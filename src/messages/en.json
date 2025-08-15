@@ -2,5 +2,13 @@
   "HomePage": {
     "title": "Hello world!",
     "about": "Go to the about page"
+  },
+  "Navbar": {
+    "production": "Production",
+    "wedding": "Wedding",
+    "about": "About Us",
+    "portfolio": "Portfolio",
+    "services": "Services",
+    "contact": "Contact"
   }
 }
