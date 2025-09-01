@@ -28,7 +28,7 @@ export default defineConfig({
         { id: 'th', title: 'Thai' },
       ],
       defaultLanguages: ['en'],
-      fieldTypes: ['string'],
+      fieldTypes: ['string', 'text'],
     }),
     languageFilter({
       supportedLanguages: [
@@ -36,7 +36,7 @@ export default defineConfig({
         { id: 'th', title: 'Thai' },
       ],
       defaultLanguages: [],
-      documentTypes: ['post'],
+      documentTypes: ['post', 'footer'],
       filterField: (enclosingType, member, selectedLanguageIds) => {
         // Filter internationalized arrays
         if (
