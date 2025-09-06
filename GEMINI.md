@@ -8,6 +8,13 @@ This is a [Next.js](https://nextjs.org/) project that uses [Sanity](https://www.
 
 - **Framework:** [Next.js](https://nextjs.org/)
 - **CMS:** [Sanity](https://www.sanity.io/)
+- **Internationalization:** [next-intl](https://next-intl-docs.vercel.app/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **UI Components:** [Radix UI](https://www.radix-ui.com/) and [Lucide React](https://lucide.dev/guide/packages/lucide-react)
+- **Linting:** [ESLint](https://eslint.org/)
+- **Formatting:** [Prettier](https://prettier.io/)
+- **Framework:** [Next.js](https://nextjs.org/)
+- **CMS:** [Sanity](https://www.sanity.io/)
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/)
 - **UI Components:** [Radix UI](https://www.radix-ui.com/) and [Lucide React](https://lucide.dev/guide/packages/lucide-react)
 - **Linting:** [ESLint](https://eslint.org/)
@@ -68,3 +75,5 @@ This will start the Next.js production server.
   ```bash
   npm run lint
   ```
+
+* **Internationalization:** All text that is displayed to the user should be added to the `src/messages/en.json` file and then referenced in the code using the `useTranslations` hook from `next-intl`.
