@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Sora, Cormorant_Garamond, Manrope } from 'next/font/google';
+import { Cormorant_Garamond, Manrope, Sora } from 'next/font/google';
 import './globals.css';
 
 const sora = Sora({
@@ -28,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html>
+    <html lang="en">
       <body
         className={`${sora.variable} ${cormorantGaramond.variable} ${manrope.variable} font-body antialiased`}
       >
