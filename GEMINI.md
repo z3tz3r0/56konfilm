@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This is a [Next.js](https://nextjs.org/) project that uses [Sanity](https://www.sanity.io/) as a headless CMS. The project is set up to display content and manage it through the Sanity Studio.
+This is a [Next.js](https://nextjs.js.org/) project that uses [Sanity](https://www.sanity.io/) as a headless CMS. The project is set up to display content and manage it through the Sanity Studio.
 
 **Key Technologies:**
 
@@ -76,4 +76,93 @@ This will start the Next.js production server.
   npm run lint
   ```
 
-* **Internationalization:** All text that is displayed to the user should be added to the `src/messages/en.json` file and then referenced in the code using the `useTranslations` hook from `next-intl`.
+## Current Folder Structure
+
+```
+/home/z3tz3r0/Projects/56konfilm/
+├───.gitignore
+├───.prettierignore
+├───.prettierrc
+├───components.json
+├───eslint.config.mjs
+├───next.config.ts
+├───package-lock.json
+├───package.json
+├───postcss.config.mjs
+├───README.md
+├───sanity.cli.ts
+├───sanity.config.ts
+├───tsconfig.json
+├───.git/...
+├───.next/
+│   ├───build/...
+│   ├───cache/...
+│   ├───server/...
+│   ├───static/...
+│   └───types/...
+├───node_modules/...
+├───public/
+│   ├───file.svg
+│   ├───globe.svg
+│   ├───next.svg
+│   ├───vercel.svg
+│   └───window.svg
+└───src/
+    ├───app/
+    │   ├───favicon.ico
+    │   ├───globals.css
+    │   ├───layout.tsx
+    │   ├───page.tsx
+    │   ├───[locale]/
+    │   │   └───portfolio/
+    │   │       └───page.tsx
+    │   └───sanity-cms/
+    │       └───[[...tool]]/
+    │           └───page.tsx
+    ├───components/
+    │   ├───Navbar.tsx
+    │   ├───TabProvider/
+    │   │   └───index.tsx
+    │   └───ui/
+    │       ├───button.tsx
+    │       └───tabs.tsx
+    ├───lib/
+    │   └───utils.ts
+    ├───sanity/
+    │   ├───env.ts
+    │   ├───structure.ts
+    │   ├───lib/
+    │   │   ├───client.ts
+    │   │   ├───image.ts
+    │   │   ├───live.ts
+    │   │   └───queries.ts
+    │   └───schemaTypes/
+    │       ├───footerType.ts
+    │       ├───index.ts
+    │       ├───page.ts
+    │       ├───postType.ts
+    │       ├───projects.ts
+    │       ├───settings.ts
+    │       └───blocks/
+    │           └───heroSection.ts
+    └───types/
+        └───sanity.ts
+Showing up to 200 items (files + folders).
+
+/home/z3tz3r0/.gemini/docs/
+├───code-convention/
+│   ├───commit-messages.md
+│   ├───doc_code-convention.md
+│   ├───example.md
+│   ├───naming-conventions.md
+│   └───writing-comments.md
+├───qa-workflows/
+│   ├───doc_qa-workflow-section-1.md
+│   ├───doc_qa-workflow-section-2.md
+│   ├───doc_qa-workflow-section-3.md
+│   ├───doc_qa-workflow-section-4.md
+│   └───doc_qa-workflows.md
+└───template/
+    └───merge-request/
+        └───doc_merge-request-template.md
+```
