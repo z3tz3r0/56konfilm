@@ -6,16 +6,19 @@ import './globals.css';
 const sora = Sora({
   variable: '--font-sora',
   subsets: ['latin'],
+  weight: ['400', '700'],
 });
 
 const cormorantGaramond = Cormorant_Garamond({
   variable: '--font-cormorant-garamond',
   subsets: ['latin'],
+  weight: ['400', '700'],
 });
 
 const manrope = Manrope({
   variable: '--font-manrope',
   subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
 });
 
 export const metadata: Metadata = {
