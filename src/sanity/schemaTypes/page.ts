@@ -16,6 +16,22 @@ export const pageType = defineType({
       group: 'content',
     }),
     defineField({
+      name: 'siteMode',
+      title: 'Site Mode',
+      description: 'Choose which experience this page belongs to.',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Production', value: 'production' },
+          { title: 'Wedding', value: 'wedding' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'production',
+      validation: (Rule) => Rule.required(),
+      group: 'content',
+    }),
+    defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',

@@ -1,6 +1,8 @@
-import { client } from '@/sanity/lib/client'; // ปรับ path ตามโครงสร้างของคุณ
-import { settingsQuery } from '@/sanity/lib/queries'; // สร้างไฟล์นี้ตาม Blueprint
+import { cookies } from 'next/headers';
 import Link from 'next/link';
+
+import { client } from '@/sanity/lib/client';
+import { settingsQuery } from '@/sanity/lib/queries';
 import { ModeSwitcher } from './ModeSwitcher';
 
 // Interface สำหรับข้อมูล Navigation ที่ดึงมา
@@ -11,11 +13,16 @@ interface NavItem {
 
 interface Settings {
   siteTitle: string;
-  mainNav: NavItem[];
+  productionNav: NavItem[];
+  weddingNav: NavItem[];
 }
 
-// Navbar กลายเป็น Async Server Component
-const Navbar = async ({ locale }: { locale: string }) => {
+const Navbar = async () => {
+  const cookieStore = await cookies();
+  const locale = cookieStore.get('lang')?.value ?? 'th';
+  const mode =
+    cookieStore.get('mode')?.value === 'production' ? 'production' : 'wedding';
+
   // ดึงข้อมูล Global Settings จาก Sanity
   const settings = await client.fetch<Settings>(
     settingsQuery,
@@ -27,15 +34,21 @@ const Navbar = async ({ locale }: { locale: string }) => {
   return (
     <header>
       <nav className="flex items-center justify-between gap-8 py-8">
-        <Link href={`/${locale}`} className="text-xl font-bold">
+        <Link href="/" className="text-xl font-bold">
           {settings?.siteTitle || '56KonFilm'}
         </Link>
 
-        <ModeSwitcher />
+        <ModeSwitcher initialMode={mode} />
 
         <div className="flex gap-8">
-          {settings?.mainNav?.map((item) => (
-            <Link key={item.url} href={`/${locale}${item.url}`}>
+          {(mode === 'production'
+            ? settings?.productionNav
+            : settings?.weddingNav
+          )?.map((item) => (
+            <Link
+              key={item.url}
+              href={item.url.startsWith('/') ? item.url : `/${item.url}`}
+            >
               {item.label}
             </Link>
           ))}

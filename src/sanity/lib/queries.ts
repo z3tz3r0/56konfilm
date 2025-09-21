@@ -1,4 +1,4 @@
-import { createClient } from 'next-sanity';
+import { createClient, groq } from 'next-sanity';
 import { apiVersion, dataset, projectId } from '../env';
 
 export const client = createClient({
@@ -9,10 +9,13 @@ export const client = createClient({
   perspective: 'published',
 });
 
-export const settingsQuery = `
-  *[_type == "settings"][0] {
+export const settingsQuery = groq`*[_type == "settings"][0] {
     "siteTitle": siteTitle[_key == $lang][0].value,
-    "mainNav": mainNav[]{
+    "productionNav": productionNav[]{
+      "label": label[_key == $lang][0].value,
+      url
+    },
+    "weddingNav": weddingNav[]{
       "label": label[_key == $lang][0].value,
       url
   }
@@ -20,8 +23,7 @@ export const settingsQuery = `
 `;
 
 // GROQ for Filtered Projects (by mode)
-export const projectsByModelQuery = `
-  *[_type == "project" && $mode in siteMode] | order(publishedAt desc) {
+export const projectsByModelQuery = groq`*[_type == "project" && $mode in siteMode] | order(publishedAt desc) {
     _id,
     "title": title[_key == $lang][0].value,
     "overview": overview[_key == $lang][0].value,
@@ -32,10 +34,11 @@ export const projectsByModelQuery = `
 `;
 
 // GROQ for a single Page with all its blocks
-export const pageBySlugQuery = `
-  *[_type == "page" && slug.current == $slug][0] {
-    "title": title[_key == $lang][0].value,
+export const pageBySlugQuery = groq`*[_type == "page" && slug.current == $slug && siteMode == $mode][0] {
+    "title": page,
     "slug": slug.current,
+    seoTitle,
+    siteMode,
     contentBlocks[]{
       _type,
 
@@ -50,7 +53,8 @@ export const pageBySlugQuery = `
         content{
           "eyebrow": coalesce(eyebrow[_key==$lang][0].value, eyebrow[_key=="en"][0].value),
           "heading": coalesce(heading[_key==$lang][0].value, heading[_key=="en"][0].value),
-          "body": coalesce(body[_key==$lang][0].value, body[_key=="en"][0].value)
+          "body": coalesce(body[_key==$lang][0].value, body[_key=="en"][0].value),
+          align
         },
         media{ image, "alt": coalesce(alt[_key==$lang][0].value, alt[_key=="en"][0].value) },
         ctas[]{
@@ -76,7 +80,7 @@ export const pageBySlugQuery = `
 
       _type == "timelineSection" => {
         background,
-        "heading": {
+        heading{
           "eyebrow": coalesce(eyebrow[_key==$lang][0].value, eyebrow[_key=="en"][0].value),
           "heading": coalesce(heading[_key==$lang][0].value, heading[_key=="en"][0].value),
           "body": coalesce(body[_key==$lang][0].value, body[_key=="en"][0].value),
@@ -86,7 +90,7 @@ export const pageBySlugQuery = `
           order,
           "title": coalesce(title[_key==$lang][0].value, title[_key=="en"][0].value),
           "description": coalesce(description[_key==$lang][0].value, description[_key=="en"][0].value)
-        },
+        } | order(order asc),
         cta{
           "label": coalesce(label[_key==$lang][0].value, label[_key=="en"][0].value),
           style, linkType, pageRef->{"slug": slug.current}, externalUrl
@@ -95,7 +99,7 @@ export const pageBySlugQuery = `
 
       _type == "mediaGallerySection" => {
         background,
-        "heading": {
+        heading{
           "eyebrow": coalesce(eyebrow[_key==$lang][0].value, eyebrow[_key=="en"][0].value),
           "heading": coalesce(heading[_key==$lang][0].value, heading[_key=="en"][0].value),
           "body": coalesce(body[_key==$lang][0].value, body[_key=="en"][0].value),
