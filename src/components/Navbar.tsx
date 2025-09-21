@@ -15,6 +15,12 @@ interface Settings {
   siteTitle: string;
   productionNav: NavItem[];
   weddingNav: NavItem[];
+  companyTitle: string;
+  address: string;
+  contactTitle: string;
+  contacts: string;
+  socialMediaTitle: string;
+  socialLinks: NavItem[];
 }
 
 const Navbar = async () => {
@@ -32,8 +38,8 @@ const Navbar = async () => {
   );
 
   return (
-    <header>
-      <nav className="flex items-center justify-between gap-8 py-8">
+    <header className="fixed w-screen bg-white/5">
+      <nav className="container mx-auto grid grid-cols-3 items-center justify-between py-8">
         <Link href="/" className="text-xl font-bold">
           {settings?.siteTitle || '56KonFilm'}
         </Link>
@@ -48,6 +54,7 @@ const Navbar = async () => {
             <Link
               key={item.url}
               href={item.url.startsWith('/') ? item.url : `/${item.url}`}
+              className="hover:underline"
             >
               {item.label}
             </Link>

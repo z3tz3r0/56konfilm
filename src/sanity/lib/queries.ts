@@ -18,9 +18,17 @@ export const settingsQuery = groq`*[_type == "settings"][0] {
     "weddingNav": weddingNav[]{
       "label": label[_key == $lang][0].value,
       url
-  }
-  }
-`;
+    },
+    "companyTitle": companyTitle[_key == $lang][0].value,
+    "address": address[_key == $lang][0].value,
+    "contactTitle": contactTitle[_key == $lang][0].value,
+    "contacts": contacts[_key == $lang][0].value,
+    "socialMediaTitle": socialMediaTitle[_key == $lang][0].value,
+    "socialLinks": socialLinks[]{
+      "label": label[_key == $lang][0].value,
+      url
+    }
+  }`;
 
 // GROQ for Filtered Projects (by mode)
 export const projectsByModelQuery = groq`*[_type == "project" && $mode in siteMode] | order(publishedAt desc) {
