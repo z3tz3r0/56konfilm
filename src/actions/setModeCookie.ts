@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers';
 
-import { SiteMode, isSupportedMode } from '@/lib/i18nUtils';
+import { SiteMode, isSupportedMode } from '@/lib/preferences';
 
 export async function setModeCookie(mode: SiteMode) {
   const nextMode = isSupportedMode(mode) ? mode : 'production';

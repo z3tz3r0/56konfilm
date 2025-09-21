@@ -1,25 +1,32 @@
-import { headers, cookies } from 'next/headers';
+'use server';
 
+import { cookies, headers } from 'next/headers';
+
+import { type Locale, type SiteMode, isSupportedLocale, isSupportedMode } from '@/lib/preferences';
 import { I18nArrayItem } from '@/types/sanity';
 
-const SUPPORTED_LOCALES = ['th', 'en'] as const;
 const FALLBACK_LOCALE: Locale = 'th';
-const SUPPORTED_MODES = ['production', 'wedding'] as const;
 const DEFAULT_MODE: SiteMode = 'production';
 
-export type Locale = (typeof SUPPORTED_LOCALES)[number];
-export type SiteMode = (typeof SUPPORTED_MODES)[number];
-
-type LocaleSelectionInput = {
-  queryParam?: string | null;
-  cookie?: string | null;
+type PreferenceSelectionInput = {
+  queryLocale?: string | null;
+  queryMode?: string | null;
+  cookieLocale?: string | null;
+  cookieMode?: string | null;
   acceptLanguage?: string | null;
 };
 
-type ModeSelectionInput = {
-  queryParam?: string | null;
-  cookie?: string | null;
+type LocaleSelectionResult = {
+  locale: Locale;
+  shouldPersistLocale: boolean;
 };
+
+type ModeSelectionResult = {
+  mode: SiteMode;
+  shouldPersistMode: boolean;
+};
+
+type PreferenceSelectionResult = LocaleSelectionResult & ModeSelectionResult;
 
 /**
  * คืนค่าภาษาเฉพาะจาก internationalized array ตาม locale ที่ใช้งานอยู่
@@ -42,46 +49,68 @@ export function getLocaleValue<T>(
   return i18nArray.find((item) => item._key === FALLBACK_LOCALE)?.value;
 }
 
-export async function resolveLocale(): Promise<Locale> {
-  const cookieStore = await cookies();
-  const headerList = await headers();
-
-  return selectLocale({
-    cookie: cookieStore.get('lang')?.value,
-    acceptLanguage: headerList.get('accept-language'),
-  }).locale;
-}
-
-export async function resolveMode(): Promise<SiteMode> {
-  const cookieStore = await cookies();
-  return selectMode({ cookie: cookieStore.get('mode')?.value }).mode;
-}
-
-export function isSupportedLocale(locale: string): locale is Locale {
-  return SUPPORTED_LOCALES.includes(locale as Locale);
-}
-
-export function isSupportedMode(mode: string): mode is SiteMode {
-  return SUPPORTED_MODES.includes(mode as SiteMode);
+/**
+ * เลือก locale และ mode ให้เรียบร้อยในครั้งเดียว (จาก query, cookie และ header)
+ */
+export function selectPreferences({
+  queryLocale,
+  queryMode,
+  cookieLocale,
+  cookieMode,
+  acceptLanguage,
+}: PreferenceSelectionInput): PreferenceSelectionResult {
+  const localeResult = deriveLocale({
+    queryLocale,
+    cookieLocale,
+    acceptLanguage,
+  });
+  const modeResult = deriveMode({ queryMode, cookieMode });
+  return { ...localeResult, ...modeResult };
 }
 
 /**
- * เลือก locale ที่เหมาะสมจาก query, cookie หรือ header
- * @param queryParam ค่าที่ส่งมาจาก query string (?lang=)
- * @param cookie ค่าจากคุกกี้ lang
- * @param acceptLanguage header accept-language ของผู้ใช้
+ * ใช้ใน Server Component เพื่อดึง locale/mode ปัจจุบันพร้อมสถานะว่าควรเซ็ตคุกกี้หรือไม่
  */
-export function selectLocale({
-  queryParam,
-  cookie,
+export async function resolvePreferences(): Promise<PreferenceSelectionResult> {
+  const [cookieStore, headerList] = await Promise.all([cookies(), headers()]);
+
+  return selectPreferences({
+    cookieLocale: cookieStore.get('lang')?.value ?? null,
+    cookieMode: cookieStore.get('mode')?.value ?? null,
+    acceptLanguage: headerList.get('accept-language'),
+  });
+}
+
+/**
+ * ดึง locale เดียวจาก `resolvePreferences`
+ */
+export async function resolveLocale(): Promise<Locale> {
+  const { locale } = await resolvePreferences();
+  return locale;
+}
+
+/**
+ * ดึง mode เดียวจาก `resolvePreferences`
+ */
+export async function resolveMode(): Promise<SiteMode> {
+  const { mode } = await resolvePreferences();
+  return mode;
+}
+
+function deriveLocale({
+  queryLocale,
+  cookieLocale,
   acceptLanguage,
-}: LocaleSelectionInput): { locale: Locale; shouldPersist: boolean } {
-  if (queryParam && isSupportedLocale(queryParam)) {
-    return { locale: queryParam, shouldPersist: true };
+}: Pick<
+  PreferenceSelectionInput,
+  'queryLocale' | 'cookieLocale' | 'acceptLanguage'
+>): LocaleSelectionResult {
+  if (queryLocale && isSupportedLocale(queryLocale)) {
+    return { locale: queryLocale, shouldPersistLocale: true };
   }
 
-  if (cookie && isSupportedLocale(cookie)) {
-    return { locale: cookie, shouldPersist: false };
+  if (cookieLocale && isSupportedLocale(cookieLocale)) {
+    return { locale: cookieLocale, shouldPersistLocale: false };
   }
 
   if (acceptLanguage) {
@@ -92,29 +121,27 @@ export function selectLocale({
 
     const matched = languages.find((lang) => isSupportedLocale(lang));
     if (matched) {
-      return { locale: matched as Locale, shouldPersist: true };
+      return { locale: matched as Locale, shouldPersistLocale: true };
     }
   }
 
-  return { locale: FALLBACK_LOCALE, shouldPersist: true };
+  return { locale: FALLBACK_LOCALE, shouldPersistLocale: true };
 }
 
-/**
- * เลือกโหมดของเว็บไซต์จาก query หรือ cookie
- * @param queryParam ค่าที่ส่งมาจาก query string (?mode=)
- * @param cookie ค่าจากคุกกี้ mode
- */
-export function selectMode({
-  queryParam,
-  cookie,
-}: ModeSelectionInput): { mode: SiteMode; shouldPersist: boolean } {
-  if (queryParam && isSupportedMode(queryParam)) {
-    return { mode: queryParam, shouldPersist: true };
+function deriveMode({
+  queryMode,
+  cookieMode,
+}: Pick<
+  PreferenceSelectionInput,
+  'queryMode' | 'cookieMode'
+>): ModeSelectionResult {
+  if (queryMode && isSupportedMode(queryMode)) {
+    return { mode: queryMode, shouldPersistMode: true };
   }
 
-  if (cookie && isSupportedMode(cookie)) {
-    return { mode: cookie, shouldPersist: false };
+  if (cookieMode && isSupportedMode(cookieMode)) {
+    return { mode: cookieMode, shouldPersistMode: false };
   }
 
-  return { mode: DEFAULT_MODE, shouldPersist: true };
+  return { mode: DEFAULT_MODE, shouldPersistMode: true };
 }
