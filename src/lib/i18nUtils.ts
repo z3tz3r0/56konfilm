@@ -1,5 +1,3 @@
-'use server';
-
 import { cookies, headers } from 'next/headers';
 
 import { type Locale, type SiteMode, isSupportedLocale, isSupportedMode } from '@/lib/preferences';
