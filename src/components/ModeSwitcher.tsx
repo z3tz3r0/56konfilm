@@ -2,7 +2,7 @@
 
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
 
@@ -15,11 +15,6 @@ interface ModeSwitcherProps {
 export const ModeSwitcher = ({ initialMode }: ModeSwitcherProps) => {
   const router = useRouter();
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     const desiredTheme = initialMode === 'production' ? 'dark' : 'light';
@@ -27,12 +22,8 @@ export const ModeSwitcher = ({ initialMode }: ModeSwitcherProps) => {
   }, [initialMode, setTheme]);
 
   const currentValue = useMemo(() => {
-    if (!mounted) {
-      return initialMode;
-    }
-
     return resolvedTheme === 'dark' ? 'production' : 'wedding';
-  }, [initialMode, mounted, resolvedTheme]);
+  }, [resolvedTheme]);
 
   const handleChange = (next: string) => {
     const nextMode = next === 'production' ? 'dark' : 'light';
@@ -42,10 +33,7 @@ export const ModeSwitcher = ({ initialMode }: ModeSwitcherProps) => {
   };
 
   return (
-    <Tabs
-      value={currentValue}
-      onValueChange={handleChange}
-    >
+    <Tabs value={currentValue} onValueChange={handleChange}>
       <TabsList>
         <TabsTrigger value="production">Production</TabsTrigger>
         <TabsTrigger value="wedding">Wedding</TabsTrigger>
