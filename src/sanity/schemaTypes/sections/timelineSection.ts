@@ -8,18 +8,20 @@ export const timelineSectionType = defineType({
   title: 'Timeline Section',
   type: 'object',
   fields: [
-    defineField({ name: 'heading', title: 'Heading', type: localizedBlockType.name }),
+    defineField({ name: 'heading', title: 'Heading', description: 'หัวข้อของ Timeline', type: localizedBlockType.name }),
     defineField({
       name: 'steps',
       title: 'Steps',
+      description: 'ขั้นตอนใน Timeline',
       type: 'array',
       of: [{ type: timelineStepType.name }],
       validation: (Rule) => Rule.required().min(2),
     }),
-    defineField({ name: 'cta', title: 'CTA', type: ctaType.name }),
+    defineField({ name: 'cta', title: 'CTA', description: 'ปุ่ม CTA', type: ctaType.name }),
     defineField({
       name: 'background',
       title: 'Background',
+      description: 'พื้นหลังของ Timeline',
       type: 'string',
       options: {
         list: [

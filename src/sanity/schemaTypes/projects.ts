@@ -1,19 +1,21 @@
 import { defineField, defineType } from 'sanity';
+import { localizedStringField, localizedTextField } from './objects/localized';
 
 export const projectType = defineType({
   name: 'project',
   title: 'Project',
   type: 'document',
   fields: [
-    defineField({
+    localizedStringField({
       name: 'title',
       title: 'Title',
-      type: 'internationalizedArrayString',
-      validation: (Rulle) => Rulle.required(),
+      description: 'หัวข้อโปรเจค',
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'slug',
       title: 'Slug',
+      description: 'URL ที่จะแสดงผลสำหรับโปรเจคนี้',
       type: 'slug',
       options: {
         source: 'title.0.value',
@@ -24,7 +26,7 @@ export const projectType = defineType({
     defineField({
       name: 'siteMode',
       title: 'Site Mode',
-      description: 'In which mode should this project appears?',
+      description: 'โปรเจคนี้จะแสดงในโหมดไหน',
       type: 'array',
       of: [{ type: 'string' }],
       options: {
@@ -35,20 +37,22 @@ export const projectType = defineType({
       },
       validation: (Rule) => Rule.required().min(1),
     }),
-    defineField({
+    localizedTextField({
       name: 'overview',
       title: 'Overview',
-      type: 'internationalizedArrayText',
+      description: 'รายละเอียดโปรเจค',
     }),
     defineField({
       name: 'coverImage',
       title: 'Cover Image',
+      description: 'รูปภาพหน้าปกโปรเจค',
       type: 'image',
       options: { hotspot: true },
     }),
     defineField({
       name: 'publishedAt',
       title: 'Published at',
+      description: 'วันที่เผยแพร่',
       type: 'datetime',
       initialValue: () => new Date().toISOString(),
     }),

@@ -9,11 +9,13 @@ export const ctaType = defineType({
     localizedStringField({
       name: 'label',
       title: 'Label',
+      description: 'ข้อความที่แสดงบนปุ่ม CTA',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'style',
       title: 'Style',
+      description: 'รูปแบบของปุ่ม CTA',
       type: 'string',
       options: {
         list: [
@@ -28,6 +30,7 @@ export const ctaType = defineType({
     defineField({
       name: 'linkType',
       title: 'Link Type',
+      description: 'ประเภทของลิงก์',
       type: 'string',
       options: {
         list: [
@@ -41,6 +44,7 @@ export const ctaType = defineType({
     defineField({
       name: 'pageRef',
       title: 'Page',
+      description: 'หน้าที่ต้องการลิงก์ไป',
       type: 'reference',
       to: [{ type: 'page' }],
       hidden: ({ parent }) => parent?.linkType !== 'internal',
@@ -48,6 +52,7 @@ export const ctaType = defineType({
     defineField({
       name: 'externalUrl',
       title: 'External URL',
+      description: 'URL ภายนอกที่ต้องการลิงก์ไป',
       type: 'url',
       hidden: ({ parent }) => parent?.linkType !== 'external',
     }),

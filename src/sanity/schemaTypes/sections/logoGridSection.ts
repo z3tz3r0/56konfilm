@@ -7,10 +7,11 @@ export const logoGridSectionType = defineType({
   title: 'Logo Grid Section',
   type: 'object',
   fields: [
-    localizedStringField({ name: 'title', title: 'Title' }),
+    localizedStringField({ name: 'title', title: 'Title', description: 'หัวข้อของ Logo Grid' }),
     defineField({
       name: 'logos',
       title: 'Logos',
+      description: 'โลโก้ที่จะแสดงใน Grid',
       type: 'array',
       of: [{ type: logoItemType.name }],
       validation: (Rule) => Rule.required().min(3),
@@ -18,6 +19,7 @@ export const logoGridSectionType = defineType({
     defineField({
       name: 'background',
       title: 'Background',
+      description: 'พื้นหลังของ Logo Grid',
       type: 'string',
       options: {
         list: [

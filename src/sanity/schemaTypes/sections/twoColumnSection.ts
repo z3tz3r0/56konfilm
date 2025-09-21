@@ -11,6 +11,7 @@ export const twoColumnSectionType = defineType({
     defineField({
       name: 'layout',
       title: 'Layout',
+      description: 'เค้าโครงของ Two Column Section',
       type: 'string',
       options: {
         list: [
@@ -21,12 +22,13 @@ export const twoColumnSectionType = defineType({
       },
       initialValue: 'textLeft',
     }),
-    defineField({ name: 'content', title: 'Content', type: localizedBlockType.name }),
-    defineField({ name: 'media', title: 'Media', type: mediaBlockType.name }),
-    defineField({ name: 'ctas', title: 'CTAs', type: 'array', of: [{ type: ctaType.name }] }),
+    defineField({ name: 'content', title: 'Content', description: 'เนื้อหาของ Two Column Section', type: localizedBlockType.name }),
+    defineField({ name: 'media', title: 'Media', description: 'สื่อของ Two Column Section', type: mediaBlockType.name }),
+    defineField({ name: 'ctas', title: 'CTAs', description: 'ปุ่ม CTA', type: 'array', of: [{ type: ctaType.name }] }),
     defineField({
       name: 'background',
       title: 'Background',
+      description: 'พื้นหลังของ Two Column Section',
       type: 'string',
       options: {
         list: [

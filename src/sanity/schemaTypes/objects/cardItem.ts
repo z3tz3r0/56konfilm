@@ -10,18 +10,21 @@ export const cardItemType = defineType({
     localizedStringField({
       name: 'title',
       title: 'Title',
+      description: 'หัวข้อของการ์ด',
       validation: (Rule) => Rule.required(),
     }),
-    localizedTextField({ name: 'body', title: 'Body' }),
+    localizedTextField({ name: 'body', title: 'Body', description: 'เนื้อหาของการ์ด' }),
     defineField({
       name: 'icon',
       title: 'Icon',
+      description: 'ไอคอนของการ์ด',
       type: 'image',
       options: { hotspot: true },
     }),
     defineField({
       name: 'variant',
       title: 'Variant',
+      description: 'รูปแบบของการ์ด',
       type: 'string',
       options: {
         list: [
@@ -31,7 +34,7 @@ export const cardItemType = defineType({
       },
       initialValue: 'default',
     }),
-    defineField({ name: 'cta', title: 'CTA', type: ctaType.name }),
+    defineField({ name: 'cta', title: 'CTA', description: 'ปุ่ม CTA', type: ctaType.name }),
   ],
 });
 

@@ -9,11 +9,12 @@ export const mediaBlockType = defineType({
     defineField({
       name: 'image',
       title: 'Image',
+      description: 'รูปภาพ',
       type: 'image',
       options: { hotspot: true },
       validation: (Rule) => Rule.required(),
     }),
-    localizedStringField({ name: 'alt', title: 'Alt Text' }),
+    localizedStringField({ name: 'alt', title: 'Alt Text', description: 'ข้อความอธิบายรูปภาพ' }),
   ],
 });
 

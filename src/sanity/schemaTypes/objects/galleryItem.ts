@@ -10,10 +10,11 @@ export const galleryItemType = defineType({
     defineField({
       name: 'media',
       title: 'Media',
+      description: 'สื่อที่จะแสดงใน Gallery',
       type: mediaBlockType.name,
       validation: (Rule) => Rule.required(),
     }),
-    localizedStringField({ name: 'label', title: 'Label' }),
+    localizedStringField({ name: 'label', title: 'Label', description: 'ข้อความที่แสดงบนสื่อ' }),
   ],
   preview: {
     select: { title: 'label.0.value', media: 'media.image' },

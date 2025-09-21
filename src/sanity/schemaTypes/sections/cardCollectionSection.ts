@@ -7,11 +7,12 @@ export const cardCollectionSectionType = defineType({
   title: 'Card Collection',
   type: 'object',
   fields: [
-    localizedStringField({ name: 'title', title: 'Title' }),
-    localizedTextField({ name: 'intro', title: 'Intro' }),
+    localizedStringField({ name: 'title', title: 'Title', description: 'หัวข้อของ Card Collection' }),
+    localizedTextField({ name: 'intro', title: 'Intro', description: 'คำอธิบายของ Card Collection' }),
     defineField({
       name: 'columns',
       title: 'Columns (lg)',
+      description: 'จำนวนคอลัมน์ในหน้าจอขนาดใหญ่',
       type: 'number',
       options: { list: [1, 2, 3, 4] },
       initialValue: 4,
@@ -19,6 +20,7 @@ export const cardCollectionSectionType = defineType({
     defineField({
       name: 'cards',
       title: 'Cards',
+      description: 'การ์ดที่จะแสดงใน Collection',
       type: 'array',
       of: [{ type: cardItemType.name }],
       validation: (Rule) => Rule.min(1),
@@ -26,6 +28,7 @@ export const cardCollectionSectionType = defineType({
     defineField({
       name: 'background',
       title: 'Background',
+      description: 'พื้นหลังของ Card Collection',
       type: 'string',
       options: {
         list: [

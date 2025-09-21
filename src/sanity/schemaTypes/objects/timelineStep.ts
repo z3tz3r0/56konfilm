@@ -9,15 +9,17 @@ export const timelineStepType = defineType({
     defineField({
       name: 'order',
       title: 'Order',
+      description: 'ลำดับของขั้นตอน',
       type: 'number',
       validation: (Rule) => Rule.required().min(1),
     }),
     localizedStringField({
       name: 'title',
       title: 'Title',
+      description: 'หัวข้อของขั้นตอน',
       validation: (Rule) => Rule.required(),
     }),
-    localizedTextField({ name: 'description', title: 'Description' }),
+    localizedTextField({ name: 'description', title: 'Description', description: 'คำอธิบายของขั้นตอน' }),
   ],
   preview: {
     select: { title: 'title.0.value', order: 'order' },

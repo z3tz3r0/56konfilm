@@ -27,16 +27,18 @@ export const localizedBlockType = defineType({
     { name: 'display', title: 'Display' },
   ],
   fields: [
-    localizedStringField({ name: 'eyebrow', title: 'Eyebrow' }),
+    localizedStringField({ name: 'eyebrow', title: 'Eyebrow', description: 'ข้อความเล็กๆ เหนือหัวข้อ' }),
     localizedStringField({
       name: 'heading',
       title: 'Heading',
+      description: 'หัวข้อหลัก',
       validation: (Rule) => Rule.required(),
     }),
-    localizedTextField({ name: 'body', title: 'Body', group: 'content' }),
+    localizedTextField({ name: 'body', title: 'Body', description: 'เนื้อหา', group: 'content' }),
     defineField({
       name: 'align',
       title: 'Text Align',
+      description: 'การจัดตำแหน่งข้อความ',
       type: 'string',
       group: 'display',
       options: {

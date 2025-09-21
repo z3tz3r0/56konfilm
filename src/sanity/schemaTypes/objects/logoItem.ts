@@ -9,6 +9,7 @@ export const logoItemType = defineType({
     defineField({
       name: 'image',
       title: 'Logo',
+      description: 'รูปภาพโลโก้',
       type: 'image',
       options: { hotspot: true },
       validation: (Rule) => Rule.required(),
@@ -16,6 +17,7 @@ export const logoItemType = defineType({
     localizedStringField({
       name: 'alt',
       title: 'Alt Text',
+      description: 'ข้อความอธิบายรูปภาพ',
       validation: (Rule) => Rule.required(),
     }),
   ],

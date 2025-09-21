@@ -12,13 +12,14 @@ export const pageType = defineType({
     defineField({
       name: 'page',
       title: 'Page Name',
+      description: 'ชื่อหน้า',
       type: 'string',
       group: 'content',
     }),
     defineField({
       name: 'siteMode',
       title: 'Site Mode',
-      description: 'Choose which experience this page belongs to.',
+      description: 'หน้านี้จะแสดงในโหมดไหน',
       type: 'string',
       options: {
         list: [
@@ -34,6 +35,7 @@ export const pageType = defineType({
     defineField({
       name: 'slug',
       title: 'Slug',
+      description: 'URL ที่จะแสดงผลสำหรับหน้านี้',
       type: 'slug',
       options: {
         source: 'page',
@@ -44,6 +46,7 @@ export const pageType = defineType({
     defineField({
       name: 'contentBlocks',
       title: 'Content Block',
+      description: 'บล็อกเนื้อหาของหน้านี้',
       type: 'array',
       of: [
         { type: 'heroSection' },
@@ -58,6 +61,7 @@ export const pageType = defineType({
     defineField({
       name: 'seoTitle',
       title: 'SEO Title',
+      description: 'หัวข้อ SEO',
       type: 'string',
       group: 'seo',
     }),
