@@ -23,7 +23,7 @@ export const settingsQuery = `
 export const projectsByModelQuery = `
   *[_type == "project" && $mode in siteMode] | order(publishedAt desc) {
     _id,
-    "title": title[_key === $lang][0].value,
+    "title": title[_key == $lang][0].value,
     "overview": overview[_key == $lang][0].value,
     "slug": slug.current,
     siteMode,
@@ -37,15 +37,110 @@ export const pageBySlugQuery = `
     "title": title[_key == $lang][0].value,
     "slug": slug.current,
     contentBlocks[]{
-      _key,
       _type,
+
       _type == "heroSection" => {
-        "title": title[_key == $lang][0].value,
-        "tagline": tagline[_key == $lang][0].value,
+        "title": coalesce(title[_key==$lang][0].value, title[_key=="en"][0].value, title[0].value),
+        "tagline": coalesce(tagline[_key==$lang][0].value, tagline[_key=="en"][0].value, tagline[0].value),
         backgroundImage
       },
-      // Add other block types here using the same pattern
-      // _type == "galleryBlock" => { ... }
+
+      _type == "twoColumnSection" => {
+        layout, background,
+        content{
+          "eyebrow": coalesce(eyebrow[_key==$lang][0].value, eyebrow[_key=="en"][0].value),
+          "heading": coalesce(heading[_key==$lang][0].value, heading[_key=="en"][0].value),
+          "body": coalesce(body[_key==$lang][0].value, body[_key=="en"][0].value)
+        },
+        media{ image, "alt": coalesce(alt[_key==$lang][0].value, alt[_key=="en"][0].value) },
+        ctas[]{
+          "label": coalesce(label[_key==$lang][0].value, label[_key=="en"][0].value),
+          style, linkType, pageRef->{"slug": slug.current}, externalUrl
+        }
+      },
+
+      _type == "cardCollectionSection" => {
+        "title": coalesce(title[_key==$lang][0].value, title[_key=="en"][0].value),
+        "intro": coalesce(intro[_key==$lang][0].value, intro[_key=="en"][0].value),
+        columns, background,
+        cards[]{
+          "title": coalesce(title[_key==$lang][0].value, title[_key=="en"][0].value),
+          "body": coalesce(body[_key==$lang][0].value, body[_key=="en"][0].value),
+          icon, variant,
+          cta{
+            "label": coalesce(label[_key==$lang][0].value, label[_key=="en"][0].value),
+            style, linkType, pageRef->{"slug": slug.current}, externalUrl
+          }
+        }
+      },
+
+      _type == "timelineSection" => {
+        background,
+        "heading": {
+          "eyebrow": coalesce(eyebrow[_key==$lang][0].value, eyebrow[_key=="en"][0].value),
+          "heading": coalesce(heading[_key==$lang][0].value, heading[_key=="en"][0].value),
+          "body": coalesce(body[_key==$lang][0].value, body[_key=="en"][0].value),
+          align
+        },
+        steps[]{
+          order,
+          "title": coalesce(title[_key==$lang][0].value, title[_key=="en"][0].value),
+          "description": coalesce(description[_key==$lang][0].value, description[_key=="en"][0].value)
+        },
+        cta{
+          "label": coalesce(label[_key==$lang][0].value, label[_key=="en"][0].value),
+          style, linkType, pageRef->{"slug": slug.current}, externalUrl
+        }
+      },
+
+      _type == "mediaGallerySection" => {
+        background,
+        "heading": {
+          "eyebrow": coalesce(eyebrow[_key==$lang][0].value, eyebrow[_key=="en"][0].value),
+          "heading": coalesce(heading[_key==$lang][0].value, heading[_key=="en"][0].value),
+          "body": coalesce(body[_key==$lang][0].value, body[_key=="en"][0].value),
+          align
+        },
+        items[]{
+          media{
+            image,
+            "alt": coalesce(alt[_key==$lang][0].value, alt[_key=="en"][0].value)
+          },
+          "label": coalesce(label[_key==$lang][0].value, label[_key=="en"][0].value)
+        },
+        cta{
+          "label": coalesce(label[_key==$lang][0].value, label[_key=="en"][0].value),
+          style, linkType, pageRef->{"slug": slug.current}, externalUrl
+        }
+      },
+
+      _type == "logoGridSection" => {
+        background,
+        "title": coalesce(title[_key==$lang][0].value, title[_key=="en"][0].value),
+        logos[]{
+          image,
+          "alt": coalesce(alt[_key==$lang][0].value, alt[_key=="en"][0].value)
+        }
+      },
+
+      _type == "ctaBannerSection" => {
+        background,
+        layout,
+        content:{
+          "eyebrow": coalesce(eyebrow[_key==$lang][0].value, eyebrow[_key=="en"][0].value),
+          "heading": coalesce(heading[_key==$lang][0].value, heading[_key=="en"][0].value),
+          "body": coalesce(body[_key==$lang][0].value, body[_key=="en"][0].value),
+          align
+        },
+        media{
+          image,
+          "alt": coalesce(alt[_key==$lang][0].value, alt[_key=="en"][0].value)
+        },
+        ctas[]{
+          "label": coalesce(label[_key==$lang][0].value, label[_key=="en"][0].value),
+          style, linkType, pageRef->{"slug": slug.current}, externalUrl
+        }
+      }
     }
   }
 `;

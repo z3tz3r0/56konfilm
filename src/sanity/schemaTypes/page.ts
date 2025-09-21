@@ -4,19 +4,25 @@ export const pageType = defineType({
   name: 'page',
   title: 'Page',
   type: 'document',
+  groups: [
+    { name: 'content', title: 'Content', default: true },
+    { name: 'seo', title: 'SEO' },
+  ],
   fields: [
     defineField({
-      name: 'title',
-      title: 'Title',
-      type: 'internationalizedArrayString',
+      name: 'page',
+      title: 'Page Name',
+      type: 'string',
+      group: 'content',
     }),
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
       options: {
-        source: 'title.0.value',
+        source: 'page',
       },
+      group: 'content',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -25,9 +31,31 @@ export const pageType = defineType({
       type: 'array',
       of: [
         { type: 'heroSection' },
-        // {type: 'galleryBlock'},
-        // { type: 'textWithImageBlock'},
+        { type: 'twoColumnSection' },
+        { type: 'cardCollectionSection' },
+        { type: 'timelineSection' },
+        { type: 'mediaGallerySection' },
+        { type: 'logoGridSection' },
+        { type: 'ctaBannerSection' },
       ],
     }),
+    defineField({
+      name: 'seoTitle',
+      title: 'SEO Title',
+      type: 'string',
+      group: 'seo',
+    }),
   ],
+  preview: {
+    select: {
+      title: 'page',
+      slug: 'slug.current',
+    },
+    prepare({ title, slug }) {
+      return {
+        title: title || 'Untitled Page',
+        subtitle: slug || 'No slug',
+      };
+    },
+  },
 });

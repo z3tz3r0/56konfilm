@@ -35,7 +35,7 @@ export default defineConfig({
         { id: 'en', title: 'English' },
         { id: 'th', title: 'Thai' },
       ],
-      defaultLanguages: [],
+      defaultLanguages: ['en'],
       documentTypes: ['post', 'footer'],
       filterField: (enclosingType, member, selectedLanguageIds) => {
         // Filter internationalized arrays
