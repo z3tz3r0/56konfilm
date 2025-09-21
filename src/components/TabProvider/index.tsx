@@ -1,7 +1,12 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
+import { ReactNode } from 'react';
 
-const PageSelectorProvider = ({ children }: { children: React.ReactNode }) => {
+interface PageSelectorProviderProps {
+  children: ReactNode;
+}
+
+const PageSelectorProvider = ({ children }: PageSelectorProviderProps) => {
   return (
     <Tabs defaultValue="production" className="container mx-auto">
       <div className="flex justify-between">

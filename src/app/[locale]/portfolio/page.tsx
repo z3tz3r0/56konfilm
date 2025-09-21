@@ -3,12 +3,19 @@ import { Project } from '@/types/sanity';
 
 const SITE_MODE = 'production';
 
-const PortfiloPage = async ({ params }: { params: { locale: string } }) => {
+interface PortfolioPageProps {
+  params: Promise<{ locale: string }>;
+}
+
+const PortfoiloPage = async ({ params }: PortfolioPageProps) => {
+  const { locale } = await params;
+
   const projects = await client.fetch<Project[]>(
     projectsByModelQuery,
-    { lang: params.locale, mode: SITE_MODE },
+    { lang: locale, mode: SITE_MODE },
     { next: { revalidate: 3600 } }
   );
+
   return (
     <main>
       <h1>Our Work</h1>
@@ -24,4 +31,4 @@ const PortfiloPage = async ({ params }: { params: { locale: string } }) => {
   );
 };
 
-export default PortfiloPage;
+export default PortfoiloPage;
