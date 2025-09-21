@@ -1,3 +1,5 @@
+import { SanityImageSource } from '@sanity/image-url/lib/types/types';
+
 export interface I18nArrayItem<T> {
   _key: string;
   value: T;
@@ -10,7 +12,7 @@ export interface RawProject {
   overview: I18nArrayItem<string>[];
   siteMode: 'production' | 'wedding';
   slug: { current: string };
-  coverImage: any;
+  coverImage: SanityImageSource;
 }
 
 // --- Data after resolving language in GROQ ---
@@ -20,5 +22,5 @@ export interface Project {
   overview: string;
   siteMode: ('production' | 'wedding')[];
   slug: string;
-  coverImage: any;
+  coverImage: SanityImageSource;
 }
