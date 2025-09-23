@@ -45,8 +45,6 @@ export default async function SiteLayout({ children }: SiteLayoutProps) {
     // ตั้งค่า revalidation เพื่อให้ข้อมูลอัปเดตเป็นระยะ
     { next: { revalidate: 3600 } } // 1 ช.ม.
   );
-  // console.log('🚀 ~ SiteLayout ~ mode:', mode);
-  // console.log('🚀 ~ SiteLayout ~ settings:', settings);
 
   return (
     <div className="min-h-screen">

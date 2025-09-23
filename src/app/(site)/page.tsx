@@ -1,13 +1,21 @@
-import { Button } from '@/components/ui/button';
+import { notFound, redirect } from 'next/navigation';
+
+import { resolvePreferences } from '@/lib/i18nUtils';
+import { client } from '@/sanity/lib/client';
+import { firstPageSlugByModeQuery } from '@/sanity/lib/queries';
 
 export default async function Home() {
-  return (
-    <div className="grid h-screen place-items-center gap-16">
-      <div className="grid place-items-center gap-4">
-        <Button variant="default">Text</Button>
-        <Button variant="secondary">Text</Button>
-        <Button variant="neutral">Text</Button>
-      </div>
-    </div>
+  const { mode } = await resolvePreferences();
+
+  const result = await client.fetch<{ slug?: string | null }>(
+    firstPageSlugByModeQuery,
+    { mode },
+    { next: { revalidate: 3600 } }
   );
+
+  if (result?.slug) {
+    redirect(`/${result.slug}`);
+  }
+
+  notFound();
 }
