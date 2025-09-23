@@ -12,6 +12,7 @@ import { motion } from 'motion/react';
 
 interface ModeSwitcherProps {
   initialMode: SiteMode;
+  className?: string;
 }
 
 const MODE_TO_THEME: Record<SiteMode, 'dark' | 'light'> = {
@@ -19,7 +20,7 @@ const MODE_TO_THEME: Record<SiteMode, 'dark' | 'light'> = {
   wedding: 'light',
 };
 
-export const ModeSwitcher = ({ initialMode }: ModeSwitcherProps) => {
+export const ModeSwitcher = ({ initialMode, className }: ModeSwitcherProps) => {
   const router = useRouter();
   const { setTheme } = useTheme();
   const [mode, setMode] = useState<SiteMode>(initialMode);
@@ -37,7 +38,7 @@ export const ModeSwitcher = ({ initialMode }: ModeSwitcherProps) => {
         await setModeCookie(nextMode);
         setMode(nextMode);
         setTheme(MODE_TO_THEME[nextMode]);
-        router.refresh();
+        router.push('/');
       } catch (error) {
         console.error('Failed to update mode: ', error);
         setMode(mode);
@@ -49,7 +50,8 @@ export const ModeSwitcher = ({ initialMode }: ModeSwitcherProps) => {
   return (
     <motion.div
       className={cn(
-        'relative grid h-11 w-60 grid-cols-2 items-center rounded-md p-1'
+        'relative grid h-11 w-60 grid-cols-2 items-center rounded-md p-1',
+        className
       )}
       animate={{
         backgroundColor:
