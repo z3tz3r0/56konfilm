@@ -7,6 +7,7 @@ import { timelineStepType } from './objects/timelineStep';
 import { galleryItemType } from './objects/galleryItem';
 import { logoItemType } from './objects/logoItem';
 import { socialMediaType } from './objects/socialMedia';
+import { backgroundMediaType } from './objects/backgroundMedia';
 import { pageType } from './page';
 import { postType } from './postType';
 import { projectType } from './projects';
@@ -35,6 +36,7 @@ export const schemaType: { types: SchemaTypeDefinition[] } = {
     localizedBlockType,
     ctaType,
     mediaBlockType,
+    backgroundMediaType,
     cardItemType,
     timelineStepType,
     galleryItemType,

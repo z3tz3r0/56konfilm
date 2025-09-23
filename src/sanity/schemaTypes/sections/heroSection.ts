@@ -1,5 +1,7 @@
 import { defineField, defineType } from 'sanity';
+import { ctaType } from '../objects/cta';
 import { localizedStringField } from '../objects/localized';
+import { backgroundMediaType } from '../objects/backgroundMedia';
 
 export const heroSectionType = defineType({
   name: 'heroSection',
@@ -9,20 +11,19 @@ export const heroSectionType = defineType({
     localizedStringField({ name: 'title', title: 'Title', description: 'หัวข้อของ Hero Section' }),
     localizedStringField({ name: 'tagline', title: 'Tagline', description: 'คำโปรยของ Hero Section' }),
     defineField({
-      name: 'backgroundImage',
-      title: 'Background Image',
-      description: 'รูปภาพพื้นหลังของ Hero Section',
-      type: 'image',
-      options: {
-        hotspot: true,
-      },
+      name: 'backgroundMedia',
+      title: 'Background Media',
+      description: 'เลือกรูปภาพหรือวิดีโอพื้นหลัง (รองรับเพียง 1 รายการ)',
+      type: backgroundMediaType.name,
     }),
+    defineField({ name: 'ctas', title: 'CTAs', description: 'ปุ่ม CTA', type: 'array', of: [{ type: ctaType.name }] }),
   ],
+  
   preview: {
     select: {
       title: 'title.0.value',
       tagline: 'tagline.0.value',
-      media: 'backgroundImage',
+      media: 'backgroundMedia.mediaAsset[0]',
     },
     prepare({ title, tagline, media }) {
       return {

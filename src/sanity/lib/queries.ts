@@ -41,47 +41,97 @@ export const projectsByModelQuery = groq`*[_type == "project" && $mode in siteMo
   }
 `;
 
+export const allPageSlugsQuery = groq`*[_type == "page" && defined(slug.current)]{
+    "slug": slug.current,
+    siteMode
+  }`;
+
+export const firstPageSlugByModeQuery = groq`
+  *[_type == "page" && siteMode == $mode] | order(_createdAt asc)[0]{
+    "slug": slug.current
+  }
+`;
+
 // GROQ for a single Page with all its blocks
-export const pageBySlugQuery = groq`*[_type == "page" && slug.current == $slug && siteMode == $mode][0] {
+export const pageBySlugQuery = groq`
+  *[_type == "page" && slug.current == $slug && siteMode == $mode][0] {
     "title": page,
     "slug": slug.current,
     seoTitle,
     siteMode,
     contentBlocks[]{
+      _key,
       _type,
 
       _type == "heroSection" => {
-        "title": coalesce(title[_key==$lang][0].value, title[_key=="en"][0].value, title[0].value),
-        "tagline": coalesce(tagline[_key==$lang][0].value, tagline[_key=="en"][0].value, tagline[0].value),
-        backgroundImage
+        "title": coalesce(title[_key == $lang][0].value, title[_key == "en"][0].value, title[0].value),
+        "tagline": coalesce(tagline[_key == $lang][0].value, tagline[_key == "en"][0].value, tagline[0].value),
+        "backgroundMedia": backgroundMedia.mediaAsset[]{
+          _type,
+          "url": asset->url,
+          "mimeType": asset->mimeType,
+          "image": select(
+            _type == "image" => {
+              asset,
+              crop,
+              hotspot
+            },
+            _type == "backgroundVideo" => null
+          )
+        },
+        ctas[]{
+          "label": coalesce(label[_key == $lang][0].value, label[_key == "en"][0].value),
+          style,
+          linkType,
+          pageRef->{
+            "slug": slug.current
+          },
+          externalUrl
+        }
       },
 
       _type == "twoColumnSection" => {
-        layout, background,
+        layout,
+        background,
         content{
-          "eyebrow": coalesce(eyebrow[_key==$lang][0].value, eyebrow[_key=="en"][0].value),
-          "heading": coalesce(heading[_key==$lang][0].value, heading[_key=="en"][0].value),
-          "body": coalesce(body[_key==$lang][0].value, body[_key=="en"][0].value),
+          "eyebrow": coalesce(eyebrow[_key == $lang][0].value, eyebrow[_key == "en"][0].value),
+          "heading": coalesce(heading[_key == $lang][0].value, heading[_key == "en"][0].value),
+          "body": coalesce(body[_key == $lang][0].value, body[_key == "en"][0].value),
           align
         },
-        media{ image, "alt": coalesce(alt[_key==$lang][0].value, alt[_key=="en"][0].value) },
+        media{
+          image,
+          "alt": coalesce(alt[_key == $lang][0].value, alt[_key == "en"][0].value)
+        },
         ctas[]{
-          "label": coalesce(label[_key==$lang][0].value, label[_key=="en"][0].value),
-          style, linkType, pageRef->{"slug": slug.current}, externalUrl
+          "label": coalesce(label[_key == $lang][0].value, label[_key == "en"][0].value),
+          style,
+          linkType,
+          pageRef->{
+            "slug": slug.current
+          },
+          externalUrl
         }
       },
 
       _type == "cardCollectionSection" => {
-        "title": coalesce(title[_key==$lang][0].value, title[_key=="en"][0].value),
-        "intro": coalesce(intro[_key==$lang][0].value, intro[_key=="en"][0].value),
-        columns, background,
+        "title": coalesce(title[_key == $lang][0].value, title[_key == "en"][0].value),
+        "intro": coalesce(intro[_key == $lang][0].value, intro[_key == "en"][0].value),
+        columns,
+        background,
         cards[]{
-          "title": coalesce(title[_key==$lang][0].value, title[_key=="en"][0].value),
-          "body": coalesce(body[_key==$lang][0].value, body[_key=="en"][0].value),
-          icon, variant,
+          "title": coalesce(title[_key == $lang][0].value, title[_key == "en"][0].value),
+          "body": coalesce(body[_key == $lang][0].value, body[_key == "en"][0].value),
+          icon,
+          variant,
           cta{
-            "label": coalesce(label[_key==$lang][0].value, label[_key=="en"][0].value),
-            style, linkType, pageRef->{"slug": slug.current}, externalUrl
+            "label": coalesce(label[_key == $lang][0].value, label[_key == "en"][0].value),
+            style,
+            linkType,
+            pageRef->{
+              "slug": slug.current
+            },
+            externalUrl
           }
         }
       },
@@ -89,68 +139,83 @@ export const pageBySlugQuery = groq`*[_type == "page" && slug.current == $slug &
       _type == "timelineSection" => {
         background,
         heading{
-          "eyebrow": coalesce(eyebrow[_key==$lang][0].value, eyebrow[_key=="en"][0].value),
-          "heading": coalesce(heading[_key==$lang][0].value, heading[_key=="en"][0].value),
-          "body": coalesce(body[_key==$lang][0].value, body[_key=="en"][0].value),
+          "eyebrow": coalesce(eyebrow[_key == $lang][0].value, eyebrow[_key == "en"][0].value),
+          "heading": coalesce(heading[_key == $lang][0].value, heading[_key == "en"][0].value),
+          "body": coalesce(body[_key == $lang][0].value, body[_key == "en"][0].value),
           align
         },
         steps[]{
           order,
-          "title": coalesce(title[_key==$lang][0].value, title[_key=="en"][0].value),
-          "description": coalesce(description[_key==$lang][0].value, description[_key=="en"][0].value)
+          "title": coalesce(title[_key == $lang][0].value, title[_key == "en"][0].value),
+          "description": coalesce(description[_key == $lang][0].value, description[_key == "en"][0].value)
         } | order(order asc),
         cta{
-          "label": coalesce(label[_key==$lang][0].value, label[_key=="en"][0].value),
-          style, linkType, pageRef->{"slug": slug.current}, externalUrl
+          "label": coalesce(label[_key == $lang][0].value, label[_key == "en"][0].value),
+          style,
+          linkType,
+          pageRef->{
+            "slug": slug.current
+          },
+          externalUrl
         }
       },
 
       _type == "mediaGallerySection" => {
         background,
         heading{
-          "eyebrow": coalesce(eyebrow[_key==$lang][0].value, eyebrow[_key=="en"][0].value),
-          "heading": coalesce(heading[_key==$lang][0].value, heading[_key=="en"][0].value),
-          "body": coalesce(body[_key==$lang][0].value, body[_key=="en"][0].value),
+          "eyebrow": coalesce(eyebrow[_key == $lang][0].value, eyebrow[_key == "en"][0].value),
+          "heading": coalesce(heading[_key == $lang][0].value, heading[_key == "en"][0].value),
+          "body": coalesce(body[_key == $lang][0].value, body[_key == "en"][0].value),
           align
         },
         items[]{
           media{
             image,
-            "alt": coalesce(alt[_key==$lang][0].value, alt[_key=="en"][0].value)
+            "alt": coalesce(alt[_key == $lang][0].value, alt[_key == "en"][0].value)
           },
-          "label": coalesce(label[_key==$lang][0].value, label[_key=="en"][0].value)
+          "label": coalesce(label[_key == $lang][0].value, label[_key == "en"][0].value)
         },
         cta{
-          "label": coalesce(label[_key==$lang][0].value, label[_key=="en"][0].value),
-          style, linkType, pageRef->{"slug": slug.current}, externalUrl
+          "label": coalesce(label[_key == $lang][0].value, label[_key == "en"][0].value),
+          style,
+          linkType,
+          pageRef->{
+            "slug": slug.current
+          },
+          externalUrl
         }
       },
 
       _type == "logoGridSection" => {
         background,
-        "title": coalesce(title[_key==$lang][0].value, title[_key=="en"][0].value),
+        "title": coalesce(title[_key == $lang][0].value, title[_key == "en"][0].value),
         logos[]{
           image,
-          "alt": coalesce(alt[_key==$lang][0].value, alt[_key=="en"][0].value)
+          "alt": coalesce(alt[_key == $lang][0].value, alt[_key == "en"][0].value)
         }
       },
 
       _type == "ctaBannerSection" => {
         background,
         layout,
-        content:{
-          "eyebrow": coalesce(eyebrow[_key==$lang][0].value, eyebrow[_key=="en"][0].value),
-          "heading": coalesce(heading[_key==$lang][0].value, heading[_key=="en"][0].value),
-          "body": coalesce(body[_key==$lang][0].value, body[_key=="en"][0].value),
+        content{
+          "eyebrow": coalesce(eyebrow[_key == $lang][0].value, eyebrow[_key == "en"][0].value),
+          "heading": coalesce(heading[_key == $lang][0].value, heading[_key == "en"][0].value),
+          "body": coalesce(body[_key == $lang][0].value, body[_key == "en"][0].value),
           align
         },
         media{
           image,
-          "alt": coalesce(alt[_key==$lang][0].value, alt[_key=="en"][0].value)
+          "alt": coalesce(alt[_key == $lang][0].value, alt[_key == "en"][0].value)
         },
         ctas[]{
-          "label": coalesce(label[_key==$lang][0].value, label[_key=="en"][0].value),
-          style, linkType, pageRef->{"slug": slug.current}, externalUrl
+          "label": coalesce(label[_key == $lang][0].value, label[_key == "en"][0].value),
+          style,
+          linkType,
+          pageRef->{
+            "slug": slug.current
+          },
+          externalUrl
         }
       }
     }

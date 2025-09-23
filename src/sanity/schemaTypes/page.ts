@@ -47,6 +47,7 @@ export const pageType = defineType({
       name: 'contentBlocks',
       title: 'Content Block',
       description: 'บล็อกเนื้อหาของหน้านี้',
+      group: 'content',
       type: 'array',
       of: [
         { type: 'heroSection' },
