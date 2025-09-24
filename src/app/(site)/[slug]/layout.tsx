@@ -3,7 +3,7 @@ import Navbar from '@/components/navigation/Navbar';
 import { Toaster } from '@/components/ui/sonner';
 import { resolvePreferences } from '@/lib/i18nUtils';
 import { client } from '@/sanity/lib/client';
-import { settingsQuery } from '@/sanity/lib/queries';
+import { modeHomeSlugsQuery, settingsQuery } from '@/sanity/lib/queries';
 import { SiteSettings } from '@/types/siteSettings';
 import { cookies } from 'next/headers';
 import { ReactNode } from 'react';
@@ -39,16 +39,28 @@ export default async function SiteLayout({ children }: SiteLayoutProps) {
   }
 
   // ดึงข้อมูล Global Settings จาก Sanity
-  const settings = await client.fetch<SiteSettings>(
+  const [settings, homeSlugs] = await Promise.all([
+    client.fetch<SiteSettings>(
     settingsQuery,
     { lang: locale },
     // ตั้งค่า revalidation เพื่อให้ข้อมูลอัปเดตเป็นระยะ
-    { next: { revalidate: 3600 } } // 1 ช.ม.
-  );
+    { next: { revalidate: 3600 } }
+  ),
+    client.fetch<{ production?: { slug?: string | null }; wedding?: { slug?: string | null } }>(
+      modeHomeSlugsQuery,
+      {},
+      { next: { revalidate: 3600 } }
+    ),
+  ]);
+
+  const modeSlugMap = {
+    production: homeSlugs.production?.slug ?? null,
+    wedding: homeSlugs.wedding?.slug ?? null,
+  } as const;
 
   return (
     <div className="min-h-screen">
-      <Navbar mode={mode} settings={settings} />
+      <Navbar mode={mode} settings={settings} homeSlugs={modeSlugMap} />
       <main>{children}</main>
       <Toaster />
       <Footer settings={settings} />

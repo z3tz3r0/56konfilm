@@ -46,9 +46,21 @@ export const allPageSlugsQuery = groq`*[_type == "page" && defined(slug.current)
     siteMode
   }`;
 
+
 export const firstPageSlugByModeQuery = groq`
   *[_type == "page" && siteMode == $mode] | order(_createdAt asc)[0]{
     "slug": slug.current
+  }
+`;
+
+export const modeHomeSlugsQuery = groq`
+  {
+    "production": *[_type == "page" && siteMode == "production"] | order(_createdAt asc)[0]{
+      "slug": slug.current
+    },
+    "wedding": *[_type == "page" && siteMode == "wedding"] | order(_createdAt asc)[0]{
+      "slug": slug.current
+    }
   }
 `;
 
