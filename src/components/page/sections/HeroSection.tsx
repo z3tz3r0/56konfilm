@@ -9,11 +9,11 @@ interface HeroSectionProps {
 export default function HeroSection({ block }: HeroSectionProps) {
   return (
     <SectionShell
-      className="flex items-center justify-center"
+      className="flex h-screen items-center justify-center"
       media={block.backgroundMedia ?? null}
       overlayClassName="bg-gradient-to-b from-black/70 via-black/40 to-black/75"
     >
-      <div className="container mx-auto flex max-w-3xl flex-col items-center gap-6 text-center text-white">
+      <div className="container mx-auto flex max-w-7xl flex-col items-center gap-6 text-center text-white">
         {block.title ? (
           <h1 className="text-3xl tracking-tight text-balance md:text-5xl">
             {block.title}

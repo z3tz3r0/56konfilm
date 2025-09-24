@@ -24,11 +24,7 @@ export default function PageBuilder({ page }: PageBuilderProps) {
     );
   }
 
-  return (
-    <article className="flex flex-col gap-16 md:gap-24">
-      {blocks.map((block, index) => renderBlock(block, index))}
-    </article>
-  );
+  return <>{blocks.map((block, index) => renderBlock(block, index))}</>;
 }
 
 function renderBlock(block: PageContentBlock, index: number) {

@@ -7,7 +7,7 @@ import { BackgroundMediaItem } from '@/types/sanity';
 
 const backgroundVariants: Record<string, string> = {
   default: '',
-  muted: 'bg-muted/40 dark:bg-muted/10',
+  muted: 'bg-secondary',
   contrast: 'bg-primary text-primary-foreground',
 };
 
@@ -30,7 +30,7 @@ export default function SectionShell({
 }: SectionShellProps) {
   const backgroundClass =
     backgroundVariants[background ?? 'default'] ?? backgroundVariants.default;
-  const paddingClass = disablePadding ? '' : 'p-4 md:p-24';
+  const paddingClass = disablePadding ? '' : 'px-4 py-16 md:p-24';
   const videoAsset = media?.find((item) => item.mimeType?.startsWith('video'));
   const imageAsset = media?.find((item) => item.image);
 
@@ -48,7 +48,7 @@ export default function SectionShell({
   return (
     <section
       className={cn(
-        'relative isolate h-screen overflow-hidden',
+        'relative isolate overflow-hidden',
         paddingClass,
         backgroundClass,
         className

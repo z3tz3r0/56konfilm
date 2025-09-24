@@ -24,7 +24,7 @@ interface NavbarProps {
 const Navbar = async ({ mode, settings, homeSlugs }: NavbarProps) => {
   return (
     <header className="fixed z-50 w-screen bg-white/5">
-      <nav className="container mx-auto grid max-w-7xl grid-cols-2 items-center justify-between px-4 py-8 md:grid-cols-3">
+      <nav className="container mx-auto grid max-w-7xl grid-cols-2 items-center justify-between p-4 md:grid-cols-3">
         <Link href="/" className={cn('text-xl font-bold', 'text-off-white')}>
           {settings?.siteTitle || '56KonFilm'}
         </Link>
