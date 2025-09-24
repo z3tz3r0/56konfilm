@@ -4,7 +4,7 @@ import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 
-import { setModeCookie } from '@/actions/setModeCookie';
+import { switchMode } from '@/actions/switchMode';
 import { isSupportedMode, type SiteMode } from '@/lib/preferences';
 import { cn } from '@/lib/utils';
 
@@ -35,10 +35,10 @@ export const ModeSwitcher = ({ initialMode, className }: ModeSwitcherProps) => {
 
     startTransition(async () => {
       try {
-        await setModeCookie(nextMode);
+        const slug = await switchMode(nextMode);
         setMode(nextMode);
         setTheme(MODE_TO_THEME[nextMode]);
-        router.push('/');
+        router.replace(slug ? `/${slug}` : '/', { scroll: false });
       } catch (error) {
         console.error('Failed to update mode: ', error);
         setMode(mode);

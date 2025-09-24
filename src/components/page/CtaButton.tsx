@@ -1,13 +1,16 @@
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { ContentCta } from '@/types/sanity';
 
 interface CtaButtonProps {
   cta: ContentCta;
+  className?: string;
+  fullWidth?: boolean;
 }
 
-export default function CtaButton({ cta }: CtaButtonProps) {
+export default function CtaButton({ cta, className, fullWidth }: CtaButtonProps) {
   if (!cta?.label) {
     return null;
   }
@@ -17,7 +20,12 @@ export default function CtaButton({ cta }: CtaButtonProps) {
 
   if (!href) {
     return (
-      <span className="border-border text-muted-foreground inline-flex items-center rounded-full border px-4 py-2 text-sm">
+      <span
+        className={cn(
+          'border-border inline-flex items-center rounded-full border px-4 py-2 text-sm text-muted-foreground',
+          fullWidth && 'w-full justify-center'
+        )}
+      >
         {cta.label}
       </span>
     );
@@ -28,8 +36,14 @@ export default function CtaButton({ cta }: CtaButtonProps) {
       href={href}
       target={isExternal ? '_blank' : ''}
       rel={isExternal ? 'noreferrer' : ''}
+      className={cn(fullWidth && 'block w-full')}
     >
-      <Button variant={variant}>{cta.label}</Button>
+      <Button
+        variant={variant}
+        className={cn(fullWidth && 'w-full justify-center', className)}
+      >
+        {cta.label}
+      </Button>
     </Link>
   );
 }
