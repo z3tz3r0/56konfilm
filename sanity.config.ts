@@ -28,15 +28,15 @@ export default defineConfig({
         { id: 'th', title: 'Thai' },
       ],
       defaultLanguages: ['en'],
-      fieldTypes: ['string'],
+      fieldTypes: ['string', 'text'],
     }),
     languageFilter({
       supportedLanguages: [
         { id: 'en', title: 'English' },
         { id: 'th', title: 'Thai' },
       ],
-      defaultLanguages: [],
-      documentTypes: ['post'],
+      defaultLanguages: ['en'],
+      documentTypes: ['post', 'footer'],
       filterField: (enclosingType, member, selectedLanguageIds) => {
         // Filter internationalized arrays
         if (
