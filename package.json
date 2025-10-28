@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "check-format": "prettier --check ."
+    "check-format": "prettier --check .",
+    "bmad:refresh": "bmad-method install -f -i codex",
+    "bmad:list": "bmad-method list:agents",
+    "bmad:validate": "bmad-method validate"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
