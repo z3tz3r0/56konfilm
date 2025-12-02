@@ -8,12 +8,29 @@
  */
 
 import { NextStudio } from 'next-sanity/studio';
+import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
+import { verifySession } from '@/lib/auth';
 import config from '../../../../sanity.config';
 
-export const dynamic = 'force-static';
+export const dynamic = 'force-dynamic'; // This is necessary for authentication system
 
 export { metadata, viewport } from 'next-sanity/studio';
 
-export default function StudioPage() {
+export default async function StudioPage() {
+  // Check authentication
+  const cookieStore = await cookies();
+  const token = cookieStore.get('sanity-cms-session')?.value;
+
+  if (!token) {
+    redirect('/sanity-cms/login');
+  }
+
+  const session = verifySession(token);
+
+  if (!session.valid) {
+    redirect('/sanity-cms/login');
+  }
+
   return <NextStudio config={config} />;
 }
