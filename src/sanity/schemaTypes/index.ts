@@ -19,11 +19,13 @@ import { mediaGallerySectionType } from './sections/mediaGallerySection';
 import { logoGridSectionType } from './sections/logoGridSection';
 import { ctaBannerSectionType } from './sections/ctaBannerSection';
 import { settingsType } from './settings';
+import { cmsCredentialsType } from './cmsCredentials';
 
 export const schemaType: { types: SchemaTypeDefinition[] } = {
   types: [
     postType,
     settingsType,
+    cmsCredentialsType, // Hidden from Studio UI but registered for API access
     projectType,
     pageType,
     heroSectionType,
