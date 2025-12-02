@@ -2,14 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { selectPreferences } from '@/lib/i18nUtils';
 
-export function middleware(request: NextRequest) {
-  const { locale, mode, shouldPersistLocale, shouldPersistMode } = selectPreferences({
-    queryLocale: request.nextUrl.searchParams.get('lang'),
-    queryMode: request.nextUrl.searchParams.get('mode'),
-    cookieLocale: request.cookies.get('lang')?.value,
-    cookieMode: request.cookies.get('mode')?.value,
-    acceptLanguage: request.headers.get('accept-language'),
-  });
+export function proxy(request: NextRequest) {
+  const { locale, mode, shouldPersistLocale, shouldPersistMode } =
+    selectPreferences({
+      queryLocale: request.nextUrl.searchParams.get('lang'),
+      queryMode: request.nextUrl.searchParams.get('mode'),
+      cookieLocale: request.cookies.get('lang')?.value,
+      cookieMode: request.cookies.get('mode')?.value,
+      acceptLanguage: request.headers.get('accept-language'),
+    });
 
   const response = NextResponse.next();
 

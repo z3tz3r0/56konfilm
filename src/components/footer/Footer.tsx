@@ -17,7 +17,7 @@ const Footer = ({ settings }: FooterProps) => {
 
   return (
     <footer className="bg-foreground text-background p-4">
-      <section className="container grid max-w-[1280px] grid-cols-3 gap-y-16">
+      <section className="container mx-auto grid max-w-[1280px] grid-cols-3 gap-y-16">
         <div id="company-details" className="col-span-3">
           <h4>{companyTitle}</h4>
           <address>{address}</address>
@@ -38,8 +38,8 @@ const Footer = ({ settings }: FooterProps) => {
             ))}
           </p>
         </div>
-        <p className="col-span-3">{companyTitle} || All right reserved ©</p>
       </section>
+      <p className="col-span-3">{companyTitle} || All right reserved ©</p>
     </footer>
   );
 };

@@ -11,6 +11,7 @@ export const structure: StructureResolver = (S) =>
         .child(S.document().schemaType('settings').documentId('settings')),
       S.divider(),
       ...S.documentTypeListItems().filter(
-        (item) => item.getId() !== 'settings'
+        (item) =>
+          item.getId() !== 'settings' && item.getId() !== 'cmsCredentials'
       ),
     ]);
