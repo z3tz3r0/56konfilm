@@ -14,11 +14,11 @@ A bilingual production-house portfolio built with Next.js and Sanity CMS. The si
 - **UI Layer**: React components (Next.js + Tailwind) map each section type to a design system element. Focus is on cinematic layouts, dark theme, high-contrast CTAs, and mobile-first responsiveness.
 
 ## Technology Stack
-- **Framework**: Next.js 15.x (App Router, Turbopack dev mode)
+- **Framework**: Next.js 16.x (App Router, Turbopack dev mode)
 - **CMS**: Sanity Studio (embedded at `/sanity-cms` with custom structure + localized workflow)
 - **Styling**: Tailwind CSS with `next/font` (Geist) and SVG/icon support
 - **Data Fetching**: `next-sanity` client with typed GROQ queries and server-side caching
-- **Tooling**: TypeScript, ESLint/Prettier (Tailwind plugin), npm scripts for lint/format/build
+- **Tooling**: TypeScript, ESLint/Prettier (Tailwind plugin), pnpm scripts for lint/format/build
 
 ## Highlights for Recruiters & Partners
 - Delivered a **fully modular marketing site** that enables non-technical editors to launch new service pages by mixing sections—no developer intervention required.
