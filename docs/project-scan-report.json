@@ -1,0 +1,39 @@
+{
+  "workflow_version": "1.2.0",
+  "timestamps": {
+    "started": "2026-01-26T20:11:10+07:00",
+    "last_updated": "2026-01-26T20:11:10+07:00"
+  },
+  "mode": "initial_scan",
+  "scan_level": "deep",
+  "project_root": "/home/z3tz3r0/Projects/56konfilm",
+  "output_folder": "/home/z3tz3r0/Projects/56konfilm/docs",
+  "completed_steps": [
+    {
+      "step": "step_1",
+      "status": "completed",
+      "timestamp": "2026-01-26T20:13:00+07:00",
+      "summary": "Classified as monolith with 1 part (web)"
+    }
+  ],
+  "current_step": "step_2",
+  "findings": {
+    "project_classification": {
+      "repository_type": "monolith",
+      "parts_count": 1,
+      "primary_tech": "Next.js, TypeScript, Sanity",
+      "project_parts": [
+        {
+          "part_id": "web",
+          "project_type_id": "web",
+          "display_name": "Web Application",
+          "root_path": "/home/z3tz3r0/Projects/56konfilm"
+        }
+      ]
+    }
+  },
+  "outputs_generated": [
+    "project-scan-report.json"
+  ],
+  "resume_instructions": "Starting from step 1"
+}

@@ -41,7 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 # GEMINI CLI
-GEMINI.md
-AGENTS.md
+# AGENTS.md and GEMINI.md are now allowed for documentation purposes.
 
 .cursor
