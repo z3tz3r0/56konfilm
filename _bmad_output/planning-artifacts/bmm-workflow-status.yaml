@@ -1,0 +1,63 @@
+project_name: 56konfilm
+selected_track: bmad-method
+field_type: brownfield
+user_name: Z3tz3r0
+date_initialized: "2026-01-26T22:03:17+07:00"
+
+workflow_items:
+  - phase: 0
+    name: Documentation
+    status: completed
+    workflows:
+      - id: document-project
+        status: completed
+        note: Project scanned and documented in _bmad_output/docs/
+
+  - phase: 1
+    name: Analysis
+    status: active
+    workflows:
+      - id: product-brief
+        status: pending
+        agent: analyst
+        command: /bmad-bmm-workflows-create-product-brief
+        note: Strategic planning for section structure and user flow
+
+  - phase: 2
+    name: Planning
+    status: pending
+    workflows:
+      - id: prd
+        status: pending
+        agent: pm
+        command: /bmad-bmm-workflows-prd
+      - id: create-ux-design
+        status: pending
+        agent: ux-designer
+        command: /bmad-bmm-workflows-create-ux-design
+
+  - phase: 3
+    name: Solutioning
+    status: pending
+    workflows:
+      - id: create-architecture
+        status: pending
+        agent: architect
+        command: /bmad-bmm-workflows-create-architecture
+      - id: create-epics-and-stories
+        status: pending
+        agent: pm
+        command: /bmad-bmm-workflows-create-epics-and-stories
+      - id: implementation-readiness
+        status: pending
+        agent: architect
+        command: /bmad-bmm-workflows-check-implementation-readiness
+
+  - phase: 4
+    name: Implementation
+    status: pending
+    workflows:
+      - id: sprint-planning
+        status: pending
+        agent: sm
+        command: /bmad-bmm-workflows-sprint-planning
