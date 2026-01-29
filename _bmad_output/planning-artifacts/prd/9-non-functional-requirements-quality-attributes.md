@@ -6,8 +6,8 @@
 *   **NFR-3 (Transition):** Visual delay **<= 300ms**; CLS < 0.1.
 
 ## SEO & Discoverability
-*   **NFR-4 (Indexability):** 100% of Landing Pages use **ISR/SSR**.
+*   **NFR-4 (Indexability):** 100% of Landing Pages use **SEO-friendly pre-rendering strategy**.
 *   **NFR-5 (Structured Data):** Valid `VideoObject` schema on Detail pages.
 
 ## Integration
-*   **NFR-6 (Standard Video):** Use optimized HTML5 video without external heavy player libraries.
+*   **NFR-6 (Standard Video):** Use optimized standard video playback without external heavy player libraries.

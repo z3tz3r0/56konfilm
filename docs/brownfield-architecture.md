@@ -10,7 +10,7 @@
 - Maintain parity between the hi-fi mocks stored in `public/high-frame/*.png` and the implemented UI.
 
 ## Technology Stack Overview
-- **Framework**: Next.js 15 (App Router) with React 19.
+- **Framework**: Next.js 16+ (App Router) with React 19.
 - **Language**: TypeScript.
 - **Styling**: Tailwind CSS 4 with custom utilities defined in `src/app/globals.css`.
 - **CMS**: Sanity v4 with the `internationalized-array` plugin for localization.
