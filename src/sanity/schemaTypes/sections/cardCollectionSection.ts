@@ -1,6 +1,6 @@
 import { defineField, defineType } from 'sanity';
-import { localizedStringField, localizedTextField } from '../objects/localized';
 import { cardItemType } from '../objects/cardItem';
+import { localizedStringField, localizedTextField } from '../objects/localized';
 
 export const cardCollectionSectionType = defineType({
   name: 'cardCollectionSection',

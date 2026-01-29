@@ -1,7 +1,7 @@
 import { defineField, defineType } from 'sanity';
+import { backgroundMediaType } from '../objects/backgroundMedia';
 import { ctaType } from '../objects/cta';
 import { localizedStringField } from '../objects/localized';
-import { backgroundMediaType } from '../objects/backgroundMedia';
 
 export const heroSectionType = defineType({
   name: 'heroSection',
