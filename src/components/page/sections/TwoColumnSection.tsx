@@ -28,7 +28,7 @@ export default function TwoColumnSection({ block }: TwoColumnSectionProps) {
           )}
         >
           {block.content?.eyebrow ? (
-            <span className="text-primary text-xl font-black tracking-[0.2em] break-words uppercase md:text-2xl">
+            <span className="text-primary text-xl font-black tracking-[0.2em] wrap-break-word uppercase md:text-2xl">
               {block.content.eyebrow}
             </span>
           ) : null}
@@ -38,7 +38,7 @@ export default function TwoColumnSection({ block }: TwoColumnSectionProps) {
             </h2>
           ) : null}
           {block.content?.body ? (
-            <p className="text-muted-foreground text-base leading-relaxed text-pretty break-words">
+            <p className="text-muted-foreground text-base leading-relaxed text-pretty wrap-break-word">
               {block.content.body}
             </p>
           ) : null}
