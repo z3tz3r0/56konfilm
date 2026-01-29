@@ -49,6 +49,7 @@ export interface ContentCta {
 }
 
 export interface MediaItem {
+  _key?: string;
   image?: SanityImageSource;
   alt?: string;
 }
@@ -93,6 +94,7 @@ export interface CardCollectionSectionBlock extends BaseBlock {
   columns?: number;
   background?: string;
   cards?: Array<{
+    _key?: string;
     title?: string;
     body?: string;
     icon?: SanityImageSource;
@@ -111,6 +113,7 @@ export interface TimelineSectionBlock extends BaseBlock {
     align?: string;
   };
   steps?: Array<{
+    _key?: string;
     order?: number;
     title?: string;
     description?: string;
@@ -128,6 +131,7 @@ export interface MediaGallerySectionBlock extends BaseBlock {
     align?: string;
   };
   items?: Array<{
+    _key?: string;
     media?: MediaItem;
     label?: string;
   }>;

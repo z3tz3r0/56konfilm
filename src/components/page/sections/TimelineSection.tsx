@@ -1,5 +1,5 @@
-import SectionShell from '@/components/page/SectionShell';
 import CtaGroup from '@/components/page/CtaGroup';
+import SectionShell from '@/components/page/SectionShell';
 import { getAlignmentClass } from '@/components/page/utils';
 import { cn } from '@/lib/utils';
 import { TimelineSectionBlock } from '@/types/sanity';
@@ -31,7 +31,7 @@ export default function TimelineSection({ block }: TimelineSectionProps) {
         {steps.length ? (
           <ol className="relative grid gap-8 md:grid-cols-2">
             {steps.map((step, index) => (
-              <li key={`${step.title ?? index}-${step.order}`} className="flex h-full flex-col gap-3">
+              <li key={step._key ?? index} className="flex h-full flex-col gap-3">
                 <div className="flex items-center gap-3">
                   <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
                     {step.order ?? index + 1}

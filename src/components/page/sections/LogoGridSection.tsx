@@ -24,7 +24,7 @@ export default function LogoGridSection({ block }: LogoGridSectionProps) {
 
               return (
                 <div
-                  key={logo.alt ?? index}
+                  key={logo._key ?? index}
                   className="relative flex h-16 w-40 items-center justify-center opacity-80 transition hover:opacity-100"
                 >
                   <Image

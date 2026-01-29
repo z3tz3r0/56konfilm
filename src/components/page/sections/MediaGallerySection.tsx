@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
-import SectionShell from '@/components/page/SectionShell';
 import CtaGroup from '@/components/page/CtaGroup';
+import SectionShell from '@/components/page/SectionShell';
 import { getAlignmentClass } from '@/components/page/utils';
 import { cn } from '@/lib/utils';
 import { urlFor } from '@/sanity/lib/image';
@@ -40,10 +40,10 @@ export default function MediaGallerySection({ block }: MediaGallerySectionProps)
 
               return (
                 <figure
-                  key={item.media?.alt ?? item.label ?? index}
+                  key={item._key ?? index}
                   className="group relative overflow-hidden rounded-2xl border border-border/60 bg-background shadow-sm"
                 >
-                  <div className="relative aspect-[4/3]">
+                  <div className="relative aspect-4/3">
                     <Image
                       src={urlFor(image).width(720).height(540).quality(80).fit('clip').url()}
                       alt={item.media?.alt ?? item.label ?? 'Gallery item'}

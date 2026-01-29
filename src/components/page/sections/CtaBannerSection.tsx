@@ -37,7 +37,7 @@ export default function CtaBannerSection({ block }: CtaBannerSectionProps) {
           </div>
           {block.media?.image ? (
             <div className={cn('order-2', mediaColumnOrder)}>
-              <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-border/40 bg-background">
+              <div className="relative aspect-4/3 overflow-hidden rounded-3xl border border-border/40 bg-background">
                 <Image
                   src={urlFor(block.media.image).width(960).height(720).quality(80).fit('clip').url()}
                   alt={block.media.alt ?? ''}
