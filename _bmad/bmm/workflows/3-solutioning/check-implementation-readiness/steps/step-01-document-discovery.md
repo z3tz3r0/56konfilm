@@ -1,16 +1,23 @@
 ---
-name: 'step-01-document-discovery'
-description: 'Discover and inventory all project documents, handling duplicates and organizing file structure'
-
-# Path Definitions
-workflow_path: '{project-root}/_bmad/bmm/workflows/3-solutioning/implementation-readiness'
-
-# File References
-thisStepFile: './step-01-document-discovery.md'
-nextStepFile: './step-02-prd-analysis.md'
-workflowFile: '{workflow_path}/workflow.md'
-outputFile: '{planning_artifacts}/implementation-readiness-report-{{date}}.md'
-templateFile: '{workflow_path}/templates/readiness-report-template.md'
+stepsCompleted:
+  - step-01-document-discovery
+  - step-02-prd-analysis
+  - step-03-epic-coverage-validation
+  - step-04-ux-alignment
+  - step-05-epic-quality-review
+  - step-06-final-assessment
+inputDocuments:
+  - _bmad_output/planning-artifacts/prd/index.md
+  - _bmad_output/planning-artifacts/architecture/index.md
+  - _bmad_output/planning-artifacts/ux-design-specification/index.md
+  - _bmad_output/planning-artifacts/epics/index.md
+workflowType: 'implementation-readiness'
+lastStep: 6
+status: 'complete'
+completedAt: '2026-01-29T21:55:00+07:00'
+project_name: '56konfilm'
+user_name: 'Z3tz3r0'
+date: '2026-01-29T21:55:00+07:00'
 ---
 
 # Step 1: Document Discovery
