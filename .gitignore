@@ -45,3 +45,5 @@ GEMINI.md
 AGENTS.md
 
 .cursor
+.gemini/
+gha-creds-*.json
