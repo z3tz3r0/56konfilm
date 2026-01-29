@@ -1,10 +1,10 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState, useTransition } from 'react';
+import { useEffect, useRef, useTransition } from 'react';
 
+import { useMode } from '@/hooks/useMode';
 import { type SiteMode } from '@/lib/preferences';
 import { cn } from '@/lib/utils';
 
@@ -16,26 +16,29 @@ interface ModeSwitcherProps {
   className?: string;
 }
 
-const MODE_TO_THEME: Record<SiteMode, 'dark' | 'light'> = {
-  production: 'dark',
-  wedding: 'light',
-};
-
 export const ModeSwitcher = ({
   initialMode,
   homeSlugs,
   className,
 }: ModeSwitcherProps) => {
   const router = useRouter();
-  const { setTheme } = useTheme();
   const [isPending, startTransition] = useTransition();
 
-  // Local, optimistic display state
-  const [displayMode, setDisplayMode] = useState<SiteMode>(initialMode);
+  // Use the global store hook instead of local state
+  const { mode: displayMode, setMode: setGlobalMode } = useMode();
 
   // Keep in sync when the server-provided initialMode changes after navigation
   useEffect(() => {
-    setDisplayMode(initialMode);
+    // ⚠️ CRITICAL: Only update displayMode via store. Do NOT call logic with side-effects here
+    // as it will disrupt the smooth slide animation.
+    // However, since useMode handles side effects, we just ensure store is in sync
+    // if parent passes a new initialMode that differs from store.
+    if (initialMode) {
+      // Intentionally NOT calling setMode here to avoid recursive side-effects/rendering loops
+      // relying on ModeProvider to set the initial state is safer.
+      // This effect is kept for reference to existing logic pattern but might be redundant
+      // if ModeProvider works correctly.
+    }
   }, [initialMode]);
 
   // Defer navigation until after the slide animation completes
@@ -46,10 +49,8 @@ export const ModeSwitcher = ({
     if (isPending) return;
     if (navTimerRef.current) return; // ignore double-taps while a nav is scheduled
 
-    // Optimistically update UI and theme immediately
-    setDisplayMode(nextMode);
-    document.cookie = `mode=${nextMode}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
-    setTheme(MODE_TO_THEME[nextMode]);
+    // Update Global State (Zustand + Cookie + Theme + Attribute)
+    setGlobalMode(nextMode);
 
     const targetSlug = homeSlugs[nextMode];
     const targetPath = targetSlug ? `/${targetSlug}` : '/';
@@ -64,6 +65,7 @@ export const ModeSwitcher = ({
 
   return (
     <motion.div
+      data-testid="mode-switcher"
       className={cn(
         'relative grid h-11 w-64 grid-cols-2 items-center rounded-md p-1',
         className

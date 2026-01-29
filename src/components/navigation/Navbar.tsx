@@ -5,11 +5,11 @@ import { SiteSettings } from '@/types/siteSettings';
 import { Menu } from 'lucide-react';
 import { Button } from '../ui/button';
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
 } from '../ui/sheet';
 import { ModeSwitcher } from './ModeSwitcher';
 
@@ -30,10 +30,11 @@ const Navbar = async ({ mode, settings, homeSlugs }: NavbarProps) => {
         </Link>
 
         <Sheet>
-          <SheetTrigger asChild className="justify-self-end md:hidden">
+            <SheetTrigger asChild className="justify-self-end md:hidden">
             <Button
               variant="ghost"
               size="icon"
+              data-testid="mobile-menu-button"
               className={
                 mode === 'production' ? '' : 'text-secondary hover:text-primary'
               }

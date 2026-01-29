@@ -1,6 +1,9 @@
+import { ModeProvider } from '@/components/providers/ModeProvider'; // Import wrapping provider
 import { ThemeProvider } from '@/components/ui/theme-provider';
+import { SiteMode } from '@/lib/preferences';
 import type { Metadata } from 'next';
 import { Cormorant_Garamond, Manrope, Sora } from 'next/font/google';
+import { cookies } from 'next/headers';
 import './globals.css';
 
 const sora = Sora({
@@ -28,8 +31,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Read initial mode from cookie, defaulting to 'production' if not found
+  const cookieStore = await cookies();
+  const initialMode = (cookieStore.get('mode')?.value as SiteMode) || 'production';
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    // Add data-mode attribute for CSS variable selector matching
+    <html lang="en" suppressHydrationWarning data-mode={initialMode}>
       <body
         className={`${sora.variable} ${cormorantGaramond.variable} ${manrope.variable} font-body antialiased`}
       >
@@ -39,7 +47,10 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          {/* Synchronize store with server state to prevent hydration mismatch */}
+          <ModeProvider initialMode={initialMode}>
+            {children}
+          </ModeProvider>
         </ThemeProvider>
       </body>
     </html>
