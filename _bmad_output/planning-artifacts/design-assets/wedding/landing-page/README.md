@@ -1,0 +1,1 @@
+- testimonial section is carousel with left and right arrow to navigate between testimonials. it should show 1 testimonial at a time.

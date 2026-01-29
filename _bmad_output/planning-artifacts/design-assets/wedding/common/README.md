@@ -1,0 +1,1 @@
+- footer section is similar to production's footer except the font and it's background color change.
