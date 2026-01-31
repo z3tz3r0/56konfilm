@@ -160,7 +160,25 @@ Notes:
 - Curtain masking is completion-driven (cover signal + navigation settle) rather than timeouts.
 - E2E tests validate `curtain-wipe`, `data-mode`, and color expectations across browsers/devices.
 
+## Senior Developer Review (AI) - Round 3
+
+Date: 2026-01-31
+
+Outcome: Approved (no required changes)
+
+Summary:
+- High: 0
+- Medium: 0
+- Low: 4
+
+Notes:
+- Optional hardening: `GlobalTransition` reads `--duration-*` only once on mount; if durations ever become mode-specific, refresh them when a transition starts.
+- Optional hardening: parsing `--duration-*` via `parseFloat()` assumes seconds; if values ever change to `ms` tokens, add a small parser to normalize units.
+- Optional test hardening: scope `global-transition.spec.ts` button clicks to `data-testid="mode-switcher"` to avoid ambiguous matches if other "Wedding"/"Production" buttons appear later.
+- Optional test clarity: rename or strengthen “should not show FOUC during transition” to assert an observable no-flash guarantee (currently it only validates curtain color + reported `data-mode`).
+
 ## Change Log
 
 - 2026-01-31: Senior Developer Review (AI) completed. Status set to `in-progress`. 9 follow-ups created.
 - 2026-01-31: Fixes applied; `npm run test:e2e` passed (24/24). Status set to `done`.
+- 2026-01-31: Senior Developer Review (AI) Round 3 completed. Outcome: Approved (no required changes).
