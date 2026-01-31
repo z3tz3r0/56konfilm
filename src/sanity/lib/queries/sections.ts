@@ -5,6 +5,7 @@ export const HERO_SECTION = groq`
   _type == "heroSection" => {
     "title": ${LOCALIZED('title')},
     "tagline": ${LOCALIZED('tagline')},
+    "parallaxText": ${LOCALIZED('parallaxText')},
     "backgroundMedia": backgroundMedia.mediaAsset[]{
       ${MEDIA_ASSET_PROJECTION}
     },

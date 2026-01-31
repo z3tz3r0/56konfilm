@@ -10,6 +10,11 @@ export const heroSectionType = defineType({
   fields: [
     localizedStringField({ name: 'title', title: 'Title', description: 'หัวข้อของ Hero Section' }),
     localizedStringField({ name: 'tagline', title: 'Tagline', description: 'คำโปรยของ Hero Section' }),
+    localizedStringField({
+      name: 'parallaxText',
+      title: 'Parallax Text',
+      description: 'ข้อความสำหรับ Effect Parallax ("WE SHOOT HARD")',
+    }),
     defineField({
       name: 'backgroundMedia',
       title: 'Background Media',
