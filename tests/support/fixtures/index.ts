@@ -31,7 +31,8 @@ export const test = base.extend<SiteFixtures>({
         }, mode);
       }
       await page.goto('/'); 
-      await page.waitForLoadState('networkidle');
+      // `networkidle` is flaky in Next dev (long-lived connections); prefer deterministic readiness.
+      await page.waitForLoadState('domcontentloaded');
     };
     await use(setModeFunc);
   },

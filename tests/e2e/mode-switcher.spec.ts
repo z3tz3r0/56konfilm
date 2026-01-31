@@ -30,12 +30,19 @@ test.describe('Global Mode Switcher', () => {
       await page.getByTestId('mobile-menu-button').click();
     }
 
-    // 2. Find Mode Switcher (use .visible() to avoid strict mode issues between desktop/mobile versions)
+    // 2. Find Mode Switcher and specifically click the "Wedding" button
+    // Using hasText to target the specific button within the switcher
     const switcher = page.getByTestId('mode-switcher').filter({ visible: true });
     await expect(switcher).toBeVisible();
 
+    const weddingBtn = switcher.getByRole('button', { name: 'Wedding' });
+    await expect(weddingBtn).toBeEnabled();
+    
     // 3. Click to switch
-    await switcher.click();
+    await weddingBtn.click();
+    
+    // Wait for navigation and state settling (transition duration + network)
+    await page.waitForLoadState('domcontentloaded');
 
     // 4. Verify theme changed on html
     await expect(page.locator('html')).toHaveClass(/light/, { timeout: 15000 });
