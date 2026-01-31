@@ -7,19 +7,21 @@ import { Cormorant_Garamond, Manrope, Sora } from 'next/font/google';
 import { cookies } from 'next/headers';
 import './globals.css';
 
+// Sora supports Latin + Thai through fallback to system fonts
+// For full Thai support, tailwind.config uses font-sans with Thai-capable system stack
 const sora = Sora({
   variable: '--font-sora',
-  subsets: ['latin'],
+  subsets: ['latin', 'latin-ext'],
 });
 
 const cormorantGaramond = Cormorant_Garamond({
   variable: '--font-cormorant-garamond',
-  subsets: ['latin'],
+  subsets: ['latin', 'latin-ext'],
 });
 
 const manrope = Manrope({
   variable: '--font-manrope',
-  subsets: ['latin'],
+  subsets: ['latin', 'latin-ext'],
 });
 
 export const metadata: Metadata = {
