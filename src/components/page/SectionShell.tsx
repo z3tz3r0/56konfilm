@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import { urlFor } from '@/sanity/lib/image';
 import { BackgroundMediaItem } from '@/types/sanity';
+import VideoLoop from './sections/hero/VideoLoop';
 
 const backgroundVariants: Record<string, string> = {
   default: '',
@@ -18,6 +19,8 @@ interface SectionShellProps {
   disablePadding?: boolean;
   className?: string;
   children: ReactNode;
+  videoPriority?: boolean; // Hero should use true, others false
+  enableVideoObserver?: boolean; // Enable IntersectionObserver for non-hero sections
 }
 
 export default function SectionShell({
@@ -27,6 +30,8 @@ export default function SectionShell({
   disablePadding = false,
   className,
   children,
+  videoPriority = false,
+  enableVideoObserver = false,
 }: SectionShellProps) {
   const backgroundClass =
     backgroundVariants[background ?? 'default'] ?? backgroundVariants.default;
@@ -59,27 +64,20 @@ export default function SectionShell({
       {shouldRenderMedia ? (
         <div className="absolute inset-0 -z-10">
           {videoAsset?.url ? (
-            <video
-              className="absolute inset-0 h-full w-full object-cover"
-              autoPlay
-              playsInline
-              muted
-              loop
-              preload="auto"
-              poster={posterUrl}
-            >
-              <source
-                src={videoAsset.url}
-                type={videoAsset.mimeType ?? 'video/mp4'}
-              />
-            </video>
-          ) : null}
-          {!videoAsset?.url && posterUrl ? (
+            <VideoLoop
+              url={videoAsset.url}
+              mimeType={videoAsset.mimeType}
+              posterUrl={posterUrl}
+              className="absolute inset-0"
+              priority={videoPriority}
+              enableObserver={enableVideoObserver}
+            />
+          ) : posterUrl ? (
             <Image
               src={posterUrl}
               alt="Section background"
               fill
-              priority
+              priority={videoPriority}
               className="object-cover"
               sizes="100vw"
             />

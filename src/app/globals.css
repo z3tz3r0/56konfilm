@@ -201,4 +201,8 @@
   address {
     font-style: normal;
   }
+
+  .hero-overlay {
+    @apply bg-gradient-to-b from-background/70 via-background/40 to-background/75;
+  }
 }

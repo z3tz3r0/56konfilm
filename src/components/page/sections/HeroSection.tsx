@@ -1,6 +1,7 @@
 import { HeroSectionBlock } from '@/types/sanity';
 import CtaGroup from '../CtaGroup';
 import SectionShell from '../SectionShell';
+import ParallaxText from './hero/ParallaxText';
 
 interface HeroSectionProps {
   block: HeroSectionBlock;
@@ -11,9 +12,16 @@ export default function HeroSection({ block }: HeroSectionProps) {
     <SectionShell
       className="flex h-screen items-center justify-center"
       media={block.backgroundMedia ?? null}
-      overlayClassName="bg-gradient-to-b from-black/70 via-black/40 to-black/75"
+      overlayClassName="hero-overlay"
+      videoPriority={true}
     >
-      <div className="container mx-auto flex max-w-7xl flex-col items-center gap-6 text-center text-white">
+      {block.parallaxText ? (
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+          <ParallaxText>{block.parallaxText}</ParallaxText>
+        </div>
+      ) : null}
+
+      <div className="container relative z-10 mx-auto flex max-w-7xl flex-col items-center gap-6 text-center text-white">
         {block.title ? (
           <h1 className="text-3xl tracking-tight text-balance md:text-5xl">
             {block.title}
