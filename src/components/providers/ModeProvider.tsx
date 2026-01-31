@@ -2,7 +2,7 @@
 
 import { useModeStore } from '@/hooks/useMode';
 import { SiteMode } from '@/lib/preferences';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useRef } from 'react';
 
 interface ModeProviderProps {
   children: ReactNode;
@@ -12,14 +12,18 @@ interface ModeProviderProps {
 /**
  * ModeProvider
  * - Hydrates the Zustand store with server-side implementation mode (from cookie)
- * - Prevents hydration mismatch by syncing initial state
+ * - Prevents hydration mismatch by syncing initial state immediately via useRef guard
  */
 export const ModeProvider = ({ children, initialMode }: ModeProviderProps) => {
-  // Always update the store with the server-supplied mode on mount/change
-  // This ensures the client store matches what the server rendered
-  useEffect(() => {
+  // Use a safe initialization pattern to avoid "Cannot update a component while rendering a different component"
+  // We initialize the store state directly if it hasn't been set yet to match server state
+  // This is safe because useModeStore is external to the component tree
+  const initialized = useRef(false);
+  
+  if (!initialized.current) {
     useModeStore.setState({ mode: initialMode });
-  }, [initialMode]);
+    initialized.current = true;
+  }
 
   return <>{children}</>;
 };
