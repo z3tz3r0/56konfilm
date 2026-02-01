@@ -55,6 +55,7 @@ export interface MediaItem {
 }
 
 export interface BackgroundMediaItem {
+  _key?: string;
   _type: string;
   url?: string;
   mimeType?: string;

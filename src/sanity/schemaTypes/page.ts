@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity';
+import { localizedStringField } from './objects/localized';
 
 export const pageType = defineType({
   name: 'page',
@@ -9,11 +10,10 @@ export const pageType = defineType({
     { name: 'seo', title: 'SEO' },
   ],
   fields: [
-    defineField({
+    localizedStringField({
       name: 'page',
       title: 'Page Name',
       description: 'ชื่อหน้า',
-      type: 'string',
       group: 'content',
     }),
     defineField({
@@ -59,17 +59,16 @@ export const pageType = defineType({
         { type: 'ctaBannerSection' },
       ],
     }),
-    defineField({
+    localizedStringField({
       name: 'seoTitle',
       title: 'SEO Title',
       description: 'หัวข้อ SEO',
-      type: 'string',
       group: 'seo',
     }),
   ],
   preview: {
     select: {
-      title: 'page',
+      title: 'page.0.value',
       slug: 'slug.current',
     },
     prepare({ title, slug }) {

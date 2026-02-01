@@ -2,13 +2,13 @@ import { createClient, groq } from 'next-sanity';
 import { apiVersion, dataset, projectId } from '../env';
 import { LOCALIZED } from './queries/fragments';
 import {
-  CARD_COLLECTION_SECTION,
-  CTA_BANNER_SECTION,
-  HERO_SECTION,
-  LOGO_GRID_SECTION,
-  MEDIA_GALLERY_SECTION,
-  TIMELINE_SECTION,
-  TWO_COLUMN_SECTION,
+    CARD_COLLECTION_SECTION,
+    CTA_BANNER_SECTION,
+    HERO_SECTION,
+    LOGO_GRID_SECTION,
+    MEDIA_GALLERY_SECTION,
+    TIMELINE_SECTION,
+    TWO_COLUMN_SECTION,
 } from './queries/sections';
 
 export const client = createClient({
@@ -74,9 +74,9 @@ export const modeHomeSlugsQuery = groq`
 
 export const pageBySlugQuery = groq`
   *[_type == "page" && slug.current == $slug && siteMode == $mode][0] {
-    "title": page,
+    "title": ${LOCALIZED('page')},
     "slug": slug.current,
-    seoTitle,
+    "seoTitle": ${LOCALIZED('seoTitle')},
     siteMode,
     contentBlocks[]{
       _key,
