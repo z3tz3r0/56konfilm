@@ -26,14 +26,18 @@ export const backgroundMediaType = defineType({
       ],
       validation: (Rule) => Rule.max(2).custom((items) => {
         if (!items || items.length === 0) return true;
-        if (items.length === 1) return true;
-        if (items.length === 2) {
-          const hasVideo = items.some((item: any) => item._type === 'file');
-          const hasImage = items.some((item: any) => item._type === 'image');
-          if (hasVideo && hasImage) return true;
-          return 'When using 2 items, must be 1 video + 1 image (for poster)';
+        
+        const images = items.filter((item: any) => item?._type === 'image');
+        const videos = items.filter((item: any) => item?._type === 'backgroundVideo');
+
+        if (videos.length > 1) return 'Only 1 video allowed';
+        if (images.length > 1) return 'Only 1 poster image allowed';
+        
+        if (videos.length > 0 && images.length === 0) {
+          return 'Video MUST be paired with a poster image for blur-up effect';
         }
-        return 'Maximum 2 items allowed';
+
+        return true;
       }),
     }),
   ],

@@ -71,6 +71,7 @@ export default function VideoLoop({
           'absolute inset-0 h-full w-full object-cover transition-opacity duration-700',
           isLoaded ? 'opacity-100' : 'opacity-0'
         )}
+        autoPlay
         muted
         loop
         playsInline

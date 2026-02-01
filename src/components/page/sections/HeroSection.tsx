@@ -14,6 +14,7 @@ export default function HeroSection({ block }: HeroSectionProps) {
       media={block.backgroundMedia ?? null}
       overlayClassName="hero-overlay"
       videoPriority={true}
+      enableVideoObserver={true}
     >
       {block.parallaxText ? (
         <div className="absolute inset-0 flex items-center justify-center overflow-hidden">

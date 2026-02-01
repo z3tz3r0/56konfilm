@@ -18,7 +18,7 @@ export const heroSectionType = defineType({
     defineField({
       name: 'backgroundMedia',
       title: 'Background Media',
-      description: 'เลือกรูปภาพหรือวิดีโอพื้นหลัง (รองรับเพียง 1 รายการ)',
+      description: 'เลือกรูปภาพหรือวิดีโอพื้นหลัง (รองรับ 1-2 รายการ: วิดีโอ + poster สำหรับ blur-up)',
       type: backgroundMediaType.name,
     }),
     defineField({ name: 'ctas', title: 'CTAs', description: 'ปุ่ม CTA', type: 'array', of: [{ type: ctaType.name }] }),

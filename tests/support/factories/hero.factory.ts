@@ -6,7 +6,7 @@ export const createHeroSection = (overrides: Partial<HeroSectionBlock> = {}): He
   parallaxText: 'WE SHOOT HARD',
   backgroundMedia: [
     {
-      _type: 'file',
+      _type: 'backgroundVideo',
       url: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
       mimeType: 'video/mp4',
     },

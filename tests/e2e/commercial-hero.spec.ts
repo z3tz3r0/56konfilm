@@ -7,11 +7,17 @@ test.describe('Commercial Homepage - Brutal Loop', () => {
     await setMode('production');
     await page.goto(TEST_HERO_URL);
 
+    const poster = page.getByAltText('Section background').or(page.getByAltText('Video poster'));
+    // We expect poster to be present (blur-up)
+    await expect(poster).toBeAttached();
+
     const video = page.locator('video').first(); 
     await expect(video).toBeVisible({ timeout: 10000 });
+    await expect(video).toHaveAttribute('autoPlay', '');
     await expect(video).toHaveAttribute('muted', '');
     await expect(video).toHaveAttribute('loop', '');
     await expect(video).toHaveAttribute('playsinline', '');
+    await expect(video).not.toHaveAttribute('controls');
     
     // Check if it's playing
     await expect(async () => {
