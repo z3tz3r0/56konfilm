@@ -119,6 +119,7 @@ export interface TimelineSectionBlock extends BaseBlock {
     order?: number;
     title?: string;
     description?: string;
+    icon?: SanityImageSource;
   }>;
   cta?: ContentCta;
 }
@@ -147,6 +148,15 @@ export interface LogoGridSectionBlock extends BaseBlock {
   logos?: MediaItem[];
 }
 
+export interface SanityColor {
+  _type: 'color';
+  hex: string;
+  alpha: number;
+  hsl: { h: number; s: number; l: number; a: number };
+  hsv: { h: number; s: number; v: number; a: number };
+  rgb: { r: number; g: number; b: number; a: number };
+}
+
 export interface CtaBannerSectionBlock extends BaseBlock {
   _type: 'ctaBannerSection';
   background?: string;
@@ -159,6 +169,16 @@ export interface CtaBannerSectionBlock extends BaseBlock {
   };
   media?: MediaItem;
   ctas?: ContentCta[];
+  customColors?: {
+    eyebrow?: SanityColor;
+    heading?: SanityColor;
+    body?: SanityColor;
+  };
+  overlay?: {
+    enabled: boolean;
+    color?: SanityColor;
+    opacity?: number;
+  };
 }
 
 export type PageContentBlock =

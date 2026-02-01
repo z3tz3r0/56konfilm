@@ -20,6 +20,13 @@ export const timelineStepType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     localizedTextField({ name: 'description', title: 'Description', description: 'คำอธิบายของขั้นตอน' }),
+    defineField({
+      name: 'icon',
+      title: 'Icon',
+      type: 'image',
+      description: 'ไอคอน PNG ของขั้นตอน',
+      options: { hotspot: true },
+    }),
   ],
   preview: {
     select: { title: 'title.0.value', order: 'order' },

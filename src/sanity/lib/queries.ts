@@ -20,6 +20,7 @@ export const client = createClient({
 });
 
 export const settingsQuery = groq`*[_type == "settings"][0] {
+    "favicon": favicon.asset->url,
     "siteTitle": ${LOCALIZED('siteTitle')},
     "productionNav": productionNav[]{
       "label": ${LOCALIZED('label')},
