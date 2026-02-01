@@ -166,6 +166,7 @@
   body {
     font-family:
       var(--font-manrope),
+      var(--font-noto-sans-thai),
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
@@ -178,7 +179,7 @@
   h2,
   h3,
   h4 {
-    font-family: var(--font-primary), 'Cormorant Garamond', serif;
+    font-family: var(--font-primary), 'Cormorant Garamond', var(--font-noto-sans-thai), serif;
     @apply leading-tight font-black text-balance;
   }
 

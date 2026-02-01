@@ -14,12 +14,14 @@ interface ModeSwitcherProps {
   initialMode: SiteMode;
   homeSlugs: ModeSlugMap;
   className?: string;
+  lang: 'en' | 'th';
 }
 
 export const ModeSwitcher = ({
   initialMode,
   homeSlugs,
   className,
+  lang,
 }: ModeSwitcherProps) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -58,7 +60,7 @@ export const ModeSwitcher = ({
       setGlobalMode(targetMode);
       
       const targetSlug = homeSlugs[targetMode as SiteMode];
-      const targetPath = targetSlug ? `/${targetSlug}` : '/';
+      const targetPath = targetSlug ? `/${lang}/${targetSlug}` : `/${lang}`;
       targetPathRef.current = targetPath;
       hasStartedTransition.current = true;
 

@@ -10,19 +10,21 @@ import { ReactNode } from 'react';
 
 interface SiteLayoutProps {
   children: ReactNode;
+  params: Promise<{ lang: 'en' | 'th' }>;
 }
 
-export default async function SiteLayout({ children }: SiteLayoutProps) {
-  const { locale, shouldPersistLocale, mode, shouldPersistMode } =
+export default async function SiteLayout({ children, params }: SiteLayoutProps) {
+  const { lang } = await params;
+  const { shouldPersistLocale, mode, shouldPersistMode } =
     await resolvePreferences();
 
   if (shouldPersistLocale || shouldPersistMode) {
     const cookieStore = await cookies();
 
-    if (shouldPersistLocale) {
+    if (shouldPersistLocale || cookieStore.get('lang')?.value !== lang) {
       cookieStore.set({
         name: 'lang',
-        value: locale,
+        value: lang,
         path: '/',
         maxAge: 60 * 60 * 24 * 365,
       });
@@ -42,7 +44,7 @@ export default async function SiteLayout({ children }: SiteLayoutProps) {
   const [settings, homeSlugs] = await Promise.all([
     client.fetch<SiteSettings>(
     settingsQuery,
-    { lang: locale },
+    { lang },
     // ตั้งค่า revalidation เพื่อให้ข้อมูลอัปเดตเป็นระยะ
     { next: { revalidate: 3600 } }
   ),
@@ -60,7 +62,7 @@ export default async function SiteLayout({ children }: SiteLayoutProps) {
 
   return (
     <div className="min-h-screen">
-      <Navbar mode={mode} settings={settings} homeSlugs={modeSlugMap} />
+      <Navbar mode={mode} settings={settings} homeSlugs={modeSlugMap} lang={lang} />
       <main>{children}</main>
       <Toaster />
       <Footer settings={settings} />
