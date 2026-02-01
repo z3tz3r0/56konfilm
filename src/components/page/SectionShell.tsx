@@ -16,6 +16,7 @@ interface SectionShellProps {
   background?: string;
   media?: BackgroundMediaItem[] | null;
   overlayClassName?: string;
+  overlayStyle?: React.CSSProperties;
   disablePadding?: boolean;
   className?: string;
   children: ReactNode;
@@ -27,6 +28,7 @@ export default function SectionShell({
   background,
   media,
   overlayClassName,
+  overlayStyle,
   disablePadding = false,
   className,
   children,
@@ -53,7 +55,7 @@ export default function SectionShell({
   return (
     <section
       className={cn(
-        'relative isolate overflow-hidden',
+        'relative isolate overflow-hidden w-full',
         paddingClass,
         backgroundClass,
         className
@@ -82,8 +84,11 @@ export default function SectionShell({
               sizes="100vw"
             />
           ) : null}
-          {overlayClassName ? (
-            <div className={cn('absolute inset-0', overlayClassName)} />
+          {overlayClassName || overlayStyle ? (
+            <div 
+              className={cn('absolute inset-0', overlayClassName)} 
+              style={overlayStyle}
+            />
           ) : null}
         </div>
       ) : null}

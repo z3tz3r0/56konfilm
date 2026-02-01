@@ -11,7 +11,7 @@ interface LogoGridSectionProps {
 export default function LogoGridSection({ block }: LogoGridSectionProps) {
   return (
     <SectionShell background={block.background}>
-      <div className="container space-y-10">
+      <div className="container mx-auto space-y-10">
         {block.title ? (
           <h2 className="text-center text-2xl font-medium text-muted-foreground">{block.title}</h2>
         ) : null}

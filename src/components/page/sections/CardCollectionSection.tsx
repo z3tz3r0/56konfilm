@@ -57,6 +57,7 @@ export default function CardCollectionSection({
                         .url()}
                       alt={card.title ?? 'Icon'}
                       fill
+                      sizes="48px"
                       className="object-cover"
                     />
                   </div>
