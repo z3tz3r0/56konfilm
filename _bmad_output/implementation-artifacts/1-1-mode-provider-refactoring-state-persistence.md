@@ -62,6 +62,8 @@ so that **I don't have to switch modes every time I refresh or return to the sit
   - [x] Verify E2E (`tests/e2e/mode-persistence.spec.ts`) passes.
   - [x] Reference `testing-conventions.md` for `toHaveClass` assertions (checking `data-mode` and `class="dark/light"`).
 
+
+
 - **Review Follow-ups (AI)**
   - [x] [AI-Review][HIGH] Ensure first-load sets `mode=production` cookie when missing (AC1 requires MUST). [src/hooks/useMode.ts:36]
   - [x] [AI-Review][HIGH] Eliminate theme/layout flash: ensure server markup applies correct theme class/variables for `production` (not just client `defaultTheme`). [src/app/layout.tsx:47]
@@ -69,10 +71,10 @@ so that **I don't have to switch modes every time I refresh or return to the sit
   - [x] [AI-Review][HIGH] Remove render-time side effect in `ModeProvider` (`useModeStore.setState` during render); move to effect/init-safe pattern. [src/components/providers/ModeProvider.tsx:20]
   - [x] [AI-Review][HIGH] Align styling strategy: either style via `[data-mode]` or guarantee `.dark` is present for production on first paint. [src/app/globals.css:71]
   - [x] ~~[AI-Review][HIGH] Make “defer navigation until after animation completes” true (don’t use `setTimeout(..., 0)`); sync with animation completion/duration.~~ **[WAIVED]** User strict constraint: Keep `setTimeout(..., 0)` for optimistic UI/cinematic feel.
-  - [ ] [AI-Review][MEDIUM] Update story “File List” to include untracked `tests/e2e/mode-persistence.spec.ts` and fix formatting for `vitest.config.ts`. [_bmad_output/implementation-artifacts/1-1-mode-provider-refactoring-state-persistence.md:110]
-  - [ ] [AI-Review][MEDIUM] Update “Implementation Status Analysis” table: it currently claims key files are missing, but they exist. [_bmad_output/implementation-artifacts/1-1-mode-provider-refactoring-state-persistence.md:73]
-  - [ ] [AI-Review][MEDIUM] Fix misleading comment about “data-theme helps next-themes” (this setup uses `attribute="class"`). [src/app/layout.tsx:46]
-  - [ ] [AI-Review][LOW] Remove unnecessary `await` on `cookies()` call for clarity. [src/app/layout.tsx:40]
+  - [x] [AI-Review][MEDIUM] Update story “File List” to include untracked `tests/e2e/mode-persistence.spec.ts` and fix formatting for `vitest.config.ts`. [_bmad_output/implementation-artifacts/1-1-mode-provider-refactoring-state-persistence.md:110]
+  - [x] [AI-Review][MEDIUM] Update “Implementation Status Analysis” table: it currently claims key files are missing, but they exist. [_bmad_output/implementation-artifacts/1-1-mode-provider-refactoring-state-persistence.md:73]
+  - [x] [AI-Review][MEDIUM] Fix misleading comment about “data-theme helps next-themes” (this setup uses `attribute="class"`). [src/app/layout.tsx:46]
+  - [x] ~~[AI-Review][LOW] Remove unnecessary `await` on `cookies()` call for clarity.~~ **[WAIVED]** Next.js 16 requires async `cookies()`. [src/app/layout.tsx:40]
 
 ## Dev Notes
 
@@ -86,10 +88,10 @@ so that **I don't have to switch modes every time I refresh or return to the sit
 
 | Component | Status | Action Required |
 |-----------|--------|-----------------|
-| `src/hooks/useMode.ts` | ❌ Missing | **Create New**. Must contain Zustand store and action logic. |
-| `src/components/providers/ModeProvider.tsx` | ❌ Missing | **Create New**. Client Component wrapper for hydration. |
-| `src/components/navigation/ModeSwitcher.tsx` | ⚠️ Needs Refactor | **Modify**. Remove `useState`/`document.cookie`. Replace with `useMode`. Preserve animation logic. |
-| `src/app/layout.tsx` | ⚠️ Needs Update | **Modify**. Read cookie headers. Wrap children with `ModeProvider` passing `initialMode`. |
+| `src/hooks/useMode.ts` | ✅ Implemented | **Create New**. Must contain Zustand store and action logic. |
+| `src/components/providers/ModeProvider.tsx` | ✅ Implemented | **Create New**. Client Component wrapper for hydration. |
+| `src/components/navigation/ModeSwitcher.tsx` | ✅ Refactored | **Modify**. Remove `useState`/`document.cookie`. Replace with `useMode`. Preserve animation logic. |
+| `src/app/layout.tsx` | ✅ Updated | **Modify**. Read cookie headers. Wrap children with `ModeProvider` passing `initialMode`. |
 
 ### Architecture Compliance
 - **State Management**: Zustand 5.0 (encapsulated in hook/store).
@@ -126,6 +128,7 @@ BMad Create-Story Workflow / Gemini 2.0 Flash (Quality Review Applied)
 - `src/components/navigation/ModeSwitcher.tsx`
 - `src/app/layout.tsx`
 - `vitest.config.ts`
+- `tests/e2e/mode-persistence.spec.ts`
 
 ## Senior Developer Review (AI)
 
@@ -156,3 +159,5 @@ Notes:
   - `src/hooks/useMode.test.ts`: 100% Pass (Vitest).
   - `tests/e2e/mode-persistence.spec.ts`: 100% Pass (Playwright) on Desktop (Chrome/Firefox) and Mobile Chrome. Robust mobile menu interaction logic implemented.
 - **Build:** Verified production build `npm run build` passes with no errors.
+
+

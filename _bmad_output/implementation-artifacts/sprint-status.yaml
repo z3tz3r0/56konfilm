@@ -43,8 +43,8 @@ development_status:
   epic-1: in-progress
   1-1-mode-provider-refactoring-state-persistence: done
   1-2-cinematic-layout-global-transitions: done
-  1-3-commercial-homepage-brutal-loop: in-progress
-  1-4-bilingual-seo-foundation-for-commercial: backlog
+  1-3-commercial-homepage-brutal-loop: done
+  1-4-bilingual-seo-foundation-for-commercial: done
   epic-1-retrospective: optional
 
   epic-2: backlog

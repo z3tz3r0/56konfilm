@@ -1,6 +1,6 @@
 # Story 1.3: Commercial Homepage Brutal Loop
 
-Status: in-progress
+Status: done
 
 ## Story
 
@@ -108,6 +108,9 @@ Antigravity (Claude 3.5 Sonnet)
 - **Accessibility:** Added `will-change: transform` for optimized parallax animations.
 - **Theming:** Replaced hardcoded overlay with mode-aware `hero-overlay` CSS class.
 - **i18n:** Added `latin-ext` font subsets for Thai character support.
+- **Schema Validation:** Tightened background media validation to specifically check `backgroundVideo` type.
+- **CMS Clarity:** Updated Hero background media description to reflect 1-2 items (video + poster).
+- **Test Fidelity:** Aligned test fixtures to `backgroundVideo` type and asserted no `controls` attribute.
 
 ### File List
 - src/sanity/schemaTypes/sections/heroSection.ts
@@ -130,6 +133,10 @@ Antigravity (Claude 3.5 Sonnet)
   - **HIGH:** Fixed Thai font support, updated test navigation strategy
   - **MEDIUM:** Added performance controls to VideoLoop, will-change CSS, mode-aware overlay
   - **LOW:** Fixed hero factory types, cleaned up test mocking
+- **2026-02-01 (Review Fixes - Round 2):** Refinements after re-review
+  - **MEDIUM:** Tightened schema validation + clarified Hero media description
+  - **MEDIUM:** Test fixtures now mirror `backgroundVideo` schema type
+  - **LOW:** Asserted decorative video (no `controls`) in E2E
 - **2026-01-31 (Initial):** Core implementation
   - **Feat:** Added `VideoLoop` and `ParallaxText` components
   - **Refactor:** `SectionShell` now uses `VideoLoop` for better performance

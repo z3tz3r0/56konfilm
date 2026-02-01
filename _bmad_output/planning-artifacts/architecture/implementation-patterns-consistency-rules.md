@@ -17,6 +17,10 @@ Queries are tiered to ensure performance and prevent context bloat:
 2.  **Sections** (`src/sanity/lib/queries/sections.ts`): Module-level projections for each Content Block (e.g., `HERO_SECTION`).
 3.  **Pages** (`src/sanity/lib/queries.ts`): The final assembly point in React Server Components where Fragments and Sections are composed into a single fetch.
 
+## Next.js 16 Specifics
+- **Proxy over Middleware:** Use `proxy.ts` (Next.js 16 convention) instead of deprecated `middleware.ts` for edge-runtime request interception.
+- **Path-based i18n:** Use `src/app/[lang]` routing pattern for best SEO (google `hreflang` compatibility).
+
 ## Enforcement Guidelines
 - **AI Agents MUST** verify if a Fragment exists before writing new projection logic.
 - **AI Agents MUST** update `src/types/sanity.ts` immediately after any query change.
