@@ -10,11 +10,12 @@ import { ReactNode } from 'react';
 
 interface SiteLayoutProps {
   children: ReactNode;
-  params: Promise<{ lang: 'en' | 'th' }>;
+  params: Promise<{ lang: string; slug: string }>;
 }
 
 export default async function SiteLayout({ children, params }: SiteLayoutProps) {
-  const { lang } = await params;
+  const { lang: rawLang } = await params;
+  const lang = rawLang as 'en' | 'th';
   const { shouldPersistLocale, mode, shouldPersistMode } =
     await resolvePreferences();
 
