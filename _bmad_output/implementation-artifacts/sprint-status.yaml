@@ -45,13 +45,14 @@ development_status:
   1-2-cinematic-layout-global-transitions: done
   1-3-commercial-homepage-brutal-loop: done
   1-4-bilingual-seo-foundation-for-commercial: done
-  epic-1-retrospective: optional
+  epic-1-retrospective: done
 
-  epic-2: backlog
-  2-1-enable-magazine-layouts-for-projects: backlog
-  2-2-upgrade-mediagallery-to-hybrid-video: backlog
-  2-3-project-navigation-cinematic-transitions: backlog
-  2-4-admin-multi-drag-and-drop-efficiency: backlog
+  epic-2: in-progress
+  2-0-design-and-performance-hardening: done
+  2-1-enable-magazine-layouts-for-projects: todo
+  2-2-upgrade-mediagallery-to-hybrid-video: todo
+  2-3-project-navigation-cinematic-transitions: todo
+  2-4-admin-multi-drag-and-drop-efficiency: todo
   epic-2-retrospective: optional
 
   epic-3: backlog

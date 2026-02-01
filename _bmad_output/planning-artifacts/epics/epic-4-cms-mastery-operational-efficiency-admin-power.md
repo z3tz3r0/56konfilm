@@ -8,6 +8,12 @@ As a **Content Admin**,
 I want **every page to automatically have the correct Title, Description, and OG Image**,
 So that **links shared on social media look professional and Google indexes the site correctly.**
 
+**CRITICAL DESIGN REQUIREMENT:**
+- **Strict Fidelity:** Even for technical stories, visual elements (like OGs, Validation UI) must align with the premium brand aesthetic.
+- **Reference Assets:** 
+  - Consult `_bmad_output/planning-artifacts/design-assets/` for any UI components touched.
+- **Admin UX:** The Sanity Studio interface itself should be clean, organized, and reflect the "Premium" feeling (custom desk structure).
+
 **Acceptance Criteria:**
 
 **Given** I create a new "Project" or "Page" in Sanity
