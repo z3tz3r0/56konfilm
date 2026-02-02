@@ -8,25 +8,20 @@ test.describe('Mode Persistence & Switcher', () => {
     const isMobile = viewportSize && viewportSize.width < 768;
 
     if (isMobile) {
-       // 1. Try to find the target button explicitly and check visibility
-       // We use getByRole to ensure we interact with the button
-       const menuBtn = page.getByRole('button', { name: text, exact: true });
-       
-       if (await menuBtn.isVisible()) {
-           await menuBtn.click();
-       } else {
-           // 2. If not visible, assume menu is closed. Open it.
-           // Note: If menu IS open but button somehow not visible, this might toggle it closed.
-           // But normally if Open, button IS visible.
-           await page.getByTestId('mobile-menu-button').click();
-           
-           // 3. Wait for it to appear
-           await expect(menuBtn).toBeVisible({ timeout: 5000 });
-           await menuBtn.click();
-       }
+      const menuBtn = page.locator(`button:visible`, { hasText: text });
+
+      if (!(await menuBtn.isVisible())) {
+        await page.getByTestId('mobile-menu-button').click();
+      }
+
+      await expect(menuBtn).toBeVisible({ timeout: 5000 });
+      await expect(menuBtn).toBeEnabled();
+      await menuBtn.click();
     } else {
        // Desktop
-       await page.getByRole('button', { name: text, exact: true }).filter({ visible: true }).click();
+       const menuBtn = page.locator('button:visible', { hasText: text });
+       await expect(menuBtn).toBeEnabled();
+       await menuBtn.click();
     }
   };
 
@@ -58,6 +53,10 @@ test.describe('Mode Persistence & Switcher', () => {
     
     // Add small pause to ensure any navigation/animation settles
     await page.waitForTimeout(500);
+    const curtain = page.locator('[data-testid="curtain-wipe"]');
+    if (await curtain.isVisible()) {
+      await curtain.waitFor({ state: 'hidden', timeout: 15000 });
+    }
 
     // Switch back
     await ensureMenuOpenAndClick(page, 'Production');

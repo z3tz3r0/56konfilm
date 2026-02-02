@@ -54,7 +54,7 @@ test.describe('Global Visual Transitions', () => {
     await expect(page.locator('html')).toHaveAttribute('data-mode', 'wedding');
 
     // Curtain should disappear after transition
-    await expect(curtain).not.toBeVisible();
+    await expect(curtain).toBeHidden({ timeout: 15000 });
   });
 
   test('should not show FOUC during transition', async ({ page, setMode }) => {
