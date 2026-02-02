@@ -1,4 +1,4 @@
-import { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import { SanityImageSource } from '@sanity/image-url';
 
 export interface I18nArrayItem<T> {
   _key: string;
@@ -13,6 +13,11 @@ export interface RawProject {
   siteMode: 'production' | 'wedding';
   slug: { current: string };
   coverImage: SanityImageSource;
+  // Metadata for Magazine Layout
+  client?: string;
+  services?: string[];
+  year?: string;
+  contentBlocks?: PageContentBlock[];
 }
 
 // --- Data after resolving language in GROQ ---
@@ -23,6 +28,11 @@ export interface Project {
   siteMode: ('production' | 'wedding')[];
   slug: string;
   coverImage: SanityImageSource;
+  // Magazine Layout Fields
+  client?: string;
+  services?: string[];
+  year?: string;
+  contentBlocks?: PageContentBlock[];
 }
 
 export type SiteMode = 'production' | 'wedding';

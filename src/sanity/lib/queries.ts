@@ -92,3 +92,28 @@ export const pageBySlugQuery = groq`
     }
   }
 `;
+
+export const projectBySlugQuery = groq`
+  *[_type == "project" && slug.current == $slug && $mode in siteMode][0] {
+    _id,
+    "title": ${LOCALIZED('title')},
+    "overview": ${LOCALIZED('overview')},
+    "slug": slug.current,
+    siteMode,
+    client,
+    year,
+    services,
+    coverImage,
+    contentBlocks[]{
+      _key,
+      _type,
+      ${HERO_SECTION},
+      ${TWO_COLUMN_SECTION},
+      ${MEDIA_GALLERY_SECTION},
+      ${LOGO_GRID_SECTION},
+      ${CTA_BANNER_SECTION},
+      ${CARD_COLLECTION_SECTION},
+      ${TIMELINE_SECTION}
+    }
+  }
+`;
