@@ -47,6 +47,59 @@ async function fetchProject(
 }
 
 function getE2eMockProject(slug: string, mode: string): Project | null {
+  const isE2E = process.env.E2E_TEST === '1';
+  const isDev = process.env.NODE_ENV !== 'production';
+
+  if (!isE2E && !isDev) {
+    return null;
+  }
+
+  if (slug === 'e2e-hybrid-gallery') {
+    return {
+      _id: 'e2e-hybrid-gallery',
+      title: 'Hybrid Gallery Test',
+      overview: 'Testing video/image mix',
+      siteMode: [mode as 'production' | 'wedding'],
+      slug,
+      coverImage: {
+        asset: {
+          _ref: 'image-e2e-mock-1920x1080-jpg',
+          _type: 'reference',
+        },
+      },
+      contentBlocks: [
+        {
+          _type: 'mediaGallerySection',
+          heading: {
+            heading: 'Hybrid Gallery',
+            body: 'Testing mixed media content',
+          },
+          items: [
+            {
+              _key: 'item-video-1',
+              mediaType: 'video',
+              videoUrl: 'https://cdn.sanity.io/files/test/video.mp4',
+              label: 'Video Item',
+            },
+            {
+              _key: 'item-image-1',
+              mediaType: 'image',
+              media: {
+                image: {
+                  asset: {
+                    _ref: 'image-e2emock-1000x1000-jpg',
+                    _type: 'reference',
+                  },
+                },
+              },
+              label: 'Image Item',
+            },
+          ],
+        },
+      ],
+    };
+  }
+
   if (slug !== 'atdd-magazine-test') {
     return null;
   }
