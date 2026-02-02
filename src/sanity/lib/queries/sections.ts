@@ -82,9 +82,11 @@ export const MEDIA_GALLERY_SECTION = groq`
       align
     },
     items[]{
+      mediaType,
       media{
         ${IMAGE_PROJECTION}
       },
+      "videoUrl": videoFile.asset->url,
       "label": ${LOCALIZED('label')}
     },
     cta{

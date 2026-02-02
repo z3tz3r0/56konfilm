@@ -10,7 +10,7 @@ export interface RawProject {
   _id: string;
   title: I18nArrayItem<string>[];
   overview: I18nArrayItem<string>[];
-  siteMode: 'production' | 'wedding';
+  siteMode: ('production' | 'wedding')[];
   slug: { current: string };
   coverImage: SanityImageSource;
   // Metadata for Magazine Layout
@@ -145,7 +145,9 @@ export interface MediaGallerySectionBlock extends BaseBlock {
   };
   items?: Array<{
     _key?: string;
+    mediaType?: 'image' | 'video';
     media?: MediaItem;
+    videoUrl?: string;
     label?: string;
   }>;
   cta?: ContentCta;
