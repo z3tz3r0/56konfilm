@@ -49,8 +49,8 @@ development_status:
 
   epic-2: in-progress
   2-0-design-and-performance-hardening: done
-  2-1-enable-magazine-layouts-for-projects: todo
-  2-2-upgrade-mediagallery-to-hybrid-video: todo
+  2-1-enable-magazine-layouts-for-projects: done
+  2-2-upgrade-mediagallery-to-hybrid-video: ready-for-dev
   2-3-project-navigation-cinematic-transitions: todo
   2-4-admin-multi-drag-and-drop-efficiency: todo
   epic-2-retrospective: optional
