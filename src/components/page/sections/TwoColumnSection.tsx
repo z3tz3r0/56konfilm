@@ -18,7 +18,7 @@ export default function TwoColumnSection({ block }: TwoColumnSectionProps) {
   const alignClass = getAlignmentClass(block.content?.align);
 
   return (
-    <SectionShell background={block.background}>
+    <SectionShell background={block.background} sanityType={block._type}>
       <div className="container mx-auto grid max-w-7xl gap-12 md:grid-cols-2">
         <div
           className={cn(

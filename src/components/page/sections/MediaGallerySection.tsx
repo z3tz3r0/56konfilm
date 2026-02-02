@@ -42,7 +42,7 @@ export default function MediaGallerySection({ block }: MediaGallerySectionProps)
   const isCentered = block.heading?.align === 'center';
 
   return (
-    <SectionShell background={block.background}>
+    <SectionShell background={block.background} sanityType={block._type}>
       <div className="container mx-auto space-y-12">
 
         <header className={cn('flex flex-col gap-4 text-balance', alignClass, isCentered && 'mx-auto text-center')}>

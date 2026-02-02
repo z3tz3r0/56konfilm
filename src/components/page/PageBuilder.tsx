@@ -9,9 +9,14 @@ import { PageContentBlock, PageDocument } from '@/types/sanity';
 
 interface PageBuilderProps {
   page: PageDocument;
+  metadata?: {
+    client?: string;
+    year?: string;
+    services?: string[];
+  };
 }
 
-export default function PageBuilder({ page }: PageBuilderProps) {
+export default function PageBuilder({ page, metadata }: PageBuilderProps) {
   const blocks = page.contentBlocks ?? [];
 
   if (!blocks.length) {
@@ -24,15 +29,19 @@ export default function PageBuilder({ page }: PageBuilderProps) {
     );
   }
 
-  return <>{blocks.map((block, index) => renderBlock(block, index))}</>;
+  return <>{blocks.map((block, index) => renderBlock(block, index, metadata))}</>;
 }
 
-function renderBlock(block: PageContentBlock, index: number) {
+function renderBlock(
+  block: PageContentBlock,
+  index: number,
+  metadata?: PageBuilderProps['metadata']
+) {
   const key = block._key ?? `${block._type}-${index}`;
 
   switch (block._type) {
     case 'heroSection':
-      return <HeroSection key={key} block={block} />;
+      return <HeroSection key={key} block={block} metadata={metadata} />;
     case 'twoColumnSection':
       return <TwoColumnSection key={key} block={block} />;
     case 'cardCollectionSection':

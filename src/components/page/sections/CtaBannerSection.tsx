@@ -10,7 +10,7 @@ interface CtaBannerSectionProps {
 }
 
 export default function CtaBannerSection({ block }: CtaBannerSectionProps) {
-  const isTextLeft = block.layout !== 'textRight';
+  // const isTextLeft = block.layout !== 'textRight';
   const alignClass = getAlignmentClass(block.content?.align);
 
   // Overlay Logic
