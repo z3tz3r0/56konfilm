@@ -51,7 +51,7 @@ development_status:
   2-0-design-and-performance-hardening: done
   2-1-enable-magazine-layouts-for-projects: done
   2-2-upgrade-mediagallery-to-hybrid-video: review
-  2-3-project-navigation-cinematic-transitions: todo
+  2-3-project-navigation-cinematic-transitions: ready-for-dev
   2-4-admin-multi-drag-and-drop-efficiency: todo
   epic-2-retrospective: optional
 
