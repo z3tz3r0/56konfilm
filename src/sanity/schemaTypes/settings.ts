@@ -1,8 +1,8 @@
 import { defineField, defineType } from 'sanity';
 
 import {
-  localizedStringField,
-  localizedTextField,
+    localizedStringField,
+    localizedTextField,
 } from './objects/localized';
 import { socialMediaType } from './objects/socialMedia';
 
@@ -11,6 +11,15 @@ export const settingsType = defineType({
   title: 'Global Settings',
   type: 'document',
   fields: [
+    defineField({
+      name: 'favicon',
+      title: 'Favicon',
+      description: 'ไอคอนเว็บไซต์ (Recommended: 32x32px or 512x512px .png/.ico)',
+      type: 'image',
+      options: {
+        accept: 'image/png, image/jpeg, image/x-icon, image/svg+xml',
+      },
+    }),
     localizedStringField({
       name: 'siteTitle',
       title: 'Site Title',

@@ -1,6 +1,6 @@
 import { defineField, defineType } from 'sanity';
-import { localizedBlockType } from '../objects/localized';
 import { ctaType } from '../objects/cta';
+import { localizedBlockType } from '../objects/localized';
 import { mediaBlockType } from '../objects/mediaBlock';
 
 export const twoColumnSectionType = defineType({

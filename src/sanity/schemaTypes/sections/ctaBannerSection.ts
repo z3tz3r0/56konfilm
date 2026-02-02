@@ -1,7 +1,7 @@
 import { defineField, defineType } from 'sanity';
+import { ctaType } from '../objects/cta';
 import { localizedBlockType } from '../objects/localized';
 import { mediaBlockType } from '../objects/mediaBlock';
-import { ctaType } from '../objects/cta';
 
 export const ctaBannerSectionType = defineType({
   name: 'ctaBannerSection',
@@ -9,7 +9,7 @@ export const ctaBannerSectionType = defineType({
   type: 'object',
   fields: [
     defineField({ name: 'content', title: 'Content', description: 'เนื้อหาของ CTA Banner', type: localizedBlockType.name }),
-    defineField({ name: 'media', title: 'Media', description: 'สื่อของ CTA Banner', type: mediaBlockType.name }),
+    defineField({ name: 'media', title: 'Media', description: 'สื่อของ CTA Banner (Recommended: 1920x512px or 4:1 aspect ratio)', type: mediaBlockType.name }),
     defineField({
       name: 'ctas',
       title: 'CTAs',
@@ -45,6 +45,42 @@ export const ctaBannerSectionType = defineType({
         ],
       },
       initialValue: 'contrast',
+    }),
+    defineField({
+      name: 'customColors',
+      title: 'Custom Text Colors',
+      description: 'ปรับแต่งสีข้อความ (หากไม่ระบุจะใช้ค่า Default ของ Theme)',
+      type: 'object',
+      fields: [
+        defineField({ name: 'eyebrow', title: 'Eyebrow Color', type: 'color' }),
+        defineField({ name: 'heading', title: 'Heading Color', type: 'color' }),
+        defineField({ name: 'body', title: 'Body Color', type: 'color' }),
+      ],
+      options: {
+        collapsible: true,
+        collapsed: true,
+      }
+    }),
+    defineField({
+      name: 'overlay',
+      title: 'Background Overlay',
+      description: 'ปรับแต่ง Overlay ทับรูปภาพพื้นหลัง',
+      type: 'object',
+      fields: [
+        defineField({ name: 'enabled', title: 'Enable Overlay', type: 'boolean', initialValue: true }),
+        defineField({ name: 'color', title: 'Overlay Color', type: 'color' }),
+        defineField({ 
+          name: 'opacity', 
+          title: 'Opacity (%)', 
+          type: 'number', 
+          validation: (Rule) => Rule.min(0).max(100),
+          initialValue: 60 
+        }),
+      ],
+      options: {
+        collapsible: true,
+        collapsed: true,
+      }
     }),
   ],
   preview: {

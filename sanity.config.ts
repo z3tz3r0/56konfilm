@@ -3,6 +3,7 @@
  * This configuration is used to for the Sanity Studio that’s mounted on the `/app/sanity-cms/[[...tool]]/page.tsx` route
  */
 
+import { colorInput } from '@sanity/color-input';
 import { languageFilter } from '@sanity/language-filter';
 import { visionTool } from '@sanity/vision';
 import { defineConfig, isKeySegment } from 'sanity';
@@ -72,5 +73,6 @@ export default defineConfig({
     // Vision is for querying with GROQ from inside the Studio
     // https://www.sanity.io/docs/the-vision-plugin
     visionTool({ defaultApiVersion: apiVersion }),
+    colorInput(),
   ],
 });

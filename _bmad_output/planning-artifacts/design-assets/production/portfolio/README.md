@@ -1,0 +1,7 @@
+- badge-filter-desktop section is similar size to mobile except in mobile it should scrollable horizontally.
+- section-previous-work-grid should be a grid and responsive.
+- section-previous-work-grid should have a hover effect that plays the video.
+- this section-previous-work-grid should be have 1 video per row on mobile.
+- this section-previous-work-grid should be able to handle both videos and images.
+- on mobile, the section-previous-work-grid should showing it's title and description of each project on top of the video/image. on desktop, it should showing when the user hover over the video/image.
+- when the user click on the video/image, it should navigate the user to it's project details page. where it shows projects details (currently doesn't have any design for it, but it should be a page that shows the project details).

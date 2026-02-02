@@ -1,10 +1,10 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { useTheme } from 'next-themes';
-import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState, useTransition } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useRef, useTransition } from 'react';
 
+import { useMode } from '@/hooks/useMode';
 import { type SiteMode } from '@/lib/preferences';
 import { cn } from '@/lib/utils';
 
@@ -14,56 +14,95 @@ interface ModeSwitcherProps {
   initialMode: SiteMode;
   homeSlugs: ModeSlugMap;
   className?: string;
+  lang: 'en' | 'th';
 }
-
-const MODE_TO_THEME: Record<SiteMode, 'dark' | 'light'> = {
-  production: 'dark',
-  wedding: 'light',
-};
 
 export const ModeSwitcher = ({
   initialMode,
   homeSlugs,
   className,
+  lang,
 }: ModeSwitcherProps) => {
   const router = useRouter();
-  const { setTheme } = useTheme();
+  const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
 
-  // Local, optimistic display state
-  const [displayMode, setDisplayMode] = useState<SiteMode>(initialMode);
+  const { 
+    mode: displayMode, 
+    setMode: setGlobalMode, 
+    setIsTransitioning, 
+    setTargetMode,
+    isTransitioning,
+    isCovered,
+    setIsCovered,
+    targetMode
+  } = useMode();
 
   // Keep in sync when the server-provided initialMode changes after navigation
   useEffect(() => {
-    setDisplayMode(initialMode);
+    // ⚠️ CRITICAL: Only update displayMode via store. Do NOT call logic with side-effects here
+    // as it will disrupt the smooth slide animation.
+    if (initialMode) {
+      // Intentionally empty to preserve structure and verify no side-effects are added here.
+      // ModeProvider handles the initial hydration.
+    }
   }, [initialMode]);
 
-  // Defer navigation until after the slide animation completes
-  const navTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Coordination Effect: When Curtain Covers Screen (isCovered=true)
+  // Track if a transition has been initiated to prevent premature lifting or loops
+  const hasStartedTransition = useRef(false);
+  const targetPathRef = useRef<string | null>(null);
+
+  // 1. Trigger Navigation when Covered
+  useEffect(() => {
+    if (isCovered && targetMode && !hasStartedTransition.current) {
+      // Opt-in to optimistic update for global theme state
+      setGlobalMode(targetMode);
+      
+      const targetSlug = homeSlugs[targetMode as SiteMode];
+      const targetPath = targetSlug ? `/${lang}/${targetSlug}` : `/${lang}`;
+      targetPathRef.current = targetPath;
+      hasStartedTransition.current = true;
+
+      if (targetPath !== pathname) {
+        startTransition(() => {
+          router.push(targetPath);
+        });
+      }
+    }
+  }, [isCovered, targetMode, setGlobalMode, startTransition, router, homeSlugs, pathname]);
+
+  // 2. Lift Curtain when Navigation Complete (isPending -> false)
+  useEffect(() => {
+    const targetPath = targetPathRef.current;
+    const navigationSettled = !targetPath || pathname === targetPath;
+
+    if (isCovered && hasStartedTransition.current && navigationSettled && !isPending) {
+        // Navigation (Transition) is done.
+        // Lift the curtain.
+        setIsTransitioning(false);
+        setTargetMode(null);
+        setIsCovered(false);
+        hasStartedTransition.current = false;
+        targetPathRef.current = null;
+    }
+  }, [isCovered, isPending, pathname, setIsTransitioning, setTargetMode, setIsCovered]);
 
   const handleModeChange = (nextMode: SiteMode) => {
     if (nextMode === displayMode) return;
-    if (isPending) return;
-    if (navTimerRef.current) return; // ignore double-taps while a nav is scheduled
-
-    // Optimistically update UI and theme immediately
-    setDisplayMode(nextMode);
-    document.cookie = `mode=${nextMode}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
-    setTheme(MODE_TO_THEME[nextMode]);
-
-    const targetSlug = homeSlugs[nextMode];
-    const targetPath = targetSlug ? `/${targetSlug}` : '/';
-
-    navTimerRef.current = setTimeout(() => {
-      navTimerRef.current = null;
-      startTransition(() => {
-        router.push(targetPath);
-      });
-    }, 0);
+    if (isPending || isTransitioning) return;
+    
+    // 1. Start Transition: Curtain enters
+    setIsCovered(false);
+    hasStartedTransition.current = false;
+    targetPathRef.current = null;
+    setTargetMode(nextMode);
+    setIsTransitioning(true);
   };
 
   return (
     <motion.div
+      data-testid="mode-switcher"
       className={cn(
         'relative grid h-11 w-64 grid-cols-2 items-center rounded-md p-1',
         className
@@ -95,10 +134,10 @@ export const ModeSwitcher = ({
       {/* Production button */}
       <motion.button
         onClick={() => handleModeChange('production')}
-        disabled={isPending || !!navTimerRef.current}
+        disabled={isPending || isTransitioning}
         className={cn(
           'relative z-10 h-full cursor-pointer text-xs font-semibold tracking-[0.1em] uppercase',
-          isPending && 'cursor-not-allowed opacity-60'
+          (isPending || isTransitioning) && 'cursor-not-allowed opacity-60'
         )}
         animate={{
           color:
@@ -116,10 +155,10 @@ export const ModeSwitcher = ({
       {/* Wedding button */}
       <motion.button
         onClick={() => handleModeChange('wedding')}
-        disabled={isPending || !!navTimerRef.current}
+        disabled={isPending || isTransitioning}
         className={cn(
           'relative z-10 h-full cursor-pointer text-xs font-semibold tracking-[0.1em] uppercase',
-          isPending && 'cursor-not-allowed opacity-60'
+          (isPending || isTransitioning) && 'cursor-not-allowed opacity-60'
         )}
         animate={{
           color: displayMode === 'wedding' ? '#5b4339' : '#faf7f2', // text-brown : text-ivory-white

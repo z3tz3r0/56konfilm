@@ -11,6 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '../ui/sheet';
+import { LanguageSwitcher } from './LanguageSwitcher';
 import { ModeSwitcher } from './ModeSwitcher';
 
 type Mode = 'production' | 'wedding';
@@ -19,21 +20,30 @@ interface NavbarProps {
   mode: Mode;
   settings: SiteSettings;
   homeSlugs: Record<Mode, string | null>;
+  lang: 'en' | 'th';
 }
 
-const Navbar = async ({ mode, settings, homeSlugs }: NavbarProps) => {
+const Navbar = async ({ mode, settings, homeSlugs, lang }: NavbarProps) => {
+  const withLang = (href: string) => {
+    if (href.startsWith('http')) return href;
+    if (href.startsWith('/en') || href.startsWith('/th')) return href;
+    if (href === '/') return `/${lang}`;
+    return `/${lang}${href.startsWith('/') ? '' : '/'}${href}`;
+  };
+
   return (
     <header className="fixed z-50 w-screen bg-white/5">
       <nav className="container mx-auto grid max-w-7xl grid-cols-2 items-center justify-between p-4 md:grid-cols-3">
-        <Link href="/" className={cn('text-xl font-bold', 'text-off-white')}>
+        <Link href={`/${lang}`} className={cn('text-xl font-bold', 'text-text-primary')}>
           {settings?.siteTitle || '56KonFilm'}
         </Link>
 
         <Sheet>
-          <SheetTrigger asChild className="justify-self-end md:hidden">
+            <SheetTrigger asChild className="justify-self-end md:hidden">
             <Button
               variant="ghost"
               size="icon"
+              data-testid="mobile-menu-button"
               className={
                 mode === 'production' ? '' : 'text-secondary hover:text-primary'
               }
@@ -48,7 +58,7 @@ const Navbar = async ({ mode, settings, homeSlugs }: NavbarProps) => {
 
             <div className="flex h-screen flex-col items-center justify-center gap-16 text-4xl font-bold">
               <nav className="-mt-16 flex flex-col items-center gap-8">
-                <Link href="/" className="hover:text-primary hover:underline">
+                <Link href={`/${lang}`} className="hover:text-primary hover:underline">
                   Home
                 </Link>
                 {(mode === 'production'
@@ -57,20 +67,24 @@ const Navbar = async ({ mode, settings, homeSlugs }: NavbarProps) => {
                 )?.map((item) => (
                   <Link
                     key={item.url}
-                    href={item.url.startsWith('/') ? item.url : `/${item.url}`}
+                    href={withLang(item.url)}
                     className="hover:text-primary hover:underline"
                   >
                     {item.label}
                   </Link>
                 ))}
               </nav>
-              <ModeSwitcher initialMode={mode} homeSlugs={homeSlugs} />
+              <ModeSwitcher initialMode={mode} homeSlugs={homeSlugs} lang={lang} />
+              <LanguageSwitcher />
             </div>
           </SheetContent>
         </Sheet>
 
         <div className="col-span-2 hidden md:grid md:grid-cols-subgrid">
-          <ModeSwitcher initialMode={mode} homeSlugs={homeSlugs} />
+          <div className="flex items-center gap-4">
+            <ModeSwitcher initialMode={mode} homeSlugs={homeSlugs} lang={lang} />
+            <LanguageSwitcher />
+          </div>
 
           <div className="col-start-2 flex items-center justify-between">
             {(mode === 'production'
@@ -79,8 +93,8 @@ const Navbar = async ({ mode, settings, homeSlugs }: NavbarProps) => {
             )?.map((item) => (
               <Link
                 key={item.url}
-                href={item.url.startsWith('/') ? item.url : `/${item.url}`}
-                className={cn('hover:underline', 'text-off-white')}
+                href={withLang(item.url)}
+                className={cn('hover:underline', 'text-text-primary')}
               >
                 {item.label}
               </Link>

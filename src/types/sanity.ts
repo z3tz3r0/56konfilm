@@ -1,4 +1,4 @@
-import { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import { SanityImageSource } from '@sanity/image-url';
 
 export interface I18nArrayItem<T> {
   _key: string;
@@ -10,9 +10,14 @@ export interface RawProject {
   _id: string;
   title: I18nArrayItem<string>[];
   overview: I18nArrayItem<string>[];
-  siteMode: 'production' | 'wedding';
+  siteMode: ('production' | 'wedding')[];
   slug: { current: string };
   coverImage: SanityImageSource;
+  // Metadata for Magazine Layout
+  client?: string;
+  services?: string[];
+  year?: string;
+  contentBlocks?: PageContentBlock[];
 }
 
 // --- Data after resolving language in GROQ ---
@@ -23,6 +28,11 @@ export interface Project {
   siteMode: ('production' | 'wedding')[];
   slug: string;
   coverImage: SanityImageSource;
+  // Magazine Layout Fields
+  client?: string;
+  services?: string[];
+  year?: string;
+  contentBlocks?: PageContentBlock[];
 }
 
 export type SiteMode = 'production' | 'wedding';
@@ -49,11 +59,13 @@ export interface ContentCta {
 }
 
 export interface MediaItem {
+  _key?: string;
   image?: SanityImageSource;
   alt?: string;
 }
 
 export interface BackgroundMediaItem {
+  _key?: string;
   _type: string;
   url?: string;
   mimeType?: string;
@@ -68,6 +80,7 @@ export interface HeroSectionBlock extends BaseBlock {
   _type: 'heroSection';
   title?: string;
   tagline?: string;
+  parallaxText?: string;
   backgroundMedia?: BackgroundMediaItem[];
   ctas?: ContentCta[];
 }
@@ -93,6 +106,7 @@ export interface CardCollectionSectionBlock extends BaseBlock {
   columns?: number;
   background?: string;
   cards?: Array<{
+    _key?: string;
     title?: string;
     body?: string;
     icon?: SanityImageSource;
@@ -111,9 +125,11 @@ export interface TimelineSectionBlock extends BaseBlock {
     align?: string;
   };
   steps?: Array<{
+    _key?: string;
     order?: number;
     title?: string;
     description?: string;
+    icon?: SanityImageSource;
   }>;
   cta?: ContentCta;
 }
@@ -128,7 +144,10 @@ export interface MediaGallerySectionBlock extends BaseBlock {
     align?: string;
   };
   items?: Array<{
+    _key?: string;
+    mediaType?: 'image' | 'video';
     media?: MediaItem;
+    videoUrl?: string;
     label?: string;
   }>;
   cta?: ContentCta;
@@ -139,6 +158,15 @@ export interface LogoGridSectionBlock extends BaseBlock {
   background?: string;
   title?: string;
   logos?: MediaItem[];
+}
+
+export interface SanityColor {
+  _type: 'color';
+  hex: string;
+  alpha: number;
+  hsl: { h: number; s: number; l: number; a: number };
+  hsv: { h: number; s: number; v: number; a: number };
+  rgb: { r: number; g: number; b: number; a: number };
 }
 
 export interface CtaBannerSectionBlock extends BaseBlock {
@@ -153,6 +181,16 @@ export interface CtaBannerSectionBlock extends BaseBlock {
   };
   media?: MediaItem;
   ctas?: ContentCta[];
+  customColors?: {
+    eyebrow?: SanityColor;
+    heading?: SanityColor;
+    body?: SanityColor;
+  };
+  overlay?: {
+    enabled: boolean;
+    color?: SanityColor;
+    opacity?: number;
+  };
 }
 
 export type PageContentBlock =

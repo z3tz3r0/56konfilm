@@ -1,25 +1,25 @@
 import { type SchemaTypeDefinition } from 'sanity';
-import { localizedBlockType } from './objects/localized';
-import { ctaType } from './objects/cta';
-import { mediaBlockType } from './objects/mediaBlock';
-import { cardItemType } from './objects/cardItem';
-import { timelineStepType } from './objects/timelineStep';
-import { galleryItemType } from './objects/galleryItem';
-import { logoItemType } from './objects/logoItem';
-import { socialMediaType } from './objects/socialMedia';
+import { cmsCredentialsType } from './cmsCredentials';
 import { backgroundMediaType } from './objects/backgroundMedia';
+import { cardItemType } from './objects/cardItem';
+import { ctaType } from './objects/cta';
+import { galleryItemType } from './objects/galleryItem';
+import { localizedBlockType } from './objects/localized';
+import { logoItemType } from './objects/logoItem';
+import { mediaBlockType } from './objects/mediaBlock';
+import { socialMediaType } from './objects/socialMedia';
+import { timelineStepType } from './objects/timelineStep';
 import { pageType } from './page';
 import { postType } from './postType';
 import { projectType } from './projects';
-import { heroSectionType } from './sections/heroSection';
-import { twoColumnSectionType } from './sections/twoColumnSection';
 import { cardCollectionSectionType } from './sections/cardCollectionSection';
-import { timelineSectionType } from './sections/timelineSection';
-import { mediaGallerySectionType } from './sections/mediaGallerySection';
-import { logoGridSectionType } from './sections/logoGridSection';
 import { ctaBannerSectionType } from './sections/ctaBannerSection';
+import { heroSectionType } from './sections/heroSection';
+import { logoGridSectionType } from './sections/logoGridSection';
+import { mediaGallerySectionType } from './sections/mediaGallerySection';
+import { timelineSectionType } from './sections/timelineSection';
+import { twoColumnSectionType } from './sections/twoColumnSection';
 import { settingsType } from './settings';
-import { cmsCredentialsType } from './cmsCredentials';
 
 export const schemaType: { types: SchemaTypeDefinition[] } = {
   types: [

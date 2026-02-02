@@ -8,11 +8,34 @@ export const galleryItemType = defineType({
   type: 'object',
   fields: [
     defineField({
+      name: 'mediaType',
+      title: 'Media Type',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Image', value: 'image' },
+          { title: 'Video', value: 'video' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'image',
+    }),
+    defineField({
       name: 'media',
-      title: 'Media',
-      description: 'สื่อที่จะแสดงใน Gallery',
+      title: 'Image',
+      description: 'รูปภาพที่จะแสดง',
       type: mediaBlockType.name,
-      validation: (Rule) => Rule.required(),
+      hidden: ({ parent }) => parent?.mediaType === 'video',
+    }),
+    defineField({
+      name: 'videoFile',
+      title: 'Video File',
+      description: 'ไฟล์วิดีโอ (MP4/WebM)',
+      type: 'file',
+      options: {
+        accept: 'video/*',
+      },
+      hidden: ({ parent }) => parent?.mediaType !== 'video',
     }),
     localizedStringField({ name: 'label', title: 'Label', description: 'ข้อความที่แสดงบนสื่อ' }),
   ],

@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:is(.dark *) or &:is([data-mode="production"] *));
 
 @theme {
   /********** production **********/
@@ -106,10 +106,16 @@
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
+  --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  /* Animation */
+  --duration-menu: 0.5s;
+  --duration-fast: 0.3s;
+  --duration-slow: 1.0s;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.dark {
+.dark, [data-mode="production"] {
   /********** Custom **********/
   /* fonts */
   --font-primary: var(--font-sora);
@@ -160,6 +166,7 @@
   body {
     font-family:
       var(--font-manrope),
+      var(--font-noto-sans-thai),
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
@@ -172,7 +179,7 @@
   h2,
   h3,
   h4 {
-    font-family: var(--font-primary), 'Cormorant Garamond', serif;
+    font-family: var(--font-primary), 'Cormorant Garamond', var(--font-noto-sans-thai), serif;
     @apply leading-tight font-black text-balance;
   }
 
@@ -194,5 +201,9 @@
 
   address {
     font-style: normal;
+  }
+
+  .hero-overlay {
+    @apply bg-gradient-to-b from-background/70 via-background/40 to-background/75;
   }
 }

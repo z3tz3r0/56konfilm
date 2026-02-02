@@ -39,7 +39,7 @@ export default function CardCollectionSection({
           <div className={cn('grid gap-6', columnsClass)}>
             {block.cards.map((card, index) => (
               <article
-                key={card.title ?? index}
+                key={card._key ?? index}
                 className={cn(
                   'border-border/60 bg-background/80 flex h-full flex-col gap-4 rounded-2xl border p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg',
                   card.variant === 'highlighted'
@@ -57,6 +57,7 @@ export default function CardCollectionSection({
                         .url()}
                       alt={card.title ?? 'Icon'}
                       fill
+                      sizes="48px"
                       className="object-cover"
                     />
                   </div>

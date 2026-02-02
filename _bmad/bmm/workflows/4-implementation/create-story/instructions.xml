@@ -1,7 +1,8 @@
 <workflow>
   <critical>The workflow execution engine is governed by: {project-root}/_bmad/core/tasks/workflow.xml</critical>
   <critical>You MUST have already loaded and processed: {installed_path}/workflow.yaml</critical>
-  <critical>Communicate all responses in {communication_language} and generate all documents in {document_output_language}</critical>
+  <critical>Communicate all responses in {communication_language}. This is strict. Do not speak English if communication_language is Thai.</critical>
+  <critical>Generate all documents in {document_output_language}.</critical>
 
   <critical>🔥 CRITICAL MISSION: You are creating the ULTIMATE story context engine that prevents LLM developer mistakes, omissions or
     disasters! 🔥</critical>
@@ -231,6 +232,8 @@
     Standards:** Testing frameworks, coverage expectations, test patterns - **Deployment Patterns:** Environment configurations, build
     processes - **Integration Patterns:** External service integrations, data flows <action>Extract any story-specific requirements that the
     developer MUST follow</action>
+    <action>Load and read: {planning_artifacts}/architecture/implementation-patterns-consistency-rules.md</action>
+    <action>Cross-reference findings with the Consistency Rules file. If there is a conflict, the Consistency Rules file wins.</action>
     <action>Identify any architectural decisions that override previous patterns</action>
   </step>
 
@@ -336,7 +339,7 @@
       1. Review the comprehensive story in {{story_file}}
       2. Run dev agents `dev-story` for optimized implementation
       3. Run `code-review` when complete (auto-marks done)
-      4. Optional: Run TEA `*automate` after `dev-story` to generate guardrail tests
+      4. Optional: If Test Architect module installed, run `/bmad:tea:automate` after `dev-story` to generate guardrail tests
 
       **The developer now has everything needed for flawless implementation!**
     </output>

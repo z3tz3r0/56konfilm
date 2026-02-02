@@ -16,7 +16,7 @@ const Footer = ({ settings }: FooterProps) => {
   } = settings;
 
   return (
-    <footer className="bg-foreground text-background p-4">
+    <footer className="bg-foreground text-background p-4 py-16">
       <section className="container mx-auto grid max-w-[1280px] grid-cols-3 gap-y-16">
         <div id="company-details" className="col-span-3">
           <h4>{companyTitle}</h4>
@@ -25,7 +25,7 @@ const Footer = ({ settings }: FooterProps) => {
 
         <div id="contacts" className="col-span-2">
           <h4>{contactTitle}</h4>
-          <p>{contacts}</p>
+          <p className="whitespace-pre-wrap">{contacts}</p>
         </div>
 
         <div id="social-media-links" className="text-right">
@@ -39,7 +39,7 @@ const Footer = ({ settings }: FooterProps) => {
           </p>
         </div>
       </section>
-      <p className="col-span-3">{companyTitle} || All right reserved ©</p>
+      <p className="col-span-3 text-center pt-16">{companyTitle} || All right reserved ©</p>
     </footer>
   );
 };

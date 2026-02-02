@@ -19,10 +19,12 @@
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store
 *.pem
+.vscode/
 
 # debug
 npm-debug.log*
@@ -32,6 +34,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -44,3 +47,10 @@ next-env.d.ts
 # AGENTS.md and GEMINI.md are now allowed for documentation purposes.
 
 .cursor
+.gemini/
+gha-creds-*.json
+
+# playwright / vitest
+playwright-report/
+test-results/
+play-results/
