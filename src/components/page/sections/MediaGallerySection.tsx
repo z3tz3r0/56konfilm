@@ -9,6 +9,7 @@ import { getAlignmentClass } from '@/components/page/utils';
 import { cn } from '@/lib/utils';
 import { urlFor } from '@/sanity/lib/image';
 import { MediaGallerySectionBlock } from '@/types/sanity';
+import { VideoItem } from './media-gallery/VideoItem';
 
 interface MediaGallerySectionProps {
   block: MediaGallerySectionBlock;
@@ -70,6 +71,30 @@ export default function MediaGallerySection({ block }: MediaGallerySectionProps)
             variants={containerVariants}
           >
             {block.items.map((item, index) => {
+              if (item.mediaType === 'video' && item.videoUrl) {
+                return (
+                  <motion.figure
+                    key={item._key ?? index}
+                    className="group relative overflow-hidden rounded-2xl bg-muted"
+                    variants={itemVariants}
+                    data-testid="gallery-item-video"
+                  >
+                    <div className="relative aspect-4/3 overflow-hidden">
+                      <VideoItem 
+                        src={item.videoUrl} 
+                        className="transition-transform duration-700 ease-out group-hover:scale-105" 
+                      />
+                      <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10" />
+                    </div>
+                    {item.label ? (
+                      <figcaption className="mt-3 px-1 text-sm font-medium text-muted-foreground transition-colors group-hover:text-primary">
+                        {item.label}
+                      </figcaption>
+                    ) : null}
+                  </motion.figure>
+                );
+              }
+
               const image = item.media?.image;
               if (!image) {
                 return null;
@@ -80,6 +105,7 @@ export default function MediaGallerySection({ block }: MediaGallerySectionProps)
                   key={item._key ?? index}
                   className="group relative overflow-hidden rounded-2xl bg-muted"
                   variants={itemVariants}
+                  data-testid="gallery-item-image"
                 >
                   <div className="relative aspect-4/3 overflow-hidden">
                     <Image
@@ -89,8 +115,6 @@ export default function MediaGallerySection({ block }: MediaGallerySectionProps)
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                       sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                     />
-                    {/* Gradient overlay for better text readability if we had overlay text, 
-                        but effectively adds depth on hover */}
                     <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10" />
                   </div>
                   {item.label ? (
