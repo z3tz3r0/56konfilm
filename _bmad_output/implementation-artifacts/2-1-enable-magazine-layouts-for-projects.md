@@ -105,6 +105,9 @@ Antigravity (Google Deepmind)
 - Normalized SEO e2e assertions for multiple canonical/hreflang tags.
 - Added stability tweaks for transitions/mode persistence tests.
 - Skipped Firefox-only velocity skew assertion (flaky behavior).
+- Guarded e2e mock project data behind `E2E_TEST` to avoid production leakage.
+- Aligned `RawProject.siteMode` typing with schema (array).
+- Verified e2e tests (chromium): `pnpm test:e2e --project=chromium`.
 
 ### File List
 - src/sanity/schemaTypes/projects.ts
@@ -127,6 +130,12 @@ Antigravity (Google Deepmind)
 - tests/e2e/mode-persistence.spec.ts
 - playwright.config.ts
 
+### Review Notes (Unrelated Working Tree Changes Observed)
+- src/sanity/lib/queries/sections.ts (from story 2-2)
+- src/sanity/schemaTypes/objects/galleryItem.ts (from story 2-2)
+- tests/e2e/media-gallery-hybrid.spec.ts (from story 2-2)
+- src/components/page/sections/media-gallery/VideoItem.tsx (from story 2-2)
+
 ## Senior Developer Review (AI)
 
 Date: 2026-02-02
@@ -142,3 +151,4 @@ Outcome: Changes applied, all ACs now implemented.
 ## Change Log
 
 - 2026-02-02: Code review fixes applied (routing, test hooks, siteMode propagation, contentBlocks validation).
+- 2026-02-02: Guarded e2e mocks to avoid prod leakage, aligned RawProject typing, and validated chromium e2e tests.
