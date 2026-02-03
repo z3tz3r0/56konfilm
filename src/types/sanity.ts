@@ -33,6 +33,11 @@ export interface Project {
   services?: string[];
   year?: string;
   contentBlocks?: PageContentBlock[];
+  nextProject?: {
+    title: string;
+    slug: string;
+    coverImage: SanityImageSource;
+  };
 }
 
 export type SiteMode = 'production' | 'wedding';

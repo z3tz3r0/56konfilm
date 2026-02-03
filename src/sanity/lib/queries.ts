@@ -2,13 +2,13 @@ import { createClient, groq } from 'next-sanity';
 import { apiVersion, dataset, projectId } from '../env';
 import { LOCALIZED } from './queries/fragments';
 import {
-    CARD_COLLECTION_SECTION,
-    CTA_BANNER_SECTION,
-    HERO_SECTION,
-    LOGO_GRID_SECTION,
-    MEDIA_GALLERY_SECTION,
-    TIMELINE_SECTION,
-    TWO_COLUMN_SECTION,
+  CARD_COLLECTION_SECTION,
+  CTA_BANNER_SECTION,
+  HERO_SECTION,
+  LOGO_GRID_SECTION,
+  MEDIA_GALLERY_SECTION,
+  TIMELINE_SECTION,
+  TWO_COLUMN_SECTION,
 } from './queries/sections';
 
 export const client = createClient({
@@ -114,6 +114,22 @@ export const projectBySlugQuery = groq`
       ${CTA_BANNER_SECTION},
       ${CARD_COLLECTION_SECTION},
       ${TIMELINE_SECTION}
-    }
+    },
+    "nextProject": coalesce(
+      *[
+        _type == "project"
+        && $mode in siteMode
+        && coalesce(publishedAt, _createdAt) < coalesce(^.publishedAt, ^._createdAt)
+      ] | order(coalesce(publishedAt, _createdAt) desc)[0] {
+        "title": ${LOCALIZED('title')},
+        "slug": slug.current,
+        coverImage
+      },
+      *[_type == "project" && $mode in siteMode] | order(coalesce(publishedAt, _createdAt) desc)[0] {
+        "title": ${LOCALIZED('title')},
+        "slug": slug.current,
+        coverImage
+      }
+    )
   }
 `;
