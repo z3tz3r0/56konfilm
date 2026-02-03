@@ -23,7 +23,7 @@ test.describe('Global Visual Transitions', () => {
     await weddingButton.click();
 
     // Expect curtain wipe to appear immediately
-    const curtain = page.getByTestId('curtain-wipe');
+    const curtain = page.getByTestId('curtain');
     await expect(curtain).toBeVisible({ timeout: 10000 });
 
     // Validate curtain color (Wedding mode -> expecting light/ivory)
@@ -74,7 +74,7 @@ test.describe('Global Visual Transitions', () => {
      await productionButton.click();
  
      // Curtain should appear
-     const curtain = page.getByTestId('curtain-wipe');
+     const curtain = page.getByTestId('curtain');
      await expect(curtain).toBeVisible({ timeout: 10000 });
 
      // Validate curtain color (Production mode -> expecting black/midnight)

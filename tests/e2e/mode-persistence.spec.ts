@@ -53,7 +53,7 @@ test.describe('Mode Persistence & Switcher', () => {
     
     // Add small pause to ensure any navigation/animation settles
     await page.waitForTimeout(500);
-    const curtain = page.locator('[data-testid="curtain-wipe"]');
+    const curtain = page.locator('[data-testid="curtain"]');
     if (await curtain.isVisible()) {
       await curtain.waitFor({ state: 'hidden', timeout: 15000 });
     }

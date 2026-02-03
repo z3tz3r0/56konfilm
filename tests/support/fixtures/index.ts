@@ -12,18 +12,22 @@ export const test = base.extend<SiteFixtures>({
   setMode: async ({ context, page }, use) => {
     const setModeFunc = async (mode: SiteMode) => {
       // Set for both localhost and 127.0.0.1 to be safe
+      await context.addCookies([
+        {
+          name: 'mode',
+          value: mode,
+          url: 'http://localhost:3000',
+          expires: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365,
+        },
+      ]);
+      console.log(`[Fixture] Set mode cookie: ${mode} for localhost`);
+      // Remove loop over domains
+      /*
       const domains = ['localhost', '127.0.0.1'];
       for (const domain of domains) {
-        await context.addCookies([
-          {
-            name: 'mode',
-            value: mode,
-            domain: domain,
-            path: '/',
-            expires: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365,
-          },
-        ]);
+         ...
       }
+      */
       // Also try to set via evaluation if on a page
       if (page.url() !== 'about:blank') {
         await page.evaluate((m) => {
