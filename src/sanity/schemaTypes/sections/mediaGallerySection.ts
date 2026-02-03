@@ -1,7 +1,8 @@
 import { defineField, defineType } from 'sanity';
-import { localizedBlockType } from '../objects/localized';
-import { galleryItemType } from '../objects/galleryItem';
+import { MultiUploadArrayInput } from '../../components/inputs/MultiUploadArrayInput';
 import { ctaType } from '../objects/cta';
+import { galleryItemType } from '../objects/galleryItem';
+import { localizedBlockType } from '../objects/localized';
 
 export const mediaGallerySectionType = defineType({
   name: 'mediaGallerySection',
@@ -14,6 +15,9 @@ export const mediaGallerySectionType = defineType({
       title: 'Items',
       description: 'รายการสื่อที่จะแสดงใน Gallery',
       type: 'array',
+      components: {
+        input: MultiUploadArrayInput,
+      },
       of: [{ type: galleryItemType.name }],
       validation: (Rule) => Rule.required().min(3),
     }),

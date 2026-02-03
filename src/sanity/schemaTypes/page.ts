@@ -39,6 +39,27 @@ export const pageType = defineType({
       type: 'slug',
       options: {
         source: 'page',
+        isUnique: async (slug, context) => {
+          const { document, getClient } = context;
+          const client = getClient({ apiVersion: '2023-01-01' });
+          const id = document?._id.replace(/^drafts\./, '');
+          const params = {
+            draft: `drafts.${id}`,
+            published: id,
+            slug,
+            siteMode: document?.siteMode,
+          };
+
+          const query = `count(*[
+            _type == "page" && 
+            slug.current == $slug && 
+            siteMode == $siteMode && 
+            !(_id in [$draft, $published])
+          ])`;
+
+          const result = await client.fetch(query, params);
+          return result === 0;
+        },
       },
       group: 'content',
       validation: (Rule) => Rule.required(),
