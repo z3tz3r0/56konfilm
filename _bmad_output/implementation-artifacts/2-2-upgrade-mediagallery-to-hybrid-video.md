@@ -1,6 +1,6 @@
 # Story 2.2: Upgrade MediaGallery to Hybrid Video
 
-Status: ready-for-dev
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -110,4 +110,4 @@ The current `MediaGallerySection` only supports images. Design assets ("Commerci
 - 2026-02-02: Populated missing Tasks/Subtasks section.
 
 ## Status
-review
+done

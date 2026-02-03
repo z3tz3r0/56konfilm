@@ -1,6 +1,6 @@
 # Story 2.3: Project Navigation & Cinematic Transitions
 
-Status: ready-for-dev
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -90,18 +90,18 @@ Users currently hit a dead end after viewing a project. We need to implement a "
 
 ## Tasks / Subtasks
 
-- [ ] **1. Data Layer (Sanity)**
-  - [ ] Update `PROJECT_DETAIL_QUERY` in `src/sanity/lib/queries.ts` to fetch `nextProject` (Title, Slug, Image).
-  - [ ] Implement circular logic (if next is null, fetch first).
-  - [ ] Update `src/types/sanity.ts`.
-- [ ] **2. Component Implementation**
-  - [ ] Create `ProjectNavigation.tsx`.
-  - [ ] Implement Layout (Design assets: Large Card, Title, "Next Project" label).
-  - [ ] Integrate `useTransitionStore` for the click handler.
-- [ ] **3. Integration**
-  - [ ] Add to `src/app/[lang]/work/[slug]/page.tsx`.
-- [ ] **4. Testing**
-  - [ ] Playwright test for navigation flow and transition masking.
+- [x] **1. Data Layer (Sanity)**
+  - [x] Update `PROJECT_DETAIL_QUERY` in `src/sanity/lib/queries.ts` to fetch `nextProject` (Title, Slug, Image).
+  - [x] Implement circular logic (if next is null, fetch first).
+  - [x] Update `src/types/sanity.ts`.
+- [x] **2. Component Implementation**
+  - [x] Create `ProjectNavigation.tsx`.
+  - [x] Implement Layout (Design assets: Large Card, Title, "Next Project" label).
+  - [x] Integrate `useTransitionStore` for the click handler.
+- [x] **3. Integration**
+  - [x] Add to `src/app/[lang]/work/[slug]/page.tsx`.
+- [x] **4. Testing**
+  - [x] Playwright test for navigation flow and transition masking.
 
 ## Dev Notes
 
@@ -118,5 +118,21 @@ Gemini 2.0 Flash
 - src/sanity/lib/queries.ts
 - src/types/sanity.ts
 - src/components/page/ProjectNavigation.tsx
+- src/components/providers/ModeProvider.tsx
+- src/components/layout/GlobalTransition.tsx
+- src/stores/useTransitionStore.ts
+- src/hooks/useMode.ts
 - src/app/[lang]/work/[slug]/page.tsx
 - tests/e2e/project-navigation.spec.ts
+- tests/e2e/global-transition.spec.ts
+- tests/e2e/mode-persistence.spec.ts
+
+### Completion Notes List
+- Added transition store facade (`useTransitionStore`) and wired ProjectNavigation to safety-lock transition flow.
+- Added pending-path transition reset in `ModeProvider` to ensure curtain exits after navigation.
+- Ensured curtain uses `data-testid="curtain"` and updated e2e tests to assert visibility, URL change, hide, and mode persistence.
+- Strengthened nextProject query to tolerate missing `publishedAt` by falling back to `_createdAt`.
+- Verified e2e tests (chromium): `pnpm test:e2e --project=chromium tests/e2e/project-navigation.spec.ts tests/e2e/global-transition.spec.ts tests/e2e/mode-persistence.spec.ts`.
+
+### Change Log
+- 2026-02-02: Code review fixes applied (transition orchestration, tests, query hardening).
