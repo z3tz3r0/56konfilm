@@ -42,6 +42,9 @@ type Props = {
   params: Promise<{ lang: string }>;
 };
 
+// Force dynamic rendering to ensure cookies are read on every request
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang } = await params;
   const settings = await client.fetch(settingsQuery, { lang });
@@ -81,6 +84,7 @@ export default async function RootLayout({
   const initialMode: SiteMode = isSupportedMode(cookieValue || '') 
     ? (cookieValue as SiteMode) 
     : 'production';
+  console.log(`[RootLayout] Lang: ${lang}, Cookie: ${cookieValue}, InitialMode: ${initialMode}`);
   const initialTheme = MODE_TO_THEME[initialMode];
 
   return (

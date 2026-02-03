@@ -11,10 +11,12 @@ interface ModeState {
   targetMode: SiteMode | null;
   isTransitioning: boolean;
   isCovered: boolean;
+  pendingPath: string | null;
   setMode: (mode: SiteMode) => void;
   setTargetMode: (mode: SiteMode | null) => void;
   setIsTransitioning: (isTransitioning: boolean) => void;
   setIsCovered: (isCovered: boolean) => void;
+  setPendingPath: (pendingPath: string | null) => void;
   // toggleMode removed from store interface as logic is complex (side-effects) 
   // and handled better in the hook or component layer
 }
@@ -27,10 +29,12 @@ export const useModeStore = create<ModeState>((set) => ({
   targetMode: null,
   isTransitioning: false,
   isCovered: false,
+  pendingPath: null,
   setMode: (mode) => set({ mode }),
   setTargetMode: (targetMode) => set({ targetMode }),
   setIsTransitioning: (isTransitioning) => set({ isTransitioning }),
   setIsCovered: (isCovered) => set({ isCovered }),
+  setPendingPath: (pendingPath) => set({ pendingPath }),
 }));
 
 
@@ -44,10 +48,12 @@ export const useMode = () => {
     targetMode,
     isTransitioning,
     isCovered,
+    pendingPath,
     setMode, 
     setTargetMode,
     setIsTransitioning,
     setIsCovered,
+    setPendingPath,
   } = useModeStore();
   const { setTheme } = useTheme();
 
@@ -94,10 +100,12 @@ export const useMode = () => {
     targetMode,
     isTransitioning,
     isCovered,
+    pendingPath,
     setMode: handleSetMode,
     setTargetMode,
     setIsTransitioning,
     setIsCovered,
+    setPendingPath,
     toggleMode: handleToggleMode,
   };
 };

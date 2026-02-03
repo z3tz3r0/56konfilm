@@ -29,7 +29,7 @@ export const GlobalTransition = () => {
     <AnimatePresence>
       {isTransitioning && (
         <motion.div
-          data-testid="curtain-wipe"
+          data-testid="curtain"
           className="fixed inset-0 z-[9999]"
           initial="hidden"
           animate="enter"
