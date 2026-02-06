@@ -20,7 +20,7 @@ export const test = base.extend<SiteFixtures>({
           expires: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365,
         },
       ]);
-      console.log(`[Fixture] Set mode cookie: ${mode} for localhost`);
+      // console.log(`[Fixture] Set mode cookie: ${mode} for localhost`);
       // Remove loop over domains
       /*
       const domains = ['localhost', '127.0.0.1'];

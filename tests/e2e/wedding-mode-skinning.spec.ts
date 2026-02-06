@@ -3,11 +3,16 @@ import { expect, test } from '../support/fixtures';
 test.describe('Wedding Mode Skinning', () => {
   
   test.beforeEach(async ({ page }) => {
-    page.on('console', msg => console.log(`BROWSER LOG: ${msg.text()}`));
+    // page.on('console', msg => {
+    //   const type = msg.type();
+    //   const text = msg.text();
+    //   if (type === 'error' || text.includes('[Mode]') || text.includes('[RootLayout]') || text.includes('[useMode]') || text.includes('[ModeSwitcher]')) {
+    //     console.log(`[Browser] ${type.toUpperCase()}: ${text}`);
+    //   }
+    // });
   });
 
   test('should apply Wedding theme variables when mode is active', async ({ page, setMode }) => {
-    page.on('console', msg => console.log(`BROWSER LOG: ${msg.text()}`));
     // GIVEN: User is in Wedding Mode
     await setMode('wedding');
 
@@ -39,14 +44,8 @@ test.describe('Wedding Mode Skinning', () => {
     await expect(page.locator('html')).toHaveAttribute('data-mode', 'wedding');
 
     // WHEN: User navigates to another page (e.g., Contact)
-    // Mobile navigation handling
-    if (isMobile) {
-      await page.getByTestId('mobile-menu-button').click();
-    }
-    
-    // We assume there's a nav link to Contact or similar. 
-    // If not, we can force navigate to test persistence mechanism directly.
-    await page.goto('/contact'); 
+    // We navigate directly to test persistence logic, bypassing UI interaction flakiness
+    await page.goto('/en/contact'); 
 
     // THEN: The mode should still be Wedding
     await expect(page.locator('html')).toHaveAttribute('data-mode', 'wedding');
@@ -61,11 +60,24 @@ test.describe('Wedding Mode Skinning', () => {
     await expect(page.locator('html')).toHaveAttribute('data-mode', 'wedding');
 
     // WHEN: User switches back to Production
-    if (isMobile) {
+    const productionButton = page.getByRole('button', { name: 'Production' }).filter({ visible: true });
+
+    // Target-First Strategy:
+    if (!(await productionButton.isVisible()) && isMobile) {
+      // If button isn't visible on mobile, open the menu
       await page.getByTestId('mobile-menu-button').click();
     }
-    const switcher = page.getByTestId('mode-switcher').filter({ visible: true });
-    await switcher.getByRole('button', { name: 'Production' }).click();
+
+    // Ensure button is ready
+    await expect(productionButton).toBeVisible();
+    await productionButton.click();
+
+    // Verify transition starts (curtain appears)
+    const curtain = page.getByTestId('curtain');
+    await expect(curtain).toBeVisible();
+
+    // Verify transition ends (curtain disappears)
+    await expect(curtain).toBeHidden({ timeout: 10000 }); // Give time for animation + nav
 
     // THEN: The mode should be Production
     await expect(page.locator('html')).toHaveAttribute('data-mode', 'production');
