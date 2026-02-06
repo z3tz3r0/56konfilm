@@ -16,6 +16,7 @@ interface SectionShellProps {
   background?: string;
   media?: BackgroundMediaItem[] | null;
   sanityType?: string;
+  dataTestId?: string;
   overlayClassName?: string;
   overlayStyle?: React.CSSProperties;
   disablePadding?: boolean;
@@ -29,6 +30,7 @@ export default function SectionShell({
   background,
   media,
   sanityType,
+  dataTestId,
   overlayClassName,
   overlayStyle,
   disablePadding = false,
@@ -63,6 +65,7 @@ export default function SectionShell({
         className
       )}
       data-sanity-type={sanityType}
+      data-testid={dataTestId}
     >
       <div className="relative z-10">{children}</div>
 

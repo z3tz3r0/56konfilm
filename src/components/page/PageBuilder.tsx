@@ -3,6 +3,9 @@ import CtaBannerSection from '@/components/page/sections/CtaBannerSection';
 import HeroSection from '@/components/page/sections/HeroSection';
 import LogoGridSection from '@/components/page/sections/LogoGridSection';
 import MediaGallerySection from '@/components/page/sections/MediaGallerySection';
+import PackagesSection from '@/components/page/sections/PackagesSection';
+import PhilosophySection from '@/components/page/sections/PhilosophySection';
+import TestimonialSection from '@/components/page/sections/TestimonialSection';
 import TimelineSection from '@/components/page/sections/TimelineSection';
 import TwoColumnSection from '@/components/page/sections/TwoColumnSection';
 import { PageContentBlock, PageDocument } from '@/types/sanity';
@@ -14,10 +17,12 @@ interface PageBuilderProps {
     year?: string;
     services?: string[];
   };
+  enableSignature?: boolean;
 }
 
-export default function PageBuilder({ page, metadata }: PageBuilderProps) {
+export default function PageBuilder({ page, metadata, enableSignature }: PageBuilderProps) {
   const blocks = page.contentBlocks ?? [];
+  const contentSignature = enableSignature ? hashBlocks(blocks) : undefined;
 
   if (!blocks.length) {
     return (
@@ -29,7 +34,15 @@ export default function PageBuilder({ page, metadata }: PageBuilderProps) {
     );
   }
 
-  return <>{blocks.map((block, index) => renderBlock(block, index, metadata))}</>;
+  return (
+    <div
+      className="contents"
+      data-testid="page-content"
+      data-content-signature={contentSignature}
+    >
+      {blocks.map((block, index) => renderBlock(block, index, metadata))}
+    </div>
+  );
 }
 
 function renderBlock(
@@ -54,7 +67,23 @@ function renderBlock(
       return <LogoGridSection key={key} block={block} />;
     case 'ctaBannerSection':
       return <CtaBannerSection key={key} block={block} />;
+    case 'packagesSection':
+      return <PackagesSection key={key} block={block} />;
+    case 'testimonialSection':
+      return <TestimonialSection key={key} block={block} />;
+    case 'philosophySection':
+      return <PhilosophySection key={key} block={block} />;
     default:
       return null;
   }
+}
+
+function hashBlocks(blocks: PageContentBlock[]) {
+  const raw = blocks.map((block) => JSON.stringify(block)).join('|');
+  let hash = 0;
+  for (let i = 0; i < raw.length; i += 1) {
+    hash = (hash << 5) - hash + raw.charCodeAt(i);
+    hash |= 0;
+  }
+  return `v1:${hash}`;
 }
