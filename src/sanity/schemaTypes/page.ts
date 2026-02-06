@@ -6,7 +6,9 @@ export const pageType = defineType({
   title: 'Page',
   type: 'document',
   groups: [
-    { name: 'content', title: 'Content', default: true },
+    { name: 'settings', title: 'Settings', default: true },
+    { name: 'commercial', title: 'Commercial Content' },
+    { name: 'wedding', title: 'Wedding Content' },
     { name: 'seo', title: 'SEO' },
   ],
   fields: [
@@ -14,7 +16,7 @@ export const pageType = defineType({
       name: 'page',
       title: 'Page Name',
       description: 'ชื่อหน้า',
-      group: 'content',
+      group: 'settings',
     }),
     defineField({
       name: 'siteMode',
@@ -25,12 +27,13 @@ export const pageType = defineType({
         list: [
           { title: 'Production', value: 'production' },
           { title: 'Wedding', value: 'wedding' },
+          { title: 'Both (Dual-Mode)', value: 'both' },
         ],
         layout: 'radio',
       },
       initialValue: 'production',
       validation: (Rule) => Rule.required(),
-      group: 'content',
+      group: 'settings',
     }),
     defineField({
       name: 'slug',
@@ -47,13 +50,11 @@ export const pageType = defineType({
             draft: `drafts.${id}`,
             published: id,
             slug,
-            siteMode: document?.siteMode,
           };
 
           const query = `count(*[
             _type == "page" && 
-            slug.current == $slug && 
-            siteMode == $siteMode && 
+            slug.current == $slug &&
             !(_id in [$draft, $published])
           ])`;
 
@@ -61,14 +62,14 @@ export const pageType = defineType({
           return result === 0;
         },
       },
-      group: 'content',
+      group: 'settings',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'contentBlocks',
-      title: 'Content Block',
-      description: 'บล็อกเนื้อหาของหน้านี้',
-      group: 'content',
+      title: 'Content Blocks (Commercial)',
+      description: 'บล็อกเนื้อหาสำหรับโหมด Commercial',
+      group: 'commercial',
       type: 'array',
       of: [
         { type: 'heroSection' },
@@ -78,7 +79,51 @@ export const pageType = defineType({
         { type: 'mediaGallerySection' },
         { type: 'logoGridSection' },
         { type: 'ctaBannerSection' },
+        { type: 'packagesSection' },
+        { type: 'testimonialSection' },
+        { type: 'philosophySection' },
       ],
+      hidden: ({ document }) => document?.siteMode === 'wedding',
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          const mode = context.document?.siteMode;
+          if (mode === 'both' || mode === 'production') {
+            return value && value.length > 0
+              ? true
+              : 'Commercial content blocks are required for this site mode.';
+          }
+          return true;
+        }),
+    }),
+    defineField({
+      name: 'contentBlocksWedding',
+      title: 'Content Blocks (Wedding)',
+      description: 'บล็อกเนื้อหาสำหรับโหมด Wedding',
+      group: 'wedding',
+      type: 'array',
+      of: [
+        { type: 'heroSection' },
+        { type: 'twoColumnSection' },
+        { type: 'cardCollectionSection' },
+        { type: 'timelineSection' },
+        { type: 'mediaGallerySection' },
+        { type: 'logoGridSection' },
+        { type: 'ctaBannerSection' },
+        { type: 'packagesSection' },
+        { type: 'testimonialSection' },
+        { type: 'philosophySection' },
+      ],
+      hidden: ({ document }) => document?.siteMode === 'production',
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          const mode = context.document?.siteMode;
+          if (mode === 'both' || mode === 'wedding') {
+            return value && value.length > 0
+              ? true
+              : 'Wedding content blocks are required for this site mode.';
+          }
+          return true;
+        }),
     }),
     localizedStringField({
       name: 'seoTitle',

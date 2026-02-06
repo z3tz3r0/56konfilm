@@ -4,6 +4,8 @@ import { backgroundMediaType } from './objects/backgroundMedia';
 import { cardItemType } from './objects/cardItem';
 import { ctaType } from './objects/cta';
 import { galleryItemType } from './objects/galleryItem';
+import { packageItemType } from './objects/packageItem';
+import { testimonialItemType } from './objects/testimonialItem';
 import { localizedBlockType } from './objects/localized';
 import { logoItemType } from './objects/logoItem';
 import { mediaBlockType } from './objects/mediaBlock';
@@ -17,6 +19,9 @@ import { ctaBannerSectionType } from './sections/ctaBannerSection';
 import { heroSectionType } from './sections/heroSection';
 import { logoGridSectionType } from './sections/logoGridSection';
 import { mediaGallerySectionType } from './sections/mediaGallerySection';
+import { packagesSectionType } from './sections/packagesSection';
+import { philosophySectionType } from './sections/philosophySection';
+import { testimonialSectionType } from './sections/testimonialSection';
 import { timelineSectionType } from './sections/timelineSection';
 import { twoColumnSectionType } from './sections/twoColumnSection';
 import { settingsType } from './settings';
@@ -33,6 +38,9 @@ export const schemaType: { types: SchemaTypeDefinition[] } = {
     cardCollectionSectionType,
     timelineSectionType,
     mediaGallerySectionType,
+    packagesSectionType,
+    philosophySectionType,
+    testimonialSectionType,
     logoGridSectionType,
     ctaBannerSectionType,
     localizedBlockType,
@@ -40,6 +48,8 @@ export const schemaType: { types: SchemaTypeDefinition[] } = {
     mediaBlockType,
     backgroundMediaType,
     cardItemType,
+    packageItemType,
+    testimonialItemType,
     timelineStepType,
     galleryItemType,
     logoItemType,

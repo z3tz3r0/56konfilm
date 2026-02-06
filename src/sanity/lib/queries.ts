@@ -2,13 +2,16 @@ import { createClient, groq } from 'next-sanity';
 import { apiVersion, dataset, projectId } from '../env';
 import { LOCALIZED } from './queries/fragments';
 import {
-  CARD_COLLECTION_SECTION,
-  CTA_BANNER_SECTION,
-  HERO_SECTION,
-  LOGO_GRID_SECTION,
-  MEDIA_GALLERY_SECTION,
-  TIMELINE_SECTION,
-  TWO_COLUMN_SECTION,
+    CARD_COLLECTION_SECTION,
+    CTA_BANNER_SECTION,
+    HERO_SECTION,
+    LOGO_GRID_SECTION,
+    MEDIA_GALLERY_SECTION,
+    PACKAGES_SECTION,
+    PHILOSOPHY_SECTION,
+    TESTIMONIAL_SECTION,
+    TIMELINE_SECTION,
+    TWO_COLUMN_SECTION,
 } from './queries/sections';
 
 export const client = createClient({
@@ -57,29 +60,34 @@ export const allPageSlugsQuery = groq`*[_type == "page" && defined(slug.current)
   }`;
 
 export const firstPageSlugByModeQuery = groq`
-  *[_type == "page" && siteMode == $mode] | order(_createdAt asc)[0]{
+  *[_type == "page" && siteMode in ["both", $mode]] | order(_createdAt asc)[0]{
     "slug": slug.current
   }
 `;
 
 export const modeHomeSlugsQuery = groq`
   {
-    "production": *[_type == "page" && siteMode == "production"] | order(_createdAt asc)[0]{
+    "production": *[_type == "page" && siteMode in ["both", "production"]] | order(_createdAt asc)[0]{
       "slug": slug.current
     },
-    "wedding": *[_type == "page" && siteMode == "wedding"] | order(_createdAt asc)[0]{
+    "wedding": *[_type == "page" && siteMode in ["both", "wedding"]] | order(_createdAt asc)[0]{
       "slug": slug.current
     }
   }
 `;
 
 export const pageBySlugQuery = groq`
-  *[_type == "page" && slug.current == $slug && siteMode == $mode][0] {
+  *[_type == "page" && slug.current == $slug && siteMode in ["both", $mode]][0] {
     "title": ${LOCALIZED('page')},
     "slug": slug.current,
     "seoTitle": ${LOCALIZED('seoTitle')},
     siteMode,
-    contentBlocks[]{
+    "contentBlocks": select(
+      siteMode == "both" && $mode == "wedding" => contentBlocksWedding,
+      siteMode == "both" && $mode == "production" => contentBlocks,
+      siteMode == "wedding" => coalesce(contentBlocksWedding, contentBlocks),
+      contentBlocks
+    )[]{
       _key,
       _type,
       ${HERO_SECTION},
@@ -88,7 +96,10 @@ export const pageBySlugQuery = groq`
       ${TIMELINE_SECTION},
       ${MEDIA_GALLERY_SECTION},
       ${LOGO_GRID_SECTION},
-      ${CTA_BANNER_SECTION}
+      ${CTA_BANNER_SECTION},
+      ${PACKAGES_SECTION},
+      ${TESTIMONIAL_SECTION},
+      ${PHILOSOPHY_SECTION}
     }
   }
 `;
@@ -113,7 +124,10 @@ export const projectBySlugQuery = groq`
       ${LOGO_GRID_SECTION},
       ${CTA_BANNER_SECTION},
       ${CARD_COLLECTION_SECTION},
-      ${TIMELINE_SECTION}
+      ${TIMELINE_SECTION},
+      ${PACKAGES_SECTION},
+      ${TESTIMONIAL_SECTION},
+      ${PHILOSOPHY_SECTION}
     },
     "nextProject": coalesce(
       *[

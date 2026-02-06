@@ -40,7 +40,7 @@ export interface Project {
   };
 }
 
-export type SiteMode = 'production' | 'wedding';
+export type CmsSiteMode = 'production' | 'wedding' | 'both';
 
 export interface PageRouteParams {
   slug: string;
@@ -165,6 +165,50 @@ export interface LogoGridSectionBlock extends BaseBlock {
   logos?: MediaItem[];
 }
 
+export interface PackagesSectionBlock extends BaseBlock {
+  _type: 'packagesSection';
+  background?: string;
+  heading?: {
+    eyebrow?: string;
+    heading?: string;
+    body?: string;
+    align?: string;
+  };
+  packages?: Array<{
+    _key?: string;
+    title?: string;
+    price?: number;
+    currency?: string;
+    features?: string[];
+    featured?: boolean;
+    cta?: ContentCta;
+  }>;
+}
+
+export interface TestimonialSectionBlock extends BaseBlock {
+  _type: 'testimonialSection';
+  background?: string;
+  heading?: {
+    eyebrow?: string;
+    heading?: string;
+    body?: string;
+    align?: string;
+  };
+  testimonials?: Array<{
+    _key?: string;
+    quote?: string;
+    authorName?: string;
+    authorTitle?: string;
+    authorImage?: SanityImageSource;
+  }>;
+}
+
+export interface PhilosophySectionBlock extends BaseBlock {
+  _type: 'philosophySection';
+  background?: string;
+  quote?: string;
+}
+
 export interface SanityColor {
   _type: 'color';
   hex: string;
@@ -205,12 +249,16 @@ export type PageContentBlock =
   | TimelineSectionBlock
   | MediaGallerySectionBlock
   | LogoGridSectionBlock
-  | CtaBannerSectionBlock;
+  | CtaBannerSectionBlock
+  | PackagesSectionBlock
+  | TestimonialSectionBlock
+  | PhilosophySectionBlock;
 
 export interface PageDocument {
   title?: string;
   slug: string;
   seoTitle?: string;
-  siteMode: SiteMode;
+  siteMode: CmsSiteMode;
   contentBlocks?: PageContentBlock[];
+  contentBlocksWedding?: PageContentBlock[];
 }

@@ -123,3 +123,50 @@ export const CTA_BANNER_SECTION = groq`
     }
   }
 `;
+
+export const PACKAGES_SECTION = groq`
+  _type == "packagesSection" => {
+    heading{
+      "eyebrow": ${LOCALIZED('eyebrow')},
+      "heading": ${LOCALIZED('heading')},
+      "body": ${LOCALIZED('body')},
+      align
+    },
+    packages[]{
+      "title": ${LOCALIZED('title')},
+      price,
+      currency,
+      features,
+      featured,
+      cta{
+        ${CTA_PROJECTION}
+      }
+    },
+    background
+  }
+`;
+
+export const TESTIMONIAL_SECTION = groq`
+  _type == "testimonialSection" => {
+    heading{
+      "eyebrow": ${LOCALIZED('eyebrow')},
+      "heading": ${LOCALIZED('heading')},
+      "body": ${LOCALIZED('body')},
+      align
+    },
+    testimonials[]{
+      "quote": ${LOCALIZED('quote')},
+      authorName,
+      authorTitle,
+      authorImage
+    },
+    background
+  }
+`;
+
+export const PHILOSOPHY_SECTION = groq`
+  _type == "philosophySection" => {
+    "quote": ${LOCALIZED('quote')},
+    background
+  }
+`;
