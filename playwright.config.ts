@@ -23,9 +23,9 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ['html', { outputFolder: 'playwright-report' }],
+    ['html', { outputFolder: 'playwright-report', open: 'never' }],
     ['junit', { outputFile: 'play-results/junit.xml' }],
-    ['list']
+    ['line']
   ],
   outputDir: 'play-results',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -78,9 +78,16 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'E2E_TEST=1 npm run dev',
+    command: 'npm run dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
+    env: {
+      E2E_TEST: '1',
+      NEXT_PUBLIC_E2E_TEST: '1',
+      PLAYWRIGHT_TEST: '1',
+      FORCE_COLOR: '0',
+      NEXT_DISABLE_TURBOPACK: '1',
+    },
   },
 });
