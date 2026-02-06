@@ -1,6 +1,5 @@
 import Footer from '@/components/footer/Footer';
 import Navbar from '@/components/navigation/Navbar';
-import { Toaster } from '@/components/ui/sonner';
 import { resolvePreferences } from '@/lib/i18nUtils';
 import { client } from '@/sanity/lib/client';
 import { modeHomeSlugsQuery, settingsQuery } from '@/sanity/lib/queries';
@@ -65,7 +64,6 @@ export default async function SiteLayout({ children, params }: SiteLayoutProps) 
     <div className="min-h-screen">
       <Navbar mode={mode} settings={settings} homeSlugs={modeSlugMap} lang={lang} />
       <main>{children}</main>
-      <Toaster />
       <Footer settings={settings} />
     </div>
   );

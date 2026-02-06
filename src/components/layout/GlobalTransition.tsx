@@ -1,12 +1,13 @@
 'use client';
 
 import { useMode } from '@/hooks/useMode';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useEffect, useState } from 'react';
 
 export const GlobalTransition = () => {
   const { isTransitioning, targetMode, setIsCovered } = useMode();
   const [durations, setDurations] = useState({ slow: 1.0, fast: 0.3 });
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -25,12 +26,16 @@ export const GlobalTransition = () => {
   const curtainColor = targetMode === 'wedding' ? '#faf7f2' : '#00040d';
   const easeOutExpo = [0.22, 1, 0.36, 1] as const;
 
+  if (prefersReducedMotion) {
+    return null;
+  }
+
   return (
     <AnimatePresence>
       {isTransitioning && (
         <motion.div
           data-testid="curtain"
-          className="fixed inset-0 z-[9999]"
+          className="fixed inset-0 z-9999"
           initial="hidden"
           animate="enter"
           exit="exit"
@@ -48,6 +53,11 @@ export const GlobalTransition = () => {
             },
           }}
           style={{ backgroundColor: curtainColor, willChange: 'transform' }}
+          onAnimationStart={() => {
+            // Safety fallback: if animation doesn't complete (e.g. reduced motion or CI lag), 
+            // force state update after expected duration + buffer
+            setTimeout(() => setIsCovered(true), durations.slow * 1000 + 100);
+          }}
           onAnimationComplete={(definition) => {
             if (definition === 'enter') setIsCovered(true);
             if (definition === 'exit') setIsCovered(false);

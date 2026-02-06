@@ -119,6 +119,9 @@
   /********** Custom **********/
   /* fonts */
   --font-primary: var(--font-sora);
+  /* animation */
+  --duration-fast: 0.3s;
+  --duration-slow: 0.5s;
   /* color */
   --background-secondary: var(--color-espresso);
   --text-primary: var(--color-off-white);
@@ -156,6 +159,11 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+
+[data-mode="wedding"] {
+  --duration-fast: 0.4s;
+  --duration-slow: 0.9s;
 }
 
 @layer base {

@@ -4,7 +4,7 @@ import { useModeStore } from '@/hooks/useMode';
 import { SiteMode } from '@/lib/preferences';
 import { useTheme } from 'next-themes';
 import { usePathname } from 'next/navigation';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 
 interface ModeProviderProps {
   children: ReactNode;
@@ -21,10 +21,17 @@ interface ModeProviderProps {
 export const ModeProvider = ({ children, initialMode }: ModeProviderProps) => {
   const { setTheme } = useTheme();
 
-  // Hydrate store with server state using useEffect to avoid render-phase updates
-  useEffect(() => {
-    console.log('ModeProvider mounted with initialMode:', initialMode);
+  // 1. Synchronous hydration of Zustand store (render-phase)
+  // Prevents "flicker" where store is empty for one frame
+  const initialized = useRef(false);
+  if (!initialized.current) {
+    console.log('ModeProvider: Synchronous hydration with', initialMode);
     useModeStore.setState({ mode: initialMode });
+    initialized.current = true;
+  }
+
+  // 2. Sync side-effects (Theme & DOM)
+  useEffect(() => {
     // Sync theme with server mode to ensure next-themes (css vars) matches cookie (content)
     const targetTheme = initialMode === 'production' ? 'dark' : 'light';
     setTheme(targetTheme);

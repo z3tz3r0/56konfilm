@@ -59,14 +59,33 @@ export const ModeSwitcher = ({
       // Opt-in to optimistic update for global theme state
       setGlobalMode(targetMode);
       
-      const targetSlug = homeSlugs[targetMode as SiteMode];
-      const targetPath = targetSlug ? `/${lang}/${targetSlug}` : `/${lang}`;
+      const currentHomeSlug = homeSlugs[displayMode as SiteMode];
+      const currentHomePath = currentHomeSlug ? `/${lang}/${currentHomeSlug}` : `/${lang}`;
+      const isCurrentlyOnHome = pathname === currentHomePath;
+
+      let targetPath: string;
+      if (isCurrentlyOnHome) {
+        // If on home, navigate to the target mode's home
+        const targetSlug = homeSlugs[targetMode as SiteMode];
+        targetPath = targetSlug ? `/${lang}/${targetSlug}` : `/${lang}`;
+      } else {
+        // If on a content page (like /contact), stay on the same path
+        // the components will handle their own mode-specific transitions
+        targetPath = pathname;
+      }
+
       targetPathRef.current = targetPath;
       hasStartedTransition.current = true;
 
       if (targetPath !== pathname) {
         startTransition(() => {
           router.push(targetPath);
+        });
+      } else {
+        // If path is same (content page or home->home fallback), force refresh 
+        // to update Server Components (RootLayout/Sanity Data) with new cookie
+        startTransition(() => {
+          router.refresh();
         });
       }
     }
@@ -110,8 +129,8 @@ export const ModeSwitcher = ({
       animate={{
         backgroundColor:
           displayMode === 'production'
-            ? '#00040d' // midnight-black
-            : '#5b4339', // brown
+            ? 'var(--color-midnight-black)'
+            : 'var(--color-brown)',
       }}
       initial={false}
     >
@@ -136,14 +155,14 @@ export const ModeSwitcher = ({
         onClick={() => handleModeChange('production')}
         disabled={isPending || isTransitioning}
         className={cn(
-          'relative z-10 h-full cursor-pointer text-xs font-semibold tracking-[0.1em] uppercase',
+          'relative z-10 h-full cursor-pointer text-xs font-semibold tracking-widest uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
           (isPending || isTransitioning) && 'cursor-not-allowed opacity-60'
         )}
         animate={{
           color:
             displayMode === 'production'
-              ? '#00040d' // midnight-black
-              : '#f9f9f9', // off-white
+              ? 'var(--color-midnight-black)'
+              : 'var(--color-off-white)',
         }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
         whileHover={{ scale: 1.05 }}
@@ -157,11 +176,11 @@ export const ModeSwitcher = ({
         onClick={() => handleModeChange('wedding')}
         disabled={isPending || isTransitioning}
         className={cn(
-          'relative z-10 h-full cursor-pointer text-xs font-semibold tracking-[0.1em] uppercase',
+          'relative z-10 h-full cursor-pointer text-xs font-semibold tracking-widest uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
           (isPending || isTransitioning) && 'cursor-not-allowed opacity-60'
         )}
         animate={{
-          color: displayMode === 'wedding' ? '#5b4339' : '#faf7f2', // text-brown : text-ivory-white
+          color: displayMode === 'wedding' ? 'var(--color-brown)' : 'var(--color-ivory-white)',
         }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
         whileHover={{ scale: 1.05 }}

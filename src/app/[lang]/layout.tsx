@@ -5,6 +5,7 @@ import { SiteMode, isSupportedMode } from '@/lib/preferences';
 import type { Metadata } from 'next';
 import { Cormorant_Garamond, Manrope, Noto_Sans_Thai, Sora } from 'next/font/google';
 import { cookies } from 'next/headers';
+import { Toaster } from 'sonner';
 import '../globals.css';
 
 // Sora supports Latin + Thai through fallback to system fonts
@@ -84,15 +85,18 @@ export default async function RootLayout({
   const initialMode: SiteMode = isSupportedMode(cookieValue || '') 
     ? (cookieValue as SiteMode) 
     : 'production';
-  console.log(`[RootLayout] Lang: ${lang}, Cookie: ${cookieValue}, InitialMode: ${initialMode}`);
   const initialTheme = MODE_TO_THEME[initialMode];
 
   return (
     // data-mode helps with CSS selection, data-theme helps next-themes
-    <html lang={lang} suppressHydrationWarning data-mode={initialMode} style={{ colorScheme: initialTheme }}>
-      <body
-        className={`${sora.variable} ${cormorantGaramond.variable} ${manrope.variable} ${notoSansThai.variable} font-body antialiased`}
-      >
+    <html 
+      lang={lang} 
+      suppressHydrationWarning 
+      data-mode={initialMode} 
+      style={{ colorScheme: initialTheme }}
+      className={`${sora.variable} ${cormorantGaramond.variable} ${manrope.variable} ${notoSansThai.variable}`}
+    >
+      <body className="font-body antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme={initialTheme} // FORCE default theme based on server mode
@@ -105,6 +109,7 @@ export default async function RootLayout({
             {children}
           </ModeProvider>
         </ThemeProvider>
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );
