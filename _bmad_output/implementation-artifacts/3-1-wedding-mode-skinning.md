@@ -1,6 +1,6 @@
 # Story 3.1: Wedding Mode Skinning
 
-Status: in-progress
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -35,18 +35,18 @@ so that **I feel I am in a romantic, studio environment rather than a raw produc
 
 ## Tasks / Subtasks
 
-- [ ] **Infrastructure: Persistence Verification** (AC: #4)
-  - [ ] Verify `ModeProvider` correctly hydrations from 'mode' cookie.
-  - [ ] Ensure `next-themes` and `data-mode` are perfectly synced on root `html` tag.
-- [ ] **Styling: CSS Variable Mapping** (AC: #1, #3)
-  - [ ] Audit `src/app/globals.css` to ensure all `@theme` variables are correctly overridden in `.dark, [data-mode="production"]` vs root (Wedding baseline).
-  - [ ] Verify `h1-h4` font-family fallback order for Wedding mode.
-- [ ] **Component: ModeSwitcher Enhancement** (AC: #2)
-  - [ ] Ensure `handleModeChange` triggers the `GlobalTransition` effectively before navigation.
-  - [ ] Verify colors used in `ModeSwitcher` motion properties match the brand guide (`#5b4339` for Wedding).
-- [ ] **Validation: Cross-Page Stability** (AC: #4)
-  - [ ] Test mode persistence during hard reloads.
-  - [ ] Verify no "Flicker of Unstyled Content" (FOUC) during mode shifts.
+- [x] **Infrastructure: Persistence Verification** (AC: #4)
+  - [x] Verify `ModeProvider` correctly hydrations from 'mode' cookie.
+  - [x] Ensure `next-themes` and `data-mode` are perfectly synced on root `html` tag.
+- [x] **Styling: CSS Variable Mapping** (AC: #1, #3)
+  - [x] Audit `src/app/globals.css` to ensure all `@theme` variables are correctly overridden in `.dark, [data-mode="production"]` vs root (Wedding baseline).
+  - [x] Verify `h1-h4` font-family fallback order for Wedding mode.
+- [x] **Component: ModeSwitcher Enhancement** (AC: #2)
+  - [x] Ensure `handleModeChange` triggers the `GlobalTransition` effectively before navigation.
+  - [x] Verify colors used in `ModeSwitcher` motion properties match the brand guide (`#5b4339` for Wedding).
+- [x] **Validation: Cross-Page Stability** (AC: #4)
+  - [x] Test mode persistence during hard reloads.
+  - [x] Verify no "Flicker of Unstyled Content" (FOUC) during mode shifts.
 
 ## Dev Notes
 
@@ -79,3 +79,8 @@ Antigravity (M18)
 - `src/app/[lang]/layout.tsx`
 - `src/components/navigation/ModeSwitcher.tsx`
 - `src/components/providers/ModeProvider.tsx`
+- `tests/e2e/wedding-mode-validation.spec.ts`
+- `tests/e2e/wedding-mode-skinning.spec.ts`
+- `tests/e2e/debug-mode.spec.ts`
+- `tests/support/fixtures/index.ts`
+- `playwright.config.ts`

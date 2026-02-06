@@ -55,11 +55,11 @@ development_status:
   2-4-admin-multi-drag-and-drop-efficiency: done
   epic-2-retrospective: done
 
-  epic-3: backlog
-  3-1-wedding-mode-skinning: in-progress
-  3-2-smart-contact-form-routing: backlog
-  3-3-dual-context-content-strategy-about-us: backlog
-  3-4-wedding-homepage-packages: backlog
+  epic-3: in-progress
+  3-1-wedding-mode-skinning: done
+  3-2-smart-contact-form-routing: done
+  3-3-dual-context-content-strategy-about-us: done
+  3-4-wedding-homepage-packages: done
   epic-3-retrospective: optional
 
   epic-4: backlog
