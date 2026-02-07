@@ -39,7 +39,7 @@ const Navbar = async ({ mode, settings, homeSlugs, lang }: NavbarProps) => {
         </Link>
 
         <Sheet>
-            <SheetTrigger asChild className="justify-self-end md:hidden">
+          <SheetTrigger asChild className="justify-self-end md:hidden">
             <Button
               variant="ghost"
               size="icon"
@@ -51,9 +51,9 @@ const Navbar = async ({ mode, settings, homeSlugs, lang }: NavbarProps) => {
               <Menu />
             </Button>
           </SheetTrigger>
-          <SheetContent className="bg-secondary text-text-secondary w-full sm:max-w-full">
-            <SheetHeader className="hidden">
-              <SheetTitle>{''}</SheetTitle>
+          <SheetContent className="w-full">
+            <SheetHeader>
+              <SheetTitle className="hidden">{''}</SheetTitle>
             </SheetHeader>
 
             <div className="flex h-screen flex-col items-center justify-center gap-16 text-4xl font-bold">
@@ -74,8 +74,10 @@ const Navbar = async ({ mode, settings, homeSlugs, lang }: NavbarProps) => {
                   </Link>
                 ))}
               </nav>
-              <ModeSwitcher initialMode={mode} homeSlugs={homeSlugs} lang={lang} />
-              <LanguageSwitcher />
+              <div className="flex flex-col items-center gap-8">
+                <ModeSwitcher initialMode={mode} homeSlugs={homeSlugs} lang={lang} />
+                <LanguageSwitcher />
+              </div>
             </div>
           </SheetContent>
         </Sheet>
