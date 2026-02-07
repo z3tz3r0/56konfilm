@@ -4,6 +4,7 @@ test.describe('Wedding Mode Validation', () => {
   test('should persist wedding mode after hard reload', async ({ page, setMode }) => {
     // GIVEN: User is in Wedding Mode
     await setMode('wedding');
+    await page.goto('/');
     await expect(page.locator('html')).toHaveAttribute('data-mode', 'wedding');
 
     // WHEN: Hard reload occurs
@@ -19,6 +20,7 @@ test.describe('Wedding Mode Validation', () => {
   test('should not show FOUC (flash of unstyled content) or wrong mode', async ({ page, setMode }) => {
      // GIVEN: Cookie is set to wedding
      await setMode('wedding');
+     await page.goto('/');
 
      // WHEN: We reload
      await page.reload();

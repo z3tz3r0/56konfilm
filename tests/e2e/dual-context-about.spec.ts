@@ -1,7 +1,12 @@
+import type { Page } from '@playwright/test';
 import { expect, test } from '../support/fixtures';
 
 test.describe('Dual-Context About Page', () => {
-  const switchMode = async (page, mode: 'Wedding' | 'Production', isMobile: boolean) => {
+  const switchMode = async (
+    page: Page,
+    mode: 'Wedding' | 'Production',
+    isMobile: boolean
+  ) => {
     if (isMobile) {
       await page.getByTestId('mobile-menu-button').click();
     }
@@ -124,8 +129,8 @@ test.describe('Dual-Context About Page', () => {
     
     // Curtain should be visible during transition (if motion isn't reduced)
     // This may or may not catch it depending on timing, but won't cause test failure
-    const curtainVisible = await curtain.isVisible().catch(() => false);
-    
+    await curtain.isVisible().catch(() => false);
+
     // Wait for transition to complete
     await page.waitForLoadState('domcontentloaded');
     

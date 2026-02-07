@@ -15,6 +15,7 @@ test.describe('Global Mode Switcher', () => {
   test('should switch to Wedding mode and persist', async ({ page, setMode }) => {
     // 1. Switch to wedding
     await setMode('wedding');
+    await page.reload();
 
     // 2. Verify html has 'light' theme (auto-retry)
     await expect(page.locator('html')).toHaveClass(/light/, { timeout: 10000 });

@@ -1,15 +1,23 @@
+import type { Page } from '@playwright/test';
 import { expect, test } from '../support/fixtures';
 
 test.describe('Smart Contact Form Routing', () => {
-  const ensureMenuOpenAndClick = async (page, text: 'Wedding' | 'Production') => {
+  const ensureMenuOpenAndClick = async (page: Page, text: 'Wedding' | 'Production') => {
     const mobileMenuBtn = page.getByTestId('mobile-menu-button');
+    const getTargetButton = () =>
+      page
+        .getByTestId('mode-switcher')
+        .filter({ visible: true })
+        .getByRole('button', { name: text });
+
     if (await mobileMenuBtn.isVisible()) {
-      const targetButton = page.getByRole('button', { name: text }).filter({ visible: true });
+      const targetButton = getTargetButton();
       if (!(await targetButton.isVisible())) {
         await mobileMenuBtn.click();
       }
     }
-    const targetButton = page.getByRole('button', { name: text }).filter({ visible: true });
+    const targetButton = getTargetButton();
+    await expect(targetButton).toBeVisible();
     await targetButton.click();
     if (await mobileMenuBtn.isVisible()) {
       await page.keyboard.press('Escape');

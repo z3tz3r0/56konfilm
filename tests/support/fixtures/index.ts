@@ -9,7 +9,7 @@ interface SiteFixtures {
 
 export const test = base.extend<SiteFixtures>({
   // Custom fixture to set the site mode via cookies
-  setMode: async ({ context, page }, use) => {
+  setMode: async ({ context }, applyFixture) => {
     const setModeFunc = async (mode: SiteMode) => {
       // Set for both localhost and 127.0.0.1 to be safe
       await context.addCookies([
@@ -20,35 +20,18 @@ export const test = base.extend<SiteFixtures>({
           expires: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365,
         },
       ]);
-      // console.log(`[Fixture] Set mode cookie: ${mode} for localhost`);
-      // Remove loop over domains
-      /*
-      const domains = ['localhost', '127.0.0.1'];
-      for (const domain of domains) {
-         ...
-      }
-      */
-      // Also try to set via evaluation if on a page
-      if (page.url() !== 'about:blank') {
-        await page.evaluate((m) => {
-          document.cookie = `mode=${m}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
-        }, mode);
-      }
-      await page.goto('/'); 
-      // `networkidle` is flaky in Next dev (long-lived connections); prefer deterministic readiness.
-      await page.waitForLoadState('domcontentloaded');
     };
-    await use(setModeFunc);
+    await applyFixture(setModeFunc);
   },
 
   // Persistent site mode fixture
-  siteMode: async ({ page }, use) => {
+  siteMode: async ({ page }, applyFixture) => {
     const html = page.locator('html');
     const className = await html.getAttribute('class');
     if (className?.includes('light')) {
-      await use('wedding');
+      await applyFixture('wedding');
     } else {
-      await use('production');
+      await applyFixture('production');
     }
   },
 });

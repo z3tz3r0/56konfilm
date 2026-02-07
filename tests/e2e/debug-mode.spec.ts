@@ -1,5 +1,4 @@
-
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Debug Mode', () => {
   test('should have data-mode attribute', async ({ page }) => {
@@ -7,33 +6,33 @@ test.describe('Debug Mode', () => {
     await page.goto('/');
     // await page.waitForTimeout(2000); // Removed arbitrary wait
     const html = await page.content();
-    // console.log('HTML Content Start:', html.substring(0, 500));
-    
+    expect(html).toContain('<html');
+
     const mode = await page.getAttribute('html', 'data-mode');
-    // console.log('Data Mode Attribute:', mode);
-    
+    expect(mode).toMatch(/^(production|wedding)$/);
+
     const classes = await page.getAttribute('html', 'class');
-    // console.log('HTML Classes:', classes);
+    expect(classes ?? '').not.toEqual('');
 
     const h1Font = await page.evaluate(() => {
       const h1 = document.querySelector('h1');
       return h1 ? getComputedStyle(h1).fontFamily : 'NO H1';
     });
-    // console.log('H1 Font Family:', h1Font);
+    expect(h1Font).not.toEqual('');
 
     const bodyFont = await page.evaluate(() => {
       return getComputedStyle(document.body).fontFamily;
     });
-    // console.log('Body Font Family:', bodyFont);
+    expect(bodyFont).not.toEqual('');
 
     const soraVar = await page.evaluate(() => {
       return getComputedStyle(document.body).getPropertyValue('--font-sora');
     });
-    // console.log('--font-sora variable:', soraVar);
+    expect(soraVar).toBeDefined();
 
     const cormorantVar = await page.evaluate(() => {
       return getComputedStyle(document.body).getPropertyValue('--font-cormorant-garamond');
     });
-    // console.log('--font-cormorant-garamond variable:', cormorantVar);
+    expect(cormorantVar).toBeDefined();
   });
 });

@@ -17,8 +17,6 @@ export interface MockHybridMediaItem {
 }
 
 export const createMediaGalleryBlock = (overrides: Partial<MediaGallerySectionBlock> = {}): MediaGallerySectionBlock => {
-  const isVideo = faker.datatype.boolean();
-
   return {
     _type: 'mediaGallerySection',
     _key: faker.string.uuid(),

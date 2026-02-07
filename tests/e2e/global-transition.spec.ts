@@ -19,7 +19,10 @@ test.describe('Global Visual Transitions', () => {
     }
 
     // Click to switch to wedding mode
-    const weddingButton = page.getByRole('button', { name: /Wedding/i }).filter({ visible: true });
+    const weddingButton = page
+      .getByTestId('mode-switcher')
+      .filter({ visible: true })
+      .getByRole('button', { name: /Wedding/i });
     await weddingButton.click();
 
     // Expect curtain wipe to appear immediately
@@ -70,7 +73,10 @@ test.describe('Global Visual Transitions', () => {
     }
 
      // Click to switch to production mode
-     const productionButton = page.getByRole('button', { name: /Production/i }).filter({ visible: true });
+     const productionButton = page
+       .getByTestId('mode-switcher')
+       .filter({ visible: true })
+       .getByRole('button', { name: /Production/i });
      await productionButton.click();
  
      // Curtain should appear
@@ -100,7 +106,11 @@ test.describe('Global Visual Transitions', () => {
        }
      }
 
-     // While curtain is visible, the body background should eventually update
-     await expect(page.locator('html')).toHaveAttribute('data-mode', 'production');
+     // Wait for transition completion, then verify final mode state
+     await expect(curtain).toBeHidden({ timeout: 15000 });
+     await expect(page.locator('html')).toHaveAttribute('data-mode', 'production', {
+       timeout: 15000,
+     });
+     await expect(page.locator('html')).toHaveClass(/dark/, { timeout: 15000 });
   });
 });

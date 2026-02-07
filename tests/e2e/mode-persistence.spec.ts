@@ -6,9 +6,14 @@ test.describe('Mode Persistence & Switcher', () => {
   const ensureMenuOpenAndClick = async (page: Page, text: 'Wedding' | 'Production') => {
     const viewportSize = page.viewportSize();
     const isMobile = viewportSize && viewportSize.width < 768;
+    const getModeButton = () =>
+      page
+        .getByTestId('mode-switcher')
+        .filter({ visible: true })
+        .getByRole('button', { name: text });
 
     if (isMobile) {
-      const menuBtn = page.locator(`button:visible`, { hasText: text });
+      const menuBtn = getModeButton();
 
       if (!(await menuBtn.isVisible())) {
         await page.getByTestId('mobile-menu-button').click();
@@ -19,10 +24,16 @@ test.describe('Mode Persistence & Switcher', () => {
       await menuBtn.click();
     } else {
        // Desktop
-       const menuBtn = page.locator('button:visible', { hasText: text });
+       const menuBtn = getModeButton();
+       await expect(menuBtn).toBeVisible();
        await expect(menuBtn).toBeEnabled();
        await menuBtn.click();
     }
+
+    const expectedMode = text.toLowerCase();
+    await expect(page.locator('html')).toHaveAttribute('data-mode', expectedMode, {
+      timeout: 15000,
+    });
   };
 
   test('should default to production (dark) mode on first visit', async ({ page }) => {
@@ -35,8 +46,6 @@ test.describe('Mode Persistence & Switcher', () => {
     await page.goto('/');
     
     await ensureMenuOpenAndClick(page, 'Wedding');
-    
-    await expect(page.locator('html')).toHaveAttribute('data-mode', 'wedding');
     await expect(page.locator('html')).toHaveClass(/light/);
 
     await page.reload();
@@ -60,8 +69,6 @@ test.describe('Mode Persistence & Switcher', () => {
 
     // Switch back
     await ensureMenuOpenAndClick(page, 'Production');
-    
-    await expect(page.locator('html')).toHaveAttribute('data-mode', 'production');
     await expect(page.locator('html')).toHaveClass(/dark/);
   });
 });

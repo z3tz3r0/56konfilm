@@ -2,7 +2,7 @@ import { expect, test } from '../support/fixtures';
 
 test.describe('Wedding Mode Skinning', () => {
   
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async () => {
     // page.on('console', msg => {
     //   const type = msg.type();
     //   const text = msg.text();
@@ -15,6 +15,7 @@ test.describe('Wedding Mode Skinning', () => {
   test('should apply Wedding theme variables when mode is active', async ({ page, setMode }) => {
     // GIVEN: User is in Wedding Mode
     await setMode('wedding');
+    await page.goto('/');
 
     // WHEN: The page renders
     const body = page.locator('body');
@@ -30,6 +31,7 @@ test.describe('Wedding Mode Skinning', () => {
   test('should switch typography to Cormorant Garamond in Wedding Mode', async ({ page, setMode }) => {
     // GIVEN: User is in Wedding Mode
     await setMode('wedding');
+    await page.goto('/');
 
     // WHEN: We check a heading (h1)
     const h1 = page.locator('h1').first();
@@ -38,9 +40,10 @@ test.describe('Wedding Mode Skinning', () => {
     await expect(h1).toHaveCSS('font-family', /Cormorant Garamond/);
   });
 
-  test('should persist wedding skin across navigation', async ({ page, setMode, isMobile }) => {
+  test('should persist wedding skin across navigation', async ({ page, setMode }) => {
     // GIVEN: User is in Wedding Mode on Home
     await setMode('wedding');
+    await page.goto('/');
     await expect(page.locator('html')).toHaveAttribute('data-mode', 'wedding');
 
     // WHEN: User navigates to another page (e.g., Contact)
@@ -54,16 +57,20 @@ test.describe('Wedding Mode Skinning', () => {
     await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(250, 247, 242)');
   });
 
-  test('should revert to Production skin when toggled back', async ({ page, setMode, isMobile }) => {
+  test('should revert to Production skin when toggled back', async ({ page, setMode }) => {
     // GIVEN: User starts in Wedding Mode
     await setMode('wedding');
+    await page.goto('/');
     await expect(page.locator('html')).toHaveAttribute('data-mode', 'wedding');
 
     // WHEN: User switches back to Production
-    const productionButton = page.getByRole('button', { name: 'Production' }).filter({ visible: true });
+    const productionButton = page
+      .getByTestId('mode-switcher')
+      .filter({ visible: true })
+      .getByRole('button', { name: 'Production' });
 
     // Target-First Strategy:
-    if (!(await productionButton.isVisible()) && isMobile) {
+    if (!(await productionButton.isVisible())) {
       // If button isn't visible on mobile, open the menu
       await page.getByTestId('mobile-menu-button').click();
     }
