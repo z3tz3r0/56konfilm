@@ -38,28 +38,69 @@ export const pageType = defineType({
     defineField({
       name: 'slug',
       title: 'Slug',
-      description: 'URL ที่จะแสดงผลสำหรับหน้านี้',
+      description:
+        'URL ของหน้านี้ เช่น about, services, contact (ไม่ต้องใส่ / ด้านหน้า). สามารถใช้ slug เดียวกันข้ามโหมดได้ หากไม่ได้ตั้งเป็น Both',
       type: 'slug',
       options: {
         source: 'page',
         isUnique: async (slug, context) => {
           const { document, getClient } = context;
+
+          if (!document || !getClient) {
+            return true;
+          }
+
+          // During early draft initialization, Studio can call isUnique before revision is ready.
+          if (!document._id || !document._rev) {
+            return true;
+          }
+
           const client = getClient({ apiVersion: '2023-01-01' });
-          const id = document?._id.replace(/^drafts\./, '');
+          const id = document?._id?.replace(/^drafts\./, '');
+          const mode = document?.siteMode || 'production';
+          const slugCandidate = slug as string | { current?: string } | undefined;
+          const slugValue =
+            typeof slugCandidate === 'string'
+              ? slugCandidate
+              : typeof slugCandidate?.current === 'string'
+                ? slugCandidate.current
+                : '';
+
+          if (!slugValue) {
+            return true;
+          }
+
           const params = {
-            draft: `drafts.${id}`,
-            published: id,
-            slug,
+            draft: id ? `drafts.${id}` : '',
+            published: id || '',
+            slug: slugValue,
+            mode,
           };
 
-          const query = `count(*[
-            _type == "page" && 
-            slug.current == $slug &&
-            !(_id in [$draft, $published])
-          ])`;
+          const query =
+            mode === 'both'
+              ? `count(*[
+                  _type == "page" &&
+                  slug.current == $slug &&
+                  !(_id in [$draft, $published])
+                ])`
+              : `count(*[
+                  _type == "page" &&
+                  slug.current == $slug &&
+                  !(_id in [$draft, $published]) &&
+                  (
+                    coalesce(siteMode, "production") == $mode ||
+                    siteMode == "both"
+                  )
+                ])`;
 
-          const result = await client.fetch(query, params);
-          return result === 0;
+          try {
+            const result = await client.fetch(query, params);
+            return result === 0;
+          } catch (error) {
+            console.warn('Slug uniqueness check failed', error);
+            return true;
+          }
         },
       },
       group: 'settings',
@@ -128,13 +169,14 @@ export const pageType = defineType({
     localizedStringField({
       name: 'seoTitle',
       title: 'SEO Title',
-      description: 'หัวข้อ SEO',
+      description:
+        'หัวข้อที่แสดงบน Google (แนะนำ 50-60 ตัวอักษร, ใส่คีย์เวิร์ดหลักช่วงต้นประโยค)',
       group: 'seo',
     }),
     defineField({
       name: 'seo',
       title: 'SEO',
-      description: 'Metadata สำหรับ Search และ Social',
+      description: 'ตั้งค่า SEO เพิ่มเติมของหน้านี้ (Title, Description, Open Graph Image)',
       type: 'seo',
       group: 'seo',
     }),

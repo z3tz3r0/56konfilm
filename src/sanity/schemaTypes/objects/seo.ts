@@ -15,17 +15,20 @@ export const seoObjectType = defineType({
     localizedStringField({
       name: 'title',
       title: 'Title',
-      description: 'SEO title for search engines and social sharing',
+      description:
+        'หัวข้อสำหรับผลค้นหาและตอนแชร์ลิงก์ (แนะนำ 50-60 ตัวอักษร และใส่คีย์เวิร์ดหลักไว้ช่วงต้น)',
     }),
     localizedTextField({
       name: 'description',
       title: 'Description',
-      description: 'SEO description for search engines and social sharing',
+      description:
+        'คำอธิบายใต้หัวข้อบน Google (แนะนำ 120-160 ตัวอักษร: สรุปจุดเด่น + บริการ + พื้นที่ให้บริการ)',
     }),
     defineField({
       name: 'ogImage',
       title: 'Open Graph Image',
-      description: 'Recommended size: 1200 x 630 px (keep under 1MB)',
+      description:
+        'ภาพที่ใช้เวลาแชร์ลงโซเชียล (แนะนำ 1200x630 px, ขนาดไม่เกิน 1MB, ข้อความบนภาพควรสั้นและอ่านง่าย)',
       type: 'image',
       options: { hotspot: true },
       validation: (Rule) =>
