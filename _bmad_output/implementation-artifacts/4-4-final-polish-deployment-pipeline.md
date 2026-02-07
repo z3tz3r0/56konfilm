@@ -270,6 +270,7 @@ Antigravity (Expert CLI Automation Agent / Gemini 2.0 Flash)
 - Resolved lint errors by importing `SiteSettings` from `@/types/siteSettings`.
 - Discovered duplicated `client` definitions and prioritized `src/sanity/lib/client.ts` with `useCdn: false`.
 - Mocked signature verification for E2E tests via `PLAYWRIGHT_TEST` environment variable.
+- Migrated dependency management from `npm` back to `pnpm` and updated `pnpm-lock.yaml`.
 
 ### Completion Notes List
 
