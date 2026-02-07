@@ -8,6 +8,8 @@ export type ActionState = {
   errors?: Record<string, string[]>;
 };
 
+const CONTACT_RECEIVER_EMAIL = '56konfilm@gmail.com';
+
 export async function submitContactForm(data: ContactFormValues | unknown): Promise<ActionState> {
   const parsed = contactFormSchema.safeParse(data);
 
@@ -24,14 +26,14 @@ export async function submitContactForm(data: ContactFormValues | unknown): Prom
   // Simulate routing logic
   try {
     if (validData.type === 'commercial') {
-      console.log(`[ROUTING] Commercial Inquiry -> agency@56konfilm.com: ${validData.name}`);
+      console.log(`[ROUTING] Commercial Inquiry -> ${CONTACT_RECEIVER_EMAIL}: ${validData.name}`);
       // In real implementation: await sendEmail(validData);
       return {
         success: true,
         message: 'Commercial Inquiry received. We will contact you shortly.',
       };
     } else if (validData.type === 'wedding') {
-      console.log(`[ROUTING] Wedding Inquiry -> wedding@56konfilm.com: ${validData.name} - ${validData.weddingDate.toLocaleDateString()}`);
+      console.log(`[ROUTING] Wedding Inquiry -> ${CONTACT_RECEIVER_EMAIL}: ${validData.name} - ${validData.weddingDate.toLocaleDateString()}`);
       // In real implementation: await sendEmail(validData);
       return {
         success: true,
