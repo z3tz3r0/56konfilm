@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, type Variants } from 'motion/react';
 import Image from 'next/image';
 
 import SectionShell from '@/components/page/SectionShell';
@@ -28,16 +28,16 @@ const itemVariants = {
     y: 0,
     transition: {
       duration: 0.6,
-      ease: 'easeOut' as any,
+      ease: 'easeOut',
     },
   },
-};
+} satisfies Variants;
 
 export default function TestimonialSection({ block }: TestimonialSectionProps) {
   const defaultBackground = !block.background || block.background === 'default';
   const [api, setApi] = useState<CarouselApi | null>(null);
   const [current, setCurrent] = useState(0);
-  const [count, setCount] = useState(0);
+  const count = block.testimonials?.length ?? 0;
 
   useEffect(() => {
     if (!api) return;
@@ -46,7 +46,6 @@ export default function TestimonialSection({ block }: TestimonialSectionProps) {
       setCurrent(api.selectedScrollSnap());
     };
 
-    setCount(api.scrollSnapList().length);
     onSelect();
     api.on('select', onSelect);
     api.on('reInit', onSelect);

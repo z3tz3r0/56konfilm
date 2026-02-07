@@ -89,7 +89,17 @@ export const ModeSwitcher = ({
         });
       }
     }
-  }, [isCovered, targetMode, setGlobalMode, startTransition, router, homeSlugs, pathname]);
+  }, [
+    isCovered,
+    targetMode,
+    setGlobalMode,
+    startTransition,
+    router,
+    homeSlugs,
+    pathname,
+    displayMode,
+    lang,
+  ]);
 
   // 2. Lift Curtain when Navigation Complete (isPending -> false)
   useEffect(() => {

@@ -2,24 +2,27 @@
 
 import { useMode } from '@/hooks/useMode';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+
+function resolveDurations() {
+  if (typeof window === 'undefined') {
+    return { slow: 1.0, fast: 0.3 };
+  }
+
+  const styles = getComputedStyle(document.documentElement);
+  const slow = parseFloat(styles.getPropertyValue('--duration-slow'));
+  const fast = parseFloat(styles.getPropertyValue('--duration-fast'));
+
+  return {
+    slow: Number.isFinite(slow) ? slow : 1.0,
+    fast: Number.isFinite(fast) ? fast : 0.3,
+  };
+}
 
 export const GlobalTransition = () => {
   const { isTransitioning, targetMode, setIsCovered } = useMode();
-  const [durations, setDurations] = useState({ slow: 1.0, fast: 0.3 });
+  const [durations] = useState(resolveDurations);
   const prefersReducedMotion = useReducedMotion();
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const styles = getComputedStyle(document.documentElement);
-      const slow = parseFloat(styles.getPropertyValue('--duration-slow'));
-      const fast = parseFloat(styles.getPropertyValue('--duration-fast'));
-      setDurations({
-        slow: Number.isFinite(slow) ? slow : 1.0,
-        fast: Number.isFinite(fast) ? fast : 0.3,
-      });
-    }
-  }, []);
 
   // If targetMode is wedding (Light), curtain is Ivory/White
   // If targetMode is production (Dark), curtain is Black

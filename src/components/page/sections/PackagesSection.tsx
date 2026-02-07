@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'motion/react';
+import { motion, type Variants } from 'motion/react';
 
 import CtaButton from '@/components/page/CtaButton';
 import SectionShell from '@/components/page/SectionShell';
@@ -20,7 +20,7 @@ const containerVariants = {
       delayChildren: 0.1,
     },
   },
-};
+} satisfies Variants;
 
 const itemVariants = {
   hidden: { opacity: 0, y: 18 },
@@ -29,10 +29,10 @@ const itemVariants = {
     y: 0,
     transition: {
       duration: 0.6,
-      ease: 'easeOut' as any,
+      ease: 'easeOut',
     },
   },
-};
+} satisfies Variants;
 
 export default function PackagesSection({ block }: PackagesSectionProps) {
   const defaultBackground = !block.background || block.background === 'default';

@@ -15,6 +15,7 @@ import Image from 'next/image';
 interface TimelineSectionProps {
   block: TimelineSectionBlock;
 }
+type TimelineStep = NonNullable<TimelineSectionBlock['steps']>[number];
 
 export default function TimelineSection({ block }: TimelineSectionProps) {
   const alignClass = getAlignmentClass(block.heading?.align);
@@ -114,7 +115,15 @@ export default function TimelineSection({ block }: TimelineSectionProps) {
 }
 
 // Reusable Card Component
-function TimelineCard({ step, index, className }: { step: any; index: number; className?: string }) {
+function TimelineCard({
+  step,
+  index,
+  className,
+}: {
+  step: TimelineStep;
+  index: number;
+  className?: string;
+}) {
   return (
     <Card className={cn("relative flex h-full flex-col overflow-hidden border-border/10 bg-card transition hover:border-primary/20", className)}>
       <CardContent className="flex flex-1 flex-col justify-start p-6 md:p-8">

@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'motion/react';
+import { motion, type Variants } from 'motion/react';
 import Image from 'next/image';
 
 import CtaGroup from '@/components/page/CtaGroup';
@@ -24,7 +24,7 @@ const containerVariants = {
       delayChildren: 0.2,
     },
   },
-};
+} satisfies Variants;
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -33,10 +33,10 @@ const itemVariants = {
     y: 0,
     transition: {
       duration: 0.5,
-      ease: 'easeOut' as any,
+      ease: 'easeOut',
     }
   },
-};
+} satisfies Variants;
 
 export default function MediaGallerySection({ block }: MediaGallerySectionProps) {
   const alignClass = getAlignmentClass(block.heading?.align);

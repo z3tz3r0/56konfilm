@@ -30,7 +30,7 @@ export default function PhilosophySection({ block }: PhilosophySectionProps) {
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.8, ease: 'easeOut' as any }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
           data-testid="philosophy-quote"
         >
           {block.quote}
