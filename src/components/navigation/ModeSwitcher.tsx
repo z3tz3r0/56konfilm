@@ -2,7 +2,7 @@
 
 import { motion } from 'motion/react';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useRef, useTransition } from 'react';
+import { useEffect, useTransition } from 'react';
 
 import { useMode } from '@/hooks/useMode';
 import { type SiteMode } from '@/lib/preferences';
@@ -27,106 +27,48 @@ export const ModeSwitcher = ({
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
 
-  const { 
-    mode: displayMode, 
-    setMode: setGlobalMode, 
-    setIsTransitioning, 
-    setTargetMode,
-    isTransitioning,
-    isCovered,
-    setIsCovered,
-    targetMode
-  } = useMode();
+  const { mode: displayMode, setMode: setGlobalMode } = useMode();
 
-  // Keep in sync when the server-provided initialMode changes after navigation
+  // Sync global store with server-side truth when initialMode changes (navigation completes)
   useEffect(() => {
-    // ⚠️ CRITICAL: Only update displayMode via store. Do NOT call logic with side-effects here
-    // as it will disrupt the smooth slide animation.
-    if (initialMode) {
-      // Intentionally empty to preserve structure and verify no side-effects are added here.
-      // ModeProvider handles the initial hydration.
+    if (initialMode !== displayMode) {
+      setGlobalMode(initialMode);
     }
-  }, [initialMode]);
-
-  // Coordination Effect: When Curtain Covers Screen (isCovered=true)
-  // Track if a transition has been initiated to prevent premature lifting or loops
-  const hasStartedTransition = useRef(false);
-  const targetPathRef = useRef<string | null>(null);
-
-  // 1. Trigger Navigation when Covered
-  useEffect(() => {
-    if (isCovered && targetMode && !hasStartedTransition.current) {
-      // Opt-in to optimistic update for global theme state
-      setGlobalMode(targetMode);
-      
-      const currentHomeSlug = homeSlugs[displayMode as SiteMode];
-      const currentHomePath = currentHomeSlug ? `/${lang}/${currentHomeSlug}` : `/${lang}`;
-      const isCurrentlyOnHome = pathname === currentHomePath;
-
-      let targetPath: string;
-      if (isCurrentlyOnHome) {
-        // If on home, navigate to the target mode's home
-        const targetSlug = homeSlugs[targetMode as SiteMode];
-        targetPath = targetSlug ? `/${lang}/${targetSlug}` : `/${lang}`;
-      } else {
-        // If on a content page (like /contact), stay on the same path
-        // the components will handle their own mode-specific transitions
-        targetPath = pathname;
-      }
-
-      targetPathRef.current = targetPath;
-      hasStartedTransition.current = true;
-
-      if (targetPath !== pathname) {
-        startTransition(() => {
-          router.push(targetPath);
-        });
-      } else {
-        // If path is same (content page or home->home fallback), force refresh 
-        // to update Server Components (RootLayout/Sanity Data) with new cookie
-        startTransition(() => {
-          router.refresh();
-        });
-      }
-    }
-  }, [
-    isCovered,
-    targetMode,
-    setGlobalMode,
-    startTransition,
-    router,
-    homeSlugs,
-    pathname,
-    displayMode,
-    lang,
-  ]);
-
-  // 2. Lift Curtain when Navigation Complete (isPending -> false)
-  useEffect(() => {
-    const targetPath = targetPathRef.current;
-    const navigationSettled = !targetPath || pathname === targetPath;
-
-    if (isCovered && hasStartedTransition.current && navigationSettled && !isPending) {
-        // Navigation (Transition) is done.
-        // Lift the curtain.
-        setIsTransitioning(false);
-        setTargetMode(null);
-        setIsCovered(false);
-        hasStartedTransition.current = false;
-        targetPathRef.current = null;
-    }
-  }, [isCovered, isPending, pathname, setIsTransitioning, setTargetMode, setIsCovered]);
+  }, [initialMode, displayMode, setGlobalMode]);
 
   const handleModeChange = (nextMode: SiteMode) => {
     if (nextMode === displayMode) return;
-    if (isPending || isTransitioning) return;
+    if (isPending) return;
     
-    // 1. Start Transition: Curtain enters
-    setIsCovered(false);
-    hasStartedTransition.current = false;
-    targetPathRef.current = null;
-    setTargetMode(nextMode);
-    setIsTransitioning(true);
+    // 1. Update mode globally (sets cookie, theme, html attribute immediately)
+    setGlobalMode(nextMode);
+    
+    // 2. Calculate target path based on mode
+    const currentHomeSlug = homeSlugs[displayMode];
+    const currentHomePath = currentHomeSlug ? `/${lang}/${currentHomeSlug}` : `/${lang}`;
+    const isCurrentlyOnHome = pathname === currentHomePath;
+
+    let targetPath: string;
+    if (isCurrentlyOnHome) {
+      // If on home, navigate to the target mode's home
+      const targetSlug = homeSlugs[nextMode];
+      targetPath = targetSlug ? `/${lang}/${targetSlug}` : `/${lang}`;
+    } else {
+      // If on a content page, stay on the same path
+      targetPath = pathname;
+    }
+
+    // 3. Navigate or refresh
+    if (targetPath !== pathname) {
+      startTransition(() => {
+        router.push(targetPath);
+      });
+    } else {
+      // Same path - refresh to update Server Components with new cookie
+      startTransition(() => {
+        router.refresh();
+      });
+    }
   };
 
   return (
@@ -163,10 +105,10 @@ export const ModeSwitcher = ({
       {/* Production button */}
       <motion.button
         onClick={() => handleModeChange('production')}
-        disabled={isPending || isTransitioning}
+        disabled={isPending}
         className={cn(
           'relative z-10 h-full cursor-pointer text-xs font-semibold tracking-widest uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
-          (isPending || isTransitioning) && 'cursor-not-allowed opacity-60'
+          isPending && 'cursor-not-allowed opacity-60'
         )}
         animate={{
           color:
@@ -184,10 +126,10 @@ export const ModeSwitcher = ({
       {/* Wedding button */}
       <motion.button
         onClick={() => handleModeChange('wedding')}
-        disabled={isPending || isTransitioning}
+        disabled={isPending}
         className={cn(
           'relative z-10 h-full cursor-pointer text-xs font-semibold tracking-widest uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
-          (isPending || isTransitioning) && 'cursor-not-allowed opacity-60'
+          isPending && 'cursor-not-allowed opacity-60'
         )}
         animate={{
           color: displayMode === 'wedding' ? 'var(--color-brown)' : 'var(--color-ivory-white)',
