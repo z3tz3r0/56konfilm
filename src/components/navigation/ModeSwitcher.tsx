@@ -27,12 +27,21 @@ export const ModeSwitcher = ({
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
 
-  // Use the global store hook
+  // Use the global store hook instead of local state
   const { mode: displayMode, setMode: setGlobalMode } = useMode();
 
   // Keep in sync when the server-provided initialMode changes after navigation
   useEffect(() => {
-    // Relying on ModeProvider for store hydration
+    // ⚠️ CRITICAL: Only update displayMode via store. Do NOT call logic with side-effects here
+    // as it will disrupt the smooth slide animation.
+    // However, since useMode handles side effects, we just ensure store is in sync
+    // if parent passes a new initialMode that differs from store.
+    if (initialMode) {
+      // Intentionally NOT calling setMode here to avoid recursive side-effects/rendering loops
+      // relying on ModeProvider to set the initial state is safer.
+      // This effect is kept for reference to existing logic pattern but might be redundant
+      // if ModeProvider works correctly.
+    }
   }, [initialMode]);
 
   // Defer navigation until after the slide animation completes
@@ -43,37 +52,22 @@ export const ModeSwitcher = ({
     if (isPending) return;
     if (navTimerRef.current) return; // ignore double-taps while a nav is scheduled
 
-    // 1. Update Global State (Zustand + Cookie + Theme + Attribute) IMMEDIATELY
+    // Update Global State (Zustand + Cookie + Theme + Attribute)
     setGlobalMode(nextMode);
 
-    // 2. Calculate target path based on mode
-    const currentHomeSlug = homeSlugs[displayMode];
-    const currentHomePath = currentHomeSlug ? `/${lang}/${currentHomeSlug}` : `/${lang}`;
-    const isCurrentlyOnHome = pathname === currentHomePath;
+    // Calculate target path including [lang]
+    const targetSlug = homeSlugs[nextMode];
+    const targetPath = targetSlug ? `/${lang}/${targetSlug}` : `/${lang}`;
 
-    let targetPath: string;
-    if (isCurrentlyOnHome) {
-      // If on home, navigate to the target mode's home
-      const targetSlug = homeSlugs[nextMode];
-      targetPath = targetSlug ? `/${lang}/${targetSlug}` : `/${lang}`;
-    } else {
-      // If on a content page, stay on the same path
-      targetPath = pathname;
-    }
-
-    // 3. Defer navigation slightly for animation smoothness
     navTimerRef.current = setTimeout(() => {
       navTimerRef.current = null;
-      
-      if (targetPath !== pathname) {
-        startTransition(() => {
+      startTransition(() => {
+        if (targetPath !== pathname) {
           router.push(targetPath);
-        });
-      } else {
-        startTransition(() => {
+        } else {
           router.refresh();
-        });
-      }
+        }
+      });
     }, 0);
   };
 
@@ -87,8 +81,8 @@ export const ModeSwitcher = ({
       animate={{
         backgroundColor:
           displayMode === 'production'
-            ? 'var(--color-midnight-black)'
-            : 'var(--color-brown)',
+            ? '#00040d' // midnight-black
+            : '#5b4339', // brown
       }}
       initial={false}
     >
@@ -113,14 +107,14 @@ export const ModeSwitcher = ({
         onClick={() => handleModeChange('production')}
         disabled={isPending || !!navTimerRef.current}
         className={cn(
-          'relative z-10 h-full cursor-pointer text-xs font-semibold tracking-widest uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
+          'relative z-10 h-full cursor-pointer text-xs font-semibold tracking-[0.1em] uppercase',
           isPending && 'cursor-not-allowed opacity-60'
         )}
         animate={{
           color:
             displayMode === 'production'
-              ? 'var(--color-midnight-black)'
-              : 'var(--color-off-white)',
+              ? '#00040d' // midnight-black
+              : '#f9f9f9', // off-white
         }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
         whileHover={{ scale: 1.05 }}
@@ -134,11 +128,11 @@ export const ModeSwitcher = ({
         onClick={() => handleModeChange('wedding')}
         disabled={isPending || !!navTimerRef.current}
         className={cn(
-          'relative z-10 h-full cursor-pointer text-xs font-semibold tracking-widest uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
+          'relative z-10 h-full cursor-pointer text-xs font-semibold tracking-[0.1em] uppercase',
           isPending && 'cursor-not-allowed opacity-60'
         )}
         animate={{
-          color: displayMode === 'wedding' ? 'var(--color-brown)' : 'var(--color-ivory-white)',
+          color: displayMode === 'wedding' ? '#5b4339' : '#faf7f2', // text-brown : text-ivory-white
         }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
         whileHover={{ scale: 1.05 }}
