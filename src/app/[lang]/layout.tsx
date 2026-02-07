@@ -1,4 +1,3 @@
-import { GlobalTransition } from '@/components/layout/GlobalTransition';
 import { ModeProvider } from '@/components/providers/ModeProvider';
 import { ThemeProvider } from '@/components/ui/theme-provider';
 import { buildMetadata } from '@/lib/metadata';
@@ -112,7 +111,6 @@ export default async function RootLayout({
         >
           {/* Synchronize store with server state */}
           <ModeProvider initialMode={initialMode}>
-            <GlobalTransition />
             {children}
           </ModeProvider>
         </ThemeProvider>

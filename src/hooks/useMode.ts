@@ -5,20 +5,11 @@ import { create } from 'zustand';
 
 /**
  * Interface definition for Mode State
+ * Cleaned: Removed global transition/curtain states
  */
 interface ModeState {
   mode: SiteMode;
-  targetMode: SiteMode | null;
-  isTransitioning: boolean;
-  isCovered: boolean;
-  pendingPath: string | null;
   setMode: (mode: SiteMode) => void;
-  setTargetMode: (mode: SiteMode | null) => void;
-  setIsTransitioning: (isTransitioning: boolean) => void;
-  setIsCovered: (isCovered: boolean) => void;
-  setPendingPath: (pendingPath: string | null) => void;
-  // toggleMode removed from store interface as logic is complex (side-effects) 
-  // and handled better in the hook or component layer
 }
 
 /**
@@ -26,15 +17,7 @@ interface ModeState {
  */
 export const useModeStore = create<ModeState>((set) => ({
   mode: 'production', // Default fallback
-  targetMode: null,
-  isTransitioning: false,
-  isCovered: false,
-  pendingPath: null,
   setMode: (mode) => set({ mode }),
-  setTargetMode: (targetMode) => set({ targetMode }),
-  setIsTransitioning: (isTransitioning) => set({ isTransitioning }),
-  setIsCovered: (isCovered) => set({ isCovered }),
-  setPendingPath: (pendingPath) => set({ pendingPath }),
 }));
 
 
@@ -43,23 +26,11 @@ export const useModeStore = create<ModeState>((set) => ({
  * Encapsulates mode logic including side-effects (Cookie, Theme, Attribute)
  */
 export const useMode = () => {
-  const { 
-    mode, 
-    targetMode,
-    isTransitioning,
-    isCovered,
-    pendingPath,
-    setMode, 
-    setTargetMode,
-    setIsTransitioning,
-    setIsCovered,
-    setPendingPath,
-  } = useModeStore();
+  const { mode, setMode } = useModeStore();
   const { setTheme } = useTheme();
 
   useEffect(() => {
-    // AC1: Ensure first-load sets mode=production cookie when missing
-    // Check if cookie exists; if not, set it to current default (production)
+    // Ensure first-load sets mode cookie when missing
     if (typeof document !== 'undefined' && !document.cookie.split('; ').find(row => row.startsWith('mode='))) {
       const defaultMode = 'production';
       const secureFlag = process.env.NODE_ENV === 'production' ? '; Secure' : '';
@@ -79,8 +50,7 @@ export const useMode = () => {
     // 2. Update next-themes
     setTheme(MODE_TO_THEME[newMode]);
 
-    // 3. Update Cookie (One year expiry, Secure, SameSite=Lax)
-    // Secure flag added to ensure transmission only over HTTPS in production
+    // 3. Update Cookie
     const secureFlag = process.env.NODE_ENV === 'production' ? '; Secure' : '';
     document.cookie = `mode=${newMode}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax${secureFlag}`;
 
@@ -97,15 +67,7 @@ export const useMode = () => {
 
   return {
     mode,
-    targetMode,
-    isTransitioning,
-    isCovered,
-    pendingPath,
     setMode: handleSetMode,
-    setTargetMode,
-    setIsTransitioning,
-    setIsCovered,
-    setPendingPath,
     toggleMode: handleToggleMode,
   };
 };
