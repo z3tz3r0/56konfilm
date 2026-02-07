@@ -2,8 +2,13 @@
 
 import HeroSection from '@/components/page/sections/HeroSection';
 import { HeroSectionBlock } from '@/types/sanity';
+import { notFound } from 'next/navigation';
 
 export default function TestHeroPage() {
+  if (process.env.E2E_TEST !== '1') {
+    notFound();
+  }
+
   const mockHeroBlock: HeroSectionBlock = {
     _type: 'heroSection',
     _key: 'test-hero',

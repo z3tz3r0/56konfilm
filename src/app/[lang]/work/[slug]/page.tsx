@@ -11,8 +11,6 @@ import { SiteSettings } from '@/types/siteSettings';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-const PAGE_REVALIDATE_SECONDS = 3600;
-
 interface PageProps {
   params: Promise<{
     lang: string;
@@ -62,9 +60,7 @@ async function fetchProject(
 
 function getE2eMockProject(slug: string, mode: string): Project | null {
   const isE2E = process.env.E2E_TEST === '1';
-  const isDev = process.env.NODE_ENV !== 'production';
-
-  if (!isE2E && !isDev) {
+  if (!isE2E) {
     return null;
   }
 

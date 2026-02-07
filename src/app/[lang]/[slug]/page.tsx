@@ -8,11 +8,8 @@ import { SiteSettings } from '@/types/siteSettings';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-const PAGE_REVALIDATE_SECONDS = 3600;
 const IS_E2E =
-  process.env.E2E_TEST === '1' ||
-  process.env.NEXT_PUBLIC_E2E_TEST === '1' ||
-  process.env.PLAYWRIGHT_TEST === '1';
+  process.env.E2E_TEST === '1';
 
 interface PageProps {
   params: Promise<{
@@ -205,5 +202,5 @@ export default async function Page({ params, searchParams }: PageProps) {
     notFound();
   }
 
-  return <PageBuilder page={page} enableSignature={forceMock || IS_E2E} />;
+  return <PageBuilder page={page} enableSignature={IS_E2E} />;
 }
