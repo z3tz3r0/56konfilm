@@ -1,5 +1,9 @@
 import { defineField, defineType } from 'sanity';
 
+type BackgroundMediaItem = {
+  _type?: string;
+};
+
 export const backgroundMediaType = defineType({
   name: 'backgroundMedia',
   title: 'Background Media',
@@ -26,9 +30,10 @@ export const backgroundMediaType = defineType({
       ],
       validation: (Rule) => Rule.max(2).custom((items) => {
         if (!items || items.length === 0) return true;
-        
-        const images = items.filter((item: any) => item?._type === 'image');
-        const videos = items.filter((item: any) => item?._type === 'backgroundVideo');
+
+        const typedItems = items as BackgroundMediaItem[];
+        const images = typedItems.filter((item) => item?._type === 'image');
+        const videos = typedItems.filter((item) => item?._type === 'backgroundVideo');
 
         if (videos.length > 1) return 'Only 1 video allowed';
         if (images.length > 1) return 'Only 1 poster image allowed';

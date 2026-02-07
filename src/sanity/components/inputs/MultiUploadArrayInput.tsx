@@ -1,3 +1,4 @@
+'use client'
 import { UploadIcon } from '@sanity/icons'
 import { Card, Flex, Spinner, Stack, Text, useToast } from '@sanity/ui'
 import React, { useCallback, useState } from 'react'
@@ -32,13 +33,34 @@ export function MultiUploadArrayInput(props: ArrayOfObjectsInputProps) {
     if (validFiles.length === 0) return
 
     setIsUploading(true)
-    const uploadedItems: any[] = []
+    type UploadedItem = {
+      _type: 'galleryItem'
+      _key: string
+      mediaType: 'image'
+      media: {
+        _type: 'mediaBlock'
+        image: {
+          _type: 'image'
+          asset: { _type: 'reference'; _ref: string }
+        }
+      }
+    } | {
+      _type: 'galleryItem'
+      _key: string
+      mediaType: 'video'
+      videoFile: {
+        _type: 'file'
+        asset: { _type: 'reference'; _ref: string }
+      }
+    }
+
+    const uploadedItems: UploadedItem[] = []
     let successCount = 0
     let failureCount = 0
 
     try {
       const results = await Promise.allSettled(
-        validFiles.map(async (file) => {
+        validFiles.map(async (file): Promise<UploadedItem> => {
           if (file.type.startsWith('image/')) {
             const assetDoc = await client.assets.upload('image', file, { filename: file.name })
             return {
