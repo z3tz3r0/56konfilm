@@ -1,4 +1,4 @@
-
+import { GlobalTransition } from '@/components/layout/GlobalTransition';
 import { ModeProvider } from '@/components/providers/ModeProvider';
 import { ThemeProvider } from '@/components/ui/theme-provider';
 import { buildMetadata } from '@/lib/metadata';
@@ -108,9 +108,11 @@ export default async function RootLayout({
           attribute="class"
           defaultTheme={initialTheme} // FORCE default theme based on server mode
           enableSystem={false} // Disable system preference to enforce mode-based theme
+          disableTransitionOnChange
         >
           {/* Synchronize store with server state */}
           <ModeProvider initialMode={initialMode}>
+            <GlobalTransition />
             {children}
           </ModeProvider>
         </ThemeProvider>
