@@ -1,5 +1,10 @@
 import { defineField, defineType } from 'sanity';
 
+import {
+    ImageAssetValue,
+    SanityValidationContext,
+    validateImageAssetSizeWarning,
+} from './backgroundMedia';
 import { localizedStringField, localizedTextField } from './localized';
 
 export const seoObjectType = defineType({
@@ -20,9 +25,16 @@ export const seoObjectType = defineType({
     defineField({
       name: 'ogImage',
       title: 'Open Graph Image',
-      description: 'Recommended size: 1200 x 630 px',
+      description: 'Recommended size: 1200 x 630 px (keep under 1MB)',
       type: 'image',
       options: { hotspot: true },
+      validation: (Rule) =>
+        Rule.custom((value, context) =>
+          validateImageAssetSizeWarning(
+            value as ImageAssetValue | undefined,
+            context as SanityValidationContext
+          )
+        ).warning(),
     }),
   ],
   preview: {

@@ -1,4 +1,9 @@
 import { defineField, defineType } from 'sanity';
+import {
+    ImageAssetValue,
+    SanityValidationContext,
+    validateImageAssetSizeWarning,
+} from './objects/backgroundMedia';
 import { localizedStringField, localizedTextField } from './objects/localized';
 
 export const projectType = defineType({
@@ -17,7 +22,8 @@ export const projectType = defineType({
       title: 'Title',
       description: 'หัวข้อโปรเจค',
       group: 'main',
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) =>
+        Rule.required().error('Project title is required before publishing.'),
     }),
     defineField({
       name: 'slug',
@@ -29,7 +35,10 @@ export const projectType = defineType({
         source: 'title.0.value',
         maxLength: 96,
       },
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) =>
+        Rule.required().error(
+          'URL Slug is required for the project to be viewable on the site.'
+        ),
     }),
     defineField({
       name: 'siteMode',
@@ -44,7 +53,12 @@ export const projectType = defineType({
           { title: 'Wedding', value: 'wedding' },
         ],
       },
-      validation: (Rule) => Rule.required().min(1),
+      validation: (Rule) =>
+        Rule.required()
+          .min(1)
+          .error(
+            'At least one site mode (Production/Wedding) must be selected.'
+          ),
     }),
     defineField({
       name: 'client',
@@ -81,6 +95,13 @@ export const projectType = defineType({
       type: 'image',
       group: 'main',
       options: { hotspot: true },
+      validation: (Rule) =>
+        Rule.custom((value, context) =>
+          validateImageAssetSizeWarning(
+            value as ImageAssetValue | undefined,
+            context as SanityValidationContext
+          )
+        ).warning(),
     }),
     defineField({
       name: 'contentBlocks',
