@@ -62,9 +62,9 @@ development_status:
   3-4-wedding-homepage-packages: done
   epic-3-retrospective: done
 
-  epic-4: in-progress
+  epic-4: done
   4-1-seo-metadata-perfection: done
   4-2-performance-motion-tuning-device-tiering: done
   4-3-cms-validation-safeguards-no-code-sanctity: done
-  4-4-final-polish-deployment-pipeline: review
-  epic-4-retrospective: optional
+  4-4-final-polish-deployment-pipeline: done
+  epic-4-retrospective: done
