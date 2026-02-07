@@ -6,6 +6,7 @@ import Image from 'next/image';
 import CtaGroup from '@/components/page/CtaGroup';
 import SectionShell from '@/components/page/SectionShell';
 import { getAlignmentClass } from '@/components/page/utils';
+import { useDeviceTier } from '@/hooks/useDeviceTier';
 import { cn } from '@/lib/utils';
 import { urlFor } from '@/sanity/lib/image';
 import { MediaGallerySectionBlock } from '@/types/sanity';
@@ -41,6 +42,8 @@ const itemVariants = {
 export default function MediaGallerySection({ block }: MediaGallerySectionProps) {
   const alignClass = getAlignmentClass(block.heading?.align);
   const isCentered = block.heading?.align === 'center';
+  const { allowHeavyMotion, isInitialized } = useDeviceTier();
+  const useLiteMotion = isInitialized && !allowHeavyMotion;
 
   return (
     <SectionShell background={block.background} sanityType={block._type}>
@@ -63,12 +66,13 @@ export default function MediaGallerySection({ block }: MediaGallerySectionProps)
         </header>
         
         {block.items?.length ? (
-          <motion.div 
+          <motion.div
             className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
-            variants={containerVariants}
+            variants={useLiteMotion ? undefined : containerVariants}
+            transition={useLiteMotion ? { duration: 0.2 } : undefined}
           >
             {block.items.map((item, index) => {
               if (item.mediaType === 'video' && item.videoUrl) {
@@ -76,18 +80,34 @@ export default function MediaGallerySection({ block }: MediaGallerySectionProps)
                   <motion.figure
                     key={item._key ?? index}
                     className="group relative overflow-hidden rounded-2xl bg-muted"
-                    variants={itemVariants}
+                    variants={useLiteMotion ? undefined : itemVariants}
                     data-testid="gallery-item-video"
                   >
                     <div className="relative aspect-4/3 overflow-hidden">
                       <VideoItem 
                         src={item.videoUrl} 
-                        className="transition-transform duration-700 ease-out group-hover:scale-105" 
+                        className={
+                          useLiteMotion
+                            ? 'transition-none'
+                            : 'transition-transform duration-700 ease-out group-hover:scale-105'
+                        }
                       />
-                      <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10" />
+                      <div
+                        className={
+                          useLiteMotion
+                            ? 'absolute inset-0 bg-black/0 transition-none'
+                            : 'absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10'
+                        }
+                      />
                     </div>
                     {item.label ? (
-                      <figcaption className="mt-3 px-1 text-sm font-medium text-muted-foreground transition-colors group-hover:text-primary">
+                      <figcaption
+                        className={
+                          useLiteMotion
+                            ? 'mt-3 px-1 text-sm font-medium text-muted-foreground'
+                            : 'mt-3 px-1 text-sm font-medium text-muted-foreground transition-colors group-hover:text-primary'
+                        }
+                      >
                         {item.label}
                       </figcaption>
                     ) : null}
@@ -104,7 +124,7 @@ export default function MediaGallerySection({ block }: MediaGallerySectionProps)
                 <motion.figure
                   key={item._key ?? index}
                   className="group relative overflow-hidden rounded-2xl bg-muted"
-                  variants={itemVariants}
+                  variants={useLiteMotion ? undefined : itemVariants}
                   data-testid="gallery-item-image"
                 >
                   <div className="relative aspect-4/3 overflow-hidden">
@@ -112,13 +132,29 @@ export default function MediaGallerySection({ block }: MediaGallerySectionProps)
                       src={urlFor(image).width(800).height(600).quality(90).url()}
                       alt={item.media?.alt ?? item.label ?? 'Gallery item'}
                       fill
-                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      className={
+                        useLiteMotion
+                          ? 'object-cover transition-none'
+                          : 'object-cover transition-transform duration-700 ease-out group-hover:scale-105'
+                      }
                       sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                     />
-                    <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10" />
+                    <div
+                      className={
+                        useLiteMotion
+                          ? 'absolute inset-0 bg-black/0 transition-none'
+                          : 'absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10'
+                      }
+                    />
                   </div>
                   {item.label ? (
-                    <figcaption className="mt-3 px-1 text-sm font-medium text-muted-foreground transition-colors group-hover:text-primary">
+                    <figcaption
+                      className={
+                        useLiteMotion
+                          ? 'mt-3 px-1 text-sm font-medium text-muted-foreground'
+                          : 'mt-3 px-1 text-sm font-medium text-muted-foreground transition-colors group-hover:text-primary'
+                      }
+                    >
                       {item.label}
                     </figcaption>
                   ) : null}

@@ -1,3 +1,6 @@
+'use client';
+
+import { useDeviceTier } from '@/hooks/useDeviceTier';
 import { cn } from '@/lib/utils';
 import { useInView } from 'motion/react';
 import { useEffect, useRef } from 'react';
@@ -5,40 +8,63 @@ import { useEffect, useRef } from 'react';
 interface VideoItemProps {
   src: string;
   className?: string;
+  posterUrl?: string;
 }
 
-export function VideoItem({ src, className }: VideoItemProps) {
+export function VideoItem({ src, className, posterUrl }: VideoItemProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  // useInView hook to detect visibility. Trigger slightly before entering/leaving
-  // using ref on the video element itself.
-  const isInView = useInView(videoRef, { margin: "0px 0px -10% 0px" }); // Wait until 10% visible from bottom? Or just margin.
-  // Actually standard IntersectionObserver margin might be better: "0px"
-  // Let's stick to default or slight offset?
-  // User wanted "ONLY play when in the viewport".
+  const { allowVideoAutoplay, isInitialized } = useDeviceTier();
+  
+  // useInView hook to detect visibility
+  const isInView = useInView(videoRef, { margin: '0px 0px -10% 0px' });
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    if (isInView) {
-      video.play().catch((err) => {
-        console.warn('Video auto-play failed:', err);
+    // Only attempt play if device tier allows autoplay
+    if (isInView && allowVideoAutoplay) {
+      video.play().catch(() => {
+        // Auto-play can be blocked by browser policy; ignore silently.
       });
     } else {
       video.pause();
     }
-  }, [isInView]);
+  }, [isInView, allowVideoAutoplay]);
+
+  // For low-power devices: render poster or placeholder instead of video
+  if (isInitialized && !allowVideoAutoplay) {
+    return (
+      <div 
+        className={cn('w-full h-full relative', className)}
+        data-testid="video-item-fallback"
+      >
+        {posterUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={posterUrl}
+            alt="Video thumbnail"
+            className="w-full h-full object-cover block"
+          />
+        ) : (
+          <div className="w-full h-full bg-neutral-800" />
+        )}
+      </div>
+    );
+  }
 
   return (
     <video
       ref={videoRef}
       src={src}
+      poster={posterUrl}
       className={cn('w-full h-full object-cover block', className)}
-      autoPlay
+      autoPlay={allowVideoAutoplay}
       muted
       loop
       playsInline
       preload="metadata"
+      data-testid="video-item"
     />
   );
 }

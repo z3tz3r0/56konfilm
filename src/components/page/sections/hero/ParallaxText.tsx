@@ -1,5 +1,6 @@
 'use client';
 
+import { useDeviceTier } from '@/hooks/useDeviceTier';
 import { cn } from '@/lib/utils';
 import { motion, useScroll, useSpring, useTransform, useVelocity } from 'motion/react';
 
@@ -8,7 +9,7 @@ interface ParallaxTextProps {
   className?: string;
 }
 
-export default function ParallaxText({ children, className }: ParallaxTextProps) {
+function HeavyParallaxText({ children, className }: ParallaxTextProps) {
   const { scrollY } = useScroll();
   const scrollVelocity = useVelocity(scrollY);
   const smoothVelocity = useSpring(scrollVelocity, {
@@ -44,4 +45,24 @@ export default function ParallaxText({ children, className }: ParallaxTextProps)
       </motion.p>
     </div>
   );
+}
+
+function StaticParallaxText({ children, className }: ParallaxTextProps) {
+  return (
+    <div className={cn('relative z-20 overflow-visible py-8', className)}>
+      <p className="text-6xl font-black uppercase tracking-tighter text-white md:text-8xl lg:text-9xl">
+        {children}
+      </p>
+    </div>
+  );
+}
+
+export default function ParallaxText({ children, className }: ParallaxTextProps) {
+  const { allowHeavyMotion, isInitialized } = useDeviceTier();
+
+  if (isInitialized && !allowHeavyMotion) {
+    return <StaticParallaxText className={className}>{children}</StaticParallaxText>;
+  }
+
+  return <HeavyParallaxText className={className}>{children}</HeavyParallaxText>;
 }
