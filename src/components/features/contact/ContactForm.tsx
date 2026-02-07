@@ -33,14 +33,11 @@ export function ContactForm({ lang = 'en' }: ContactFormProps) {
       <ContactHeader isWedding={isWedding} />
 
       <Form {...form}>
-        <form 
-          onSubmit={form.handleSubmit(onSubmit as any)} 
-          className="space-y-6"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <input type="hidden" {...form.register('type')} />
 
           <FormField
-            control={form.control as any}
+            control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
@@ -58,7 +55,7 @@ export function ContactForm({ lang = 'en' }: ContactFormProps) {
           />
 
           <FormField
-            control={form.control as any}
+            control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
@@ -82,7 +79,7 @@ export function ContactForm({ lang = 'en' }: ContactFormProps) {
           </AnimatePresence>
 
           <FormField
-            control={form.control as any}
+            control={form.control}
             name="message"
             render={({ field }) => (
               <FormItem>

@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
 import { motion } from 'motion/react';
 import { UseFormReturn } from 'react-hook-form';
+import type { ContactFormValues } from '@/lib/schemas/contact';
 
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -22,7 +23,7 @@ import {
 } from '@/components/ui/popover';
 
 interface WeddingFieldsProps {
-  form: UseFormReturn<any>;
+  form: UseFormReturn<ContactFormValues>;
   lang?: 'en' | 'th';
 }
 

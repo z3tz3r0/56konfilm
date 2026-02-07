@@ -5,7 +5,7 @@ import { useMode } from '@/hooks/useMode';
 import { contactFormSchema, type ContactFormValues } from '@/lib/schemas/contact';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useTransition } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, type DefaultValues } from 'react-hook-form';
 import { toast } from 'sonner';
 
 export function useContactForm() {
@@ -13,8 +13,8 @@ export function useContactForm() {
   const [isPending, startTransition] = useTransition();
   const currentType = mode === 'wedding' ? 'wedding' : 'commercial';
 
-  const form = useForm<ContactFormValues>({
-    // @ts-expect-error - Zod discriminated unions can be tricky with RHF generics
+  const form = useForm<ContactFormValues, unknown, ContactFormValues>({
+    // @ts-expect-error - z.coerce input type differs from resolver output type for discriminated union
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
       type: currentType,
@@ -22,7 +22,7 @@ export function useContactForm() {
       email: '',
       message: '',
       venue: '',
-    } as any,
+    } as DefaultValues<ContactFormValues>,
     mode: 'onBlur',
   });
 
@@ -30,7 +30,7 @@ export function useContactForm() {
   useEffect(() => {
     form.setValue('type', currentType);
     if (currentType === 'commercial') {
-      form.clearErrors(['weddingDate', 'venue'] as any);
+      form.clearErrors(['weddingDate', 'venue']);
     }
   }, [currentType, form]);
 
