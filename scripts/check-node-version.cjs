@@ -16,7 +16,6 @@ const versionOk =
     (minor === requiredMinor && patch >= requiredPatch));
 
 if (!versionOk) {
-  // eslint-disable-next-line no-console
   console.error(
     [
       '[node-version] Unsupported Node.js version:',
