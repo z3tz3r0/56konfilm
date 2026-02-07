@@ -1,4 +1,4 @@
-# generated: 2026-02-03
+# generated: 2026-02-07
 # project: 56konfilm
 # project_key: NOKEY
 # tracking_system: file-system
@@ -33,7 +33,7 @@
 # - SM typically creates next story after previous one is 'done' to incorporate learnings
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
-generated: 2026-02-03
+generated: 2026-02-07
 project: 56konfilm
 project_key: NOKEY
 tracking_system: file-system
@@ -55,15 +55,15 @@ development_status:
   2-4-admin-multi-drag-and-drop-efficiency: done
   epic-2-retrospective: done
 
-  epic-3: in-progress
+  epic-3: done
   3-1-wedding-mode-skinning: done
   3-2-smart-contact-form-routing: done
   3-3-dual-context-content-strategy-about-us: done
   3-4-wedding-homepage-packages: done
-  epic-3-retrospective: optional
+  epic-3-retrospective: done
 
-  epic-4: backlog
-  4-1-seo-metadata-perfection: backlog
+  epic-4: in-progress
+  4-1-seo-metadata-perfection: review
   4-2-performance-motion-tuning-device-tiering: backlog
   4-3-cms-validation-safeguards-no-code-sanctity: backlog
   4-4-final-polish-deployment-pipeline: backlog
