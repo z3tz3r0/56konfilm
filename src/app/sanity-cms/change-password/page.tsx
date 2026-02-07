@@ -12,6 +12,8 @@ interface ChangePasswordFormData {
 }
 
 export default function ChangePasswordPage() {
+  'use no memo';
+
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
@@ -23,10 +25,8 @@ export default function ChangePasswordPage() {
     register,
     handleSubmit,
     formState: { errors: formErrors },
-    watch,
+    getValues,
   } = useForm<ChangePasswordFormData>();
-
-  const newPassword = watch('newPassword');
 
   // Check authentication on mount
   useEffect(() => {
@@ -184,7 +184,8 @@ export default function ChangePasswordPage() {
                 {...register('confirmPassword', {
                   required: 'Please confirm your new password',
                   validate: (value) =>
-                    value === newPassword || 'Passwords do not match',
+                    value === getValues('newPassword') ||
+                    'Passwords do not match',
                 })}
                 className="w-full rounded-md border border-gray-600 bg-[#1a1a1a] px-4 py-2 text-white placeholder-gray-500 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 placeholder="Confirm your new password"

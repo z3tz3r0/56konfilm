@@ -49,7 +49,7 @@ export default function LoginPage() {
       // Redirect to Sanity Studio
       router.push('/sanity-cms');
       router.refresh();
-    } catch (err) {
+    } catch {
       setError('An error occurred. Please try again.');
       setIsLoading(false);
     }
