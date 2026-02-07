@@ -2,8 +2,6 @@
 
 import { useModeStore } from '@/hooks/useMode';
 import { SiteMode } from '@/lib/preferences';
-import { useTheme } from 'next-themes';
-import { usePathname } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
 
 interface ModeProviderProps {
@@ -11,47 +9,17 @@ interface ModeProviderProps {
   initialMode: SiteMode;
 }
 
-
-
 /**
  * ModeProvider
  * - Hydrates the Zustand store with server-side implementation mode (from cookie)
- * - Prevents hydration mismatch by syncing initial state immediately via useRef guard
+ * - Prevents hydration mismatch by syncing initial state
  */
 export const ModeProvider = ({ children, initialMode }: ModeProviderProps) => {
-  const { setTheme } = useTheme();
-
-  // 1. Synchronous hydration of Zustand store (render-phase)
-  // Prevents "flicker" where store is empty for one frame
-  const initialized = useRef(false);
-  if (!initialized.current) {
+  // Always update the store with the server-supplied mode on mount/change
+  // This ensures the client store matches what the server rendered
+  useEffect(() => {
     useModeStore.setState({ mode: initialMode });
-    initialized.current = true;
-  }
-
-  // 2. Sync side-effects (Theme & DOM) when initialMode changes (after navigation completes)
-  useEffect(() => {
-    // Sync theme with server mode to ensure next-themes (css vars) matches cookie (content)
-    const targetTheme = initialMode === 'production' ? 'dark' : 'light';
-    setTheme(targetTheme);
-    
-    // Ensure data-mode attribute is in sync (critical for CSS selectors)
-    document.documentElement.setAttribute('data-mode', initialMode);
-  }, [initialMode, setTheme]);
-
-  const pathname = usePathname();
-  const pendingPath = useModeStore((state) => state.pendingPath);
-
-  useEffect(() => {
-    if (!pendingPath) return;
-    if (pathname === pendingPath) {
-      useModeStore.setState({
-        isTransitioning: false,
-        pendingPath: null,
-        targetMode: null,
-      });
-    }
-  }, [pathname, pendingPath]);
+  }, [initialMode]);
 
   return <>{children}</>;
 };

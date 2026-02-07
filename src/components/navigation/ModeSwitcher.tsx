@@ -2,7 +2,7 @@
 
 import { motion } from 'motion/react';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useTransition } from 'react';
+import { useEffect, useRef, useTransition } from 'react';
 
 import { useMode } from '@/hooks/useMode';
 import { type SiteMode } from '@/lib/preferences';
@@ -27,22 +27,25 @@ export const ModeSwitcher = ({
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
 
+  // Use the global store hook
   const { mode: displayMode, setMode: setGlobalMode } = useMode();
 
-  // Sync global store with server-side truth when initialMode changes (navigation completes)
+  // Keep in sync when the server-provided initialMode changes after navigation
   useEffect(() => {
-    if (initialMode !== displayMode) {
-      setGlobalMode(initialMode);
-    }
-  }, [initialMode, displayMode, setGlobalMode]);
+    // Relying on ModeProvider for store hydration
+  }, [initialMode]);
+
+  // Defer navigation until after the slide animation completes
+  const navTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleModeChange = (nextMode: SiteMode) => {
     if (nextMode === displayMode) return;
     if (isPending) return;
-    
-    // 1. Update mode globally (sets cookie, theme, html attribute immediately)
+    if (navTimerRef.current) return; // ignore double-taps while a nav is scheduled
+
+    // 1. Update Global State (Zustand + Cookie + Theme + Attribute) IMMEDIATELY
     setGlobalMode(nextMode);
-    
+
     // 2. Calculate target path based on mode
     const currentHomeSlug = homeSlugs[displayMode];
     const currentHomePath = currentHomeSlug ? `/${lang}/${currentHomeSlug}` : `/${lang}`;
@@ -58,17 +61,20 @@ export const ModeSwitcher = ({
       targetPath = pathname;
     }
 
-    // 3. Navigate or refresh
-    if (targetPath !== pathname) {
-      startTransition(() => {
-        router.push(targetPath);
-      });
-    } else {
-      // Same path - refresh to update Server Components with new cookie
-      startTransition(() => {
-        router.refresh();
-      });
-    }
+    // 3. Defer navigation slightly for animation smoothness
+    navTimerRef.current = setTimeout(() => {
+      navTimerRef.current = null;
+      
+      if (targetPath !== pathname) {
+        startTransition(() => {
+          router.push(targetPath);
+        });
+      } else {
+        startTransition(() => {
+          router.refresh();
+        });
+      }
+    }, 0);
   };
 
   return (
@@ -105,7 +111,7 @@ export const ModeSwitcher = ({
       {/* Production button */}
       <motion.button
         onClick={() => handleModeChange('production')}
-        disabled={isPending}
+        disabled={isPending || !!navTimerRef.current}
         className={cn(
           'relative z-10 h-full cursor-pointer text-xs font-semibold tracking-widest uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
           isPending && 'cursor-not-allowed opacity-60'
@@ -126,7 +132,7 @@ export const ModeSwitcher = ({
       {/* Wedding button */}
       <motion.button
         onClick={() => handleModeChange('wedding')}
-        disabled={isPending}
+        disabled={isPending || !!navTimerRef.current}
         className={cn(
           'relative z-10 h-full cursor-pointer text-xs font-semibold tracking-widest uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
           isPending && 'cursor-not-allowed opacity-60'
