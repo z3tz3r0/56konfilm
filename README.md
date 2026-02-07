@@ -26,6 +26,16 @@ A bilingual production-house portfolio built with Next.js and Sanity CMS. The si
 - Created a **scalable schema suite** (timeline, gallery, card grid, CTA banner) that can be reused across future campaigns without schema rewrites.
 - Ensured **content parity safeguards** through GROQ fallbacks and shared helpers, reducing risk of untranslated copy in production.
 
+## Sanity Webhook Configuration
+
+To enable on-demand revalidation, configure a webhook in the Sanity project management (sanity.io/manage):
+
+1. **URL**: `https://[YOUR_PRODUCTION_URL]/api/revalidate`
+2. **Trigger on**: Create, Update, Delete
+3. **Filter**: Leave blank (triggers for all relevant documents)
+4. **Projection**: `{ _type, "slug": slug.current }`
+5. **Secret**: Set a secure secret and add it as `SANITY_REVALIDATE_SECRET` in your environment variables.
+
 ## Roadmap
 - Finish UI components for all section types and connect them to live Sanity content.
 - Extend testing coverage (`npm run lint` currently flags placeholder `any` types) and introduce visual regression snapshots once the design stabilizes.
