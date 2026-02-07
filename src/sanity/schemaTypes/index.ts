@@ -9,6 +9,7 @@ import { testimonialItemType } from './objects/testimonialItem';
 import { localizedBlockType } from './objects/localized';
 import { logoItemType } from './objects/logoItem';
 import { mediaBlockType } from './objects/mediaBlock';
+import { seoObjectType } from './objects/seo';
 import { socialMediaType } from './objects/socialMedia';
 import { timelineStepType } from './objects/timelineStep';
 import { pageType } from './page';
@@ -54,5 +55,6 @@ export const schemaType: { types: SchemaTypeDefinition[] } = {
     galleryItemType,
     logoItemType,
     socialMediaType,
+    seoObjectType,
   ],
 };

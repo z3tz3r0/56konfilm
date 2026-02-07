@@ -48,3 +48,15 @@ export const MEDIA_ASSET_PROJECTION = groq`
     _type == "backgroundVideo" => null
   )
 `;
+
+export const SEO_PROJECTION = groq`
+  seo {
+    "title": ${LOCALIZED('title')},
+    "description": ${LOCALIZED('description')},
+    "ogImage": ogImage{
+      asset,
+      crop,
+      hotspot
+    }
+  }
+`;

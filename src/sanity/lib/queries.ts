@@ -1,6 +1,6 @@
 import { createClient, groq } from 'next-sanity';
 import { apiVersion, dataset, projectId } from '../env';
-import { LOCALIZED } from './queries/fragments';
+import { LOCALIZED, SEO_PROJECTION } from './queries/fragments';
 import {
     CARD_COLLECTION_SECTION,
     CTA_BANNER_SECTION,
@@ -25,6 +25,7 @@ export const client = createClient({
 export const settingsQuery = groq`*[_type == "settings"][0] {
     "favicon": favicon.asset->url,
     "siteTitle": ${LOCALIZED('siteTitle')},
+    ${SEO_PROJECTION},
     "productionNav": productionNav[]{
       "label": ${LOCALIZED('label')},
       url
@@ -59,6 +60,11 @@ export const allPageSlugsQuery = groq`*[_type == "page" && defined(slug.current)
     siteMode
   }`;
 
+export const allProjectSlugsQuery = groq`*[_type == "project" && defined(slug.current)]{
+    "slug": slug.current,
+    siteMode
+  }`;
+
 export const firstPageSlugByModeQuery = groq`
   *[_type == "page" && siteMode in ["both", $mode]] | order(_createdAt asc)[0]{
     "slug": slug.current
@@ -81,6 +87,7 @@ export const pageBySlugQuery = groq`
     "title": ${LOCALIZED('page')},
     "slug": slug.current,
     "seoTitle": ${LOCALIZED('seoTitle')},
+    ${SEO_PROJECTION},
     siteMode,
     "contentBlocks": select(
       siteMode == "both" && $mode == "wedding" => contentBlocksWedding,
@@ -110,6 +117,8 @@ export const projectBySlugQuery = groq`
     "title": ${LOCALIZED('title')},
     "overview": ${LOCALIZED('overview')},
     "slug": slug.current,
+    publishedAt,
+    ${SEO_PROJECTION},
     siteMode,
     client,
     year,

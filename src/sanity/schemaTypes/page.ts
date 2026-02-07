@@ -131,6 +131,13 @@ export const pageType = defineType({
       description: 'หัวข้อ SEO',
       group: 'seo',
     }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      description: 'Metadata สำหรับ Search และ Social',
+      type: 'seo',
+      group: 'seo',
+    }),
   ],
   preview: {
     select: {

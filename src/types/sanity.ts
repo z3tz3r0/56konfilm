@@ -18,6 +18,8 @@ export interface RawProject {
   services?: string[];
   year?: string;
   contentBlocks?: PageContentBlock[];
+  publishedAt?: string;
+  seo?: SeoFields;
 }
 
 // --- Data after resolving language in GROQ ---
@@ -33,6 +35,8 @@ export interface Project {
   services?: string[];
   year?: string;
   contentBlocks?: PageContentBlock[];
+  publishedAt?: string;
+  seo?: SeoFields;
   nextProject?: {
     title: string;
     slug: string;
@@ -258,7 +262,14 @@ export interface PageDocument {
   title?: string;
   slug: string;
   seoTitle?: string;
+  seo?: SeoFields;
   siteMode: CmsSiteMode;
   contentBlocks?: PageContentBlock[];
   contentBlocksWedding?: PageContentBlock[];
+}
+
+export interface SeoFields {
+  title?: string;
+  description?: string;
+  ogImage?: SanityImageSource;
 }

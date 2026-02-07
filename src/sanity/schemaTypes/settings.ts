@@ -117,6 +117,12 @@ export const settingsType = defineType({
       type: 'array',
       of: [{ type: socialMediaType.name }],
     }),
+    defineField({
+      name: 'seo',
+      title: 'Global SEO',
+      description: 'ค่า SEO กลางสำหรับใช้ fallback',
+      type: 'seo',
+    }),
   ],
   preview: {
     select: {

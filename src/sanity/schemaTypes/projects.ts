@@ -103,5 +103,12 @@ export const projectType = defineType({
       group: 'metadata',
       initialValue: () => new Date().toISOString(),
     }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      description: 'Metadata สำหรับ Search และ Social',
+      type: 'seo',
+      group: 'seo',
+    }),
   ],
 });
