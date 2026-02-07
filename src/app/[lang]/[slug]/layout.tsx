@@ -1,7 +1,7 @@
 import Footer from '@/components/footer/Footer';
 import Navbar from '@/components/navigation/Navbar';
 import { resolvePreferences } from '@/lib/i18nUtils';
-import { client } from '@/sanity/lib/client';
+import { sanityFetch } from '@/sanity/lib/fetch';
 import { modeHomeSlugsQuery, settingsQuery } from '@/sanity/lib/queries';
 import { SiteSettings } from '@/types/siteSettings';
 import { ReactNode } from 'react';
@@ -18,17 +18,15 @@ export default async function SiteLayout({ children, params }: SiteLayoutProps) 
 
   // ดึงข้อมูล Global Settings จาก Sanity
   const [settings, homeSlugs] = await Promise.all([
-    client.fetch<SiteSettings>(
-    settingsQuery,
-    { lang },
-    // ตั้งค่า revalidation เพื่อให้ข้อมูลอัปเดตเป็นระยะ
-    { next: { revalidate: 3600 } }
-  ),
-    client.fetch<{ production?: { slug?: string | null }; wedding?: { slug?: string | null } }>(
-      modeHomeSlugsQuery,
-      {},
-      { next: { revalidate: 3600 } }
-    ),
+    sanityFetch<SiteSettings>({
+      query: settingsQuery,
+      params: { lang },
+      tags: ['settings'],
+    }),
+    sanityFetch<{ production?: { slug?: string | null }; wedding?: { slug?: string | null } }>({
+      query: modeHomeSlugsQuery,
+      tags: ['page'],
+    }),
   ]);
 
   const modeSlugMap = {

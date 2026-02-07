@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-import { client } from '@/sanity/lib/client';
+import { sanityFetch } from '@/sanity/lib/fetch';
 import { allPageSlugsQuery, allProjectSlugsQuery } from '@/sanity/lib/queries';
 
 type RouteSlug = {
@@ -24,8 +24,14 @@ const LANGS = ['en', 'th'] as const;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [pages, projects] = await Promise.all([
-    client.fetch<RouteSlug[]>(allPageSlugsQuery, {}, { next: { revalidate: 3600 } }),
-    client.fetch<RouteSlug[]>(allProjectSlugsQuery, {}, { next: { revalidate: 3600 } }),
+    sanityFetch<RouteSlug[]>({
+      query: allPageSlugsQuery,
+      tags: ['page'],
+    }),
+    sanityFetch<RouteSlug[]>({
+      query: allProjectSlugsQuery,
+      tags: ['project'],
+    }),
   ]);
 
   const staticEntries: MetadataRoute.Sitemap = LANGS.map((lang) => ({

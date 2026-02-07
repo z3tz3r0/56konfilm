@@ -1,8 +1,8 @@
 import { GlobalTransition } from '@/components/layout/GlobalTransition';
 import { ModeProvider } from '@/components/providers/ModeProvider';
 import { ThemeProvider } from '@/components/ui/theme-provider';
-import { SiteMode, isSupportedMode } from '@/lib/preferences';
 import { buildMetadata } from '@/lib/metadata';
+import { SiteMode, isSupportedMode } from '@/lib/preferences';
 import type { Metadata } from 'next';
 import { Cormorant_Garamond, Manrope, Noto_Sans_Thai, Sora } from 'next/font/google';
 import { cookies } from 'next/headers';
@@ -14,24 +14,30 @@ import '../globals.css';
 const sora = Sora({
   variable: '--font-sora',
   subsets: ['latin', 'latin-ext'],
+  display: 'swap',
 });
 
 const cormorantGaramond = Cormorant_Garamond({
   variable: '--font-cormorant-garamond',
   subsets: ['latin', 'latin-ext'],
+  display: 'swap',
 });
 
 const manrope = Manrope({
   variable: '--font-manrope',
   subsets: ['latin', 'latin-ext'],
+  display: 'swap',
 });
 
 const notoSansThai = Noto_Sans_Thai({
   variable: '--font-noto-sans-thai',
   subsets: ['thai'],
+  display: 'swap',
 });
 
-import { client, settingsQuery } from '@/sanity/lib/queries';
+import { sanityFetch } from '@/sanity/lib/fetch';
+import { settingsQuery } from '@/sanity/lib/queries';
+import { SiteSettings } from '@/types/siteSettings';
 
 type Props = {
   params: Promise<{ lang: string }>;
@@ -42,7 +48,11 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang } = await params;
-  const settings = await client.fetch(settingsQuery, { lang });
+  const settings = await sanityFetch<SiteSettings | null>({
+    query: settingsQuery,
+    params: { lang },
+    tags: ['settings'],
+  });
 
   const metadata = buildMetadata({
     lang,

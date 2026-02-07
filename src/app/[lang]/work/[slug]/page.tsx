@@ -3,10 +3,11 @@ import ProjectNavigation from '@/components/page/ProjectNavigation';
 import JsonLd from '@/components/seo/JsonLd';
 import { resolvePreferences } from '@/lib/i18nUtils';
 import { buildMetadata } from '@/lib/metadata';
-import { client } from '@/sanity/lib/client';
-import { projectBySlugQuery, settingsQuery } from '@/sanity/lib/queries';
+import { sanityFetch } from '@/sanity/lib/fetch';
 import { urlFor } from '@/sanity/lib/image';
+import { projectBySlugQuery, settingsQuery } from '@/sanity/lib/queries';
 import { PageDocument, Project } from '@/types/sanity';
+import { SiteSettings } from '@/types/siteSettings';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -27,7 +28,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { mode } = await resolvePreferences();
   const [project, settings] = await Promise.all([
     fetchProject(slug, lang, mode),
-    client.fetch(settingsQuery, { lang }),
+    sanityFetch<SiteSettings | null>({
+      query: settingsQuery,
+      params: { lang },
+      tags: ['settings'],
+    }),
   ]);
 
   return buildMetadata({
@@ -46,11 +51,11 @@ async function fetchProject(
   lang: string,
   mode: string
 ): Promise<Project | null> {
-  const project = await client.fetch<Project | null>(
-    projectBySlugQuery,
-    { slug, lang, mode },
-    { next: { revalidate: PAGE_REVALIDATE_SECONDS } }
-  );
+  const project = await sanityFetch<Project | null>({
+    query: projectBySlugQuery,
+    params: { slug, lang, mode },
+    tags: ['project', slug],
+  });
 
   return project;
 }

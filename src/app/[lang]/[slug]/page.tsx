@@ -1,9 +1,10 @@
 import PageBuilder from '@/components/page/PageBuilder';
-import { buildMetadata } from '@/lib/metadata';
 import { resolvePreferences } from '@/lib/i18nUtils';
-import { client } from '@/sanity/lib/client';
+import { buildMetadata } from '@/lib/metadata';
+import { sanityFetch } from '@/sanity/lib/fetch';
 import { pageBySlugQuery, settingsQuery } from '@/sanity/lib/queries';
 import { PageDocument } from '@/types/sanity';
+import { SiteSettings } from '@/types/siteSettings';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -28,7 +29,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const [page, settings] = await Promise.all([
     fetchPageDocument(slug, lang, false),
-    client.fetch(settingsQuery, { lang }),
+    sanityFetch<SiteSettings | null>({
+      query: settingsQuery,
+      params: { lang },
+      tags: ['settings'],
+    }),
   ]);
 
   return buildMetadata({
@@ -180,11 +185,11 @@ async function fetchPageDocument(
     };
   }
 
-  const page = await client.fetch<PageDocument | null>(
-    pageBySlugQuery,
-    { slug, lang, mode },
-    { next: { revalidate: PAGE_REVALIDATE_SECONDS } }
-  );
+  const page = await sanityFetch<PageDocument | null>({
+    query: pageBySlugQuery,
+    params: { slug, lang, mode },
+    tags: ['page', slug],
+  });
 
   return page;
 }

@@ -1,7 +1,7 @@
 import Footer from '@/components/footer/Footer';
 import Navbar from '@/components/navigation/Navbar';
 import { resolvePreferences } from '@/lib/i18nUtils';
-import { client } from '@/sanity/lib/client';
+import { sanityFetch } from '@/sanity/lib/fetch';
 import { modeHomeSlugsQuery, settingsQuery } from '@/sanity/lib/queries';
 import { SiteSettings } from '@/types/siteSettings';
 import { ReactNode } from 'react';
@@ -18,16 +18,15 @@ export default async function ContactLayout({ children, params }: ContactLayoutP
 
   // Fetch Global Settings and Home Slugs for Navbar
   const [settings, homeSlugs] = await Promise.all([
-    client.fetch<SiteSettings>(
-      settingsQuery,
-      { lang },
-      { next: { revalidate: 3600 } }
-    ),
-    client.fetch<{ production?: { slug?: string | null }; wedding?: { slug?: string | null } }>(
-      modeHomeSlugsQuery,
-      {},
-      { next: { revalidate: 3600 } }
-    ),
+    sanityFetch<SiteSettings>({
+      query: settingsQuery,
+      params: { lang },
+      tags: ['settings'],
+    }),
+    sanityFetch<{ production?: { slug?: string | null }; wedding?: { slug?: string | null } }>({
+      query: modeHomeSlugsQuery,
+      tags: ['page'],
+    }),
   ]);
 
   const modeSlugMap = {
