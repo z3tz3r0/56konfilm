@@ -1,15 +1,38 @@
 import { ContactForm } from '@/components/features/contact/ContactForm';
 import SectionShell from '@/components/page/SectionShell';
+import { buildMetadata } from '@/lib/metadata';
+import { sanityFetch } from '@/sanity/lib/fetch';
+import { pageBySlugQuery, settingsQuery } from '@/sanity/lib/queries';
+import { PageDocument } from '@/types/sanity';
+import { SiteSettings } from '@/types/siteSettings';
 import { Metadata } from 'next';
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
-  return {
-    title: lang === 'th' ? 'ติดต่อเรา - 56Konfilm' : 'Contact Us - 56Konfilm',
-    description: lang === 'th' 
-      ? 'ติดต่อ 56Konfilm สำหรับโปรดักชั่นโฆษณาหรือถ่ายภาพแต่งงาน' 
-      : 'Contact 56Konfilm for commercial production or wedding photography.',
-  };
+  const [settings, page] = await Promise.all([
+    sanityFetch<SiteSettings | null>({
+      query: settingsQuery,
+      params: { lang },
+      tags: ['settings'],
+    }),
+    sanityFetch<PageDocument | null>({
+      query: pageBySlugQuery,
+      params: { slug: 'contact', lang, mode: 'production' },
+      tags: ['page', 'contact'],
+    }),
+  ]);
+
+  const fallbackTitle = lang === 'th' ? 'ติดต่อเรา - 56Konfilm' : 'Contact Us - 56Konfilm';
+
+  return buildMetadata({
+    lang,
+    pathname: `/${lang}/contact`,
+    title: page?.title || fallbackTitle,
+    seo: page?.seo,
+    fallbackSeo: settings?.seo,
+    fallbackTitle: settings?.siteTitle,
+    siteTitle: settings?.siteTitle,
+  });
 }
 
 export default async function ContactPage({ params }: { params: Promise<{ lang: string }> }) {
