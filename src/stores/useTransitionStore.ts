@@ -1,21 +1,15 @@
-import { useModeStore } from '@/hooks/useMode';
+import { create } from 'zustand';
 
-export const useTransitionStore = () => {
-  const {
-    isTransitioning,
-    isCovered,
-    pendingPath,
-    setIsTransitioning,
-    setIsCovered,
-    setPendingPath,
-  } = useModeStore();
+interface TransitionState {
+  isTransitioning: boolean;
+  pendingPath: string | null;
+  setIsTransitioning: (value: boolean) => void;
+  setPendingPath: (value: string | null) => void;
+}
 
-  return {
-    isTransitioning,
-    isCovered,
-    pendingPath,
-    setIsTransitioning,
-    setIsCovered,
-    setPendingPath,
-  };
-};
+export const useTransitionStore = create<TransitionState>((set) => ({
+  isTransitioning: false,
+  pendingPath: null,
+  setIsTransitioning: (value) => set({ isTransitioning: value }),
+  setPendingPath: (value) => set({ pendingPath: value }),
+}));

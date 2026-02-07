@@ -23,9 +23,8 @@ export default function ProjectNavigation({
   const params = useParams();
   const lang = (params?.lang as string) || 'en';
   
-  const { setTargetMode } = useMode();
+  const { setMode } = useMode();
   const {
-    isCovered,
     isTransitioning,
     pendingPath,
     setIsTransitioning,
@@ -34,30 +33,30 @@ export default function ProjectNavigation({
   const [, startTransition] = useTransition();
   const pathname = usePathname();
 
-  // Safety Lock: Navigate only when covered
+  // Navigate when a pending path is queued.
   useEffect(() => {
-    if (isCovered && pendingPath) {
+    if (pendingPath) {
       startTransition(() => {
         router.push(pendingPath);
       });
     }
-  }, [isCovered, pendingPath, router, startTransition]);
+  }, [pendingPath, router, startTransition]);
 
   // Release transition after navigation completes
   useEffect(() => {
     if (!pendingPath) return;
     if (pathname === pendingPath) {
       setIsTransitioning(false);
-      setTargetMode(null);
+      setMode(mode);
       setPendingPath(null);
     }
-  }, [pathname, pendingPath, setIsTransitioning, setPendingPath, setTargetMode]);
+  }, [pathname, pendingPath, setIsTransitioning, setPendingPath, setMode, mode]);
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (isTransitioning || isCovered || pendingPath) return;
+    if (isTransitioning || pendingPath) return;
     setPendingPath(`/${lang}/work/${nextProject.slug}`);
-    setTargetMode(mode);
+    setMode(mode);
     setIsTransitioning(true);
   };
 
