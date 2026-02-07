@@ -20,7 +20,7 @@ export const projectType = defineType({
     localizedStringField({
       name: 'title',
       title: 'Title',
-      description: 'หัวข้อโปรเจค',
+      description: 'หัวข้อโปรเจกต์',
       group: 'main',
       validation: (Rule) =>
         Rule.required().error('Project title is required before publishing.'),
@@ -28,7 +28,7 @@ export const projectType = defineType({
     defineField({
       name: 'slug',
       title: 'Slug',
-      description: 'URL ที่จะแสดงผลสำหรับโปรเจคนี้',
+      description: 'URL ที่จะแสดงผลสำหรับโปรเจกต์นี้',
       type: 'slug',
       group: 'main',
       options: {
@@ -43,7 +43,7 @@ export const projectType = defineType({
     defineField({
       name: 'siteMode',
       title: 'Site Mode',
-      description: 'โปรเจคนี้จะแสดงในโหมดไหน',
+      description: 'โปรเจกต์นี้จะแสดงในโหมดไหน',
       type: 'array',
       group: 'main',
       of: [{ type: 'string' }],
@@ -85,13 +85,13 @@ export const projectType = defineType({
     localizedTextField({
       name: 'overview',
       title: 'Overview',
-      description: 'รายละเอียดโปรเจค',
+      description: 'รายละเอียดโปรเจกต์',
       group: 'main',
     }),
     defineField({
       name: 'coverImage',
       title: 'Cover Image',
-      description: 'รูปภาพหน้าปกโปรเจค',
+      description: 'รูปภาพหน้าปกโปรเจกต์',
       type: 'image',
       group: 'main',
       options: { hotspot: true },
