@@ -1,7 +1,8 @@
 import PageBuilder from '@/components/page/PageBuilder';
+import { buildMetadata } from '@/lib/metadata';
 import { resolvePreferences } from '@/lib/i18nUtils';
 import { client } from '@/sanity/lib/client';
-import { pageBySlugQuery } from '@/sanity/lib/queries';
+import { pageBySlugQuery, settingsQuery } from '@/sanity/lib/queries';
 import { PageDocument } from '@/types/sanity';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -25,15 +26,20 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { lang, slug } = await params;
 
-  return {
-    alternates: {
-      canonical: `/${lang}/${slug}`,
-      languages: {
-        en: `/en/${slug}`,
-        th: `/th/${slug}`,
-      },
-    },
-  };
+  const [page, settings] = await Promise.all([
+    fetchPageDocument(slug, lang, false),
+    client.fetch(settingsQuery, { lang }),
+  ]);
+
+  return buildMetadata({
+    lang,
+    pathname: `/${lang}/${slug}`,
+    title: page?.title || settings?.siteTitle || '56KonFilm',
+    seo: page?.seo,
+    fallbackSeo: settings?.seo,
+    fallbackTitle: settings?.siteTitle,
+    siteTitle: settings?.siteTitle,
+  });
 }
 
 async function fetchPageDocument(
@@ -48,6 +54,10 @@ async function fetchPageDocument(
       title: 'About',
       slug: 'about',
       seoTitle: 'About',
+      seo: {
+        title: 'About 56KonFilm',
+        description: 'About the studio and how we create cinematic stories.',
+      },
       siteMode: 'both',
       contentBlocks: [
         {
@@ -70,6 +80,10 @@ async function fetchPageDocument(
       title: 'Wedding Home',
       slug: 'wedding-home',
       seoTitle: 'Wedding Home',
+      seo: {
+        title: 'Wedding Home',
+        description: 'Wedding films crafted with emotion and timeless style.',
+      },
       siteMode: 'both',
       contentBlocks: [
         {

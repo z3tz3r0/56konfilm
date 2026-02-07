@@ -2,6 +2,7 @@ import { GlobalTransition } from '@/components/layout/GlobalTransition';
 import { ModeProvider } from '@/components/providers/ModeProvider';
 import { ThemeProvider } from '@/components/ui/theme-provider';
 import { SiteMode, isSupportedMode } from '@/lib/preferences';
+import { buildMetadata } from '@/lib/metadata';
 import type { Metadata } from 'next';
 import { Cormorant_Garamond, Manrope, Noto_Sans_Thai, Sora } from 'next/font/google';
 import { cookies } from 'next/headers';
@@ -30,13 +31,6 @@ const notoSansThai = Noto_Sans_Thai({
   subsets: ['thai'],
 });
 
-const metadataBase =
-  process.env.NEXT_PUBLIC_SITE_URL
-    ? new URL(process.env.NEXT_PUBLIC_SITE_URL)
-    : process.env.VERCEL_URL
-      ? new URL(`https://${process.env.VERCEL_URL}`)
-      : new URL('http://localhost:3000');
-
 import { client, settingsQuery } from '@/sanity/lib/queries';
 
 type Props = {
@@ -49,14 +43,17 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang } = await params;
   const settings = await client.fetch(settingsQuery, { lang });
-  
+
+  const metadata = buildMetadata({
+    lang,
+    pathname: `/${lang}`,
+    fallbackTitle: settings?.siteTitle || '56KonFilm',
+    fallbackSeo: settings?.seo,
+    siteTitle: settings?.siteTitle,
+  });
+
   return {
-    metadataBase,
-    title: {
-      default: settings?.siteTitle || '56KonFilm',
-      template: `%s | ${settings?.siteTitle || '56KonFilm'}`,
-    },
-    description: 'Film Production House',
+    ...metadata,
     icons: settings?.favicon ? [{ rel: 'icon', url: settings.favicon }] : undefined,
   };
 }

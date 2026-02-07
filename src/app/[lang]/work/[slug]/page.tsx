@@ -1,8 +1,11 @@
 import PageBuilder from '@/components/page/PageBuilder';
 import ProjectNavigation from '@/components/page/ProjectNavigation';
+import JsonLd from '@/components/seo/JsonLd';
 import { resolvePreferences } from '@/lib/i18nUtils';
+import { buildMetadata } from '@/lib/metadata';
 import { client } from '@/sanity/lib/client';
-import { projectBySlugQuery } from '@/sanity/lib/queries';
+import { projectBySlugQuery, settingsQuery } from '@/sanity/lib/queries';
+import { urlFor } from '@/sanity/lib/image';
 import { PageDocument, Project } from '@/types/sanity';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -21,16 +24,21 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { lang, slug } = await params;
+  const { mode } = await resolvePreferences();
+  const [project, settings] = await Promise.all([
+    fetchProject(slug, lang, mode),
+    client.fetch(settingsQuery, { lang }),
+  ]);
 
-  return {
-    alternates: {
-      canonical: `/${lang}/work/${slug}`,
-      languages: {
-        en: `/en/work/${slug}`,
-        th: `/th/work/${slug}`,
-      },
-    },
-  };
+  return buildMetadata({
+    lang,
+    pathname: `/${lang}/work/${slug}`,
+    title: project?.title || settings?.siteTitle || '56KonFilm',
+    seo: project?.seo,
+    fallbackSeo: settings?.seo,
+    fallbackTitle: settings?.siteTitle,
+    siteTitle: settings?.siteTitle,
+  });
 }
 
 async function fetchProject(
@@ -150,8 +158,31 @@ function getE2eMockProject(slug: string, mode: string): Project | null {
           heading: 'E2E Media Gallery',
           body: 'Mock gallery body.',
         },
+        items: [
+          {
+            _key: 'e2e-video',
+            mediaType: 'video',
+            videoUrl: 'https://cdn.sanity.io/files/test/e2e-project-video.mp4',
+            label: 'E2E Project Reel',
+          },
+        ],
       },
     ],
+  };
+}
+
+function getProjectVideoData(project: Project) {
+  const mediaSection = project.contentBlocks?.find(
+    (block) => block._type === 'mediaGallerySection'
+  );
+  const firstVideo = mediaSection?.items?.find((item) => item.mediaType === 'video' && item.videoUrl);
+  if (!firstVideo?.videoUrl) {
+    return null;
+  }
+
+  return {
+    url: firstVideo.videoUrl,
+    name: firstVideo.label || project.title,
   };
 }
 
@@ -198,8 +229,26 @@ export default async function ProjectPage({ params }: PageProps) {
     services: resolvedProject.services,
   };
 
+  const videoData = getProjectVideoData(resolvedProject);
+  const thumbnailUrl = resolvedProject.coverImage
+    ? urlFor(resolvedProject.coverImage).width(1280).height(720).fit('crop').url()
+    : undefined;
+
+  const jsonLd = videoData
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'VideoObject',
+        name: videoData.name,
+        description: resolvedProject.overview || resolvedProject.title,
+        thumbnailUrl: thumbnailUrl ? [thumbnailUrl] : undefined,
+        uploadDate: resolvedProject.publishedAt || new Date().toISOString(),
+        contentUrl: videoData.url,
+      }
+    : null;
+
   return (
     <>
+      {jsonLd ? <JsonLd data={jsonLd} /> : null}
       <PageBuilder page={pageDocument} metadata={metadata} />
       {resolvedProject.nextProject && (
         <ProjectNavigation nextProject={resolvedProject.nextProject} mode={mode} />

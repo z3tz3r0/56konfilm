@@ -4,7 +4,6 @@ import { resolvePreferences } from '@/lib/i18nUtils';
 import { client } from '@/sanity/lib/client';
 import { modeHomeSlugsQuery, settingsQuery } from '@/sanity/lib/queries';
 import { SiteSettings } from '@/types/siteSettings';
-import { cookies } from 'next/headers';
 import { ReactNode } from 'react';
 
 interface SiteLayoutProps {
@@ -15,30 +14,7 @@ interface SiteLayoutProps {
 export default async function SiteLayout({ children, params }: SiteLayoutProps) {
   const { lang: rawLang } = await params;
   const lang = rawLang as 'en' | 'th';
-  const { shouldPersistLocale, mode, shouldPersistMode } =
-    await resolvePreferences();
-
-  if (shouldPersistLocale || shouldPersistMode) {
-    const cookieStore = await cookies();
-
-    if (shouldPersistLocale || cookieStore.get('lang')?.value !== lang) {
-      cookieStore.set({
-        name: 'lang',
-        value: lang,
-        path: '/',
-        maxAge: 60 * 60 * 24 * 365,
-      });
-    }
-
-    if (shouldPersistMode) {
-      cookieStore.set({
-        name: 'mode',
-        value: mode,
-        path: '/',
-        maxAge: 60 * 60 * 24 * 365,
-      });
-    }
-  }
+  const { mode } = await resolvePreferences();
 
   // ดึงข้อมูล Global Settings จาก Sanity
   const [settings, homeSlugs] = await Promise.all([
