@@ -8,7 +8,7 @@ A bilingual production-house portfolio built with Next.js and Sanity CMS. The si
 - **Value Prop**: Combines rich visuals, localized storytelling (Thai default, English secondary), and flexible section-driven pages to showcase the studio’s strength across TVC, film, and OEM production.
 
 ## Architecture Overview
-- **App Router + Server Components**: All routes live in `src/app`; localization is determined by a `lang` cookie (defaulting to Thai) instead of URL segments. Cookie middleware keeps language persistent across visits.
+- **App Router + Server Components**: All routes live under `src/app/[lang]`; localization uses URL route segments (`/en`, `/th`) with Thai as the default. A `lang` cookie persists the user's language preference across visits.
 - **Modular Page Builder**: Each page document in Sanity composes reusable sections—hero, two-column narratives, service grids, timeline process, media gallery, logo wall, and CTA banners. GROQ queries hydrate localized strings with fallbacks.
 - **Localization Model**: Internationalized array fields for strings/text keep Thai and English content in parity. Shared helper schemas (`localizedBlock`, `cta`, `mediaBlock`, etc.) enforce consistent structure across modules.
 - **UI Layer**: React components (Next.js + Tailwind) map each section type to a design system element. Focus is on cinematic layouts, dark theme, high-contrast CTAs, and mobile-first responsiveness.

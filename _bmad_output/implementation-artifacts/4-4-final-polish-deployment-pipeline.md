@@ -1,6 +1,6 @@
 # Story 4.4: Final Polish & Deployment Pipeline
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -63,8 +63,36 @@ so that **the owner sees their changes instantly without waiting for a re-deploy
   - [x] 6.1 Create `tests/e2e/deployment/revalidation.spec.ts`
   - [x] 6.2 Test: POST to `/api/revalidate` without secret returns 401
   - [x] 6.3 Test: POST to `/api/revalidate` with valid secret returns 200
-  - [x] 6.4 Create `tests/e2e/performance/lighthouse.spec.ts` (optional, manual verification may be preferred)
-  - [x] 6.5 Document manual verification process for Lighthouse scores
+  - [ ] ~~6.4 Create `tests/e2e/performance/lighthouse.spec.ts`~~ — **Skipped**: Lighthouse CI is automated via `.github/workflows/lighthouse.yml` with `@lhci/cli` thresholds (95+). A separate E2E spec would duplicate CI and is impractical (Lighthouse requires headless Chrome flags incompatible with Playwright).
+  - [x] 6.5 Document manual verification process for Lighthouse scores (see below)
+
+### Manual Lighthouse Verification Procedure (Task 6.5)
+
+**Prerequisites:** Production build available locally or deployed to preview URL.
+
+1. **Run local audit:**
+   ```bash
+   pnpm run build && pnpm run start
+   # In a separate terminal:
+   npx lhci autorun  # Uses lighthouserc.js config
+   ```
+2. **Verify scores:** All 4 categories (Performance, Accessibility, Best Practices, SEO) must score ≥ 95.
+3. **Check both locales:** Audit both `/en` and `/th` homepage routes.
+4. **CI automated verification:** `.github/workflows/lighthouse.yml` runs `@lhci/cli` on every PR, enforcing the same 95+ threshold via `lighthouserc.js` assertions.
+5. **Browser DevTools verification:** Open Chrome DevTools → Lighthouse tab → Generate report for both locales to cross-verify CI results.
+
+### Review Follow-ups (AI) — ✅ All Resolved
+
+- [x] [AI-Review][HIGH] Add `SANITY_REVALIDATE_SECRET` to `.env.local` — Fixed concatenated env vars with proper newline.
+- [x] [AI-Review][HIGH] Add `SANITY_REVALIDATE_SECRET` to `.env.example` — Added with documentation.
+- [x] [AI-Review][HIGH] Create missing `lighthouse.spec.ts` or untick Task 6.4 — Unticked with rationale (Lighthouse CI covers it).
+- [x] [AI-Review][HIGH] Add manual Lighthouse verification procedure — Added above.
+- [x] [AI-Review][HIGH] Align Lighthouse CI Node runtime — Changed from `20` to `24`.
+- [x] [AI-Review][HIGH] Migrate Lighthouse workflow from npm to pnpm — Full migration with pnpm cache.
+- [x] [AI-Review][HIGH] Reconcile story File List — Updated below.
+- [x] [AI-Review][MEDIUM] Replace test-only signature bypass — Changed to `NODE_ENV=test` guard with security documentation.
+- [x] [AI-Review][MEDIUM] Add missing files to File List — Reconciled below.
+- [x] [AI-Review][LOW] Fix README architecture note — Updated to reflect `[lang]` route segments.
 
 ## Dev Notes
 
@@ -255,8 +283,9 @@ export async function sanityFetch<T>({
 
 ## Story Completion Status
 
-- Status set to `review`.
-- All tasks completed. On-demand revalidation implemented and performance gaps addressed.
+- Status set to `done`.
+- All tasks completed (Task 6.4 intentionally skipped — see rationale above).
+- On-demand revalidation implemented, Lighthouse CI pipeline configured, all review follow-ups resolved.
 
 ## Dev Agent Record
 
@@ -269,8 +298,11 @@ Antigravity (Expert CLI Automation Agent / Gemini 2.0 Flash)
 - Encountered breaking change in Next.js 16 `revalidateTag` - now requires a second argument (used `'max'`).
 - Resolved lint errors by importing `SiteSettings` from `@/types/siteSettings`.
 - Discovered duplicated `client` definitions and prioritized `src/sanity/lib/client.ts` with `useCdn: false`.
-- Mocked signature verification for E2E tests via `PLAYWRIGHT_TEST` environment variable.
+- Signature bypass uses `NODE_ENV=test` guard (safe: Vercel always sets `NODE_ENV=production`).
 - Migrated dependency management from `npm` back to `pnpm` and updated `pnpm-lock.yaml`.
+- Fixed `.env.local` concatenation bug (`SANITY_CMS_REMEMBER_MAX_AGE` and `SANITY_REVALIDATE_SECRET` were on same line).
+- Fixed Lighthouse CI workflow: Node 20→24, npm→pnpm.
+- Fixed README locale architecture note to reflect `[lang]` route segments.
 
 ### Completion Notes List
 
@@ -279,13 +311,12 @@ Antigravity (Expert CLI Automation Agent / Gemini 2.0 Flash)
 - ✅ Optimized Hero images with `priority` and fonts with `display: swap`.
 - ✅ Integrated Lighthouse CI with 95+ score assertions.
 - ✅ Added bundle analyzer to `next.config.ts`.
+- ✅ All AI-Review follow-ups resolved.
 
 ### File List
 
 - `src/app/api/revalidate/route.ts`
 - `src/sanity/lib/fetch.ts`
-- `lighthouserc.js`
-- `.github/workflows/lighthouse.yml`
 - `src/sanity/lib/client.ts`
 - `src/app/[lang]/page.tsx`
 - `src/app/[lang]/[slug]/page.tsx`
@@ -294,10 +325,13 @@ Antigravity (Expert CLI Automation Agent / Gemini 2.0 Flash)
 - `src/app/[lang]/layout.tsx`
 - `src/app/[lang]/[slug]/layout.tsx`
 - `src/app/[lang]/contact/layout.tsx`
+- `lighthouserc.js`
+- `.github/workflows/lighthouse.yml`
 - `next.config.ts`
 - `package.json`
 - `playwright.config.ts`
 - `.env.local`
+- `.env.example`
 - `README.md`
 - `tests/api/revalidate.api.spec.ts`
 - `tests/e2e/deployment/revalidation.spec.ts`
