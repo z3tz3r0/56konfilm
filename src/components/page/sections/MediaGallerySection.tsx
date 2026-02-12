@@ -2,6 +2,8 @@
 
 import { motion, type Variants } from 'motion/react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
 import CtaGroup from '@/components/page/CtaGroup';
 import SectionShell from '@/components/page/SectionShell';
@@ -40,6 +42,8 @@ const itemVariants = {
 } satisfies Variants;
 
 export default function MediaGallerySection({ block }: MediaGallerySectionProps) {
+  const params = useParams();
+  const lang = (params?.lang as string) || 'en';
   const alignClass = getAlignmentClass(block.heading?.align);
   const isCentered = block.heading?.align === 'center';
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
@@ -118,6 +122,64 @@ export default function MediaGallerySection({ block }: MediaGallerySectionProps)
               const image = item.media?.image;
               if (!image) {
                 return null;
+              }
+
+              const card = (
+                <motion.figure
+                  className="group relative overflow-hidden rounded-2xl bg-muted"
+                  variants={useLiteMotion ? undefined : itemVariants}
+                  data-testid={item.projectSlug ? 'gallery-item-project' : 'gallery-item-image'}
+                >
+                  <div className="relative aspect-4/3 overflow-hidden">
+                    <Image
+                      src={urlFor(image).width(800).height(600).quality(90).url()}
+                      alt={item.media?.alt ?? item.label ?? 'Gallery item'}
+                      fill
+                      className={
+                        useLiteMotion
+                          ? 'object-cover transition-none'
+                          : 'object-cover transition-transform duration-700 ease-out group-hover:scale-105'
+                      }
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    />
+                    <div
+                      className={
+                        useLiteMotion
+                          ? 'absolute inset-0 bg-black/0 transition-none'
+                          : 'absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10'
+                      }
+                    />
+                  </div>
+                  {item.label ? (
+                    <figcaption
+                      className={
+                        useLiteMotion
+                          ? 'mt-3 px-1 text-sm font-medium text-muted-foreground'
+                          : 'mt-3 px-1 text-sm font-medium text-muted-foreground transition-colors group-hover:text-primary'
+                      }
+                    >
+                      {item.label}
+                    </figcaption>
+                  ) : null}
+                  {item.projectOverview ? (
+                    <p className="px-1 pb-1 text-sm text-muted-foreground/90">
+                      {item.projectOverview}
+                    </p>
+                  ) : null}
+                </motion.figure>
+              );
+
+              if (item.projectSlug) {
+                return (
+                  <Link
+                    key={item._key ?? index}
+                    href={`/${lang}/work/${item.projectSlug}`}
+                    className="block"
+                    aria-label={item.label ?? item.projectSlug}
+                  >
+                    {card}
+                  </Link>
+                );
               }
 
               return (

@@ -75,20 +75,38 @@ export const TIMELINE_SECTION = groq`
 export const MEDIA_GALLERY_SECTION = groq`
   _type == "mediaGallerySection" => {
     background,
+    sourceType,
     heading{
       "eyebrow": ${LOCALIZED('eyebrow')},
       "heading": ${LOCALIZED('heading')},
       "body": ${LOCALIZED('body')},
       align
     },
-    items[]{
-      mediaType,
-      media{
-        ${IMAGE_PROJECTION}
-      },
-      "videoUrl": videoFile.asset->url,
-      "label": ${LOCALIZED('label')}
-    },
+    "items": select(
+      sourceType == "projects" => selectedProjects[]->{
+        "_key": _id,
+        "mediaType": "image",
+        "media": {
+          "image": coverImage{
+            asset,
+            crop,
+            hotspot
+          },
+          "alt": ${LOCALIZED('title')}
+        },
+        "label": ${LOCALIZED('title')},
+        "projectSlug": slug.current,
+        "projectOverview": ${LOCALIZED('overview')}
+      }[0...6],
+      items[]{
+        mediaType,
+        media{
+          ${IMAGE_PROJECTION}
+        },
+        "videoUrl": videoFile.asset->url,
+        "label": ${LOCALIZED('label')}
+      }
+    ),
     cta{
       ${CTA_PROJECTION}
     }

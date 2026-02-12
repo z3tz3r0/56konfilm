@@ -146,6 +146,7 @@ export interface TimelineSectionBlock extends BaseBlock {
 export interface MediaGallerySectionBlock extends BaseBlock {
   _type: 'mediaGallerySection';
   background?: string;
+  sourceType?: 'manual' | 'projects';
   heading: {
     eyebrow?: string;
     heading?: string;
@@ -158,6 +159,8 @@ export interface MediaGallerySectionBlock extends BaseBlock {
     media?: MediaItem;
     videoUrl?: string;
     label?: string;
+    projectSlug?: string;
+    projectOverview?: string;
   }>;
   cta?: ContentCta;
 }
