@@ -78,14 +78,14 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'npm run dev',
+    command: 'pnpm run dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
     env: {
+      NODE_ENV: 'test',
       E2E_TEST: '1',
       NEXT_PUBLIC_E2E_TEST: '1',
-      PLAYWRIGHT_TEST: '1',
       FORCE_COLOR: '0',
       NEXT_DISABLE_TURBOPACK: '1',
     },
