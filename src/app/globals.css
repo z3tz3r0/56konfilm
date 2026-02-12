@@ -212,6 +212,6 @@
   }
 
   .hero-overlay {
-    @apply bg-gradient-to-b from-background/70 via-background/40 to-background/75;
+    @apply bg-linear-to-b from-background/70 via-background/40 to-background/75;
   }
 }
