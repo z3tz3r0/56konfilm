@@ -3,6 +3,7 @@
 import { useDeviceTier } from '@/hooks/useDeviceTier';
 import { cn } from '@/lib/utils';
 import { useInView } from 'motion/react';
+import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 
 interface VideoItemProps {
@@ -40,11 +41,12 @@ export function VideoItem({ src, className, posterUrl }: VideoItemProps) {
         data-testid="video-item-fallback"
       >
         {posterUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={posterUrl}
             alt="Video thumbnail"
-            className="w-full h-full object-cover block"
+            fill
+            sizes="100vw"
+            className="object-cover"
           />
         ) : (
           <div className="w-full h-full bg-neutral-800" />
