@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, m } from 'motion/react';
 
 interface ContactHeaderProps {
   isWedding: boolean;
@@ -8,13 +8,13 @@ interface ContactHeaderProps {
 
 export function ContactHeader({ isWedding }: ContactHeaderProps) {
   return (
-    <motion.div
+    <m.div
       initial={false}
       animate={{ color: isWedding ? 'var(--color-brown)' : 'var(--color-ivory-white)' }}
       className="mb-8 text-center"
     >
       <AnimatePresence mode="wait">
-        <motion.div
+        <m.div
           key={isWedding ? 'wedding' : 'commercial'}
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
@@ -29,8 +29,8 @@ export function ContactHeader({ isWedding }: ContactHeaderProps) {
               ? 'We accept a limited number of weddings per year. Let’s see if we are a match.'
               : 'Ready to elevate your brand visual identity?'}
           </p>
-        </motion.div>
+        </m.div>
       </AnimatePresence>
-    </motion.div>
+    </m.div>
   );
 }

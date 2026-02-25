@@ -108,14 +108,6 @@ export function classifyDeviceTier(capabilities: DeviceCapabilities): DeviceTier
 }
 
 /**
- * Get current device tier
- * Convenience function that detects capabilities and classifies in one call
- */
-export function getDeviceTier(): DeviceTier {
-  return classifyDeviceTier(getDeviceCapabilities());
-}
-
-/**
  * Tier-based feature flags
  */
 export interface TierFeatureFlags {

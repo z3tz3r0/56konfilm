@@ -1,14 +1,35 @@
-import CardCollectionSection from '@/components/page/sections/CardCollectionSection';
-import CtaBannerSection from '@/components/page/sections/CtaBannerSection';
+import dynamic from 'next/dynamic';
+
 import HeroSection from '@/components/page/sections/HeroSection';
-import LogoGridSection from '@/components/page/sections/LogoGridSection';
-import MediaGallerySection from '@/components/page/sections/MediaGallerySection';
-import PackagesSection from '@/components/page/sections/PackagesSection';
-import PhilosophySection from '@/components/page/sections/PhilosophySection';
-import TestimonialSection from '@/components/page/sections/TestimonialSection';
-import TimelineSection from '@/components/page/sections/TimelineSection';
-import TwoColumnSection from '@/components/page/sections/TwoColumnSection';
 import { PageContentBlock, PageDocument } from '@/types/sanity';
+
+const TwoColumnSection = dynamic(
+  () => import('@/components/page/sections/TwoColumnSection'),
+);
+const CardCollectionSection = dynamic(
+  () => import('@/components/page/sections/CardCollectionSection'),
+);
+const TimelineSection = dynamic(
+  () => import('@/components/page/sections/TimelineSection'),
+);
+const LogoGridSection = dynamic(
+  () => import('@/components/page/sections/LogoGridSection'),
+);
+const CtaBannerSection = dynamic(
+  () => import('@/components/page/sections/CtaBannerSection'),
+);
+const MediaGallerySection = dynamic(
+  () => import('@/components/page/sections/MediaGallerySection'),
+);
+const PackagesSection = dynamic(
+  () => import('@/components/page/sections/PackagesSection'),
+);
+const TestimonialSection = dynamic(
+  () => import('@/components/page/sections/TestimonialSection'),
+);
+const PhilosophySection = dynamic(
+  () => import('@/components/page/sections/PhilosophySection'),
+);
 
 interface PageBuilderProps {
   page: PageDocument;

@@ -9,7 +9,7 @@ import {
 } from '@/lib/performance/deviceTier';
 import { useSyncExternalStore } from 'react';
 
-export interface UseDeviceTierResult {
+interface UseDeviceTierResult {
   /** Current device tier classification */
   tier: DeviceTier;
   /** Whether the device is considered low-power */

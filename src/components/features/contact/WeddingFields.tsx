@@ -2,7 +2,8 @@
 
 import { cn } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
+import { useMemo } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import type { ContactFormValues } from '@/lib/schemas/contact';
 
@@ -28,12 +29,13 @@ interface WeddingFieldsProps {
 }
 
 export function WeddingFields({ form, lang = 'en' }: WeddingFieldsProps) {
-  const dateFormatter = new Intl.DateTimeFormat(lang === 'th' ? 'th-TH' : 'en-US', {
-    dateStyle: 'medium',
-  });
+  const dateFormatter = useMemo(
+    () => new Intl.DateTimeFormat(lang === 'th' ? 'th-TH' : 'en-US', { dateStyle: 'medium' }),
+    [lang],
+  );
 
   return (
-    <motion.div
+    <m.div
       key="wedding-fields"
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: 'auto' }}
@@ -100,6 +102,6 @@ export function WeddingFields({ form, lang = 'en' }: WeddingFieldsProps) {
           </FormItem>
         )}
       />
-    </motion.div>
+    </m.div>
   );
 }
