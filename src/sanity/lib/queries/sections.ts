@@ -43,7 +43,7 @@ export const CARD_COLLECTION_SECTION = groq`
     cards[]{
       "title": ${LOCALIZED('title')},
       "body": ${LOCALIZED('body')},
-      icon,
+      icon{ asset, crop, hotspot },
       variant,
       cta{
         ${CTA_PROJECTION}
@@ -64,7 +64,8 @@ export const TIMELINE_SECTION = groq`
     steps[]{
       order,
       "title": ${LOCALIZED('title')},
-      "description": ${LOCALIZED('description')}
+      "description": ${LOCALIZED('description')},
+      icon{ asset, crop, hotspot }
     } | order(order asc),
     cta{
       ${CTA_PROJECTION}
@@ -138,6 +139,16 @@ export const CTA_BANNER_SECTION = groq`
     },
     ctas[]{
       ${CTA_PROJECTION}
+    },
+    customColors{
+      eyebrow,
+      heading,
+      body
+    },
+    overlay{
+      enabled,
+      color,
+      opacity
     }
   }
 `;
@@ -176,7 +187,7 @@ export const TESTIMONIAL_SECTION = groq`
       "quote": ${LOCALIZED('quote')},
       authorName,
       authorTitle,
-      authorImage
+      authorImage{ asset, crop, hotspot }
     },
     background
   }

@@ -18,12 +18,10 @@ interface PageProps {
   }>;
 }
 
-// Ensure dynamic rendering to support cookie-based mode switching
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { lang, slug } = await params;
-  const { mode } = await resolvePreferences();
+  const [{ lang, slug }, { mode }] = await Promise.all([params, resolvePreferences()]);
   const [project, settings] = await Promise.all([
     fetchProject(slug, lang, mode),
     sanityFetch<SiteSettings | null>({
@@ -188,9 +186,7 @@ function getProjectVideoData(project: Project) {
 }
 
 export default async function ProjectPage({ params }: PageProps) {
-  const { lang, slug } = await params;
-
-  const { mode } = await resolvePreferences();
+  const [{ lang, slug }, { mode }] = await Promise.all([params, resolvePreferences()]);
   const e2eProject = getE2eMockProject(slug, mode);
   const project = await fetchProject(slug, lang, mode);
   const resolvedProject = e2eProject

@@ -50,8 +50,8 @@ export default function HeroSection({ block, metadata }: HeroSectionProps) {
             className="mt-2 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm text-white/80"
             data-testid="project-services"
           >
-            {metadata.services.map((service, index) => (
-              <span key={index} className="uppercase tracking-wide">
+            {metadata.services.map((service) => (
+              <span key={service} className="uppercase tracking-wide">
                 {service}
               </span>
             ))}

@@ -31,9 +31,9 @@ export default function CtaGroup({
         className
       )}
     >
-      {ctas.map((cta, index) => (
+      {ctas.map((cta) => (
         <CtaButton
-          key={`${cta.label ?? 'cta'}-${index}`}
+          key={cta.externalUrl ?? cta.pageRef?.slug ?? cta.label}
           cta={cta}
           className={className}
           fullWidth={!!fullWidth}

@@ -47,7 +47,7 @@ function getOgImageUrl(
   return urlFor(image).width(1200).height(630).fit('crop').url();
 }
 
-export type MetadataInput = {
+type MetadataInput = {
   lang: string;
   pathname: string;
   seo?: SeoFields | null;

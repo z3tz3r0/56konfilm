@@ -8,14 +8,14 @@ interface NavItem {
 
 export interface SiteSettings {
   favicon?: string;
-  siteTitle: string;
+  siteTitle?: string;
   seo?: SeoFields;
-  productionNav: NavItem[];
-  weddingNav: NavItem[];
-  companyTitle: string;
-  address: string;
-  contactTitle: string;
-  contacts: string;
-  socialMediaTitle: string;
-  socialLinks: NavItem[];
+  productionNav?: NavItem[];
+  weddingNav?: NavItem[];
+  companyTitle?: string;
+  address?: string;
+  contactTitle?: string;
+  contacts?: string;
+  socialMediaTitle?: string;
+  socialLinks?: NavItem[];
 }

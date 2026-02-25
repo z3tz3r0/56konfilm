@@ -1,7 +1,6 @@
 import { cookies, headers } from 'next/headers';
 
 import { type Locale, type SiteMode, isSupportedLocale, isSupportedMode } from '@/lib/preferences';
-import { I18nArrayItem } from '@/types/sanity';
 
 const FALLBACK_LOCALE: Locale = 'th';
 const DEFAULT_MODE: SiteMode = 'production';
@@ -25,27 +24,6 @@ type ModeSelectionResult = {
 };
 
 type PreferenceSelectionResult = LocaleSelectionResult & ModeSelectionResult;
-
-/**
- * คืนค่าภาษาเฉพาะจาก internationalized array ตาม locale ที่ใช้งานอยู่
- * @param i18nArray อาร์เรย์ข้อมูลที่มีคีย์ `_key` เป็นรหัสภาษา
- * @param currentLang ภาษาที่ต้องการ (เช่น 'th' หรือ 'en')
- */
-export function getLocaleValue<T>(
-  i18nArray: I18nArrayItem<T>[] | undefined | null,
-  currentLang: string
-): T | undefined {
-  if (!i18nArray) {
-    return undefined;
-  }
-
-  const foundValue = i18nArray.find((item) => item._key === currentLang)?.value;
-  if (foundValue) {
-    return foundValue;
-  }
-
-  return i18nArray.find((item) => item._key === FALLBACK_LOCALE)?.value;
-}
 
 /**
  * เลือก locale และ mode ให้เรียบร้อยในครั้งเดียว (จาก query, cookie และ header)

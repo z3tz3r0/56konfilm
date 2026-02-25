@@ -12,11 +12,9 @@ interface SiteLayoutProps {
 }
 
 export default async function SiteLayout({ children, params }: SiteLayoutProps) {
-  const { lang: rawLang } = await params;
+  const [{ lang: rawLang }, { mode }] = await Promise.all([params, resolvePreferences()]);
   const lang = rawLang as 'en' | 'th';
-  const { mode } = await resolvePreferences();
 
-  // ดึงข้อมูล Global Settings จาก Sanity
   const [settings, homeSlugs] = await Promise.all([
     sanityFetch<SiteSettings>({
       query: settingsQuery,

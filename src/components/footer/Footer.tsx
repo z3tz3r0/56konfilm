@@ -31,8 +31,8 @@ const Footer = ({ settings }: FooterProps) => {
         <div id="social-media-links" className="text-right">
           <h4>{socialMediaTitle}</h4>
           <p>
-            {socialLinks.map((link, idx) => (
-              <Link key={idx} href={link.url}>
+            {socialLinks?.map((link) => (
+              <Link key={link.url} href={link.url}>
                 {link.label}
               </Link>
             ))}

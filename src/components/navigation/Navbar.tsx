@@ -75,7 +75,7 @@ const Navbar = async ({ mode, settings, homeSlugs, lang }: NavbarProps) => {
                 ))}
               </nav>
               <div className="flex flex-col items-center gap-8">
-                <ModeSwitcher initialMode={mode} homeSlugs={homeSlugs} lang={lang} />
+                <ModeSwitcher homeSlugs={homeSlugs} lang={lang} />
                 <LanguageSwitcher />
               </div>
             </div>
@@ -84,7 +84,7 @@ const Navbar = async ({ mode, settings, homeSlugs, lang }: NavbarProps) => {
 
         <div className="col-span-2 hidden md:grid md:grid-cols-subgrid">
           <div className="flex items-center gap-4">
-            <ModeSwitcher initialMode={mode} homeSlugs={homeSlugs} lang={lang} />
+            <ModeSwitcher homeSlugs={homeSlugs} lang={lang} />
             <LanguageSwitcher />
           </div>
 

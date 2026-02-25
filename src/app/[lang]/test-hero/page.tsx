@@ -1,8 +1,12 @@
-'use client';
-
+import type { Metadata } from 'next';
 import HeroSection from '@/components/page/sections/HeroSection';
 import { HeroSectionBlock } from '@/types/sanity';
 import { notFound } from 'next/navigation';
+
+export const metadata: Metadata = {
+  title: 'Test Hero',
+  robots: { index: false },
+};
 
 export default function TestHeroPage() {
   if (process.env.E2E_TEST !== '1') {

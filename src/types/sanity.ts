@@ -1,27 +1,5 @@
 import { SanityImageSource } from '@sanity/image-url';
 
-export interface I18nArrayItem<T> {
-  _key: string;
-  value: T;
-}
-
-// --- Raw Data from Sanity ---
-export interface RawProject {
-  _id: string;
-  title: I18nArrayItem<string>[];
-  overview: I18nArrayItem<string>[];
-  siteMode: ('production' | 'wedding')[];
-  slug: { current: string };
-  coverImage: SanityImageSource;
-  // Metadata for Magazine Layout
-  client?: string;
-  services?: string[];
-  year?: string;
-  contentBlocks?: PageContentBlock[];
-  publishedAt?: string;
-  seo?: SeoFields;
-}
-
 // --- Data after resolving language in GROQ ---
 export interface Project {
   _id: string;
@@ -29,7 +7,7 @@ export interface Project {
   overview: string;
   siteMode: ('production' | 'wedding')[];
   slug: string;
-  coverImage: SanityImageSource;
+  coverImage?: SanityImageSource;
   // Magazine Layout Fields
   client?: string;
   services?: string[];
@@ -44,20 +22,11 @@ export interface Project {
   };
 }
 
-export type CmsSiteMode = 'production' | 'wedding' | 'both';
+type CmsSiteMode = 'production' | 'wedding' | 'both';
 
-export interface PageRouteParams {
-  slug: string;
-}
+type LinkType = 'internal' | 'external' | null;
 
-export interface PageLinkReference {
-  slug?: string;
-  url?: string;
-}
-
-export type LinkType = 'internal' | 'external' | null;
-
-export type CtaStyle = 'primary' | 'secondary' | 'link' | null;
+type CtaStyle = 'primary' | 'secondary' | 'link' | null;
 
 export interface ContentCta {
   label?: string;
@@ -216,7 +185,7 @@ export interface PhilosophySectionBlock extends BaseBlock {
   quote?: string;
 }
 
-export interface SanityColor {
+interface SanityColor {
   _type: 'color';
   hex: string;
   alpha: number;

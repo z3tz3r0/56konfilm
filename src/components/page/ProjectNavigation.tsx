@@ -24,40 +24,32 @@ export default function ProjectNavigation({
   const lang = (params?.lang as string) || 'en';
   
   const { setMode } = useMode();
-  const {
-    isTransitioning,
-    pendingPath,
-    setIsTransitioning,
-    setPendingPath,
-  } = useTransitionStore();
+  const pendingPath = useTransitionStore((s) => s.pendingPath);
+  const setPendingPath = useTransitionStore((s) => s.setPendingPath);
+  const setIsTransitioning = useTransitionStore((s) => s.setIsTransitioning);
+  const resetTransition = useTransitionStore((s) => s.resetTransition);
   const [, startTransition] = useTransition();
   const pathname = usePathname();
 
-  // Navigate when a pending path is queued.
-  useEffect(() => {
-    if (pendingPath) {
-      startTransition(() => {
-        router.push(pendingPath);
-      });
-    }
-  }, [pendingPath, router, startTransition]);
-
-  // Release transition after navigation completes
   useEffect(() => {
     if (!pendingPath) return;
     if (pathname === pendingPath) {
-      setIsTransitioning(false);
+      resetTransition();
       setMode(mode);
-      setPendingPath(null);
     }
-  }, [pathname, pendingPath, setIsTransitioning, setPendingPath, setMode, mode]);
+  }, [pathname, pendingPath, resetTransition, setMode, mode]);
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
+    const { isTransitioning, pendingPath } = useTransitionStore.getState();
     if (isTransitioning || pendingPath) return;
-    setPendingPath(`/${lang}/work/${nextProject.slug}`);
+    const path = `/${lang}/work/${nextProject.slug}`;
+    setPendingPath(path);
     setMode(mode);
     setIsTransitioning(true);
+    startTransition(() => {
+      router.push(path);
+    });
   };
 
   const imageUrl = nextProject.coverImage
@@ -83,6 +75,7 @@ export default function ProjectNavigation({
               src={imageUrl}
               alt={nextProject.title}
               fill
+              sizes="(max-width: 1280px) 100vw, 1280px"
               className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
           )}

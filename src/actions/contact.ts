@@ -2,7 +2,7 @@
 
 import { contactFormSchema, ContactFormValues } from '@/lib/schemas/contact';
 
-export type ActionState = {
+type ActionState = {
   success: boolean;
   message?: string;
   errors?: Record<string, string[]>;

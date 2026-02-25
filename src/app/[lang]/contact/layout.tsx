@@ -12,11 +12,9 @@ interface ContactLayoutProps {
 }
 
 export default async function ContactLayout({ children, params }: ContactLayoutProps) {
-  const { lang: rawLang } = await params;
+  const [{ lang: rawLang }, { mode }] = await Promise.all([params, resolvePreferences()]);
   const lang = rawLang as 'en' | 'th';
-  const { mode } = await resolvePreferences();
 
-  // Fetch Global Settings and Home Slugs for Navbar
   const [settings, homeSlugs] = await Promise.all([
     sanityFetch<SiteSettings>({
       query: settingsQuery,
