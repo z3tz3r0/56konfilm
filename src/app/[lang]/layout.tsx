@@ -1,15 +1,14 @@
 import { ModeProvider } from '@/components/providers/ModeProvider';
+import MotionProvider from '@/components/providers/MotionProvider';
 import { ThemeProvider } from '@/components/ui/theme-provider';
 import { buildMetadata } from '@/lib/metadata';
-import { SiteMode, isSupportedMode } from '@/lib/preferences';
+import { isSupportedMode, type SiteMode } from '@/lib/preferences';
 import type { Metadata } from 'next';
 import { Cormorant_Garamond, Manrope, Noto_Sans_Thai, Sora } from 'next/font/google';
 import { cookies } from 'next/headers';
 import { Toaster } from 'sonner';
 import '../globals.css';
 
-// Sora supports Latin + Thai through fallback to system fonts
-// For full Thai support, tailwind.config uses font-sans with Thai-capable system stack
 const sora = Sora({
   variable: '--font-sora',
   subsets: ['latin', 'latin-ext'],
@@ -42,9 +41,6 @@ type Props = {
   params: Promise<{ lang: string }>;
 };
 
-// Force dynamic rendering to ensure cookies are read on every request
-export const dynamic = 'force-dynamic';
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang } = await params;
   const settings = await sanityFetch<SiteSettings | null>({
@@ -67,8 +63,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// Map mode to theme for initial server rendering
-const MODE_TO_THEME: Record<SiteMode, string> = {
+const MODE_TO_THEME: Record<SiteMode, 'dark' | 'light'> = {
   production: 'dark',
   wedding: 'light',
 };
@@ -84,34 +79,32 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: Promise<{ lang: string }>;
 }>) {
-  const { lang } = await params;
-  const cookieStore = await cookies();
-  // Validate cookie value server-side
-  const cookieValue = cookieStore.get('mode')?.value;
-  const initialMode: SiteMode = isSupportedMode(cookieValue || '') 
-    ? (cookieValue as SiteMode) 
+  const [{ lang }, cookieStore] = await Promise.all([params, cookies()]);
+  const cookieMode = cookieStore.get('mode')?.value;
+  const initialMode: SiteMode = cookieMode && isSupportedMode(cookieMode)
+    ? (cookieMode as SiteMode)
     : 'production';
   const initialTheme = MODE_TO_THEME[initialMode];
 
   return (
-    // data-mode helps with CSS selection, data-theme helps next-themes
-    <html 
-      lang={lang} 
-      suppressHydrationWarning 
-      data-mode={initialMode} 
+    <html
+      lang={lang}
+      suppressHydrationWarning
+      data-mode={initialMode}
       style={{ colorScheme: initialTheme }}
       className={`${sora.variable} ${cormorantGaramond.variable} ${manrope.variable} ${notoSansThai.variable}`}
     >
       <body className="font-body antialiased">
         <ThemeProvider
           attribute="class"
-          defaultTheme={initialTheme} // FORCE default theme based on server mode
-          enableSystem={false} // Disable system preference to enforce mode-based theme
+          defaultTheme={initialTheme}
+          enableSystem={false}
           disableTransitionOnChange
         >
-          {/* Synchronize store with server state */}
           <ModeProvider initialMode={initialMode}>
-            {children}
+            <MotionProvider>
+              {children}
+            </MotionProvider>
           </ModeProvider>
         </ThemeProvider>
         <Toaster richColors position="top-right" />
