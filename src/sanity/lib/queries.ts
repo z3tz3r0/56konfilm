@@ -1,5 +1,4 @@
-import { createClient, groq } from 'next-sanity';
-import { apiVersion, dataset, projectId } from '../env';
+import { groq } from 'next-sanity';
 import { LOCALIZED, SEO_PROJECTION } from './queries/fragments';
 import {
     CARD_COLLECTION_SECTION,
@@ -13,14 +12,6 @@ import {
     TIMELINE_SECTION,
     TWO_COLUMN_SECTION,
 } from './queries/sections';
-
-export const client = createClient({
-  projectId,
-  dataset,
-  apiVersion,
-  useCdn: true,
-  perspective: 'published',
-});
 
 export const settingsQuery = groq`*[_type == "settings"][0] {
     "favicon": favicon.asset->url,
@@ -44,16 +35,6 @@ export const settingsQuery = groq`*[_type == "settings"][0] {
       url
     }
   }`;
-
-export const projectsByModelQuery = groq`*[_type == "project" && $mode in siteMode] | order(publishedAt desc) {
-    _id,
-    "title": ${LOCALIZED('title')},
-    "overview": ${LOCALIZED('overview')},
-    "slug": slug.current,
-    siteMode,
-    coverImage
-  }
-`;
 
 export const allPageSlugsQuery = groq`*[_type == "page" && defined(slug.current)]{
     "slug": slug.current,
@@ -123,7 +104,7 @@ export const projectBySlugQuery = groq`
     client,
     year,
     services,
-    coverImage,
+    coverImage{ asset, crop, hotspot },
     contentBlocks[]{
       _key,
       _type,
@@ -146,12 +127,12 @@ export const projectBySlugQuery = groq`
       ] | order(coalesce(publishedAt, _createdAt) desc)[0] {
         "title": ${LOCALIZED('title')},
         "slug": slug.current,
-        coverImage
+        coverImage{ asset, crop, hotspot }
       },
       *[_type == "project" && $mode in siteMode] | order(coalesce(publishedAt, _createdAt) desc)[0] {
         "title": ${LOCALIZED('title')},
         "slug": slug.current,
-        coverImage
+        coverImage{ asset, crop, hotspot }
       }
     )
   }

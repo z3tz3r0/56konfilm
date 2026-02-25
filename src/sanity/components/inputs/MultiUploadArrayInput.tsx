@@ -9,6 +9,11 @@ function randomKey(length = 12) {
     return Math.random().toString(36).substring(2, 2 + length)
 }
 
+function DefaultArrayInput(props: ArrayOfObjectsInputProps) {
+  const Render = props.renderDefault
+  return <Render {...props} />
+}
+
 export function MultiUploadArrayInput(props: ArrayOfObjectsInputProps) {
   const { onChange } = props
   const client = useClient({ apiVersion: '2024-01-01' })
@@ -155,7 +160,7 @@ export function MultiUploadArrayInput(props: ArrayOfObjectsInputProps) {
 
   return (
     <Stack space={3}>
-      {props.renderDefault(props)}
+      <DefaultArrayInput {...props} />
       
       <Card 
         data-testid="multi-upload-dropzone"
