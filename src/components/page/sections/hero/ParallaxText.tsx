@@ -2,7 +2,7 @@
 
 import { useDeviceTier } from '@/hooks/useDeviceTier';
 import { cn } from '@/lib/utils';
-import { motion, useScroll, useSpring, useTransform, useVelocity } from 'motion/react';
+import { m, useScroll, useSpring, useTransform, useVelocity } from 'motion/react';
 
 interface ParallaxTextProps {
   children: string;
@@ -29,20 +29,19 @@ function HeavyParallaxText({ children, className }: ParallaxTextProps) {
 
   return (
     <div className={cn('relative z-20 overflow-visible py-8', className)}>
-      <motion.p
+      <m.p
         className="text-6xl font-black uppercase tracking-tighter text-white md:text-8xl lg:text-9xl"
         style={{
           skewX: skew,
           y: y,
           textShadow: '0 4px 20px rgba(0,0,0,0.5)',
-          willChange: 'transform',
         }}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
         {children}
-      </motion.p>
+      </m.p>
     </div>
   );
 }

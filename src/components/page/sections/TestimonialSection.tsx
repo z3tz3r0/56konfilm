@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion, type Variants } from 'motion/react';
+import { m, type Variants } from 'motion/react';
 import Image from 'next/image';
 
 import SectionShell from '@/components/page/SectionShell';
@@ -83,7 +83,7 @@ export default function TestimonialSection({ block }: TestimonialSectionProps) {
               <CarouselContent>
                 {block.testimonials.map((testimonial, index) => (
                   <CarouselItem key={testimonial._key ?? index}>
-                    <motion.article
+                    <m.article
                       className={cn(
                         'bg-secondary/80 border-border/40 mx-auto flex max-w-3xl flex-col gap-6 rounded-3xl border p-8 text-center shadow-sm transition-opacity duration-500',
                         index === current ? 'opacity-100' : 'opacity-0 pointer-events-none'
@@ -125,7 +125,7 @@ export default function TestimonialSection({ block }: TestimonialSectionProps) {
                           </p>
                         ) : null}
                       </div>
-                    </motion.article>
+                    </m.article>
                   </CarouselItem>
                 ))}
               </CarouselContent>

@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 
 import SectionShell from '@/components/page/SectionShell';
 import { cn } from '@/lib/utils';
@@ -21,7 +21,7 @@ export default function PhilosophySection({ block }: PhilosophySectionProps) {
       className={cn(defaultBackground && 'bg-background')}
     >
       <div className="container mx-auto max-w-4xl">
-        <motion.blockquote
+        <m.blockquote
           className="text-center text-3xl font-semibold leading-relaxed md:text-5xl"
           style={{
             fontFamily:
@@ -34,7 +34,7 @@ export default function PhilosophySection({ block }: PhilosophySectionProps) {
           data-testid="philosophy-quote"
         >
           {block.quote}
-        </motion.blockquote>
+        </m.blockquote>
       </div>
     </SectionShell>
   );

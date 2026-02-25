@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, type Variants } from 'motion/react';
+import { m, type Variants } from 'motion/react';
 
 import CtaButton from '@/components/page/CtaButton';
 import SectionShell from '@/components/page/SectionShell';
@@ -64,7 +64,7 @@ export default function PackagesSection({ block }: PackagesSectionProps) {
         </header>
 
         {block.packages?.length ? (
-          <motion.div
+          <m.div
             className="grid gap-6 md:grid-cols-3"
             initial="hidden"
             whileInView="visible"
@@ -74,7 +74,7 @@ export default function PackagesSection({ block }: PackagesSectionProps) {
             {block.packages.map((pkg, index) => {
               const isFeatured = Boolean(pkg.featured);
               return (
-                <motion.article
+                <m.article
                   key={pkg._key ?? index}
                   className={cn(
                     'border-border/60 bg-background/80 flex h-full flex-col gap-6 rounded-3xl border p-8 shadow-sm',
@@ -121,10 +121,10 @@ export default function PackagesSection({ block }: PackagesSectionProps) {
                       />
                     ) : null}
                   </div>
-                </motion.article>
+                </m.article>
               );
             })}
-          </motion.div>
+          </m.div>
         ) : null}
       </div>
     </SectionShell>
