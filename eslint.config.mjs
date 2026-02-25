@@ -1,8 +1,18 @@
-import { defineConfig, globalIgnores } from 'eslint/config';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTypescript from 'eslint-config-next/typescript';
+import prettier from 'eslint-config-prettier';
 
-export default defineConfig([
+const config = [
+  { ignores: [
+    '.next/**',
+    'out/**',
+    'build/**',
+    'dist/**',
+    'play-results/**',
+    'playwright-report/**',
+    'test-results/**',
+    'next-env.d.ts',
+  ]},
   ...nextVitals,
   ...nextTypescript,
   {
@@ -12,14 +22,7 @@ export default defineConfig([
       '@typescript-eslint/ban-ts-comment': 'off',
     },
   },
-  globalIgnores([
-    '.next/**',
-    'out/**',
-    'build/**',
-    'dist/**',
-    'play-results/**',
-    'playwright-report/**',
-    'test-results/**',
-    'next-env.d.ts',
-  ]),
-]);
+  prettier,
+];
+
+export default config;
