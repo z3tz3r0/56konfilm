@@ -13,7 +13,7 @@ import { cookies } from 'next/headers';
 import { verifySession } from '@/lib/auth';
 import config from '../../../../sanity.config';
 
-export const dynamic = 'force-dynamic'; // This is necessary for authentication system
+export const dynamic = 'force-dynamic';
 
 export { metadata, viewport } from 'next-sanity/studio';
 

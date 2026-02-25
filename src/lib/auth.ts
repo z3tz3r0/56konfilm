@@ -12,7 +12,7 @@ const SESSION_SECRET = sanityCmsSessionSecret;
 const DEFAULT_MAX_AGE = sanityCmsSessionMaxAge; // 7 days
 const REMEMBER_MAX_AGE = sanityCmsRememberMaxAge; // 30 days
 
-export interface PasswordValidationResult {
+interface PasswordValidationResult {
   valid: boolean;
   errors: string[];
 }
