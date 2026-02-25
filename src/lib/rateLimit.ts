@@ -21,7 +21,7 @@ setInterval(
   5 * 60 * 1000
 );
 
-export interface RateLimitResult {
+interface RateLimitResult {
   allowed: boolean;
   remaining: number;
   resetAt: number;
