@@ -16,13 +16,15 @@ export const pageType = defineType({
     localizedStringField({
       name: 'page',
       title: 'Page Name',
-      description: 'ชื่อหน้า',
+      description:
+        'ชื่อหน้า (จะแสดงผลภายในระบบ และใช้เป็นชื่อหน้าหลักสำหรับ SEO หากไม่ได้ระบุ SEO Title แยกต่างหาก)',
       group: 'settings',
     }),
     defineField({
       name: 'siteMode',
       title: 'Site Mode',
-      description: 'หน้านี้จะแสดงในโหมดไหน',
+      description:
+        'หน้านี้จะแสดงผลในโหมดไหน (Production: สำหรับงานโฆษณา/ธุรกิจ, Wedding: สำหรับงานแต่งงาน, Both: แสดงทั้งสองโหมด)',
       type: 'string',
       options: {
         list: [
@@ -40,7 +42,7 @@ export const pageType = defineType({
       name: 'slug',
       title: 'Slug',
       description:
-        'URL ของหน้านี้ เช่น about, services, contact (ไม่ต้องใส่ / ด้านหน้า). สามารถใช้ slug เดียวกันข้ามโหมดได้ หากไม่ได้ตั้งเป็น Both',
+        'URL ที่จะใช้เข้าถึงหน้านี้ (เช่น "about", "services") ไม่ต้องใส่เครื่องหมาย / ด้านหน้า พยายามให้สั้นและมีคีย์เวิร์ดที่เกี่ยวข้องเพื่อผลดีต่อ SEO',
       type: 'slug',
       options: {
         source: 'page',
@@ -54,15 +56,14 @@ export const pageType = defineType({
 
           // During early draft initialization, Studio can call isUnique before revision is ready.
           const id = document?._id;
-          const rev = document?._rev;
 
-          if (!id || !rev) {
+          if (!id) {
             return true;
           }
 
           const client = getClient({ apiVersion: '2023-01-01' });
           const cleanId = id.replace(/^drafts\./, '');
-          const mode = (document as any)?.siteMode || 'production';
+          const mode = (document as { siteMode?: string })?.siteMode || 'production';
           const slugCandidate = slug as
             | string
             | { current?: string }
@@ -119,7 +120,8 @@ export const pageType = defineType({
     defineField({
       name: 'contentBlocks',
       title: 'Content Blocks (Commercial)',
-      description: 'บล็อกเนื้อหาสำหรับโหมด Commercial',
+      description:
+        'ส่วนสำหรับจัดการเนื้อหาในโหมด Commercial (สามารถเพิ่ม/ลบ หรือจัดลำดับ section ต่างๆ ได้อย่างอิสระ)',
       group: 'commercial',
       type: 'array',
       of: [
@@ -149,7 +151,8 @@ export const pageType = defineType({
     defineField({
       name: 'contentBlocksWedding',
       title: 'Content Blocks (Wedding)',
-      description: 'บล็อกเนื้อหาสำหรับโหมด Wedding',
+      description:
+        'ส่วนสำหรับจัดการเนื้อหาในโหมด Wedding (สามารถออกแบบเนื้อหาให้แตกต่างจากโหมด Commercial ได้อย่างสิ้นเชิง)',
       group: 'wedding',
       type: 'array',
       of: [
@@ -182,14 +185,14 @@ export const pageType = defineType({
       name: 'seoTitle',
       title: 'SEO Title',
       description:
-        'หัวข้อที่แสดงบน Google (แนะนำ 50-60 ตัวอักษร, ใส่คีย์เวิร์ดหลักช่วงต้นประโยค)',
+        'หัวข้อที่แสดงบน Google (แนะนำ 50-60 ตัวอักษร, ควรใส่คีย์เวิร์ดหลักไว้ช่วงต้นเพื่อประสิทธิภาพสูงสุด)',
       group: 'seo',
     }),
     defineField({
       name: 'seo',
       title: 'SEO',
       description:
-        'ตั้งค่า SEO เพิ่มเติมของหน้านี้ (Title, Description, Open Graph Image)',
+        'การตั้งค่า Meta Tags เพิ่มเติมสำหรับการแชร์ลงโซเชียลมีเดียและการแสดงผลบน Google (หากไม่ใส่ ระบบจะดึงข้อมูลจาก Page Name ให้อัตโนมัติ)',
       type: 'seo',
       group: 'seo',
     }),
