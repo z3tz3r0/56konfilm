@@ -1,3 +1,4 @@
+import { SanityImageSource } from '@sanity/image-url';
 import { SeoFields } from './sanity';
 
 // Interface สำหรับข้อมูล Navigation ที่ดึงมา
@@ -7,7 +8,7 @@ interface NavItem {
 }
 
 export interface SiteSettings {
-  favicon?: string;
+  favicon?: SanityImageSource;
   siteTitle?: string;
   seo?: SeoFields;
   productionNav?: NavItem[];

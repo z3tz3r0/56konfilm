@@ -39,6 +39,7 @@ const notoSansThai = Noto_Sans_Thai({
 });
 
 import { sanityFetch } from '@/sanity/lib/fetch';
+import { urlFor } from '@/sanity/lib/image';
 import { settingsQuery } from '@/sanity/lib/queries';
 import { SiteSettings } from '@/types/siteSettings';
 import Script from 'next/script';
@@ -66,7 +67,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     ...metadata,
     icons: settings?.favicon
-      ? [{ rel: 'icon', url: settings.favicon }]
+      ? [{ rel: 'icon', url: urlFor(settings.favicon).width(32).height(32).url() }]
       : undefined,
   };
 }
