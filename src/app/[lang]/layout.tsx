@@ -41,6 +41,7 @@ const notoSansThai = Noto_Sans_Thai({
 import { sanityFetch } from '@/sanity/lib/fetch';
 import { settingsQuery } from '@/sanity/lib/queries';
 import { SiteSettings } from '@/types/siteSettings';
+import Script from 'next/script';
 
 type Props = {
   params: Promise<{ lang: string }>;
@@ -102,6 +103,15 @@ export default async function RootLayout({
       style={{ colorScheme: initialTheme }}
       className={`${sora.variable} ${cormorantGaramond.variable} ${manrope.variable} ${notoSansThai.variable} antialiased`}
     >
+      <head>
+        {process.env.NODE_ENV === 'development' && (
+          <Script
+            src="//unpkg.com/react-grab/dist/index.global.js"
+            crossOrigin="anonymous"
+            strategy="beforeInteractive"
+          />
+        )}
+      </head>
       <body className="font-body">
         <ThemeProvider
           attribute="class"
