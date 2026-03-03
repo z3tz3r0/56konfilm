@@ -31,7 +31,9 @@ test.describe('Debug Mode', () => {
     expect(soraVar).toBeDefined();
 
     const cormorantVar = await page.evaluate(() => {
-      return getComputedStyle(document.body).getPropertyValue('--font-cormorant-garamond');
+      return getComputedStyle(document.body).getPropertyValue(
+        '--font-cormorant-garamond'
+      );
     });
     expect(cormorantVar).toBeDefined();
   });

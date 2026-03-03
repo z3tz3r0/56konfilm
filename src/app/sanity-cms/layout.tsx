@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 export default async function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
   const lang = cookieStore.get('lang')?.value || 'en';
@@ -11,5 +11,5 @@ export default async function RootLayout({
     <html lang={lang}>
       <body>{children}</body>
     </html>
-  )
+  );
 }

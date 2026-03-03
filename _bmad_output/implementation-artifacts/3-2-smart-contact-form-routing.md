@@ -56,7 +56,7 @@ so that **my team can maximize response speed and not lose leads.**
 - **Mode Logic:** Access `mode` via `useMode()` hook (from `src/components/providers/ModeProvider`).
 - **Styling:** Use `shadcn/ui` components (`Form`, `Input`, `DatePicker`) if available, styled with Tailwind 4 mode vars.
 - **Animation:** Use `motion/react` for the field transitions (height, opacity) to avoid jarring Layout Shift.
-- **Architecture:** 
+- **Architecture:**
   - Do NOT create two separate form components. Use one smart component with conditional fields to maintain shared logic (name, email, phone).
   - Server Action should be the single source of truth for "Routing" logic.
 

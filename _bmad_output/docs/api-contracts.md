@@ -7,6 +7,7 @@ This document outlines the API endpoints available in the 56konfilm project.
 All authentication routes are located under `/api/auth/`.
 
 ### Login
+
 - **Endpoint:** `POST /api/auth/login`
 - **Description:** Authenticates a user and sets a session cookie.
 - **Request Body:**
@@ -25,6 +26,7 @@ All authentication routes are located under `/api/auth/`.
   - `500 Internal Server Error`: Generic error.
 
 ### Verify Session
+
 - **Endpoint:** `GET /api/auth/verify`
 - **Description:** Checks if the current session cookie is valid.
 - **Responses:**
@@ -32,12 +34,14 @@ All authentication routes are located under `/api/auth/`.
   - `401 Unauthorized`: Not authenticated or invalid token.
 
 ### Logout
+
 - **Endpoint:** `POST /api/auth/logout`
 - **Description:** Clears the session cookie.
 - **Responses:**
   - `200 OK`: Logout successful.
 
 ### Change Password
+
 - **Endpoint:** `POST /api/auth/change-password`
 - **Description:** Updates the user's password in Sanity. Requires a valid session.
 - **Request Body:**

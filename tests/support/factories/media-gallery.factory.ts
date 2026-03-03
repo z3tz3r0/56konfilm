@@ -16,7 +16,9 @@ export interface MockHybridMediaItem {
   alt?: string;
 }
 
-export const createMediaGalleryBlock = (overrides: Partial<MediaGallerySectionBlock> = {}): MediaGallerySectionBlock => {
+export const createMediaGalleryBlock = (
+  overrides: Partial<MediaGallerySectionBlock> = {}
+): MediaGallerySectionBlock => {
   return {
     _type: 'mediaGallerySection',
     _key: faker.string.uuid(),

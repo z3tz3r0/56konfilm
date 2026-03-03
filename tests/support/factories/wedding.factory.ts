@@ -39,9 +39,19 @@ export const createPackagesSection = (overrides = {}) => ({
     body: 'Professional wedding film production services tailored to your emotional journey.',
   },
   packages: [
-    createPackageItem({ title: { en: 'Cherish Starter', th: 'เริ่มต้น' }, price: 2000 }),
-    createPackageItem({ title: { en: 'Forever Memories', th: 'ความทรงจำ' }, price: 5000, featured: true }),
-    createPackageItem({ title: { en: 'Grand Symphony', th: 'อลังการ' }, price: 9000 }),
+    createPackageItem({
+      title: { en: 'Cherish Starter', th: 'เริ่มต้น' },
+      price: 2000,
+    }),
+    createPackageItem({
+      title: { en: 'Forever Memories', th: 'ความทรงจำ' },
+      price: 5000,
+      featured: true,
+    }),
+    createPackageItem({
+      title: { en: 'Grand Symphony', th: 'อลังการ' },
+      price: 9000,
+    }),
   ],
   ...overrides,
 });
@@ -61,7 +71,7 @@ export const createPhilosophySection = (overrides = {}) => ({
   _type: 'philosophySection',
   _key: faker.string.uuid(),
   quote: {
-    en: 'We take our craft to heart as it\'s truly valuable in life',
+    en: "We take our craft to heart as it's truly valuable in life",
     th: 'เราใส่หัวใจในงานของเรา เพราะมันคือสิ่งที่มีค่าในชีวิต',
   },
   ...overrides,

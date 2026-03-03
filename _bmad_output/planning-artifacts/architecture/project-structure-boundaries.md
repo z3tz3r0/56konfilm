@@ -1,6 +1,7 @@
 # Project Structure & Boundaries
 
 ## Complete Project Directory Structure
+
 ```text
 56konfilm/
 ├── sanity.config.ts            # Sanity Studio Root
@@ -29,11 +30,13 @@
 ```
 
 ## Architectural Boundaries
+
 - **Mode Boundary:** Persisted in Cookies (Server) and synchronized with `ModeProvider` (Client). All styling is driven by global CSS Variables derived from this state.
 - **Data Boundary:** Sanity is the Single Source of Truth. Data flows from RSCs down to client components via Props.
 - **Animation Boundary:** Unified timing and easing constants in `src/components/ui/transitions/`.
 
 ## Requirements to Structure Mapping
+
 - **Dual-Mode Logic:** `Middleware` + `ModeProvider` + `Layout`.
 - **Modular Page Builder:** `SectionRenderer` in `[slug]/page.tsx`.
 - **Cinematic Experience:** Framer Motion orchestration in `src/components/ui/`.

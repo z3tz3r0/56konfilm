@@ -14,10 +14,10 @@ interface VideoLoopProps {
   enableObserver?: boolean;
 }
 
-export default function VideoLoop({ 
-  url, 
-  mimeType, 
-  posterUrl, 
+export default function VideoLoop({
+  url,
+  mimeType,
+  posterUrl,
   className,
   priority = false,
   enableObserver = true,
@@ -75,7 +75,7 @@ export default function VideoLoop({
             data-testid="video-poster-fallback"
           />
         ) : (
-          <div 
+          <div
             className="absolute inset-0 bg-neutral-900"
             data-testid="video-placeholder-fallback"
           />

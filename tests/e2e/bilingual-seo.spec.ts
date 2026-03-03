@@ -1,7 +1,6 @@
 import { expect, test } from '../support/fixtures';
 
 test.describe('Bilingual SEO & Routing', () => {
-
   test('should render English version when preferred', async ({ browser }) => {
     const context = await browser.newContext({
       locale: 'en-US',
@@ -18,22 +17,20 @@ test.describe('Bilingual SEO & Routing', () => {
     const canonical = page.locator('link[rel="canonical"]');
     // Assert at least one canonical tag exists (some setups emit multiple)
     expect(await canonical.count()).toBeGreaterThan(0);
-    
+
     // AND: Hreflang tags exist for en and th
     expect(
-      await page
-        .locator('link[rel="alternate"][hreflang="en"]')
-        .count()
+      await page.locator('link[rel="alternate"][hreflang="en"]').count()
     ).toBeGreaterThan(0);
     expect(
-      await page
-        .locator('link[rel="alternate"][hreflang="th"]')
-        .count()
+      await page.locator('link[rel="alternate"][hreflang="th"]').count()
     ).toBeGreaterThan(0);
     await context.close();
   });
 
-  test('should render Thai version when accessing /th path', async ({ page }) => {
+  test('should render Thai version when accessing /th path', async ({
+    page,
+  }) => {
     // GIVEN: User visits the /th path
     await page.goto('/th');
 
@@ -47,19 +44,18 @@ test.describe('Bilingual SEO & Routing', () => {
   test('should switch language via UI', async ({ page }) => {
     // GIVEN: User is on English page
     await page.goto('/');
-    
+
     // WHEN: User clicks Thai language switcher
     // We assume there will be a switcher. We define data-testid requirement here.
-    const thButton = page.locator('[data-testid="language-switcher-th"]:visible');
+    const thButton = page.locator(
+      '[data-testid="language-switcher-th"]:visible'
+    );
     if (!(await thButton.isVisible())) {
       const mobileMenuButton = page.getByTestId('mobile-menu-button');
       await mobileMenuButton.click();
     }
     await expect(thButton).toBeVisible();
-    await Promise.all([
-      page.waitForURL(/\/th/),
-      thButton.click(),
-    ]);
+    await Promise.all([page.waitForURL(/\/th/), thButton.click()]);
 
     // THEN: URL changes to /th...
     await expect(page).toHaveURL(/\/th/);
@@ -69,7 +65,9 @@ test.describe('Bilingual SEO & Routing', () => {
   });
 
   // Proxy / Middleware Test
-  test('should redirect/rewrite based on Accept-Language header', async ({ browser }) => {
+  test('should redirect/rewrite based on Accept-Language header', async ({
+    browser,
+  }) => {
     // This requires a new context with specific locale
     const context = await browser.newContext({
       locale: 'th-TH',
@@ -89,5 +87,4 @@ test.describe('Bilingual SEO & Routing', () => {
 
     await context.close();
   });
-
 });

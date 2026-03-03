@@ -10,8 +10,8 @@ test.describe('Sanity Revalidation API', () => {
     const response = await request.post(REVALIDATE_PATH, {
       data: {
         _type: 'project',
-        slug: { current: 'test-project' }
-      }
+        slug: { current: 'test-project' },
+      },
     });
 
     // THEN: Return Unauthorized
@@ -23,26 +23,28 @@ test.describe('Sanity Revalidation API', () => {
     // WHEN: POSTing to revalidate endpoint
     const response = await request.post(REVALIDATE_PATH, {
       headers: {
-        'x-sanity-signature': 'mock-valid-signature' // parseBody would handle this
+        'x-sanity-signature': 'mock-valid-signature', // parseBody would handle this
       },
-      data: {}
+      data: {},
     });
 
     // THEN: Return Bad Request
     expect(response.status()).toBe(400);
   });
 
-  test('should return 200 and revalidate: true for valid payload', async ({ request }) => {
+  test('should return 200 and revalidate: true for valid payload', async ({
+    request,
+  }) => {
     // GIVEN: A valid request with secret and correct payload
     // WHEN: POSTing to revalidate endpoint
     const response = await request.post(REVALIDATE_PATH, {
       headers: {
-        'x-sanity-signature': 'mock-valid-signature' 
+        'x-sanity-signature': 'mock-valid-signature',
       },
       data: {
         _type: 'project',
-        slug: { current: 'test-project' }
-      }
+        slug: { current: 'test-project' },
+      },
     });
 
     // THEN: Return Success

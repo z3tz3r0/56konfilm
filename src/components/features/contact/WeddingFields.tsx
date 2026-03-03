@@ -10,17 +10,17 @@ import type { ContactFormValues } from '@/lib/schemas/contact';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from '@/components/ui/popover';
 
 interface WeddingFieldsProps {
@@ -30,8 +30,11 @@ interface WeddingFieldsProps {
 
 export function WeddingFields({ form, lang = 'en' }: WeddingFieldsProps) {
   const dateFormatter = useMemo(
-    () => new Intl.DateTimeFormat(lang === 'th' ? 'th-TH' : 'en-US', { dateStyle: 'medium' }),
-    [lang],
+    () =>
+      new Intl.DateTimeFormat(lang === 'th' ? 'th-TH' : 'en-US', {
+        dateStyle: 'medium',
+      }),
+    [lang]
   );
 
   return (
@@ -55,8 +58,8 @@ export function WeddingFields({ form, lang = 'en' }: WeddingFieldsProps) {
                   <Button
                     variant="secondary"
                     className={cn(
-                      "w-full pl-3 text-left font-normal",
-                      !field.value && "text-muted-foreground"
+                      'w-full pl-3 text-left font-normal',
+                      !field.value && 'text-muted-foreground'
                     )}
                   >
                     {field.value instanceof Date ? (
@@ -74,7 +77,7 @@ export function WeddingFields({ form, lang = 'en' }: WeddingFieldsProps) {
                   selected={field.value as Date | undefined}
                   onSelect={field.onChange}
                   disabled={(date) =>
-                    date < new Date() || date < new Date("1900-01-01")
+                    date < new Date() || date < new Date('1900-01-01')
                   }
                   initialFocus
                 />

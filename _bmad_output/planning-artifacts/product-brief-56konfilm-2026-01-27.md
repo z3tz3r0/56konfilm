@@ -36,26 +36,28 @@ The production house currently lacks a finished, deployable portfolio that refle
 
 ### Problem Impact
 
-*   **Brand Fragmentation:** Inability to effectively serve two distinct audiences (Ad Agencies vs. Couples) without maintaining two separate, disconnected websites.
-*   **Operational Dependency:** The owner cannot update work, create landing pages, or adjust content strategy without technical intervention, leading to stale portfolios and missed opportunities.
+- **Brand Fragmentation:** Inability to effectively serve two distinct audiences (Ad Agencies vs. Couples) without maintaining two separate, disconnected websites.
+- **Operational Dependency:** The owner cannot update work, create landing pages, or adjust content strategy without technical intervention, leading to stale portfolios and missed opportunities.
 
 ### Why Existing Solutions Fall Short
 
-*   **Standard CMS (WordPress/Wix):** Lacks the technical capability to render "brutal," high-performance animations while maintaining a user-frieldly backend.
-*   **Traditional Custom Builds:** Typically lock content into fixed layouts, making it impossible for non-technical owners to dramatically shift the site's tone or structure on the fly.
+- **Standard CMS (WordPress/Wix):** Lacks the technical capability to render "brutal," high-performance animations while maintaining a user-frieldly backend.
+- **Traditional Custom Builds:** Typically lock content into fixed layouts, making it impossible for non-technical owners to dramatically shift the site's tone or structure on the fly.
 
 ### Proposed Solution
 
 A **Next.js + Sanity CMS** platform featuring a **Modular Section Architecture**.
-*   **Frontend:** A "Brutal Motion" engine that applies premium cinematic animations to every component by default.
-*   **Backend:** A "Lego-like" page builder in Sanity Studio, tailored for non-technical users to stack, reorder, and configure pre-built, high-design sections.
-*   **Flexibility:** Full bilingual support (TH/EN) and dynamic page generation capabilities.
+
+- **Frontend:** A "Brutal Motion" engine that applies premium cinematic animations to every component by default.
+- **Backend:** A "Lego-like" page builder in Sanity Studio, tailored for non-technical users to stack, reorder, and configure pre-built, high-design sections.
+- **Flexibility:** Full bilingual support (TH/EN) and dynamic page generation capabilities.
 
 ### Key Differentiators
 
 1.  **Dual-Identity Platform Architecture (Killer Feature):**
+
     > _Seamlessly transition between two distinct brand identities—**Commercial Production (High-Energy)** and **Wedding Studio (Emotive)**—managing isolated content sets and design themes within a single unified platform._
-    This allows the owner to operate two distinct "virtual companies" from a single backend, switching the entire site's mood, color palette, typography, and content universe with a single toggle.
+    > This allows the owner to operate two distinct "virtual companies" from a single backend, switching the entire site's mood, color palette, typography, and content universe with a single toggle.
 
 2.  **Owner-First "No-Code" Experience:**
     A bespoke CMS configuration that hides technical complexity. Complex animations and layout shifts are pre-coded into modules, allowing the owner to build "award-winning" level pages simply by filling in text and uploading video.
@@ -67,22 +69,25 @@ A **Next.js + Sanity CMS** platform featuring a **Modular Section Architecture**
 ### Primary Users (The "Dual-Audience")
 
 **1. The Creative Director / Agency Producer (Commercial Mode Target)**
-*   **Context:** Looking for a bold Production House with a unique visual style for high-stakes ad campaigns.
-*   **Needs:** Needs to see a sharp Showreel, cutting-edge Motion Graphics, and a site that signals "Tech-savviness."
-*   **Success Scenario:** Lands on the *Commercial Mode* (dark/brutal theme), feels the energy, and thinks, "These people speak my language."
+
+- **Context:** Looking for a bold Production House with a unique visual style for high-stakes ad campaigns.
+- **Needs:** Needs to see a sharp Showreel, cutting-edge Motion Graphics, and a site that signals "Tech-savviness."
+- **Success Scenario:** Lands on the _Commercial Mode_ (dark/brutal theme), feels the energy, and thinks, "These people speak my language."
 
 **2. The Modern Couple (Wedding Mode Target)**
-*   **Context:** Gen-Z/Millennial couples planning a wedding, looking for a cinematographer who captures "emotion" not just "events."
-*   **Needs:** Needs accessibility, gentleness, emotional connection, and a vibe that feels personal.
-*   **Success Scenario:** Switches to *Wedding Mode* (light/soft theme), feels the romantic atmosphere through different music/visuals, and trusts the brand with their big day.
+
+- **Context:** Gen-Z/Millennial couples planning a wedding, looking for a cinematographer who captures "emotion" not just "events."
+- **Needs:** Needs accessibility, gentleness, emotional connection, and a vibe that feels personal.
+- **Success Scenario:** Switches to _Wedding Mode_ (light/soft theme), feels the romantic atmosphere through different music/visuals, and trusts the brand with their big day.
 
 ### Secondary Users (Internal)
 
 **The Business Owner / Content Lead (Admin User)**
-*   **Role:** Owner of 56konfilm & Primary Editor.
-*   **Context:** Extremely busy, high aesthetic standards, zero patience for coding or waiting on devs.
-*   **Pain Point:** Current site is too rigid; cannot spin up a custom landing page for a specific client pitch tomorrow.
-*   **Success Vision:** Manages two worlds (Commercial/Wedding) from one dashboard. Swaps sections like Lego blocks. Publishes updates instantly with confidence that the "complex frontend" won't break.
+
+- **Role:** Owner of 56konfilm & Primary Editor.
+- **Context:** Extremely busy, high aesthetic standards, zero patience for coding or waiting on devs.
+- **Pain Point:** Current site is too rigid; cannot spin up a custom landing page for a specific client pitch tomorrow.
+- **Success Vision:** Manages two worlds (Commercial/Wedding) from one dashboard. Swaps sections like Lego blocks. Publishes updates instantly with confidence that the "complex frontend" won't break.
 
 ### User Journey (The "Switch" Experience)
 
@@ -90,8 +95,8 @@ A **Next.js + Sanity CMS** platform featuring a **Modular Section Architecture**
 2.  **Interaction:** Notices a prominent **"Switch Mode"** toggle or entry gate.
 3.  **Transformation (The Aha! Moment):** Click triggers an instant site-wide metamorphosis—Theme, Font, Music, and Content all shift context.
 4.  **Conversion:**
-    *   *Commercial User* explores rigorous portfolio and Technical Rate Card.
-    *   *Wedding User* browses emotional stories and Wedding Packages.
+    - _Commercial User_ explores rigorous portfolio and Technical Rate Card.
+    - _Wedding User_ browses emotional stories and Wedding Packages.
 5.  **Retention (Note for Admin):** Owner tracks distinct traffic behaviors and optimizes each "world" independently without code.
 
 ---
@@ -100,25 +105,25 @@ A **Next.js + Sanity CMS** platform featuring a **Modular Section Architecture**
 
 ### Technical Excellence (Non-Negotiable)
 
-*   **Lighthouse Performance Score:** **100/100** on both Mobile and Desktop. This is a critical requirement despite the "Brutal Motion" aesthetic.
-*   **Core Web Vitals:** All metrics must pass Google's "Good" thresholds (LCP < 2.5s, CLS = 0, FID < 100ms) to ensure premium feel and SEO favorability.
-*   **Animation Smoothness:** 60fps locked on standard devices; no jank during complex transitions or mode switches.
+- **Lighthouse Performance Score:** **100/100** on both Mobile and Desktop. This is a critical requirement despite the "Brutal Motion" aesthetic.
+- **Core Web Vitals:** All metrics must pass Google's "Good" thresholds (LCP < 2.5s, CLS = 0, FID < 100ms) to ensure premium feel and SEO favorability.
+- **Animation Smoothness:** 60fps locked on standard devices; no jank during complex transitions or mode switches.
 
 ### SEO Domination
 
-*   **Ranking Goal:** Achieve #1 ranking for niche keywords in both "Commercial Production House Bangkok" and "Cinematic Wedding Videography" sectors.
-*   **Technical SEO:** 100/100 Health Score on Ahrefs/Lighthouse.
-*   **Discoverability:** Perfect implementation of Structured Data (Schema.org) for `VideoObject`, `LocalBusiness`, and `AggregateRating` to capture Rich Results.
+- **Ranking Goal:** Achieve #1 ranking for niche keywords in both "Commercial Production House Bangkok" and "Cinematic Wedding Videography" sectors.
+- **Technical SEO:** 100/100 Health Score on Ahrefs/Lighthouse.
+- **Discoverability:** Perfect implementation of Structured Data (Schema.org) for `VideoObject`, `LocalBusiness`, and `AggregateRating` to capture Rich Results.
 
 ### Operational Efficiency (The "Owner" Metric)
 
-*   **Agility:** Owner must be able to create, populate, and publish a new custom Landing Page in **< 15 minutes**.
-*   **Autonomy:** 100% of front-end content (Text, Images, Videos, Layout Order) must be editable without Developer intervention.
+- **Agility:** Owner must be able to create, populate, and publish a new custom Landing Page in **< 15 minutes**.
+- **Autonomy:** 100% of front-end content (Text, Images, Videos, Layout Order) must be editable without Developer intervention.
 
 ### Business Impact
 
-*   **Conversion Rate:** Measurable increase in "high-quality" leads (e.g., specific inquiries from ad agencies) attributed to the portfolio site.
-*   **Brand Authority:** Qualitative feedback from clients specifically mentioning the efficient, professional online experience as a deciding factor.
+- **Conversion Rate:** Measurable increase in "high-quality" leads (e.g., specific inquiries from ad agencies) attributed to the portfolio site.
+- **Brand Authority:** Qualitative feedback from clients specifically mentioning the efficient, professional online experience as a deciding factor.
 
 ---
 
@@ -127,29 +132,29 @@ A **Next.js + Sanity CMS** platform featuring a **Modular Section Architecture**
 ### Musy-Have Features (Phase 1)
 
 1.  **Homepage (The Gateway)**
-    *   **Dual Mode Switcher:** A globally accessible toggle (Sticky or Nav-integrated) to switch between Commercial/Wedding modes instantly.
-    *   **Dynamic Hero Section:** Supports different "Showreel" video loops for each mode.
+    - **Dual Mode Switcher:** A globally accessible toggle (Sticky or Nav-integrated) to switch between Commercial/Wedding modes instantly.
+    - **Dynamic Hero Section:** Supports different "Showreel" video loops for each mode.
 
 2.  **Work Detail Page (The "Cinematic" Experience)**
-    *   **High-Fidelity Video Player:** Custom player wrapper (Vimeo/Custom) that supports auto-play, loop, and full-screen without UI clutter.
-    *   **Modular Storytelling:** Layout that allows mixing full-width video, grid images, and text narrative (Owner controllable).
+    - **High-Fidelity Video Player:** Custom player wrapper (Vimeo/Custom) that supports auto-play, loop, and full-screen without UI clutter.
+    - **Modular Storytelling:** Layout that allows mixing full-width video, grid images, and text narrative (Owner controllable).
 
 3.  **About & Contact**
-    *   **Dual-Context Content:** "About" page text must dynamically shift tone based on the active mode (e.g., "Our Crew" vs. "Our Vibe").
-    *   **Smart Routing:** Contact forms that route inquiries to different internal labels/emails based on the user's mode (Agency/Wedding).
+    - **Dual-Context Content:** "About" page text must dynamically shift tone based on the active mode (e.g., "Our Crew" vs. "Our Vibe").
+    - **Smart Routing:** Contact forms that route inquiries to different internal labels/emails based on the user's mode (Agency/Wedding).
 
 4.  **CMS Backbone (Owner-First)**
-    *   **Sanity Studio V3:** Customized "Desk Structure" separating Commercial and Wedding content buckets.
-    *   **Page Builder:** Drag-and-drop section reordering capability.
+    - **Sanity Studio V3:** Customized "Desk Structure" separating Commercial and Wedding content buckets.
+    - **Page Builder:** Drag-and-drop section reordering capability.
 
 ### Out of Scope (Phase 2+)
 
-*   **Integrated Booking System:** No real-time calendar or payment gateway for Wedding packages in MVP (use Contact Form instead).
-*   **E-Commerce:** No extensive merchandise or preset store (simple outbound links allowed).
-*   **User Accounts:** No client login portal for file delivery (files delivered via external links).
+- **Integrated Booking System:** No real-time calendar or payment gateway for Wedding packages in MVP (use Contact Form instead).
+- **E-Commerce:** No extensive merchandise or preset store (simple outbound links allowed).
+- **User Accounts:** No client login portal for file delivery (files delivered via external links).
 
 ### Future Vision
 
-*   **Client Project Portal:** A private login area for clients to view rough cuts and leave comments directly on the timeline (Frame.io integration).
-*   **Automated Booking:** Full availability calendar for Wedding shoots with Stripe integration.
-*   **AI Montage Generator:** Auto-generating "Best of" showreels from uploaded clips using AI video analysis.
+- **Client Project Portal:** A private login area for clients to view rough cuts and leave comments directly on the timeline (Frame.io integration).
+- **Automated Booking:** Full availability calendar for Wedding shoots with Stripe integration.
+- **AI Montage Generator:** Auto-generating "Best of" showreels from uploaded clips using AI video analysis.

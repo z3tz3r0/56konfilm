@@ -12,6 +12,7 @@ export const pageType = defineType({
     { name: 'seo', title: 'SEO' },
   ],
   fields: [
+    // Settings Tab
     localizedStringField({
       name: 'page',
       title: 'Page Name',
@@ -58,7 +59,10 @@ export const pageType = defineType({
           const client = getClient({ apiVersion: '2023-01-01' });
           const id = document?._id?.replace(/^drafts\./, '');
           const mode = document?.siteMode || 'production';
-          const slugCandidate = slug as string | { current?: string } | undefined;
+          const slugCandidate = slug as
+            | string
+            | { current?: string }
+            | undefined;
           const slugValue =
             typeof slugCandidate === 'string'
               ? slugCandidate
@@ -106,6 +110,8 @@ export const pageType = defineType({
       group: 'settings',
       validation: (Rule) => Rule.required(),
     }),
+
+    // Commercial Content Tab
     defineField({
       name: 'contentBlocks',
       title: 'Content Blocks (Commercial)',
@@ -166,6 +172,8 @@ export const pageType = defineType({
           return true;
         }),
     }),
+
+    // SEO Tab
     localizedStringField({
       name: 'seoTitle',
       title: 'SEO Title',
@@ -176,7 +184,8 @@ export const pageType = defineType({
     defineField({
       name: 'seo',
       title: 'SEO',
-      description: 'ตั้งค่า SEO เพิ่มเติมของหน้านี้ (Title, Description, Open Graph Image)',
+      description:
+        'ตั้งค่า SEO เพิ่มเติมของหน้านี้ (Title, Description, Open Graph Image)',
       type: 'seo',
       group: 'seo',
     }),

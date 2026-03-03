@@ -66,7 +66,7 @@ export default function TestimonialSection({ block }: TestimonialSectionProps) {
       <div className="container mx-auto max-w-5xl space-y-10">
         <header className="mx-auto flex max-w-3xl flex-col items-center gap-3 text-center">
           {block.heading?.eyebrow ? (
-            <span className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">
+            <span className="text-primary text-sm font-semibold tracking-[0.3em] uppercase">
               {block.heading.eyebrow}
             </span>
           ) : null}
@@ -86,23 +86,35 @@ export default function TestimonialSection({ block }: TestimonialSectionProps) {
                     <m.article
                       className={cn(
                         'bg-secondary/80 border-border/40 mx-auto flex max-w-3xl flex-col gap-6 rounded-3xl border p-8 text-center shadow-sm transition-opacity duration-500',
-                        index === current ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                        index === current
+                          ? 'opacity-100'
+                          : 'pointer-events-none opacity-0'
                       )}
                       initial="hidden"
                       whileInView="visible"
                       viewport={{ once: true, margin: '-100px' }}
                       variants={itemVariants}
-                      data-testid={index === current ? 'testimonial-item' : undefined}
+                      data-testid={
+                        index === current ? 'testimonial-item' : undefined
+                      }
                     >
-                      <div className="text-primary flex items-center justify-center text-5xl">“</div>
+                      <div className="text-primary flex items-center justify-center text-5xl">
+                        “
+                      </div>
                       {testimonial.quote ? (
-                        <p className="text-foreground text-lg leading-relaxed" style={{ fontFamily: 'var(--font-primary), "Cormorant Garamond", var(--font-noto-sans-thai), serif' }}>
+                        <p
+                          className="text-foreground text-lg leading-relaxed"
+                          style={{
+                            fontFamily:
+                              'var(--font-primary), "Cormorant Garamond", var(--font-noto-sans-thai), serif',
+                          }}
+                        >
                           {testimonial.quote}
                         </p>
                       ) : null}
                       <div className="flex flex-col items-center gap-2">
                         {testimonial.authorImage ? (
-                          <div className="relative size-12 overflow-hidden rounded-full border border-border/60">
+                          <div className="border-border/60 relative size-12 overflow-hidden rounded-full border">
                             <Image
                               src={urlFor(testimonial.authorImage)
                                 .width(96)
@@ -117,7 +129,9 @@ export default function TestimonialSection({ block }: TestimonialSectionProps) {
                           </div>
                         ) : null}
                         {testimonial.authorName ? (
-                          <p className="text-base font-semibold">{testimonial.authorName}</p>
+                          <p className="text-base font-semibold">
+                            {testimonial.authorName}
+                          </p>
                         ) : null}
                         {testimonial.authorTitle ? (
                           <p className="text-muted-foreground text-sm">

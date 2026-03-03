@@ -22,11 +22,7 @@ export default function PhilosophySection({ block }: PhilosophySectionProps) {
     >
       <div className="container mx-auto max-w-4xl">
         <m.blockquote
-          className="text-center text-3xl font-semibold leading-relaxed md:text-5xl"
-          style={{
-            fontFamily:
-              'var(--font-primary), "Cormorant Garamond", var(--font-noto-sans-thai), serif',
-          }}
+          className="font-primary text-center text-3xl leading-relaxed font-semibold whitespace-pre-line md:text-5xl"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}

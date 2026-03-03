@@ -22,7 +22,7 @@ export default function ProjectNavigation({
   const router = useRouter();
   const params = useParams();
   const lang = (params?.lang as string) || 'en';
-  
+
   const { setMode } = useMode();
   const pendingPath = useTransitionStore((s) => s.pendingPath);
   const setPendingPath = useTransitionStore((s) => s.setPendingPath);
@@ -60,15 +60,17 @@ export default function ProjectNavigation({
     <section
       data-testid="project-navigation"
       className={cn(
-        'relative w-full py-20 pb-32 flex justify-center px-4',
-        mode === 'production' ? 'bg-background text-foreground' : 'bg-background text-foreground'
+        'relative flex w-full justify-center px-4 py-20 pb-32',
+        mode === 'production'
+          ? 'bg-background text-foreground'
+          : 'bg-background text-foreground'
       )}
     >
       <div className="container mx-auto max-w-5xl">
         <Link
           href={`/${lang}/work/${nextProject.slug}`}
           onClick={handleClick}
-          className="group relative block w-full overflow-hidden rounded-lg aspect-video"
+          className="group relative block aspect-video w-full overflow-hidden rounded-lg"
         >
           {imageUrl && (
             <Image
@@ -81,19 +83,19 @@ export default function ProjectNavigation({
           )}
 
           {/* Overlay */}
-          <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors duration-500" />
+          <div className="absolute inset-0 bg-black/40 transition-colors duration-500 group-hover:bg-black/30" />
 
           {/* Content */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 text-white p-8">
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center p-8 text-center text-white">
             <span
               data-testid="next-project-label"
-              className="uppercase tracking-[0.2em] text-sm md:text-base font-light mb-4 opacity-80"
+              className="mb-4 text-sm font-light tracking-[0.2em] uppercase opacity-80 md:text-base"
             >
               Next Project
             </span>
             <h2
               data-testid="next-project-title"
-              className="text-4xl md:text-6xl lg:text-7xl font-serif font-medium tracking-tight"
+              className="font-serif text-4xl font-medium tracking-tight md:text-6xl lg:text-7xl"
             >
               {nextProject.title}
             </h2>

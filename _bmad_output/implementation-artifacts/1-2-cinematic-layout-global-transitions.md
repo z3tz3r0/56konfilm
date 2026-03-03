@@ -33,8 +33,8 @@ so that **the experience feels premium and continuous, not jarring.**
 - [x] **Task 1: Transition Component Architecture**
   - [x] Create `src/components/layout/GlobalTransition.tsx` (Client Component, "use client").
   - [x] Implement "Curtain Wipe" logic using `motion/react`.
-  - [x] **Critical Logic**: The curtain must cover the screen *before* the underlying theme/mode effectively swaps, or mask the swap.
-    - *Suggested Pattern*: `useMode` store adds `isTransitioning` state. `toggleMode` triggers transition start -> component calls back to finalize mode swap -> component finishes transition.
+  - [x] **Critical Logic**: The curtain must cover the screen _before_ the underlying theme/mode effectively swaps, or mask the swap.
+    - _Suggested Pattern_: `useMode` store adds `isTransitioning` state. `toggleMode` triggers transition start -> component calls back to finalize mode swap -> component finishes transition.
 
 - [x] **Task 2: Integration**
   - [x] Add `GlobalTransition` to `src/app/layout.tsx` (inside `ModeProvider`).
@@ -62,29 +62,24 @@ so that **the experience feels premium and continuous, not jarring.**
   - [x] [AI-Review][MEDIUM] Make cookie init consistent with secure flag: initial cookie set in `useEffect` omits `Secure` while updates include it. [src/hooks/useMode.ts:51]
   - [x] [AI-Review][LOW] Fix Dev Notes typo: “transalateY” → “translateY”. [_bmad_output/implementation-artifacts/1-2-cinematic-layout-global-transitions.md:66]
 
-  - **Review Follow-ups (AI) - Round 2**
-    - [x] [AI-Review][HIGH] Stop hardcoding curtain duration; read/use `--duration-slow` / `--duration-
-  fast` as the single source of truth (AC1). [src/components/layout/GlobalTransition.tsx:19]
-    - [x] [AI-Review][HIGH] Replace timer-based masking with a completion-driven flow (animation
-  complete + navigation/theme applied) so the swap is guaranteed to happen under the curtain (AC1/AC2).
-  [src/components/navigation/ModeSwitcher.tsx:56]
-    - [x] [AI-Review][MEDIUM] Add an assertion that the curtain truly covers the mobile menu (not just
-  “menu opened”); verify it blocks interaction/visibility while visible. [tests/e2e/global-
-  transition.spec.ts:4]
-    - [x] [AI-Review][MEDIUM] Normalize Playwright test setup: `tests/e2e/mode-persistence.spec.ts`
-  should use the same fixtures pattern as other e2e tests (avoid mixing direct `@playwright/test` with
-  `../support/fixtures`). [tests/e2e/mode-persistence.spec.ts:1]
-    - [x] [AI-Review][MEDIUM] Update Story “File List” to include changed-but-missing files: `src/
-  components/providers/ModeProvider.tsx`, `tests/e2e/mode-persistence.spec.ts`, `tests/e2e/mode-
-  switcher.spec.ts`. [_bmad_output/implementation-artifacts/1-2-cinematic-layout-global-
-  transitions.md:89]
-    - [x] [AI-Review][LOW] Resolve story contradictions: “✅ Resolved 9/9 …” vs “Outcome: Changes
-  Requested” notes; update review text to match current reality. [_bmad_output/implementation-
-  artifacts/1-2-cinematic-layout-global-transitions.md:97]
+  - **Review Follow-ups (AI) - Round 2** - [x] [AI-Review][HIGH] Stop hardcoding curtain duration; read/use `--duration-slow` / `--duration-
+fast` as the single source of truth (AC1). [src/components/layout/GlobalTransition.tsx:19] - [x] [AI-Review][HIGH] Replace timer-based masking with a completion-driven flow (animation
+    complete + navigation/theme applied) so the swap is guaranteed to happen under the curtain (AC1/AC2).
+    [src/components/navigation/ModeSwitcher.tsx:56] - [x] [AI-Review][MEDIUM] Add an assertion that the curtain truly covers the mobile menu (not just
+    “menu opened”); verify it blocks interaction/visibility while visible. [tests/e2e/global-
+    transition.spec.ts:4] - [x] [AI-Review][MEDIUM] Normalize Playwright test setup: `tests/e2e/mode-persistence.spec.ts`
+    should use the same fixtures pattern as other e2e tests (avoid mixing direct `@playwright/test` with
+    `../support/fixtures`). [tests/e2e/mode-persistence.spec.ts:1] - [x] [AI-Review][MEDIUM] Update Story “File List” to include changed-but-missing files: `src/
+components/providers/ModeProvider.tsx`, `tests/e2e/mode-persistence.spec.ts`, `tests/e2e/mode-
+switcher.spec.ts`. [_bmad_output/implementation-artifacts/1-2-cinematic-layout-global-
+    transitions.md:89] - [x] [AI-Review][LOW] Resolve story contradictions: “✅ Resolved 9/9 …” vs “Outcome: Changes
+    Requested” notes; update review text to match current reality. [_bmad_output/implementation-
+    artifacts/1-2-cinematic-layout-global-transitions.md:97]
 
 ## Dev Notes
 
 ### Technical Implementation Details
+
 - **Library**: `motion/react` (v12.23+). Import: `import { motion, AnimatePresence } from 'motion/react'`.
 - **State Management**:
   - Recommend extending `useMode` store with `transitionPhase` ('idle', 'entering', 'exiting').
@@ -92,11 +87,13 @@ so that **the experience feels premium and continuous, not jarring.**
 - **Optimistic UI**: Use `useTransition` or `startTransition` if React 19 features help, but `framer-motion`'s `onAnimationComplete` is likely the most reliable trigger for the actual mode swap.
 
 ### Architecture Compliance
+
 - **Directory**: `src/components/layout/` for global layout components.
 - **Client Components**: `GlobalTransition.tsx` must be a Client Component.
 - **Performance**: Avoid animating `width`/`height` if possible; use `scaleY` or `translateY` for the curtain effect to maintain 60fps.
 
 ### References
+
 - Epic 1: `_bmad_output/planning-artifacts/epics/epic-1-dual-identity-foundation-commercial-mode-the-brutal-core.md`
 - Architecture: `_bmad_output/planning-artifacts/architecture/core-architectural-decisions.md`
 - Previous Story (1.1): `_bmad_output/implementation-artifacts/1-1-mode-provider-refactoring-state-persistence.md`
@@ -104,9 +101,11 @@ so that **the experience feels premium and continuous, not jarring.**
 ## Dev Agent Record
 
 ### Agent Model Used
+
 Antigravity (Google Deepmind)
 
 ### File List
+
 - `src/components/layout/GlobalTransition.tsx`
 - `src/hooks/useMode.ts`
 - `src/app/layout.tsx`
@@ -118,6 +117,7 @@ Antigravity (Google Deepmind)
 - `tests/e2e/mode-switcher.spec.ts`
 
 ### Completion Notes
+
 - Implemented `GlobalTransition` component with `motion/react` for smooth curtain wipe animation.
 - Updated `useMode` store to handle transition state (`isTransitioning`, `targetMode`, `isCovered`).
 - Enhanced `ModeSwitcher` to orchestrate the transition sequence (Curtain Enter -> Cover Signal -> Mode Swap -> Curtain Exit).
@@ -134,12 +134,14 @@ Date: 2026-01-31
 Outcome: Changes Requested (action items created)
 
 Summary:
+
 - Critical: 1
 - High: 4
 - Medium: 3
 - Low: 1
 
 Notes:
+
 - AC1 timing contract is not met: story references `--duration-slow`/`--duration-fast`, but implementation hardcodes duration.
 - Masking logic is timing-based (`setTimeout`) and does not guarantee the swap completes while covered.
 - E2E test is marked complete but does not assert the story’s required behaviors (notably `data-mode` change and mobile menu coverage).
@@ -151,11 +153,13 @@ Date: 2026-01-31
 Outcome: Approved
 
 Summary:
+
 - High: 2
 - Medium: 3
 - Low: 1
 
 Notes:
+
 - Transition duration is sourced from CSS variables (`--duration-slow` / `--duration-fast`).
 - Curtain masking is completion-driven (cover signal + navigation settle) rather than timeouts.
 - E2E tests validate `curtain-wipe`, `data-mode`, and color expectations across browsers/devices.
@@ -167,11 +171,13 @@ Date: 2026-01-31
 Outcome: Approved (no required changes)
 
 Summary:
+
 - High: 0
 - Medium: 0
 - Low: 4
 
 Notes:
+
 - Optional hardening: `GlobalTransition` reads `--duration-*` only once on mount; if durations ever become mode-specific, refresh them when a transition starts.
 - Optional hardening: parsing `--duration-*` via `parseFloat()` assumes seconds; if values ever change to `ms` tokens, add a small parser to normalize units.
 - Optional test hardening: scope `global-transition.spec.ts` button clicks to `data-testid="mode-switcher"` to avoid ambiguous matches if other "Wedding"/"Production" buttons appear later.

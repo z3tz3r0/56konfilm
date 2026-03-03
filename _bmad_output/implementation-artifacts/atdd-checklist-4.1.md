@@ -2,17 +2,17 @@
 
 **Story**: 4.1  
 **Status**: RED Phase (Failing Tests)  
-**Primary Test Level**: E2E  
+**Primary Test Level**: E2E
 
 ## Acceptance Criteria Breakdown
 
-| AC # | Acceptance Criterion | Test File | Status |
-|------|----------------------|-----------|--------|
-| 1 | Dynamic Metadata (Title, Desc, OG Image) on publish | `seo-metadata-perfection.spec.ts` | 🔴 FAIL |
-| 2 | Dynamic `/sitemap.xml` listing active routes | `seo-routes.spec.ts` | 🔴 FAIL |
-| 3 | Environment-based `robots.txt` rules | `seo-routes.spec.ts` | 🔴 FAIL |
-| 4 | `VideoObject` structured data on Project Detail | `seo-metadata-perfection.spec.ts` | 🔴 FAIL |
-| 5 | Canonical and Hreflang sync on language switch | `seo-metadata-perfection.spec.ts` | 🔴 FAIL |
+| AC # | Acceptance Criterion                                | Test File                         | Status  |
+| ---- | --------------------------------------------------- | --------------------------------- | ------- |
+| 1    | Dynamic Metadata (Title, Desc, OG Image) on publish | `seo-metadata-perfection.spec.ts` | 🔴 FAIL |
+| 2    | Dynamic `/sitemap.xml` listing active routes        | `seo-routes.spec.ts`              | 🔴 FAIL |
+| 3    | Environment-based `robots.txt` rules                | `seo-routes.spec.ts`              | 🔴 FAIL |
+| 4    | `VideoObject` structured data on Project Detail     | `seo-metadata-perfection.spec.ts` | 🔴 FAIL |
+| 5    | Canonical and Hreflang sync on language switch      | `seo-metadata-perfection.spec.ts` | 🔴 FAIL |
 
 ## Supporting Infrastructure
 
@@ -28,15 +28,18 @@
 ## Implementation Checklist
 
 ### Phase 1: Sanity Schema & Metadata Utility
+
 - [ ] Create `seo` object schema in Sanity.
 - [ ] Implement `src/lib/metadata.ts` shared helper.
 - [ ] Update `generateMetadata` in `layout.tsx`, `[slug]/page.tsx`, and `work/[slug]/page.tsx`.
 
 ### Phase 2: Technical SEO Routes
+
 - [ ] Implement `src/app/sitemap.ts` using Sanity data.
 - [ ] Implement `src/app/robots.ts` with environment logic.
 
 ### Phase 3: Structured Data
+
 - [ ] Create `JsonLd` component.
 - [ ] Embed `VideoObject` on project detail pages.
 

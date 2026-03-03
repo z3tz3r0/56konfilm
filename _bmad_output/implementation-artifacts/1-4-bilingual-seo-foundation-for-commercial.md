@@ -13,6 +13,7 @@ so that **I can serve the correct language version to the correct user.**
 ## Acceptance Criteria
 
 ### 1. HTML & SEO Structure (`lang` & `hreflang`)
+
 - **Given** the site is rendered in English (default or selected)
 - **When** the HTML response is received
 - **Then** the `<html>` tag must have `lang="en"`.
@@ -23,11 +24,13 @@ so that **I can serve the correct language version to the correct user.**
 - **Correction:** `src/app/layout.tsx` currently hardcodes `lang="en"`. This MUST be dynamic.
 
 ### 2. Next.js 16 Proxy (formerly Middleware)
+
 - **Constraint:** Use the new **Next.js 16 `proxy.ts`** convention (not `middleware.ts`).
 - **Goal:** Intercept requests to handle `Accept-Language` headers and rewrite/redirect users to the correct localized path (e.g., `/` -> `/th` if Thai preferred).
 - **Current State:** `src/proxy.ts` exists but **does not perform rewrites/redirects** to path-based routes (it currently only sets cookies). It MUST be updated to support the `/th` prefix logic.
 
 ### 3. Language Switching (Soft Navigation)
+
 - **Given** the user is viewing the site in English
 - **When** they click "TH" in the navigation
 - **Then** the URL should change to `/th/...`.
@@ -36,6 +39,7 @@ so that **I can serve the correct language version to the correct user.**
 - **Implementation:** Create/Update `LanguageSwitcher.tsx` (Component doesn't exist yet) to use Next.js `<Link>` with the correct locale prefix.
 
 ### 4. Sanity Content Localization
+
 - **Given** a content editor is in Sanity Studio
 - **When** they edit the "Hero Text"
 - **Then** they should see inputs for both English and Thai.
@@ -66,11 +70,13 @@ so that **I can serve the correct language version to the correct user.**
 ## Dev Notes
 
 ### What is ALREADY DONE:
+
 - **Proxy Stub:** `src/proxy.ts` exists but is incomplete (only sets cookies, no path logic).
 - **Localization Utils:** `src/lib/i18nUtils.ts` exists and contains strong logic for preference detection (Reuse this!).
 - **Sanity Helpers:** `src/sanity/schemaTypes/objects/localized.ts` exists (Reuse this definition!).
 
 ### What is MISSING / NEEDS WORK:
+
 - **Path Structure:** `src/app/[lang]` does NOT exist.
 - **Components:** `LanguageSwitcher.tsx` does NOT exist.
 - **Schema Usage:** `page.ts` does NOT use the localized helpers yet.

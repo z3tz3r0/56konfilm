@@ -61,8 +61,6 @@
       "state_management": "Zustand (installed), React Hook Form"
     }
   },
-  "outputs_generated": [
-    "project-scan-report.json"
-  ],
+  "outputs_generated": ["project-scan-report.json"],
   "resume_instructions": "Starting from step 1"
 }

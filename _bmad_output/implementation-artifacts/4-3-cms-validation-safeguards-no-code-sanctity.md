@@ -29,7 +29,7 @@ so that **I don't accidentally break the design of my own website.**
 - [x] Implement Image Size Validation (AC: 1)
   - [x] Update `src/sanity/schemaTypes/objects/backgroundMedia.ts`
   - [x] Add `warning()` to image validation if `asset->size` exceeds 1,000,000 bytes.
-  - [x] *Note:* Use `Rule.custom` with an async fetch for asset metadata.
+  - [x] _Note:_ Use `Rule.custom` with an async fetch for asset metadata.
 - [x] Harden Project Publication Rules (AC: 2)
   - [x] Verify `src/sanity/schemaTypes/projects.ts` fields (`title`, `slug`, `siteMode`) use `Rule.required().error(...)`.
   - [x] Ensure `siteMode` has `.min(1).error('At least one site mode (Production/Wedding) must be selected.')`.
@@ -55,13 +55,17 @@ so that **I don't accidentally break the design of my own website.**
 
 - **Async Validation:** Detecting file size requires an async custom rule.
   ```typescript
-  validation: Rule => Rule.custom(async (value, context) => {
-    if (!value?.asset?._ref) return true;
-    const client = context.getClient({apiVersion: '2023-11-20'});
-    const asset = await client.fetch('*[_id == $ref][0]', { ref: value.asset._ref });
-    if (asset?.size > 1000000) return 'Image too large, please optimize < 1MB';
-    return true;
-  }).warning()
+  validation: (Rule) =>
+    Rule.custom(async (value, context) => {
+      if (!value?.asset?._ref) return true;
+      const client = context.getClient({ apiVersion: '2023-11-20' });
+      const asset = await client.fetch('*[_id == $ref][0]', {
+        ref: value.asset._ref,
+      });
+      if (asset?.size > 1000000)
+        return 'Image too large, please optimize < 1MB';
+      return true;
+    }).warning();
   ```
 - **Error Messages:** All validation errors must be user-friendly and clear (e.g., "URL Slug is required for the project to be viewable on the site").
 - **Consistency:** Maintain naming patterns (`camelCase` for fields) as per `implementation-patterns-consistency-rules.md`.
@@ -95,7 +99,7 @@ so that **I don't accidentally break the design of my own website.**
 ### Previous Story Intelligence
 
 - **Story 4.2 Learning:** Sanity/schema strict typing is active. Ensure all validation rules return proper types and handle `undefined` values gracefully.
-- **Story 4.1 Learning:** Keep Studio UI consistent and "Premium". Use clear descriptions in schema fields to explain *why* validation is failing.
+- **Story 4.1 Learning:** Keep Studio UI consistent and "Premium". Use clear descriptions in schema fields to explain _why_ validation is failing.
 
 ### Git Intelligence Summary
 

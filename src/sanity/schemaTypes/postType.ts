@@ -7,7 +7,11 @@ export const postType = defineType({
   title: 'Post',
   type: 'document',
   fields: [
-    localizedStringField({ name: 'title', title: 'Title', description: 'หัวข้อโพสต์' }),
+    localizedStringField({
+      name: 'title',
+      title: 'Title',
+      description: 'หัวข้อโพสต์',
+    }),
     defineField({
       name: 'slug',
       title: 'Slug',

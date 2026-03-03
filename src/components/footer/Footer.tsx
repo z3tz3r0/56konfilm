@@ -39,7 +39,9 @@ const Footer = ({ settings }: FooterProps) => {
           </p>
         </div>
       </section>
-      <p className="col-span-3 text-center pt-16">{companyTitle} || All right reserved ©</p>
+      <p className="col-span-3 pt-16 text-center">
+        {companyTitle} || All right reserved ©
+      </p>
     </footer>
   );
 };

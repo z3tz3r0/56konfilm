@@ -7,13 +7,16 @@ trigger: always_on
 **Scope:** Apply these rules to files in `tests/**`.
 
 ## Core Configuration
+
 - **Framework:** Playwright (TypeScript)
 - **Base Mode:** Tests should assume `production` (Dark Mode) as the default state.
 - **Config:** `playwright.config.ts` enforces `colorScheme: 'dark'`.
 
 ## Fixtures & State
+
 Use the custom fixtures defined in `tests/support/fixtures/index.ts`:
-- **`setMode(mode)`**: 
+
+- **`setMode(mode)`**:
   - Sets the `mode` cookie for the current domain context.
   - Automatically reloads/navigates to ensure state application.
   - Usage: `await setMode('wedding');`
@@ -21,6 +24,7 @@ Use the custom fixtures defined in `tests/support/fixtures/index.ts`:
   - Resolves the current visible mode by checking the `html` class (`dark` vs `light`).
 
 ## Selector Strategy (Strict)
+
 1.  **`data-testid`**: Primary selector. Use `page.getByTestId('id')`.
 2.  **Mobile Awareness**:
     - Elements hidden behind the mobile menu must be revealed first.
@@ -32,7 +36,9 @@ Use the custom fixtures defined in `tests/support/fixtures/index.ts`:
       ```
 
 ## Theme/Mode Assertions
+
 Do **not** rely on `body` classes. `next-themes` applies classes to `html`.
+
 - **Production (Dark):**
   ```typescript
   await expect(page.locator('html')).toHaveClass(/dark/, { timeout: 10000 });
@@ -41,7 +47,8 @@ Do **not** rely on `body` classes. `next-themes` applies classes to `html`.
   ```typescript
   await expect(page.locator('html')).toHaveClass(/light/, { timeout: 10000 });
   ```
-*Note: We use `toPass` or long timeouts for assertions that depend on Cookie->Theme sync.*
+  _Note: We use `toPass` or long timeouts for assertions that depend on Cookie->Theme sync._
 
 ## Execution
+
 - **Run E2E:** `npm run test:e2e`

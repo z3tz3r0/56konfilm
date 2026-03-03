@@ -44,7 +44,10 @@ export const packagesSectionType = defineType({
     },
     prepare({ title, packages, background }) {
       const count = Array.isArray(packages) ? packages.length : 0;
-      const subtitleParts = [background && background !== 'default' ? background : null, `${count} package${count === 1 ? '' : 's'}`];
+      const subtitleParts = [
+        background && background !== 'default' ? background : null,
+        `${count} package${count === 1 ? '' : 's'}`,
+      ];
       return {
         title: title || 'Packages Section',
         subtitle: subtitleParts.filter(Boolean).join(' · '),

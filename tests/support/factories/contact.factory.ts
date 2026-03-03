@@ -10,9 +10,12 @@ export interface ContactSubmission {
   venue?: string;
 }
 
-export const createContactSubmission = (overrides: Partial<ContactSubmission> = {}): ContactSubmission => {
-  const type = overrides.type || faker.helpers.arrayElement(['commercial', 'wedding']);
-  
+export const createContactSubmission = (
+  overrides: Partial<ContactSubmission> = {}
+): ContactSubmission => {
+  const type =
+    overrides.type || faker.helpers.arrayElement(['commercial', 'wedding']);
+
   const base = {
     name: faker.person.fullName(),
     email: faker.internet.email(),
@@ -33,5 +36,7 @@ export const createContactSubmission = (overrides: Partial<ContactSubmission> = 
   return base;
 };
 
-export const createContactSubmissions = (count: number, overrides: Partial<ContactSubmission> = {}) => 
-  Array.from({ length: count }, () => createContactSubmission(overrides));
+export const createContactSubmissions = (
+  count: number,
+  overrides: Partial<ContactSubmission> = {}
+) => Array.from({ length: count }, () => createContactSubmission(overrides));

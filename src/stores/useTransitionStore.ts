@@ -17,5 +17,6 @@ export const useTransitionStore = create<TransitionState>((set) => ({
   setIsTransitioning: (value) => set({ isTransitioning: value }),
   setIsCovered: (value) => set({ isCovered: value }),
   setPendingPath: (value) => set({ pendingPath: value }),
-  resetTransition: () => set({ isTransitioning: false, isCovered: false, pendingPath: null }),
+  resetTransition: () =>
+    set({ isTransitioning: false, isCovered: false, pendingPath: null }),
 }));

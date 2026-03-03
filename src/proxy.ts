@@ -23,7 +23,7 @@ export function proxy(request: NextRequest) {
   );
 
   // 3. Resolve preferences
-  // We pass 'null' for queryLocale because we are now path-based, 
+  // We pass 'null' for queryLocale because we are now path-based,
   // but if we wanted to support ?lang= override, we could keep it.
   const { locale, mode, shouldPersistLocale, shouldPersistMode } =
     selectPreferences({
@@ -42,7 +42,7 @@ export function proxy(request: NextRequest) {
     );
     // Preserve query params
     newUrl.search = request.nextUrl.search;
-    
+
     const response = NextResponse.redirect(newUrl);
 
     // Set cookies on redirect if needed
@@ -78,13 +78,16 @@ export function proxy(request: NextRequest) {
 
   // If path has a valid locale, sync cookie to THAT locale (Path is Truth)
   if (pathLocale && request.cookies.get('lang')?.value !== pathLocale) {
-     response.cookies.set({
+    response.cookies.set({
       name: 'lang',
       value: pathLocale,
       path: '/',
       maxAge: 60 * 60 * 24 * 365,
     });
-  } else if (!pathLocale && (shouldPersistLocale || request.cookies.get('lang')?.value !== locale)) {
+  } else if (
+    !pathLocale &&
+    (shouldPersistLocale || request.cookies.get('lang')?.value !== locale)
+  ) {
     // If no path locale (should cause redirect above, but fallback), sync preference
     response.cookies.set({
       name: 'lang',

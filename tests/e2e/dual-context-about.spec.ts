@@ -11,7 +11,9 @@ test.describe('Dual-Context About Page', () => {
       await page.getByTestId('mobile-menu-button').click();
     }
 
-    const switcher = page.getByTestId('mode-switcher').filter({ visible: true });
+    const switcher = page
+      .getByTestId('mode-switcher')
+      .filter({ visible: true });
     await expect(switcher).toBeVisible();
 
     const button = switcher.getByRole('button', { name: mode });
@@ -29,7 +31,9 @@ test.describe('Dual-Context About Page', () => {
     await page.waitForLoadState('domcontentloaded');
   });
 
-  test('should render Commercial content in Production mode', async ({ page }) => {
+  test('should render Commercial content in Production mode', async ({
+    page,
+  }) => {
     // Verify we're in Production (dark) mode
     await expect(page.locator('html')).toHaveClass(/dark/, { timeout: 10000 });
 
@@ -38,15 +42,20 @@ test.describe('Dual-Context About Page', () => {
     await expect(pageContent).toBeVisible({ timeout: 5000 });
 
     // Capture initial content for comparison
-    const initialSignature = await pageContent.getAttribute('data-content-signature');
+    const initialSignature = await pageContent.getAttribute(
+      'data-content-signature'
+    );
     expect(initialSignature).toBeTruthy();
   });
 
-  test('should render Wedding content in Wedding mode', async ({ page, isMobile }) => {
+  test('should render Wedding content in Wedding mode', async ({
+    page,
+    isMobile,
+  }) => {
     // Switch to Wedding mode
     await switchMode(page, 'Wedding', isMobile);
 
-    // Verify we're in Wedding (light) mode  
+    // Verify we're in Wedding (light) mode
     await expect(page.locator('html')).toHaveClass(/light/, { timeout: 10000 });
     await expect(page).toHaveURL(/\/about(\?|$)/);
 
@@ -55,17 +64,24 @@ test.describe('Dual-Context About Page', () => {
     await expect(pageContent).toBeVisible({ timeout: 5000 });
 
     // Capture content in wedding mode
-    const weddingSignature = await pageContent.getAttribute('data-content-signature');
+    const weddingSignature = await pageContent.getAttribute(
+      'data-content-signature'
+    );
     expect(weddingSignature).toBeTruthy();
   });
 
-  test('should swap content when toggling modes on About page', async ({ page, isMobile }) => {
+  test('should swap content when toggling modes on About page', async ({
+    page,
+    isMobile,
+  }) => {
     // Start in Production mode
     await expect(page.locator('html')).toHaveClass(/dark/, { timeout: 10000 });
 
     // Capture initial content structure (number of sections)
     const initialContent = page.getByTestId('page-content');
-    const initialSignature = await initialContent.getAttribute('data-content-signature');
+    const initialSignature = await initialContent.getAttribute(
+      'data-content-signature'
+    );
     const initialSections = await page.locator('main section').count();
     expect(initialSignature).toBeTruthy();
 
@@ -80,7 +96,9 @@ test.describe('Dual-Context About Page', () => {
 
     // Verify content has changed
     const newContent = page.getByTestId('page-content');
-    const newSignature = await newContent.getAttribute('data-content-signature');
+    const newSignature = await newContent.getAttribute(
+      'data-content-signature'
+    );
     const newSections = await page.locator('main section').count();
 
     // Content should exist in both modes
@@ -93,7 +111,7 @@ test.describe('Dual-Context About Page', () => {
     await expect(page).toHaveURL(/\/about(\?|$)/);
   });
 
-  test('should maintain correct content after mode switch and page reload', async ({ 
+  test('should maintain correct content after mode switch and page reload', async ({
     page,
     isMobile,
   }) => {
@@ -102,7 +120,9 @@ test.describe('Dual-Context About Page', () => {
     await expect(page.locator('html')).toHaveClass(/light/, { timeout: 10000 });
 
     // Capture Wedding content
-    const weddingContent = await page.getByTestId('page-content').getAttribute('data-content-signature');
+    const weddingContent = await page
+      .getByTestId('page-content')
+      .getAttribute('data-content-signature');
     expect(weddingContent).toBeTruthy();
 
     // Reload the page
@@ -113,11 +133,16 @@ test.describe('Dual-Context About Page', () => {
     await expect(page.locator('html')).toHaveClass(/light/, { timeout: 10000 });
 
     // Content should still be present after reload
-    const reloadedContent = await page.getByTestId('page-content').getAttribute('data-content-signature');
+    const reloadedContent = await page
+      .getByTestId('page-content')
+      .getAttribute('data-content-signature');
     expect(reloadedContent).toBeTruthy();
   });
 
-  test('should transition smoothly without flashing', async ({ page, isMobile }) => {
+  test('should transition smoothly without flashing', async ({
+    page,
+    isMobile,
+  }) => {
     // Verify initial state
     await expect(page.locator('html')).toHaveClass(/dark/, { timeout: 10000 });
 
@@ -126,14 +151,14 @@ test.describe('Dual-Context About Page', () => {
 
     // Look for the curtain transition (should appear during mode change)
     const curtain = page.getByTestId('curtain');
-    
+
     // Curtain should be visible during transition (if motion isn't reduced)
     // This may or may not catch it depending on timing, but won't cause test failure
     await curtain.isVisible().catch(() => false);
 
     // Wait for transition to complete
     await page.waitForLoadState('domcontentloaded');
-    
+
     // Verify final state
     await expect(page.locator('html')).toHaveClass(/light/, { timeout: 15000 });
   });

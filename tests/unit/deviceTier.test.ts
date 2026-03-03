@@ -5,10 +5,10 @@
  */
 
 import {
-    classifyDeviceTier,
-    getDeviceCapabilities,
-    getTierFeatureFlags,
-    type DeviceCapabilities,
+  classifyDeviceTier,
+  getDeviceCapabilities,
+  getTierFeatureFlags,
+  type DeviceCapabilities,
 } from '@/lib/performance/deviceTier';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 

@@ -47,7 +47,7 @@ export default function PackagesSection({ block }: PackagesSectionProps) {
       <div className="container mx-auto max-w-6xl space-y-12">
         <header className="mx-auto flex max-w-3xl flex-col items-center gap-3 text-center">
           {block.heading?.eyebrow ? (
-            <span className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">
+            <span className="text-primary text-sm font-semibold tracking-[0.3em] uppercase">
               {block.heading.eyebrow}
             </span>
           ) : null}
@@ -98,14 +98,28 @@ export default function PackagesSection({ block }: PackagesSectionProps) {
                     <p className="text-4xl font-semibold md:text-5xl">
                       {pkg.price ?? ''}
                     </p>
-                    <p className={cn('text-sm uppercase tracking-[0.2em]', isFeatured ? 'text-white/80' : 'text-muted-foreground')}>
+                    <p
+                      className={cn(
+                        'text-sm tracking-[0.2em] uppercase',
+                        isFeatured ? 'text-white/80' : 'text-muted-foreground'
+                      )}
+                    >
                       {pkg.currency ?? 'THB'}
                     </p>
                   </div>
                   {pkg.features?.length ? (
-                    <ul className={cn('space-y-2 text-sm', isFeatured ? 'text-white/90' : 'text-muted-foreground')}>
+                    <ul
+                      className={cn(
+                        'space-y-2 text-sm',
+                        isFeatured ? 'text-white/90' : 'text-muted-foreground'
+                      )}
+                    >
                       {pkg.features.map((feature, featureIndex) => (
-                        <li key={`${pkg._key ?? index}-feature-${featureIndex}`}>{feature}</li>
+                        <li
+                          key={`${pkg._key ?? index}-feature-${featureIndex}`}
+                        >
+                          {feature}
+                        </li>
                       ))}
                     </ul>
                   ) : null}

@@ -61,8 +61,8 @@ export const ctaType = defineType({
     Rule.custom((val) => {
       if (!val) return true;
       if (val.linkType === 'internal' && !val.pageRef) return 'Select a page';
-      if (val.linkType === 'external' && !val.externalUrl) return 'Provide a URL';
+      if (val.linkType === 'external' && !val.externalUrl)
+        return 'Provide a URL';
       return true;
     }),
 });
-

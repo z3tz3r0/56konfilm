@@ -11,11 +11,12 @@ I want **to use the Modular Page Builder inside "Project" documents**,
 so that **I can create magazine-style layouts for case studies, not just simple text descriptions.**
 
 **CRITICAL DESIGN REQUIREMENT:**
+
 - **Strict Fidelity:** Implementations MUST strictly follow the breakdown in `_bmad_output/planning-artifacts/design-assets/`.
 - **Reference Assets:**
   - `public/high-frame/R01_portfolio_production.png`
   - `_bmad_output/planning-artifacts/design-assets/production/portfolio/fullpage-desktop.png`
-- **Flexibility:** While the *default* order matches the design, the Admin MUST have the power to reorder these sections via Sanity Studio.
+- **Flexibility:** While the _default_ order matches the design, the Admin MUST have the power to reorder these sections via Sanity Studio.
 
 ## Acceptance Criteria
 
@@ -33,7 +34,7 @@ so that **I can create magazine-style layouts for case studies, not just simple 
    - **Client** (String)
    - **Services** (Array of Strings or String)
    - **Year** (Number or Date)
-   (Note: These appeared missing in the initial schema analysis and MUST be added).
+     (Note: These appeared missing in the initial schema analysis and MUST be added).
 
 ## Tasks / Subtasks
 
@@ -110,6 +111,7 @@ Antigravity (Google Deepmind)
 - Verified e2e tests (chromium): `pnpm test:e2e --project=chromium`.
 
 ### File List
+
 - src/sanity/schemaTypes/projects.ts
 - src/sanity/lib/queries.ts
 - src/types/sanity.ts
@@ -131,6 +133,7 @@ Antigravity (Google Deepmind)
 - playwright.config.ts
 
 ### Review Notes (Unrelated Working Tree Changes Observed)
+
 - src/sanity/lib/queries/sections.ts (from story 2-2)
 - src/sanity/schemaTypes/objects/galleryItem.ts (from story 2-2)
 - tests/e2e/media-gallery-hybrid.spec.ts (from story 2-2)
@@ -141,6 +144,7 @@ Antigravity (Google Deepmind)
 Date: 2026-02-02
 
 Summary:
+
 - Fixed AC mismatch by adding `/works/[slug]` redirect route.
 - Added test hooks (`data-sanity-type`, `data-testid`) so e2e can validate blocks/metadata.
 - Corrected `siteMode` propagation in `ProjectPage`.

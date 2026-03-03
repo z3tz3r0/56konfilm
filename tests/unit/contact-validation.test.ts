@@ -30,20 +30,20 @@ describe('Contact Form Validation', () => {
     const result = contactFormSchema.safeParse(invalidWedding);
     expect(result.success).toBe(false);
     if (!result.success) {
-        const errorFields = result.error.issues.map((e: any) => e.path[0]);
-        expect(errorFields).toContain('weddingDate');
-        expect(errorFields).toContain('venue');
+      const errorFields = result.error.issues.map((e: any) => e.path[0]);
+      expect(errorFields).toContain('weddingDate');
+      expect(errorFields).toContain('venue');
     }
   });
 
   it('should validate a valid wedding inquiry', () => {
     const validWedding = {
-        type: 'wedding',
-        name: 'Couple Z',
-        email: 'couple@z.com',
-        message: 'This is a detailed message about our big day.',
-        weddingDate: new Date('2025-12-25'),
-        venue: 'Grand Hall'
+      type: 'wedding',
+      name: 'Couple Z',
+      email: 'couple@z.com',
+      message: 'This is a detailed message about our big day.',
+      weddingDate: new Date('2025-12-25'),
+      venue: 'Grand Hall',
     };
     const result = contactFormSchema.safeParse(validWedding);
     if (!result.success) console.error(JSON.stringify(result.error, null, 2));

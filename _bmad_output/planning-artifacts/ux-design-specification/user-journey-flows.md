@@ -1,9 +1,11 @@
 # User Journey Flows (Final Specification)
 
 ## Journey 1: The Agency Producer (The "Scout")
+
 **Goal:** Assess quality, vet technical capability, and book 56konfilm for a commercial shoot.
 **Context:** Desktop/Laptop. High intent.
-**Visual Mapping (Strict):** 
+**Visual Mapping (Strict):**
+
 1. `production/landing-page/section-hero-desktop.png` (Full-bleed Video Hero)
 2. `production/landing-page/section-who-we-are-desktop.png` (OEM Production House Narrative)
 3. `production/landing-page/section-our-service-desktop.png` (High-end craft categories)
@@ -25,9 +27,11 @@ graph TD
 ```
 
 ## Journey 2: The Modern Couple (The "Vibe Check")
+
 **Goal:** Feel an emotional connection and trust 56konfilm with their wedding day.
 **Context:** Emotional Discovery.
 **Visual Mapping (Strict):**
+
 1. `wedding/landing-page/section-hero-desktop.png` (Soft Warm Hero)
 2. `wedding/landing-page/section-philosophy-desktop.png` ("We take our craft to heart")
 3. `wedding/landing-page/section-featured-desktop.png` (Curated Love Stories)
@@ -47,6 +51,7 @@ graph TD
 ```
 
 ## Journey 3: The Content Admin (The Owner)
+
 **Goal:** Create a new "Featured Commercial" project page in under 15 minutes.
 **Behavior:** Flexible Block System based on `production/services/README.md`.
 
@@ -62,6 +67,7 @@ graph TD
 ```
 
 ## Journey 4: The Mobile Commuter (Passive Consumption)
+
 **Goal:** Browsing during commute to see "what's cool."
 **Visual Mapping:** `production/landing-page/fullpage-landing-page-mobile.png`
 
@@ -75,6 +81,7 @@ graph TD
 ```
 
 ## Journey 5: The "Service Shopper" (Specific Need)
+
 **Goal:** Identify technical capabilities (RED/Drone).
 **Visual Mapping:** `production/services/section-all-service-desktop.png`
 
@@ -87,6 +94,7 @@ graph TD
 ```
 
 ## Journey 6: The "Lost" User (Recovery)
+
 **Goal:** Recover from a broken link/deleted project without bounce.
 **Context:** 404 Page.
 
@@ -101,6 +109,7 @@ graph TD
 ```
 
 ## Journey 9: The "Slow Connection" Experience
+
 **Goal:** Prevent bounce while video loads.
 **Interaction:** Low-Res Poster -> Muted Loop.
 
@@ -113,6 +122,7 @@ graph TD
 ```
 
 ## Journey 10: The "Mode Guardian" (Route Protection)
+
 **Goal:** Resolve context mismatches.
 
 ```mermaid
@@ -124,6 +134,7 @@ graph TD
 ```
 
 ## Journey 11: The "Engagement Loop" (Auto-Advance)
+
 **Goal:** Increase time-on-site for Producers.
 
 ```mermaid
@@ -135,6 +146,7 @@ graph TD
 ```
 
 ## Journey 12: The "Testimonial Discovery" (Social Proof)
+
 **Goal:** Validate trust for Wedding couples.
 **Visual Mapping:** `wedding/landing-page/section-testimonial-desktop.png`
 
@@ -146,6 +158,7 @@ graph TD
 ```
 
 ## Journey 13: The "Package Selection" (Conversion)
+
 **Goal:** Direct user to the right price point.
 **Visual Mapping:** `wedding/landing-page/section-packages-desktop.png`
 
@@ -158,6 +171,7 @@ graph TD
 ```
 
 ## Journey 15: Behind The Scenes Exploration (Engagement)
+
 **Goal:** See the technical reality and personality of the 56konfilm crew.
 **Behavior (per README):** Grid of videos/images.
 **Visual Mapping:** `wedding/about-us/section-behind-blog-desktop.png`
@@ -171,10 +185,12 @@ graph TD
 ```
 
 ## Journey Patterns
-*   **The "Vibe Check" Gate:** Users almost always start on "Production" (Default). The "Switch" is the gate to the secondary journey.
-*   **Video-First Discovery:** Vetting happens via muted hover/scroll loops; deep diving requires explicit action.
-*   **Persistent Inquiry:** "Book Now" or "Contact" is always accessible, ensuring decision-to-action is zero clicks away.
+
+- **The "Vibe Check" Gate:** Users almost always start on "Production" (Default). The "Switch" is the gate to the secondary journey.
+- **Video-First Discovery:** Vetting happens via muted hover/scroll loops; deep diving requires explicit action.
+- **Persistent Inquiry:** "Book Now" or "Contact" is always accessible, ensuring decision-to-action is zero clicks away.
 
 ## Flow Optimization Principles
+
 1.  **No Dead Ends:** Every Project Detail page loop continues with "Next Project" suggestions.
 2.  **Contextual Forms:** Forms detect mode (Wedding vs Commercial) to shuffle fields (Wedding Date vs Agency Name).

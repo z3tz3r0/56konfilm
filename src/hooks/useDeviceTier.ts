@@ -87,9 +87,15 @@ export function useDeviceTier(): UseDeviceTierResult {
  * Hook for getting only the feature flags without tier info
  * Convenience hook for components that only need the boolean flags
  */
-export function useDeviceFeatureFlags(): TierFeatureFlags & { isInitialized: boolean } {
-  const { allowHeavyMotion, allowVideoAutoplay, useSimplifiedTransitions, isInitialized } =
-    useDeviceTier();
+export function useDeviceFeatureFlags(): TierFeatureFlags & {
+  isInitialized: boolean;
+} {
+  const {
+    allowHeavyMotion,
+    allowVideoAutoplay,
+    useSimplifiedTransitions,
+    isInitialized,
+  } = useDeviceTier();
 
   return {
     allowHeavyMotion,
@@ -98,4 +104,3 @@ export function useDeviceFeatureFlags(): TierFeatureFlags & { isInitialized: boo
     isInitialized,
   };
 }
-

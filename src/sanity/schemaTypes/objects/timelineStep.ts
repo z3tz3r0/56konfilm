@@ -19,7 +19,11 @@ export const timelineStepType = defineType({
       description: 'หัวข้อของขั้นตอน',
       validation: (Rule) => Rule.required(),
     }),
-    localizedTextField({ name: 'description', title: 'Description', description: 'คำอธิบายของขั้นตอน' }),
+    localizedTextField({
+      name: 'description',
+      title: 'Description',
+      description: 'คำอธิบายของขั้นตอน',
+    }),
     defineField({
       name: 'icon',
       title: 'Icon',
@@ -38,4 +42,3 @@ export const timelineStepType = defineType({
     },
   },
 });
-

@@ -8,7 +8,12 @@ export const timelineSectionType = defineType({
   title: 'Timeline Section',
   type: 'object',
   fields: [
-    defineField({ name: 'heading', title: 'Heading', description: 'หัวข้อของ Timeline', type: localizedBlockType.name }),
+    defineField({
+      name: 'heading',
+      title: 'Heading',
+      description: 'หัวข้อของ Timeline',
+      type: localizedBlockType.name,
+    }),
     defineField({
       name: 'steps',
       title: 'Steps',
@@ -17,7 +22,12 @@ export const timelineSectionType = defineType({
       of: [{ type: timelineStepType.name }],
       validation: (Rule) => Rule.required().min(2),
     }),
-    defineField({ name: 'cta', title: 'CTA', description: 'ปุ่ม CTA', type: ctaType.name }),
+    defineField({
+      name: 'cta',
+      title: 'CTA',
+      description: 'ปุ่ม CTA',
+      type: ctaType.name,
+    }),
     defineField({
       name: 'background',
       title: 'Background',
@@ -41,7 +51,10 @@ export const timelineSectionType = defineType({
     },
     prepare({ heading, steps, background }) {
       const count = Array.isArray(steps) ? steps.length : 0;
-      const subtitleParts = [background && background !== 'default' ? background : null, `${count} step${count === 1 ? '' : 's'}`];
+      const subtitleParts = [
+        background && background !== 'default' ? background : null,
+        `${count} step${count === 1 ? '' : 's'}`,
+      ];
       return {
         title: heading || 'Timeline Section',
         subtitle: subtitleParts.filter(Boolean).join(' · '),

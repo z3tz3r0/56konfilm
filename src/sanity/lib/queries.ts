@@ -1,16 +1,16 @@
 import { groq } from 'next-sanity';
 import { LOCALIZED, SEO_PROJECTION } from './queries/fragments';
 import {
-    CARD_COLLECTION_SECTION,
-    CTA_BANNER_SECTION,
-    HERO_SECTION,
-    LOGO_GRID_SECTION,
-    MEDIA_GALLERY_SECTION,
-    PACKAGES_SECTION,
-    PHILOSOPHY_SECTION,
-    TESTIMONIAL_SECTION,
-    TIMELINE_SECTION,
-    TWO_COLUMN_SECTION,
+  CARD_COLLECTION_SECTION,
+  CTA_BANNER_SECTION,
+  HERO_SECTION,
+  LOGO_GRID_SECTION,
+  MEDIA_GALLERY_SECTION,
+  PACKAGES_SECTION,
+  PHILOSOPHY_SECTION,
+  TESTIMONIAL_SECTION,
+  TIMELINE_SECTION,
+  TWO_COLUMN_SECTION,
 } from './queries/sections';
 
 export const settingsQuery = groq`*[_type == "settings"][0] {
@@ -63,18 +63,45 @@ export const modeHomeSlugsQuery = groq`
   }
 `;
 
+// export const pageBySlugQuery = groq`
+//   *[_type == "page" && slug.current == $slug && siteMode in ["both", $mode]][0] {
+//     "title": ${LOCALIZED('page')},
+//     "slug": slug.current,
+//     "seoTitle": ${LOCALIZED('seoTitle')},
+//     ${SEO_PROJECTION},
+//     siteMode,
+//     "contentBlocks": select(
+//       siteMode == "both" && $mode == "wedding" => contentBlocksWedding,
+//       siteMode == "both" && $mode == "production" => contentBlocks,
+//       siteMode == "wedding" => coalesce(contentBlocksWedding, contentBlocks),
+//       contentBlocks
+//     )[]{
+//       _key,
+//       _type,
+//       ${HERO_SECTION},
+//       ${TWO_COLUMN_SECTION},
+//       ${CARD_COLLECTION_SECTION},
+//       ${TIMELINE_SECTION},
+//       ${MEDIA_GALLERY_SECTION},
+//       ${LOGO_GRID_SECTION},
+//       ${CTA_BANNER_SECTION},
+//       ${PACKAGES_SECTION},
+//       ${TESTIMONIAL_SECTION},
+//       ${PHILOSOPHY_SECTION}
+//     }
+//   }
+// `;
+
 export const pageBySlugQuery = groq`
-  *[_type == "page" && slug.current == $slug && siteMode in ["both", $mode]][0] {
+  *[_type in ["productionPages", "weddingPages"] && slug.current == $slug && siteMode == $mode][0] {
     "title": ${LOCALIZED('page')},
     "slug": slug.current,
     "seoTitle": ${LOCALIZED('seoTitle')},
     ${SEO_PROJECTION},
     siteMode,
     "contentBlocks": select(
-      siteMode == "both" && $mode == "wedding" => contentBlocksWedding,
-      siteMode == "both" && $mode == "production" => contentBlocks,
-      siteMode == "wedding" => coalesce(contentBlocksWedding, contentBlocks),
-      contentBlocks
+      _type == "productionPages" => commercialSections,
+      _type == "weddingPages" => weddingSections
     )[]{
       _key,
       _type,

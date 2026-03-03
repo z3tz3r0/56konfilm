@@ -2,7 +2,10 @@
 
 import { submitContactForm } from '@/actions/contact';
 import { useMode } from '@/hooks/useMode';
-import { contactFormSchema, type ContactFormValues } from '@/lib/schemas/contact';
+import {
+  contactFormSchema,
+  type ContactFormValues,
+} from '@/lib/schemas/contact';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useTransition } from 'react';
 import { useForm, type DefaultValues } from 'react-hook-form';

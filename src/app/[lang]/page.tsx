@@ -1,17 +1,23 @@
 import { notFound, redirect } from 'next/navigation';
-
 import { resolvePreferences } from '@/lib/i18nUtils';
 import { sanityFetch } from '@/sanity/lib/fetch';
 import { firstPageSlugByModeQuery } from '@/sanity/lib/queries';
 import { Metadata } from 'next';
 
-export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
-  const [{ lang }, { mode }] = await Promise.all([params, resolvePreferences()]);
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const [{ lang }, { mode }] = await Promise.all([
+    params,
+    resolvePreferences(),
+  ]);
 
   const result = await sanityFetch<{ slug?: string | null }>({
     query: firstPageSlugByModeQuery,
     params: { mode },
-    tags: ['page'],
+    tags: [mode === 'production' ? 'productionPages' : 'weddingPages'],
   });
 
   if (result?.slug) {

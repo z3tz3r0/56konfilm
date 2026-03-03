@@ -11,6 +11,7 @@ I want **to intuitively browse to the next project at the bottom of the page**,
 so that **I keep consuming content without hitting a dead end.**
 
 ### 1. Introduction
+
 Users currently hit a dead end after viewing a project. We need to implement a "Next Project" navigation card that keeps them in the "flow". Crucially, this navigation must respect the Dual-Identity nature (Commercial flows to Commercial, Wedding to Wedding) and trigger our signature `CurtainWipe` transition.
 
 ## Acceptance Criteria
@@ -27,10 +28,10 @@ Users currently hit a dead end after viewing a project. We need to implement a "
 3. **Given** I click "Next Project"
    **When** the navigation begins
    **Then** the Global `CurtainWipe` transition must trigger:
-     - Curtain covers the screen.
-     - Page navigation occurs.
-     - Curtain lifts on the new page.
-   **And** the `mode` must NOT change (persisted via cookie/state).
+   - Curtain covers the screen.
+   - Page navigation occurs.
+   - Curtain lifts on the new page.
+     **And** the `mode` must NOT change (persisted via cookie/state).
 
 4. **Given** I am on the last project of the list
    **Then** the "Next Project" should loop back to the first project of the same mode (Circular list).
@@ -51,8 +52,8 @@ Users currently hit a dead end after viewing a project. We need to implement a "
 - **Data Fetching (Atomic GROQ):**
   - **Constraint:** Do NOT fetch the entire next project object. Fetch minimal data: `title`, `slug`, `mainImage`, `client`, `year`.
   - **Query Pattern:** Use GROQ's `order()` and logical index finding, or simply fetch neighbors.
-    - *Simpler Approach:* Fetch basic list of *all* project slugs/IDs in current mode, find current index, determine next index (with wrap-around) in the application layer or efficient projection.
-    - *Better Performance:* Use GROQ specialized neighbor query:
+    - _Simpler Approach:_ Fetch basic list of _all_ project slugs/IDs in current mode, find current index, determine next index (with wrap-around) in the application layer or efficient projection.
+    - _Better Performance:_ Use GROQ specialized neighbor query:
       ```groq
       "nextProject": *[_type == "project" && $siteMode in siteMode && _createdAt > ^._createdAt] | order(_createdAt asc) [0] {
          title, "slug": slug.current, ...
@@ -78,15 +79,15 @@ Users currently hit a dead end after viewing a project. We need to implement a "
   - **Test ID:** `data-testid="project-navigation"`
   - **Transition Test:**
     - Click next project.
-    - *Assert:* `data-testid="curtain"` becomes visible.
-    - *Assert:* URL changes.
-    - *Assert:* `data-testid="curtain"` becomes hidden.
+    - _Assert:_ `data-testid="curtain"` becomes visible.
+    - _Assert:_ URL changes.
+    - _Assert:_ `data-testid="curtain"` becomes hidden.
   - **Data Isolation:** Verify that a Commercial project NEVER links to a Wedding project.
 
 ## Implementation Tips
 
 - **Transition Timing:** Do NOT rely on `setTimeout`. Rely on the `isCovered` state signal from the transition component.
-- **GROQ Logic:** Filtering by `siteMode` is critical. `siteMode` is an array of strings (`['production', 'wedding']`). Ensure your neighbor query matches the *current* page's context.
+- **GROQ Logic:** Filtering by `siteMode` is critical. `siteMode` is an array of strings (`['production', 'wedding']`). Ensure your neighbor query matches the _current_ page's context.
 
 ## Tasks / Subtasks
 
@@ -112,9 +113,11 @@ Users currently hit a dead end after viewing a project. We need to implement a "
 ## Dev Agent Record
 
 ### Agent Model Used
+
 Gemini 2.0 Flash
 
 ### File List
+
 - src/sanity/lib/queries.ts
 - src/types/sanity.ts
 - src/components/page/ProjectNavigation.tsx
@@ -128,6 +131,7 @@ Gemini 2.0 Flash
 - tests/e2e/mode-persistence.spec.ts
 
 ### Completion Notes List
+
 - Added transition store facade (`useTransitionStore`) and wired ProjectNavigation to safety-lock transition flow.
 - Added pending-path transition reset in `ModeProvider` to ensure curtain exits after navigation.
 - Ensured curtain uses `data-testid="curtain"` and updated e2e tests to assert visibility, URL change, hide, and mode persistence.
@@ -135,4 +139,5 @@ Gemini 2.0 Flash
 - Verified e2e tests (chromium): `pnpm test:e2e --project=chromium tests/e2e/project-navigation.spec.ts tests/e2e/global-transition.spec.ts tests/e2e/mode-persistence.spec.ts`.
 
 ### Change Log
+
 - 2026-02-02: Code review fixes applied (transition orchestration, tests, query hardening).

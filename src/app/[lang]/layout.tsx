@@ -4,7 +4,12 @@ import { ThemeProvider } from '@/components/ui/theme-provider';
 import { buildMetadata } from '@/lib/metadata';
 import { isSupportedMode, type SiteMode } from '@/lib/preferences';
 import type { Metadata } from 'next';
-import { Cormorant_Garamond, Manrope, Noto_Sans_Thai, Sora } from 'next/font/google';
+import {
+  Cormorant_Garamond,
+  Manrope,
+  Noto_Sans_Thai,
+  Sora,
+} from 'next/font/google';
 import { cookies } from 'next/headers';
 import { Toaster } from 'sonner';
 import '../globals.css';
@@ -59,7 +64,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     ...metadata,
-    icons: settings?.favicon ? [{ rel: 'icon', url: settings.favicon }] : undefined,
+    icons: settings?.favicon
+      ? [{ rel: 'icon', url: settings.favicon }]
+      : undefined,
   };
 }
 
@@ -81,9 +88,10 @@ export default async function RootLayout({
 }>) {
   const [{ lang }, cookieStore] = await Promise.all([params, cookies()]);
   const cookieMode = cookieStore.get('mode')?.value;
-  const initialMode: SiteMode = cookieMode && isSupportedMode(cookieMode)
-    ? (cookieMode as SiteMode)
-    : 'production';
+  const initialMode: SiteMode =
+    cookieMode && isSupportedMode(cookieMode)
+      ? (cookieMode as SiteMode)
+      : 'production';
   const initialTheme = MODE_TO_THEME[initialMode];
 
   return (
@@ -92,9 +100,9 @@ export default async function RootLayout({
       suppressHydrationWarning
       data-mode={initialMode}
       style={{ colorScheme: initialTheme }}
-      className={`${sora.variable} ${cormorantGaramond.variable} ${manrope.variable} ${notoSansThai.variable}`}
+      className={`${sora.variable} ${cormorantGaramond.variable} ${manrope.variable} ${notoSansThai.variable} antialiased`}
     >
-      <body className="font-body antialiased">
+      <body className="font-body">
         <ThemeProvider
           attribute="class"
           defaultTheme={initialTheme}
@@ -102,9 +110,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <ModeProvider initialMode={initialMode}>
-            <MotionProvider>
-              {children}
-            </MotionProvider>
+            <MotionProvider>{children}</MotionProvider>
           </ModeProvider>
         </ThemeProvider>
         <Toaster richColors position="top-right" />

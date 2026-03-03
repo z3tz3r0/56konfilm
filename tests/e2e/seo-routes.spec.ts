@@ -18,7 +18,9 @@ test.describe('Technical SEO Routes', () => {
     expect(body).toContain('<loc>');
   });
 
-  test('should have a robots.txt with environment-specific rules', async ({ request }) => {
+  test('should have a robots.txt with environment-specific rules', async ({
+    request,
+  }) => {
     // WHEN: Accessing /robots.txt
     const response = await request.get('/robots.txt');
 
@@ -29,7 +31,7 @@ test.describe('Technical SEO Routes', () => {
     // AND: Rules match expectations (Staging should Disallow)
     const body = await response.text();
     expect(body.toLowerCase()).toContain('user-agent: *');
-    
+
     // In our E2E environment, we might want to check for Disallow if we treat it as non-prod
     // or Allow if we simulate prod. The story says: Allow Prod, Disallow Staging.
     // Let's check for basic structure first.

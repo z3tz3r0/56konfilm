@@ -12,7 +12,9 @@ export default function Error({
       <div className="text-center">
         <h1 className="text-3xl font-bold">Something went wrong</h1>
         <p className="text-muted-foreground mt-4 text-lg">
-          {error.digest ? `Error ID: ${error.digest}` : 'An unexpected error occurred.'}
+          {error.digest
+            ? `Error ID: ${error.digest}`
+            : 'An unexpected error occurred.'}
         </p>
         <button
           onClick={reset}

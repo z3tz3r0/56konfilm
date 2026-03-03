@@ -7,7 +7,11 @@ import { PageDocument } from '@/types/sanity';
 import { SiteSettings } from '@/types/siteSettings';
 import { Metadata } from 'next';
 
-export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
   const { lang } = await params;
   const [settings, page] = await Promise.all([
     sanityFetch<SiteSettings | null>({
@@ -22,7 +26,8 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     }),
   ]);
 
-  const fallbackTitle = lang === 'th' ? 'ติดต่อเรา - 56Konfilm' : 'Contact Us - 56Konfilm';
+  const fallbackTitle =
+    lang === 'th' ? 'ติดต่อเรา - 56Konfilm' : 'Contact Us - 56Konfilm';
 
   return buildMetadata({
     lang,
@@ -35,15 +40,17 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   });
 }
 
-export default async function ContactPage({ params }: { params: Promise<{ lang: string }> }) {
+export default async function ContactPage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
   const { lang } = await params;
 
   return (
-    <SectionShell 
-      className="py-20 min-h-[80vh] flex items-center justify-center"
-    >
+    <SectionShell className="flex min-h-[80vh] items-center justify-center py-20">
       <div className="w-full max-w-4xl">
-         <ContactForm lang={lang as 'en' | 'th'} />
+        <ContactForm lang={lang as 'en' | 'th'} />
       </div>
     </SectionShell>
   );

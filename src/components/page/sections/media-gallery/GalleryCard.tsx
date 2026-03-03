@@ -22,7 +22,7 @@ export function GalleryCard({
 }: GalleryCardProps) {
   return (
     <m.figure
-      className="group relative overflow-hidden rounded-2xl bg-muted"
+      className="group bg-muted relative overflow-hidden rounded-2xl"
       variants={variants}
       data-testid={testId}
     >
@@ -40,8 +40,8 @@ export function GalleryCard({
         <figcaption
           className={
             useLiteMotion
-              ? 'mt-3 px-1 text-sm font-medium text-muted-foreground'
-              : 'mt-3 px-1 text-sm font-medium text-muted-foreground transition-colors group-hover:text-primary'
+              ? 'text-muted-foreground mt-3 px-1 text-sm font-medium'
+              : 'text-muted-foreground group-hover:text-primary mt-3 px-1 text-sm font-medium transition-colors'
           }
         >
           {label}

@@ -1,5 +1,10 @@
 import { groq } from 'next-sanity';
-import { CTA_PROJECTION, IMAGE_PROJECTION, LOCALIZED, MEDIA_ASSET_PROJECTION } from './fragments';
+import {
+  CTA_PROJECTION,
+  IMAGE_PROJECTION,
+  LOCALIZED,
+  MEDIA_ASSET_PROJECTION,
+} from './fragments';
 
 export const HERO_SECTION = groq`
   _type == "heroSection" => {

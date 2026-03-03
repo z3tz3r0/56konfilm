@@ -15,7 +15,7 @@ interface VideoItemProps {
 export function VideoItem({ src, className, posterUrl }: VideoItemProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const { allowVideoAutoplay, isInitialized } = useDeviceTier();
-  
+
   // useInView hook to detect visibility
   const isInView = useInView(videoRef, { margin: '0px 0px -10% 0px' });
 
@@ -36,8 +36,8 @@ export function VideoItem({ src, className, posterUrl }: VideoItemProps) {
   // For low-power devices: render poster or placeholder instead of video
   if (isInitialized && !allowVideoAutoplay) {
     return (
-      <div 
-        className={cn('w-full h-full relative', className)}
+      <div
+        className={cn('relative h-full w-full', className)}
         data-testid="video-item-fallback"
       >
         {posterUrl ? (
@@ -49,7 +49,7 @@ export function VideoItem({ src, className, posterUrl }: VideoItemProps) {
             className="object-cover"
           />
         ) : (
-          <div className="w-full h-full bg-neutral-800" />
+          <div className="h-full w-full bg-neutral-800" />
         )}
       </div>
     );
@@ -60,7 +60,7 @@ export function VideoItem({ src, className, posterUrl }: VideoItemProps) {
       ref={videoRef}
       src={src}
       poster={posterUrl}
-      className={cn('w-full h-full object-cover block', className)}
+      className={cn('block h-full w-full object-cover', className)}
       autoPlay={allowVideoAutoplay}
       muted
       loop

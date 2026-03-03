@@ -4,31 +4,31 @@ import HeroSection from '@/components/page/sections/HeroSection';
 import { PageContentBlock, PageDocument } from '@/types/sanity';
 
 const TwoColumnSection = dynamic(
-  () => import('@/components/page/sections/TwoColumnSection'),
+  () => import('@/components/page/sections/TwoColumnSection')
 );
 const CardCollectionSection = dynamic(
-  () => import('@/components/page/sections/CardCollectionSection'),
+  () => import('@/components/page/sections/CardCollectionSection')
 );
 const TimelineSection = dynamic(
-  () => import('@/components/page/sections/TimelineSection'),
+  () => import('@/components/page/sections/TimelineSection')
 );
 const LogoGridSection = dynamic(
-  () => import('@/components/page/sections/LogoGridSection'),
+  () => import('@/components/page/sections/LogoGridSection')
 );
 const CtaBannerSection = dynamic(
-  () => import('@/components/page/sections/CtaBannerSection'),
+  () => import('@/components/page/sections/CtaBannerSection')
 );
 const MediaGallerySection = dynamic(
-  () => import('@/components/page/sections/MediaGallerySection'),
+  () => import('@/components/page/sections/MediaGallerySection')
 );
 const PackagesSection = dynamic(
-  () => import('@/components/page/sections/PackagesSection'),
+  () => import('@/components/page/sections/PackagesSection')
 );
 const TestimonialSection = dynamic(
-  () => import('@/components/page/sections/TestimonialSection'),
+  () => import('@/components/page/sections/TestimonialSection')
 );
 const PhilosophySection = dynamic(
-  () => import('@/components/page/sections/PhilosophySection'),
+  () => import('@/components/page/sections/PhilosophySection')
 );
 
 interface PageBuilderProps {
@@ -41,7 +41,11 @@ interface PageBuilderProps {
   enableSignature?: boolean;
 }
 
-export default function PageBuilder({ page, metadata, enableSignature }: PageBuilderProps) {
+export default function PageBuilder({
+  page,
+  metadata,
+  enableSignature,
+}: PageBuilderProps) {
   const blocks = page.contentBlocks ?? [];
   const contentSignature = enableSignature ? hashBlocks(blocks) : undefined;
 

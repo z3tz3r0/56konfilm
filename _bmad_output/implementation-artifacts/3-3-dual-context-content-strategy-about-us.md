@@ -114,10 +114,11 @@ Antigravity (M18)
 ### Completion Notes
 
 ✅ All acceptance criteria met:
+
 - AC#1: Sanity Studio displays separate tabs for Commercial/Wedding content
 - AC#2: About page document can independently manage contentBlocks for each mode
 - AC#3: `/about` renders Production House content in Commercial mode
-- AC#4: `/about` renders Wedding Studio content in Wedding mode  
+- AC#4: `/about` renders Wedding Studio content in Wedding mode
 - AC#5: Mode switch transitions seamlessly between content versions
 
 **Build Status:** ✅ Successful (No compilation errors)  

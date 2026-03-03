@@ -10,7 +10,9 @@ export function ContactHeader({ isWedding }: ContactHeaderProps) {
   return (
     <m.div
       initial={false}
-      animate={{ color: isWedding ? 'var(--color-brown)' : 'var(--color-ivory-white)' }}
+      animate={{
+        color: isWedding ? 'var(--color-brown)' : 'var(--color-ivory-white)',
+      }}
       className="mb-8 text-center"
     >
       <AnimatePresence mode="wait">
@@ -21,12 +23,12 @@ export function ContactHeader({ isWedding }: ContactHeaderProps) {
           exit={{ opacity: 0, y: -6 }}
           transition={{ duration: 0.2, ease: 'easeOut' }}
         >
-          <h2 className="text-3xl font-bold tracking-tight mb-2">
+          <h2 className="mb-2 text-3xl font-bold tracking-tight">
             {isWedding ? 'Tell us your love story' : 'Commercial Inquiry'}
           </h2>
           <p className="opacity-80">
             {isWedding
-              ? 'We accept a limited number of weddings per year. Let’s see if we are a match.'
+              ? `We accept a limited number of weddings per year. Let's see if we are a match.`
               : 'Ready to elevate your brand visual identity?'}
           </p>
         </m.div>

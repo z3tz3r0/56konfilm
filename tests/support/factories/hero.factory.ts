@@ -1,6 +1,8 @@
 import { HeroSectionBlock } from '@/types/sanity';
 
-export const createHeroSection = (overrides: Partial<HeroSectionBlock> = {}): HeroSectionBlock => ({
+export const createHeroSection = (
+  overrides: Partial<HeroSectionBlock> = {}
+): HeroSectionBlock => ({
   _type: 'heroSection',
   _key: 'test-hero',
   parallaxText: 'WE SHOOT HARD',

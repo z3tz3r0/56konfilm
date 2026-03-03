@@ -1,12 +1,21 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+// import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 
 export function LanguageSwitcher() {
   const pathname = usePathname();
   const segments = pathname.split('/').filter(Boolean);
-  
+  const router = useRouter();
+
   // Current paths SHOULD be /en/... or /th/... via proxy redirect.
   // If we are somehow on root (e.g. before hydration redirect completes?), default to 'en'.
   const currentLang = ['en', 'th'].includes(segments[0]) ? segments[0] : 'en';
@@ -24,21 +33,41 @@ export function LanguageSwitcher() {
 
   return (
     <div className="flex items-center gap-2">
-      <Link 
-        href={getPathFor('en')} 
+      <Select
+        defaultValue={currentLang}
+        onValueChange={(value) => {
+          router.push(getPathFor(value));
+        }}
+      >
+        <SelectTrigger>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent position="popper" align="start">
+          <SelectGroup>
+            <SelectItem value="en" data-testid="language-switcher-en">
+              EN
+            </SelectItem>
+            <SelectItem value="th" data-testid="language-switcher-th">
+              TH
+            </SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+      {/* <Link
+        href={getPathFor('en')}
         data-testid="language-switcher-en"
-        className={`text-sm tracking-wide transition-opacity ${currentLang === 'en' ? 'opacity-100 font-medium' : 'opacity-50 hover:opacity-100'}`}
+        className={`text-xs tracking-wide transition-opacity ${currentLang === 'en' ? 'font-medium opacity-100' : 'opacity-50 hover:opacity-100'}`}
       >
         EN
       </Link>
-      <span className="text-secondary/30">/</span>
-      <Link 
-        href={getPathFor('th')} 
+      <span>/</span>
+      <Link
+        href={getPathFor('th')}
         data-testid="language-switcher-th"
-        className={`text-sm tracking-wide transition-opacity ${currentLang === 'th' ? 'opacity-100 font-medium' : 'opacity-50 hover:opacity-100'}`}
+        className={`text-xs tracking-wide transition-opacity ${currentLang === 'th' ? 'font-medium opacity-100' : 'opacity-50 hover:opacity-100'}`}
       >
         TH
-      </Link>
+      </Link> */}
     </div>
   );
 }
