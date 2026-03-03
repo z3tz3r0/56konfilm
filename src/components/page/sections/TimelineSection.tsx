@@ -25,7 +25,7 @@ export default function TimelineSection({ block }: TimelineSectionProps) {
 
   return (
     <SectionShell background={block.background}>
-      <div className="container space-y-12">
+      <div className="container mx-auto space-y-12">
         <header className={cn('flex flex-col gap-3', alignClass)}>
           {block.heading?.eyebrow ? (
             <span className="text-primary text-sm font-semibold tracking-[0.2em] uppercase">
@@ -119,10 +119,12 @@ export default function TimelineSection({ block }: TimelineSectionProps) {
             </div>
           </div>
         ) : null}
-        <CtaGroup
-          ctas={block.cta ? [block.cta] : undefined}
-          alignment={block.heading?.align}
-        />
+        <div className="mx-auto w-full">
+          <CtaGroup
+            ctas={block.cta ? [block.cta] : undefined}
+            alignment={block.heading?.align}
+          />
+        </div>
       </div>
     </SectionShell>
   );
