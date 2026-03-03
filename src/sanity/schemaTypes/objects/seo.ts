@@ -14,9 +14,9 @@ export const seoObjectType = defineType({
   fields: [
     localizedStringField({
       name: 'title',
-      title: 'Title',
+      title: 'Title Override',
       description:
-        'หัวข้อสำหรับผลค้นหาและตอนแชร์ลิงก์ (แนะนำ 50-60 ตัวอักษร และใส่คีย์เวิร์ดหลักไว้ช่วงต้น)',
+        'หัวข้อที่จะแสดงในหน้าผลการค้นหา (Google) และเวลาแชร์ลิงก์ (แนะนำ 50-60 ตัวอักษร พยายามใส่คีย์เวิร์ดสำคัญไว้ข้างหน้า หากไม่ใส่ระบบจะดึงชื่อหน้าไปใช้แทน)',
       validation: (Rule) =>
         Rule.custom((value) => {
           if (!value || !Array.isArray(value)) return true;
@@ -30,9 +30,9 @@ export const seoObjectType = defineType({
     }),
     localizedTextField({
       name: 'description',
-      title: 'Description',
+      title: 'Meta Description',
       description:
-        'คำอธิบายใต้หัวข้อบน Google (แนะนำ 120-160 ตัวอักษร)',
+        'สรุปเนื้อหาที่แสดงใต้หัวข้อบน Google (แนะนำ 120-160 ตัวอักษร เขียนให้น่าดึงดูดใจเพื่อเพิ่มโอกาสให้คนคลิกเข้ามาดู)',
       validation: (Rule) =>
         Rule.custom((value) => {
           if (!value || !Array.isArray(value)) return true;
@@ -50,13 +50,14 @@ export const seoObjectType = defineType({
     localizedStringField({
       name: 'keywords',
       title: 'Keywords',
-      description: 'คำสำคัญ (เช่น: production house, wedding film, cinematographers) แยกด้วยจุลภาค',
+      description:
+        'คำสำคัญที่เกี่ยวข้องกับหน้านี้ (เช่น: production house, wedding film, cinematographer) แยกแต่ละคำด้วยเครื่องหมายจุลภาค (,)',
     }),
     defineField({
       name: 'ogImage',
-      title: 'Open Graph Image',
+      title: 'Social Share Image',
       description:
-        'ภาพที่ใช้เวลาแชร์ลงโซเชียล (แนะนำ 1200x630 px, ขนาดไม่เกิน 1MB, ข้อความบนภาพควรสั้นและอ่านง่าย)',
+        'รูปภาพที่จะแสดงเวลาแชร์ลิงก์ลงโซเชียล (แนะนำขนาด 1200x630 px, ไฟล์ไม่เกิน 1MB, เน้นภาพที่สื่อสารชัดเจนและดึงดูดสายตา)',
       type: 'image',
       options: { hotspot: true },
       validation: (Rule) =>
