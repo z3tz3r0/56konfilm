@@ -2,7 +2,7 @@
 
 import { m } from 'motion/react';
 import { usePathname, useRouter } from 'next/navigation';
-import { useRef, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 
 import { useMode } from '@/hooks/useMode';
 import { type SiteMode } from '@/lib/preferences';
@@ -24,17 +24,14 @@ export const ModeSwitcher = ({
   const router = useRouter();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
+  const [isNavigating, setIsNavigating] = useState(false);
 
   // Use the global store hook instead of local state
   const { mode: displayMode, setMode: setGlobalMode } = useMode();
 
-  // Defer navigation until after the slide animation completes
-  const navTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const handleModeChange = (nextMode: SiteMode) => {
     if (nextMode === displayMode) return;
-    if (isPending) return;
-    if (navTimerRef.current) return; // ignore double-taps while a nav is scheduled
+    if (isPending || isNavigating) return;
 
     // Update Global State (Zustand + Cookie + Theme + Attribute)
     setGlobalMode(nextMode);
@@ -43,14 +40,15 @@ export const ModeSwitcher = ({
     const targetSlug = homeSlugs[nextMode];
     const targetPath = targetSlug ? `/${lang}/${targetSlug}` : `/${lang}`;
 
-    navTimerRef.current = setTimeout(() => {
-      navTimerRef.current = null;
+    setIsNavigating(true);
+    setTimeout(() => {
       startTransition(() => {
         if (targetPath !== pathname) {
           router.push(targetPath);
         } else {
           router.refresh();
         }
+        setIsNavigating(false);
       });
     }, 0);
   };
@@ -89,10 +87,10 @@ export const ModeSwitcher = ({
       {/* Production button */}
       <m.button
         onClick={() => handleModeChange('production')}
-        disabled={isPending || !!navTimerRef.current}
+        disabled={isPending || isNavigating}
         className={cn(
           'font-primary relative z-10 h-full cursor-pointer text-xs tracking-[0.8px] uppercase',
-          isPending && 'cursor-not-allowed opacity-60'
+          (isPending || isNavigating) && 'cursor-not-allowed opacity-60'
         )}
         animate={{
           color:
@@ -110,10 +108,10 @@ export const ModeSwitcher = ({
       {/* Wedding button */}
       <m.button
         onClick={() => handleModeChange('wedding')}
-        disabled={isPending || !!navTimerRef.current}
+        disabled={isPending || isNavigating}
         className={cn(
           'font-primary relative z-10 h-full cursor-pointer text-xs tracking-[0.8px] uppercase',
-          isPending && 'cursor-not-allowed opacity-60'
+          (isPending || isNavigating) && 'cursor-not-allowed opacity-60'
         )}
         animate={{
           color: displayMode === 'wedding' ? '#5b4339' : '#faf7f2', // text-brown : text-ivory-white
