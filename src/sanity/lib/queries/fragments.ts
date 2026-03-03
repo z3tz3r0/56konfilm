@@ -53,6 +53,7 @@ export const SEO_PROJECTION = groq`
   seo {
     "title": ${LOCALIZED('title')},
     "description": ${LOCALIZED('description')},
+    "keywords": ${LOCALIZED('keywords')},
     "ogImage": ogImage{
       asset,
       crop,

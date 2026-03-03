@@ -243,5 +243,6 @@ export interface PageDocument {
 export interface SeoFields {
   title?: string;
   description?: string;
+  keywords?: string;
   ogImage?: SanityImageSource;
 }

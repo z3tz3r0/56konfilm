@@ -29,7 +29,7 @@ function resolveSeoValue(
 function resolveSeoText(
   seo: SeoFields | null | undefined,
   fallbackSeo: SeoFields | null | undefined,
-  key: 'title' | 'description'
+  key: 'title' | 'description' | 'keywords'
 ): string | undefined {
   const value = resolveSeoValue(seo, fallbackSeo, key);
   return typeof value === 'string' ? value : undefined;
@@ -59,30 +59,34 @@ type MetadataInput = {
 
 export function buildMetadata(input: MetadataInput): Metadata {
   const metadataBase = getMetadataBase();
-  const siteTitle =
-    input.siteTitle || input.fallbackTitle || DEFAULT_SITE_TITLE;
+  const brandName = input.siteTitle || input.fallbackTitle || DEFAULT_SITE_TITLE;
+
   const title =
     resolveSeoText(input.seo, input.fallbackSeo, 'title') ||
     input.title ||
-    siteTitle;
+    brandName;
+
   const description =
     resolveSeoText(input.seo, input.fallbackSeo, 'description') ||
     DEFAULT_DESCRIPTION;
+
+  const keywords = resolveSeoText(input.seo, input.fallbackSeo, 'keywords');
+
   const ogImageUrl =
     getOgImageUrl(input.seo, input.fallbackSeo) ||
-    new URL('/favicon.ico', metadataBase).toString();
+    new URL('/og-default.jpg', metadataBase).toString();
 
   const cleanPath = input.pathname.startsWith('/')
     ? input.pathname
     : `/${input.pathname}`;
 
+  const isHome = cleanPath === `/${input.lang}`;
+
   return {
     metadataBase,
-    title:
-      cleanPath === `/${input.lang}`
-        ? { default: siteTitle, template: `%s | ${siteTitle}` }
-        : title,
+    title: isHome ? { default: brandName, template: `%s | ${brandName}` } : title,
     description,
+    keywords,
     alternates: {
       canonical: cleanPath,
       languages: {
@@ -93,15 +97,27 @@ export function buildMetadata(input: MetadataInput): Metadata {
     openGraph: {
       title,
       description,
-      images: ogImageUrl ? [ogImageUrl] : undefined,
+      siteName: brandName,
+      images: ogImageUrl ? [{ url: ogImageUrl, width: 1200, height: 630 }] : undefined,
       locale: input.lang === 'th' ? 'th_TH' : 'en_US',
       type: 'website',
     },
     twitter: {
-      card: ogImageUrl ? 'summary_large_image' : 'summary',
+      card: 'summary_large_image',
       title,
       description,
       images: ogImageUrl ? [ogImageUrl] : undefined,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
   };
 }
