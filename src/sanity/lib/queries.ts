@@ -14,7 +14,7 @@ import {
 } from './queries/sections';
 
 export const settingsQuery = groq`*[_type == "settings"][0] {
-    "favicon": favicon.asset->url,
+    "favicon": favicon,
     "siteTitle": ${LOCALIZED('siteTitle')},
     ${SEO_PROJECTION},
     "productionNav": productionNav[]{
@@ -36,7 +36,7 @@ export const settingsQuery = groq`*[_type == "settings"][0] {
     }
   }`;
 
-export const allPageSlugsQuery = groq`*[_type == "page" && defined(slug.current)]{
+export const allPageSlugsQuery = groq`*[_type in ["page", "productionPages", "weddingPages"] && defined(slug.current)]{
     "slug": slug.current,
     siteMode
   }`;
@@ -47,17 +47,27 @@ export const allProjectSlugsQuery = groq`*[_type == "project" && defined(slug.cu
   }`;
 
 export const firstPageSlugByModeQuery = groq`
-  *[_type == "page" && siteMode in ["both", $mode]] | order(_createdAt asc)[0]{
+  *[
+    (_type == "page" && siteMode in ["both", $mode]) ||
+    (_type == "productionPages" && $mode == "production") ||
+    (_type == "weddingPages" && $mode == "wedding")
+  ] | order(_createdAt asc)[0]{
     "slug": slug.current
   }
 `;
 
 export const modeHomeSlugsQuery = groq`
   {
-    "production": *[_type == "page" && siteMode in ["both", "production"]] | order(_createdAt asc)[0]{
+    "production": *[
+      (_type == "page" && siteMode in ["both", "production"]) ||
+      (_type == "productionPages")
+    ] | order(_createdAt asc)[0]{
       "slug": slug.current
     },
-    "wedding": *[_type == "page" && siteMode in ["both", "wedding"]] | order(_createdAt asc)[0]{
+    "wedding": *[
+      (_type == "page" && siteMode in ["both", "wedding"]) ||
+      (_type == "weddingPages")
+    ] | order(_createdAt asc)[0]{
       "slug": slug.current
     }
   }
@@ -93,7 +103,13 @@ export const modeHomeSlugsQuery = groq`
 // `;
 
 export const pageBySlugQuery = groq`
-  *[_type in ["productionPages", "weddingPages"] && slug.current == $slug && siteMode == $mode][0] {
+  *[
+    (
+      (_type == "page" && siteMode in ["both", $mode]) ||
+      (_type == "productionPages" && $mode == "production") ||
+      (_type == "weddingPages" && $mode == "wedding")
+    ) && slug.current == $slug
+  ][0] {
     "title": ${LOCALIZED('page')},
     "slug": slug.current,
     "seoTitle": ${LOCALIZED('seoTitle')},
@@ -101,7 +117,9 @@ export const pageBySlugQuery = groq`
     siteMode,
     "contentBlocks": select(
       _type == "productionPages" => commercialSections,
-      _type == "weddingPages" => weddingSections
+      _type == "weddingPages" => weddingSections,
+      _type == "page" && $mode == "production" => contentBlocks,
+      _type == "page" && $mode == "wedding" => contentBlocksWedding
     )[]{
       _key,
       _type,

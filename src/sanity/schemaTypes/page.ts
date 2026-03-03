@@ -45,20 +45,24 @@ export const pageType = defineType({
       options: {
         source: 'page',
         isUnique: async (slug, context) => {
-          const { document, getClient } = context;
+          const document = context?.document;
+          const getClient = context?.getClient;
 
           if (!document || !getClient) {
             return true;
           }
 
           // During early draft initialization, Studio can call isUnique before revision is ready.
-          if (!document._id || !document._rev) {
+          const id = document?._id;
+          const rev = document?._rev;
+
+          if (!id || !rev) {
             return true;
           }
 
           const client = getClient({ apiVersion: '2023-01-01' });
-          const id = document?._id?.replace(/^drafts\./, '');
-          const mode = document?.siteMode || 'production';
+          const cleanId = id.replace(/^drafts\./, '');
+          const mode = (document as any)?.siteMode || 'production';
           const slugCandidate = slug as
             | string
             | { current?: string }
@@ -75,8 +79,8 @@ export const pageType = defineType({
           }
 
           const params = {
-            draft: id ? `drafts.${id}` : '',
-            published: id || '',
+            draft: `drafts.${cleanId}`,
+            published: cleanId,
             slug: slugValue,
             mode,
           };
