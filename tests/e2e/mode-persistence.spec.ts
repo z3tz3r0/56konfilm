@@ -3,7 +3,10 @@ import { expect, test } from '../support/fixtures';
 
 test.describe('Mode Persistence & Switcher', () => {
   // Robust Mobile Interaction Helper: Target-First Approach
-  const ensureMenuOpenAndClick = async (page: Page, text: 'Wedding' | 'Production') => {
+  const ensureMenuOpenAndClick = async (
+    page: Page,
+    text: 'Wedding' | 'Production'
+  ) => {
     const viewportSize = page.viewportSize();
     const isMobile = viewportSize && viewportSize.width < 768;
     const getModeButton = () =>
@@ -23,43 +26,52 @@ test.describe('Mode Persistence & Switcher', () => {
       await expect(menuBtn).toBeEnabled();
       await menuBtn.click();
     } else {
-       // Desktop
-       const menuBtn = getModeButton();
-       await expect(menuBtn).toBeVisible();
-       await expect(menuBtn).toBeEnabled();
-       await menuBtn.click();
+      // Desktop
+      const menuBtn = getModeButton();
+      await expect(menuBtn).toBeVisible();
+      await expect(menuBtn).toBeEnabled();
+      await menuBtn.click();
     }
 
     const expectedMode = text.toLowerCase();
-    await expect(page.locator('html')).toHaveAttribute('data-mode', expectedMode, {
-      timeout: 15000,
-    });
+    await expect(page.locator('html')).toHaveAttribute(
+      'data-mode',
+      expectedMode,
+      {
+        timeout: 15000,
+      }
+    );
   };
 
-  test('should default to production (dark) mode on first visit', async ({ page }) => {
+  test('should default to production (dark) mode on first visit', async ({
+    page,
+  }) => {
     await page.goto('/');
-    await expect(page.locator('html')).toHaveAttribute('data-mode', 'production');
+    await expect(page.locator('html')).toHaveAttribute(
+      'data-mode',
+      'production'
+    );
     await expect(page.locator('html')).toHaveClass(/dark/);
   });
 
   test('should persist wedding mode after refresh', async ({ page }) => {
     await page.goto('/');
-    
+
     await ensureMenuOpenAndClick(page, 'Wedding');
     await expect(page.locator('html')).toHaveClass(/light/);
 
     await page.reload();
 
     await expect(page.locator('html')).toHaveAttribute('data-mode', 'wedding');
-    await expect(page.locator('html')).toHaveClass(/light/); 
+    await expect(page.locator('html')).toHaveClass(/light/);
   });
-  
+
   test('should switch back to production', async ({ page }) => {
     await page.goto('/');
-    
+
     await ensureMenuOpenAndClick(page, 'Wedding');
     await expect(page.locator('html')).toHaveAttribute('data-mode', 'wedding');
-    
+
     // Add small pause to ensure any navigation/animation settles
     await page.waitForTimeout(500);
     const curtain = page.locator('[data-testid="curtain"]');

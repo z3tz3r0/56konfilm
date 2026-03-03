@@ -10,12 +10,14 @@ This guide provides instructions for setting up and working on the 56konfilm pro
 ## Setup
 
 1. **Clone the repository**:
+
    ```bash
    git clone <repository-url>
    cd 56konfilm
    ```
 
 2. **Install dependencies**:
+
    ```bash
    pnpm install
    ```
@@ -32,9 +34,11 @@ This guide provides instructions for setting up and working on the 56konfilm pro
 ### Running Locally
 
 Start the development server with Turbopack:
+
 ```bash
 pnpm dev
 ```
+
 The site will be available at `http://localhost:3000`.
 
 ### Content Management
@@ -44,12 +48,14 @@ Access the embedded Sanity Studio at `/sanity-cms`. You will need credentials (s
 ### Linting & Formatting
 
 We use ESLint and Prettier to maintain code quality.
+
 - **Check Linting**: `pnpm lint`
 - **Format Code**: `pnpm format`
 
 ## Production Build
 
 To create a production build and start the server:
+
 ```bash
 pnpm build
 pnpm start
@@ -62,5 +68,6 @@ When adding new fields to Sanity, use the helper functions in `src/sanity/schema
 ## Project Shortcuts
 
 The project includes BMAD-specific shortcuts:
+
 - `pnpm bmad:refresh`: Rebuilds the internal codex.
 - `pnpm bmad:validate`: Validates project structure against BMAD standards.

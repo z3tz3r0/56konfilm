@@ -91,17 +91,20 @@ const mockData = createPackagesSection();
 ## Required data-testid Attributes
 
 ### Packages Section
+
 - `packages-section` - Outer section container
 - `package-card` - Individual pricing tier card
 - `[data-featured="true"]` - Attribute to identify the highlighted tier
 
 ### Testimonial Section
+
 - `testimonial-section` - Outer section container
 - `testimonial-item` - Content of a single review
 - `carousel-next` - Button to move to next testimonial
 - `carousel-prev` - Button to move to previous testimonial
 
 ### Philosophy Section
+
 - `philosophy-section` - Outer section container
 - `philosophy-quote` - The main brand quote text
 
@@ -110,7 +113,9 @@ const mockData = createPackagesSection();
 ## Implementation Checklist
 
 ### Test: should render Packages Section with 3 distinct tiers
+
 **File:** `tests/e2e/wedding-homepage-packages.spec.ts`
+
 - [ ] Create `packageItem` object schema in Sanity
 - [ ] Create `packagesSection` section schema in Sanity
 - [ ] Implement `PackagesSection.tsx` component
@@ -118,27 +123,31 @@ const mockData = createPackagesSection();
 - [ ] Apply featured styling based on `featured` boolean
 - [ ] Run test: `npm run test:e2e -- wedding-homepage-packages.spec.ts`
 - [ ] ✅ Test passes (green phase)
-**Estimated Effort:** 2 hours
+      **Estimated Effort:** 2 hours
 
 ### Test: should navigate Testimonials Carousel using arrows
+
 **File:** `tests/e2e/wedding-homepage-packages.spec.ts`
+
 - [ ] Create `testimonialItem` and `testimonialSection` schema
 - [ ] Implement `TestimonialSection.tsx` using `Embla Carousel`
 - [ ] Add `data-testid="testimonial-section"`, `testimonial-item`, and `carousel-next`
 - [ ] Implement navigation logic
 - [ ] Run test: `npm run test:e2e -- wedding-homepage-packages.spec.ts`
 - [ ] ✅ Test passes (green phase)
-**Estimated Effort:** 2 hours
+      **Estimated Effort:** 2 hours
 
 ### Test: should display Philosophy Section with Serif typography
+
 **File:** `tests/e2e/wedding-homepage-packages.spec.ts`
+
 - [ ] Create `philosophySection` schema
 - [ ] Implement `PhilosophySection.tsx`
 - [ ] Ensure `font-family` is set to Serif (Cormorant Garamond)
 - [ ] Add `data-testid="philosophy-section"` and `philosophy-quote`
 - [ ] Run test: `npm run test:e2e -- wedding-homepage-packages.spec.ts`
 - [ ] ✅ Test passes (green phase)
-**Estimated Effort:** 1 hour
+      **Estimated Effort:** 1 hour
 
 ---
 
@@ -160,18 +169,21 @@ npx playwright test tests/e2e/wedding-homepage-packages.spec.ts --debug
 ## Red-Green-Refactor Workflow
 
 ### RED Phase (Complete) ✅
+
 - ✅ All tests written and failing (verified via terminal)
 - ✅ Data factories created for all new sections
 - ✅ data-testid requirements listed
 - ✅ Implementation checklist created
 
 ### GREEN Phase (DEV Team - Next Steps)
+
 1. Pick one failing test from implementation checklist.
 2. Implement minimal code to make it pass.
 3. Run test to verify green.
 4. Move to next test.
 
 ### REFACTOR Phase
+
 1. Verify all tests pass.
 2. Review for code quality (DRY, naming, performance).
 3. Ensure animations are smooth and follow "Emotional" layer vibe.
@@ -181,17 +193,20 @@ npx playwright test tests/e2e/wedding-homepage-packages.spec.ts --debug
 ## Test Execution Evidence
 
 ### Initial Test Run (RED Phase Verification)
+
 **Command:** `npx playwright test tests/e2e/wedding-homepage-packages.spec.ts`
 
 **Results:**
+
 ```
-  8) [firefox] › tests/e2e/wedding-homepage-packages.spec.ts:10:7 › Wedding Homepage Sections › should render Packages Section with 3 distinct tiers 
+  8) [firefox] › tests/e2e/wedding-homepage-packages.spec.ts:10:7 › Wedding Homepage Sections › should render Packages Section with 3 distinct tiers
     TimeoutError: locator.scrollIntoViewIfNeeded: Timeout 15000ms exceeded.
     Call log:
       - waiting for getByTestId('packages-section')
 ```
 
 **Summary:**
+
 - Total tests: 12 (3 browsers x 4 tests)
 - Passing: 0
 - Failing: 12

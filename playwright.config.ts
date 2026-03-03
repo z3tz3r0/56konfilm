@@ -25,7 +25,7 @@ export default defineConfig({
   reporter: [
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
     ['junit', { outputFile: 'play-results/junit.xml' }],
-    ['line']
+    ['line'],
   ],
   outputDir: 'play-results',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -38,7 +38,7 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    
+
     /* Action & Navigation timeouts */
     actionTimeout: 15 * 1000,
     navigationTimeout: 30 * 1000,

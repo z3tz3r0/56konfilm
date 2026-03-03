@@ -7,8 +7,16 @@ export const cardCollectionSectionType = defineType({
   title: 'Card Collection',
   type: 'object',
   fields: [
-    localizedStringField({ name: 'title', title: 'Title', description: 'หัวข้อของ Card Collection' }),
-    localizedTextField({ name: 'intro', title: 'Intro', description: 'คำอธิบายของ Card Collection' }),
+    localizedStringField({
+      name: 'title',
+      title: 'Title',
+      description: 'หัวข้อของ Card Collection',
+    }),
+    localizedTextField({
+      name: 'intro',
+      title: 'Intro',
+      description: 'คำอธิบายของ Card Collection',
+    }),
     defineField({
       name: 'columns',
       title: 'Columns (lg)',
@@ -48,7 +56,10 @@ export const cardCollectionSectionType = defineType({
     },
     prepare({ title, cards, background }) {
       const count = Array.isArray(cards) ? cards.length : 0;
-      const subtitleParts = [background && background !== 'default' ? background : null, `${count} card${count === 1 ? '' : 's'}`];
+      const subtitleParts = [
+        background && background !== 'default' ? background : null,
+        `${count} card${count === 1 ? '' : 's'}`,
+      ];
       return {
         title: title || 'Card Collection',
         subtitle: subtitleParts.filter(Boolean).join(' · '),

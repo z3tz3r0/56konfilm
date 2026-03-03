@@ -1,7 +1,10 @@
 import { expect, test } from '../support/fixtures';
 
 test.describe('Global Visual Transitions', () => {
-  test('should display curtain wipe animation when switching modes', async ({ page, setMode }) => {
+  test('should display curtain wipe animation when switching modes', async ({
+    page,
+    setMode,
+  }) => {
     // Start in production mode
     await setMode('production');
     await page.goto('/');
@@ -61,10 +64,10 @@ test.describe('Global Visual Transitions', () => {
   });
 
   test('should not show FOUC during transition', async ({ page, setMode }) => {
-     // Start in wedding mode
-     await setMode('wedding');
-     await page.goto('/');
- 
+    // Start in wedding mode
+    await setMode('wedding');
+    await page.goto('/');
+
     // Initial check for mobile menu
     const mobileMenuBtn = page.getByTestId('mobile-menu-button');
     const isMobile = await mobileMenuBtn.isVisible();
@@ -72,45 +75,49 @@ test.describe('Global Visual Transitions', () => {
       await mobileMenuBtn.click();
     }
 
-     // Click to switch to production mode
-     const productionButton = page
-       .getByTestId('mode-switcher')
-       .filter({ visible: true })
-       .getByRole('button', { name: /Production/i });
-     await productionButton.click();
- 
-     // Curtain should appear
-     const curtain = page.getByTestId('curtain');
-     await expect(curtain).toBeVisible({ timeout: 10000 });
+    // Click to switch to production mode
+    const productionButton = page
+      .getByTestId('mode-switcher')
+      .filter({ visible: true })
+      .getByRole('button', { name: /Production/i });
+    await productionButton.click();
 
-     // Validate curtain color (Production mode -> expecting black/midnight)
-     await expect(curtain).toHaveCSS('background-color', 'rgb(0, 4, 13)'); // #00040d
+    // Curtain should appear
+    const curtain = page.getByTestId('curtain');
+    await expect(curtain).toBeVisible({ timeout: 10000 });
 
-     // If mobile menu is present, curtain must cover the viewport (and therefore the menu)
-     if (isMobile) {
-       const viewport = page.viewportSize();
-       expect(viewport).toBeTruthy();
-       if (viewport) {
-         const box = await curtain.boundingBox();
-         expect(box).toBeTruthy();
-         if (box) {
-           expect(box.x).toBeLessThanOrEqual(1);
-           expect(box.y).toBeLessThanOrEqual(1);
-           await expect
-             .poll(async () => (await curtain.boundingBox())?.width ?? 0)
-             .toBeGreaterThanOrEqual(viewport.width - 1);
-           await expect
-             .poll(async () => (await curtain.boundingBox())?.height ?? 0)
-             .toBeGreaterThanOrEqual(viewport.height - 1);
-         }
-       }
-     }
+    // Validate curtain color (Production mode -> expecting black/midnight)
+    await expect(curtain).toHaveCSS('background-color', 'rgb(0, 4, 13)'); // #00040d
 
-     // Wait for transition completion, then verify final mode state
-     await expect(curtain).toBeHidden({ timeout: 15000 });
-     await expect(page.locator('html')).toHaveAttribute('data-mode', 'production', {
-       timeout: 15000,
-     });
-     await expect(page.locator('html')).toHaveClass(/dark/, { timeout: 15000 });
+    // If mobile menu is present, curtain must cover the viewport (and therefore the menu)
+    if (isMobile) {
+      const viewport = page.viewportSize();
+      expect(viewport).toBeTruthy();
+      if (viewport) {
+        const box = await curtain.boundingBox();
+        expect(box).toBeTruthy();
+        if (box) {
+          expect(box.x).toBeLessThanOrEqual(1);
+          expect(box.y).toBeLessThanOrEqual(1);
+          await expect
+            .poll(async () => (await curtain.boundingBox())?.width ?? 0)
+            .toBeGreaterThanOrEqual(viewport.width - 1);
+          await expect
+            .poll(async () => (await curtain.boundingBox())?.height ?? 0)
+            .toBeGreaterThanOrEqual(viewport.height - 1);
+        }
+      }
+    }
+
+    // Wait for transition completion, then verify final mode state
+    await expect(curtain).toBeHidden({ timeout: 15000 });
+    await expect(page.locator('html')).toHaveAttribute(
+      'data-mode',
+      'production',
+      {
+        timeout: 15000,
+      }
+    );
+    await expect(page.locator('html')).toHaveClass(/dark/, { timeout: 15000 });
   });
 });

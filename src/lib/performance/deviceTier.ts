@@ -42,20 +42,21 @@ export function getDeviceCapabilities(): DeviceCapabilities {
   const hardwareConcurrency = navigator.hardwareConcurrency || 0;
 
   // Network Information API (not supported in Safari)
-  const connection = (navigator as Navigator & { 
-    connection?: {
-      saveData?: boolean;
-      effectiveType?: string;
-    };
-  }).connection;
-  
+  const connection = (
+    navigator as Navigator & {
+      connection?: {
+        saveData?: boolean;
+        effectiveType?: string;
+      };
+    }
+  ).connection;
+
   const saveData = connection?.saveData ?? false;
   const effectiveType = connection?.effectiveType ?? null;
 
   // Reduced motion preference
-  const prefersReducedMotion = window.matchMedia?.(
-    '(prefers-reduced-motion: reduce)'
-  ).matches ?? false;
+  const prefersReducedMotion =
+    window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 
   return {
     hardwareConcurrency,
@@ -69,8 +70,11 @@ export function getDeviceCapabilities(): DeviceCapabilities {
  * Classifies device into performance tier
  * Deterministic mapping: input capabilities -> tier output
  */
-export function classifyDeviceTier(capabilities: DeviceCapabilities): DeviceTier {
-  const { hardwareConcurrency, saveData, effectiveType, prefersReducedMotion } = capabilities;
+export function classifyDeviceTier(
+  capabilities: DeviceCapabilities
+): DeviceTier {
+  const { hardwareConcurrency, saveData, effectiveType, prefersReducedMotion } =
+    capabilities;
 
   // Reduced motion always forces low tier (accessibility override)
   if (prefersReducedMotion) {
@@ -94,7 +98,11 @@ export function classifyDeviceTier(capabilities: DeviceCapabilities): DeviceTier
   }
 
   // 3G network with limited cores -> medium tier
-  if (effectiveType === '3g' && hardwareConcurrency > 0 && hardwareConcurrency <= 4) {
+  if (
+    effectiveType === '3g' &&
+    hardwareConcurrency > 0 &&
+    hardwareConcurrency <= 4
+  ) {
     return 'medium';
   }
 

@@ -52,7 +52,7 @@ so that **I feel I am in a romantic, studio environment rather than a raw produc
 
 - **Mode Logic:** We use `SiteMode` (production/wedding) which maps to `Theme` (dark/light).
 - **Styling:** Tailwind 4 `@theme` block in `globals.css` is the source of truth.
-- **Reference Assets:** 
+- **Reference Assets:**
   - `public/high-frame/R00_Portfolio_Wedding.png`
   - `_bmad_output/planning-artifacts/design-assets/wedding/common/section-navigation-desktop.png`
 

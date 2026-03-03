@@ -1,6 +1,6 @@
 import {
-    IMAGE_SIZE_WARNING_MESSAGE,
-    validateImageAssetSizeWarning,
+  IMAGE_SIZE_WARNING_MESSAGE,
+  validateImageAssetSizeWarning,
 } from '@/sanity/schemaTypes/objects/backgroundMedia';
 import { describe, expect, it, vi } from 'vitest';
 

@@ -1,6 +1,7 @@
 - section-all-service-mobile should be a scrollable horizontal list of services.
 - those section that is a grid with 2 columns that has text on the left and video/image on the right should be responsive or vice versa. the video/image should be able to adjust it's height to match the text length.
 - The word "think" should rotating text like other words like below
+
 ```ts
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 import {

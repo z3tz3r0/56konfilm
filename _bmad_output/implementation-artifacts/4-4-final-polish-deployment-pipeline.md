@@ -99,6 +99,7 @@ so that **the owner sees their changes instantly without waiting for a re-deploy
 ### Developer Context Section
 
 This is the **final polish story** of Epic 4 and the entire project. It focuses on two critical aspects:
+
 1. **Operational Efficiency:** The business owner needs instant content updates without developer intervention
 2. **Quality Assurance:** The site must achieve near-perfect Lighthouse scores to meet the "Premium" brand promise
 
@@ -107,6 +108,7 @@ The Sanity-to-Next.js revalidation pipeline is fundamental architecture. Once im
 ### Technical Requirements
 
 #### On-Demand Revalidation Architecture
+
 ```typescript
 // src/app/api/revalidate/route.ts
 import { revalidateTag } from 'next/cache';
@@ -121,7 +123,10 @@ export async function POST(req: NextRequest) {
     }>(req, process.env.SANITY_REVALIDATE_SECRET);
 
     if (!isValidSignature) {
-      return NextResponse.json({ message: 'Invalid signature' }, { status: 401 });
+      return NextResponse.json(
+        { message: 'Invalid signature' },
+        { status: 401 }
+      );
     }
 
     if (!body?._type) {
@@ -130,7 +135,7 @@ export async function POST(req: NextRequest) {
 
     // Revalidate by document type
     revalidateTag(body._type, 'max');
-    
+
     // Revalidate specific slug if available
     if (body.slug?.current) {
       revalidateTag(body.slug.current, 'max');
@@ -139,12 +144,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ revalidated: true, now: Date.now() });
   } catch (err) {
     console.error('[Revalidation Error]', err);
-    return NextResponse.json({ message: 'Error revalidating' }, { status: 500 });
+    return NextResponse.json(
+      { message: 'Error revalidating' },
+      { status: 500 }
+    );
   }
 }
 ```
 
 #### Sanity Fetch Helper with Tags
+
 ```typescript
 // src/sanity/lib/fetch.ts
 import { client } from './client';
@@ -156,11 +165,11 @@ type SanityFetchParams = {
   revalidate?: number;
 };
 
-export async function sanityFetch<T>({ 
-  query, 
-  params = {}, 
+export async function sanityFetch<T>({
+  query,
+  params = {},
   tags = [],
-  revalidate = 3600 
+  revalidate = 3600,
 }: SanityFetchParams): Promise<T> {
   return client.fetch<T>(query, params, {
     next: {
@@ -181,17 +190,18 @@ export async function sanityFetch<T>({
 
 ### Library Framework Requirements
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| `next` | `^16.1.6` | App Router, ISR, `revalidateTag` |
+| Package       | Version    | Purpose                              |
+| ------------- | ---------- | ------------------------------------ |
+| `next`        | `^16.1.6`  | App Router, ISR, `revalidateTag`     |
 | `next-sanity` | `^12.0.16` | `parseBody` for webhook verification |
-| `@lhci/cli` | `^0.14.x` | Lighthouse CI automation (devDep) |
+| `@lhci/cli`   | `^0.14.x`  | Lighthouse CI automation (devDep)    |
 
 **CRITICAL:** The project uses Next.js 16 with the `proxy.ts` pattern (not deprecated `middleware.ts`). Do not add middleware for revalidation.
 
 ### File Structure Requirements
 
 **New Files:**
+
 - `src/app/api/revalidate/route.ts` - Webhook handler
 - `src/sanity/lib/fetch.ts` - Centralized fetch helper with tags
 - `lighthouserc.js` - Lighthouse CI configuration
@@ -199,6 +209,7 @@ export async function sanityFetch<T>({
 - `tests/e2e/deployment/revalidation.spec.ts` - E2E tests
 
 **Modified Files:**
+
 - `src/sanity/lib/client.ts` - Update `useCdn` comment/logic
 - `package.json` - Add `@lhci/cli` to devDependencies
 - `.env.local` / `.env.example` - Add `SANITY_REVALIDATE_SECRET`
@@ -206,11 +217,13 @@ export async function sanityFetch<T>({
 ### Testing Requirements
 
 **E2E Tests:**
+
 - Verify `/api/revalidate` returns 401 without valid signature
 - Verify `/api/revalidate` returns 200 with valid mock signature
 - Mock webhook payload structure for testing
 
 **Lighthouse Validation:**
+
 - Run `npx lhci autorun` locally before committing
 - CI should fail if any score drops below 95
 - Edge cases: Test both language routes (`/en`, `/th`)
@@ -218,16 +231,19 @@ export async function sanityFetch<T>({
 ### Previous Story Intelligence
 
 **Story 4.3 Learnings:**
+
 - Async validation works well with Sanity's `context.getClient()` pattern
 - Fail-open with logging is the preferred error handling approach
 - E2E tests for Sanity Studio use fragile internal selectors - document them
 
 **Story 4.2 Learnings:**
+
 - Device tiering is now implemented via `useDeviceTier` hook
 - Video autoplay is gated by device capability
 - Motion components use `motion/react` (NOT `framer-motion`)
 
 **Story 4.1 Learnings:**
+
 - SEO metadata uses `generateMetadata` pattern correctly
 - Sitemap and robots.txt are already implemented (see existing files)
 - Page revalidation currently uses time-based (3600s) - this story upgrades to tag-based
@@ -235,12 +251,14 @@ export async function sanityFetch<T>({
 ### Git Intelligence Summary
 
 **Recent Commits (context for this story):**
+
 - `058e33e` - test(perf): add unit and e2e tests for device tiering and cms validation
 - `b8b3bdb` - feat(cms): add image size validation and field safeguards
 - `19c1232` - feat(ui): optimize motion and video playback based on device tier
 - `0621f0e` - feat(perf): implement device tiering detection hook
 
 **Patterns Established:**
+
 - Test files in `tests/e2e/` and `tests/unit/` directories
 - Sanity schema types in `src/sanity/schemaTypes/`
 - API routes in `src/app/api/`
@@ -248,21 +266,25 @@ export async function sanityFetch<T>({
 ### Latest Tech Information
 
 **Next.js 16 ISR & Revalidation:**
+
 - Use `revalidateTag(tag, 'max')` for tag-based invalidation with SWR (Next.js 16 requirement)
 - Use `revalidatePath(path)` for path-based invalidation
 - Both functions are imported from `next/cache`
 
 **`next-sanity` Webhook Integration:**
+
 - `parseBody()` from `next-sanity/webhook` handles signature verification
 - Requires `SANITY_REVALIDATE_SECRET` environment variable
 - Returns `{ body, isValidSignature }` tuple
 
 **Lighthouse CI Best Practices:**
+
 - Use `preset: 'lighthouse:recommended'` for balanced settings
 - Configure `upload.target: 'temporary-public-storage'` for CI
 - Set `assert.preset: 'lighthouse:no-pwa'` (PWA not required for this project)
 
 **Lighthouse Scoring (2024/2025):**
+
 - TBT (30%), LCP (25%), CLS (25%), FCP (10%), Speed Index (10%)
 - Target: All scores ≥ 95, ideally 100
 - Focus on LCP (hero image priority) and CLS (font loading)

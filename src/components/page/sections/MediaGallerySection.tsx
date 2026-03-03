@@ -32,17 +32,19 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     transition: {
       duration: 0.5,
       ease: 'easeOut',
-    }
+    },
   },
 } satisfies Variants;
 
-export default function MediaGallerySection({ block }: MediaGallerySectionProps) {
+export default function MediaGallerySection({
+  block,
+}: MediaGallerySectionProps) {
   const params = useParams();
   const lang = (params?.lang as string) || 'en';
   const alignClass = getAlignmentClass(block.heading?.align);
@@ -57,29 +59,36 @@ export default function MediaGallerySection({ block }: MediaGallerySectionProps)
   return (
     <SectionShell background={block.background} sanityType={block._type}>
       <div className="container mx-auto space-y-12">
-
-        <header className={cn('flex flex-col gap-4 text-balance', alignClass, isCentered && 'mx-auto text-center')}>
+        <header
+          className={cn(
+            'flex flex-col gap-4 text-balance',
+            alignClass,
+            isCentered && 'mx-auto text-center'
+          )}
+        >
           {block.heading?.eyebrow ? (
-            <span className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">
+            <span className="text-primary text-sm font-semibold tracking-[0.2em] uppercase">
               {block.heading.eyebrow}
             </span>
           ) : null}
           {block.heading?.heading ? (
-            <h2 className="text-3xl font-semibold md:text-4xl lg:text-5xl">{block.heading.heading}</h2>
+            <h2 className="text-3xl font-semibold md:text-4xl lg:text-5xl">
+              {block.heading.heading}
+            </h2>
           ) : null}
           {block.heading?.body ? (
-            <p className="max-w-3xl text-lg text-muted-foreground wrap-break-word font-light leading-relaxed">
+            <p className="text-muted-foreground max-w-3xl text-lg leading-relaxed font-light wrap-break-word">
               {block.heading.body}
             </p>
           ) : null}
         </header>
-        
+
         {block.items?.length ? (
           <m.div
             className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: '-100px' }}
             variants={useLiteMotion ? undefined : containerVariants}
             transition={useLiteMotion ? { duration: 0.2 } : undefined}
           >
@@ -95,8 +104,8 @@ export default function MediaGallerySection({ block }: MediaGallerySectionProps)
                     label={item.label}
                     testId="gallery-item-video"
                   >
-                    <VideoItem 
-                      src={item.videoUrl} 
+                    <VideoItem
+                      src={item.videoUrl}
                       className={
                         useLiteMotion
                           ? 'transition-none'
@@ -117,10 +126,14 @@ export default function MediaGallerySection({ block }: MediaGallerySectionProps)
                   variants={variants}
                   useLiteMotion={useLiteMotion}
                   label={item.label}
-                  testId={item.projectSlug ? 'gallery-item-project' : 'gallery-item-image'}
+                  testId={
+                    item.projectSlug
+                      ? 'gallery-item-project'
+                      : 'gallery-item-image'
+                  }
                   extra={
                     item.projectOverview ? (
-                      <p className="px-1 pb-1 text-sm text-muted-foreground/90">
+                      <p className="text-muted-foreground/90 px-1 pb-1 text-sm">
                         {item.projectOverview}
                       </p>
                     ) : undefined
@@ -154,9 +167,9 @@ export default function MediaGallerySection({ block }: MediaGallerySectionProps)
           </m.div>
         ) : null}
 
-        <CtaGroup 
-          ctas={block.cta ? [block.cta] : undefined} 
-          alignment={block.heading?.align} 
+        <CtaGroup
+          ctas={block.cta ? [block.cta] : undefined}
+          alignment={block.heading?.align}
         />
       </div>
     </SectionShell>

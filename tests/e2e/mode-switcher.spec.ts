@@ -12,7 +12,10 @@ test.describe('Global Mode Switcher', () => {
     await expect(page.locator('html')).toHaveClass(/dark/, { timeout: 10000 });
   });
 
-  test('should switch to Wedding mode and persist', async ({ page, setMode }) => {
+  test('should switch to Wedding mode and persist', async ({
+    page,
+    setMode,
+  }) => {
     // 1. Switch to wedding
     await setMode('wedding');
     await page.reload();
@@ -33,15 +36,17 @@ test.describe('Global Mode Switcher', () => {
 
     // 2. Find Mode Switcher and specifically click the "Wedding" button
     // Using hasText to target the specific button within the switcher
-    const switcher = page.getByTestId('mode-switcher').filter({ visible: true });
+    const switcher = page
+      .getByTestId('mode-switcher')
+      .filter({ visible: true });
     await expect(switcher).toBeVisible();
 
     const weddingBtn = switcher.getByRole('button', { name: 'Wedding' });
     await expect(weddingBtn).toBeEnabled();
-    
+
     // 3. Click to switch
     await weddingBtn.click();
-    
+
     // Wait for navigation and state settling (transition duration + network)
     await page.waitForLoadState('domcontentloaded');
 

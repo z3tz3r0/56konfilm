@@ -11,6 +11,7 @@ I want **to see video loops playing automatically in the gallery grids**,
 So that **I can feel the "motion" of the work without clicking play.**
 
 ### 1. Introduction
+
 The current `MediaGallerySection` only supports images. Design assets ("Commercial" mode) utilize high-energy video loops in grids to showcase production quality. We need to upgrade the Sanity schema to allow mixed media (Images + Videos) and update the frontend to render them efficiently.
 
 ## Acceptance Criteria
@@ -18,7 +19,7 @@ The current `MediaGallerySection` only supports images. Design assets ("Commerci
 1. **Given** the existing `MediaGallerySection` component
    **When** I add an item in Sanity
    **Then** I should be able to select EITHER an **Image** OR a **Video File** (MP4/WebM).
-   (*Constraint: Admin must explicitly choose the type per item*).
+   (_Constraint: Admin must explicitly choose the type per item_).
 
 2. **Given** a gallery item is a **Video**
    **When** it renders on the frontend
@@ -45,7 +46,7 @@ The current `MediaGallerySection` only supports images. Design assets ("Commerci
 ### 2. Architecture Guidelines
 
 - **Media Strategy:** Use **Native HTML5 Video**. Do NOT install external video players (like `react-player` or `mux-player`) for these grid loops.
-  - *Reasoning:* These are decorative/ambient loops, not content consumption. Performance is paramount.
+  - _Reasoning:_ These are decorative/ambient loops, not content consumption. Performance is paramount.
 - **Performance:**
   - Use `IntersectionObserver` or `framer-motion`'s `useInView` to manage play/pause state.
   - **Requirement:** Videos outside the viewport MUST be paused to save battery/CPU.
@@ -68,28 +69,30 @@ The current `MediaGallerySection` only supports images. Design assets ("Commerci
 ## Implementation Tips
 
 - **Sanity Schema:** You likely need to change the `items` array to be an array of objects where each object has a type selector (or utilizes `oneOf` if using strict references, though a conditional field inside a generic object is often easier for this simple use case).
-  - *Better approach:* Add a `mediaType` select field (`image` | `video`) and conditionally show `image` or `videoFile` fields.
+  - _Better approach:_ Add a `mediaType` select field (`image` | `video`) and conditionally show `image` or `videoFile` fields.
 - **Performance:** Create a `<LazyVideo />` component that encapsulates the `ref` and logic.
 
 ## Tasks/Subtasks
 
 - [x] **1. Update Sanity Schema & Queries**
-    - [x] Modify `src/sanity/schemaTypes/sections/mediaGallerySection.ts` to include `mediaType` and `video` fields.
-    - [x] Update `src/sanity/lib/queries/sections.ts` to include video file URL in projection.
-    - [x] Update `src/types/sanity.ts` with new interfaces.
+  - [x] Modify `src/sanity/schemaTypes/sections/mediaGallerySection.ts` to include `mediaType` and `video` fields.
+  - [x] Update `src/sanity/lib/queries/sections.ts` to include video file URL in projection.
+  - [x] Update `src/types/sanity.ts` with new interfaces.
 - [x] **2. Frontend Implementation**
-    - [x] Create `VideoItem` component with `IntersectionObserver` for auto-play/pause.
-    - [x] Update `MediaGallerySection` to handle hybrid content (Image vs Video).
+  - [x] Create `VideoItem` component with `IntersectionObserver` for auto-play/pause.
+  - [x] Update `MediaGallerySection` to handle hybrid content (Image vs Video).
 - [x] **3. Testing**
-    - [x] Logic/Component tests for VideoItem.
-    - [x] E2E tests for verifying video presence and attributes.
+  - [x] Logic/Component tests for VideoItem.
+  - [x] E2E tests for verifying video presence and attributes.
 
 ## Dev Agent Record
 
 ### Debug Log
+
 <!-- Log important debugging steps and findings here -->
 
 ### Completion Notes
+
 - Implemented `VideoItem` component using `motion/react` `useInView` to manage playback performance.
 - Updated Sanity schema (`galleryItem`) to support `mediaType` selection (Image vs Video).
 - Updated GROQ queries to fetch `videoUrl`.
@@ -97,6 +100,7 @@ The current `MediaGallerySection` only supports images. Design assets ("Commerci
 - Ensured strict grid layout preservation by forcing videos to `object-cover` and 4/3 aspect ratio.
 
 ## File List
+
 - src/sanity/schemaTypes/objects/galleryItem.ts
 - src/sanity/lib/queries/sections.ts
 - src/types/sanity.ts
@@ -106,8 +110,11 @@ The current `MediaGallerySection` only supports images. Design assets ("Commerci
 - tests/e2e/media-gallery-hybrid.spec.ts
 
 ## Change Log
+
 <!-- Track changes to the story file itself -->
+
 - 2026-02-02: Populated missing Tasks/Subtasks section.
 
 ## Status
+
 done

@@ -39,17 +39,19 @@ export const validateImageAssetSizeWarning = async (
 
   try {
     const client = context.getClient({ apiVersion: '2023-11-20' });
-    const asset = (await client.fetch(
-      '*[_id == $ref][0]{size}',
-      { ref: assetRef }
-    )) as { size?: number };
+    const asset = (await client.fetch('*[_id == $ref][0]{size}', {
+      ref: assetRef,
+    })) as { size?: number };
 
     if (typeof asset?.size === 'number' && asset.size > MAX_IMAGE_SIZE_BYTES) {
       return IMAGE_SIZE_WARNING_MESSAGE;
     }
   } catch (error) {
     // Fail-open but log warning for debugging
-    console.warn('[Sanity Validation] Image size check failed, skipping:', error);
+    console.warn(
+      '[Sanity Validation] Image size check failed, skipping:',
+      error
+    );
     return true;
   }
 
@@ -64,7 +66,8 @@ export const backgroundMediaType = defineType({
     defineField({
       name: 'mediaAsset',
       title: 'Media Asset',
-      description: 'เลือกรูปภาพหรือวิดีโอสำหรับใช้เป็นพื้นหลัง (สำหรับวิดีโอ: เพิ่มรูปภาพ poster เพื่อ blur-up effect)',
+      description:
+        'เลือกรูปภาพหรือวิดีโอสำหรับใช้เป็นพื้นหลัง (สำหรับวิดีโอ: เพิ่มรูปภาพ poster เพื่อ blur-up effect)',
       type: 'array',
       of: [
         defineField({
@@ -89,22 +92,25 @@ export const backgroundMediaType = defineType({
           },
         }),
       ],
-      validation: (Rule) => Rule.max(2).custom((items) => {
-        if (!items || items.length === 0) return true;
+      validation: (Rule) =>
+        Rule.max(2).custom((items) => {
+          if (!items || items.length === 0) return true;
 
-        const typedItems = items as BackgroundMediaItem[];
-        const images = typedItems.filter((item) => item?._type === 'image');
-        const videos = typedItems.filter((item) => item?._type === 'backgroundVideo');
+          const typedItems = items as BackgroundMediaItem[];
+          const images = typedItems.filter((item) => item?._type === 'image');
+          const videos = typedItems.filter(
+            (item) => item?._type === 'backgroundVideo'
+          );
 
-        if (videos.length > 1) return 'Only 1 video allowed';
-        if (images.length > 1) return 'Only 1 poster image allowed';
-        
-        if (videos.length > 0 && images.length === 0) {
-          return 'Video MUST be paired with a poster image for blur-up effect';
-        }
+          if (videos.length > 1) return 'Only 1 video allowed';
+          if (images.length > 1) return 'Only 1 poster image allowed';
 
-        return true;
-      }),
+          if (videos.length > 0 && images.length === 0) {
+            return 'Video MUST be paired with a poster image for blur-up effect';
+          }
+
+          return true;
+        }),
     }),
   ],
 });

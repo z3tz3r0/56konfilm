@@ -22,4 +22,5 @@ Welcome to the technical documentation for the 56konfilm platform. This guide is
 - `pnpm build`: Generate the production bundle.
 
 ---
-*Last updated: 2026-01-26*
+
+_Last updated: 2026-01-26_

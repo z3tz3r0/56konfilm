@@ -26,7 +26,9 @@ export default function CtaGroup({
   return (
     <div
       className={cn(
-        fullWidth ? 'flex w-full flex-col items-stretch gap-3' : 'flex flex-wrap gap-3',
+        fullWidth
+          ? 'flex w-full flex-col items-stretch gap-3'
+          : 'flex flex-wrap gap-3',
         justifyClass,
         className
       )}

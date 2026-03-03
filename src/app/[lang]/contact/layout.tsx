@@ -11,8 +11,14 @@ interface ContactLayoutProps {
   params: Promise<{ lang: string }>;
 }
 
-export default async function ContactLayout({ children, params }: ContactLayoutProps) {
-  const [{ lang: rawLang }, { mode }] = await Promise.all([params, resolvePreferences()]);
+export default async function ContactLayout({
+  children,
+  params,
+}: ContactLayoutProps) {
+  const [{ lang: rawLang }, { mode }] = await Promise.all([
+    params,
+    resolvePreferences(),
+  ]);
   const lang = rawLang as 'en' | 'th';
 
   const [settings, homeSlugs] = await Promise.all([
@@ -21,7 +27,10 @@ export default async function ContactLayout({ children, params }: ContactLayoutP
       params: { lang },
       tags: ['settings'],
     }),
-    sanityFetch<{ production?: { slug?: string | null }; wedding?: { slug?: string | null } }>({
+    sanityFetch<{
+      production?: { slug?: string | null };
+      wedding?: { slug?: string | null };
+    }>({
       query: modeHomeSlugsQuery,
       tags: ['page'],
     }),
@@ -34,7 +43,12 @@ export default async function ContactLayout({ children, params }: ContactLayoutP
 
   return (
     <div className="min-h-screen">
-      <Navbar mode={mode} settings={settings} homeSlugs={modeSlugMap} lang={lang} />
+      <Navbar
+        mode={mode}
+        settings={settings}
+        homeSlugs={modeSlugMap}
+        lang={lang}
+      />
       <main>{children}</main>
       <Footer settings={settings} />
     </div>

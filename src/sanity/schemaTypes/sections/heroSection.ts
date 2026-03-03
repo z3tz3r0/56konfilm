@@ -8,8 +8,16 @@ export const heroSectionType = defineType({
   title: 'Hero Section',
   type: 'object',
   fields: [
-    localizedStringField({ name: 'title', title: 'Title', description: 'หัวข้อของ Hero Section' }),
-    localizedStringField({ name: 'tagline', title: 'Tagline', description: 'คำโปรยของ Hero Section' }),
+    localizedStringField({
+      name: 'title',
+      title: 'Title',
+      description: 'หัวข้อของ Hero Section',
+    }),
+    localizedStringField({
+      name: 'tagline',
+      title: 'Tagline',
+      description: 'คำโปรยของ Hero Section',
+    }),
     localizedStringField({
       name: 'parallaxText',
       title: 'Parallax Text',
@@ -18,12 +26,19 @@ export const heroSectionType = defineType({
     defineField({
       name: 'backgroundMedia',
       title: 'Background Media',
-      description: 'เลือกรูปภาพหรือวิดีโอพื้นหลัง (รองรับ 1-2 รายการ: วิดีโอ + poster สำหรับ blur-up)',
+      description:
+        'เลือกรูปภาพหรือวิดีโอพื้นหลัง (รองรับ 1-2 รายการ: วิดีโอ + poster สำหรับ blur-up)',
       type: backgroundMediaType.name,
     }),
-    defineField({ name: 'ctas', title: 'CTAs', description: 'ปุ่ม CTA', type: 'array', of: [{ type: ctaType.name }] }),
+    defineField({
+      name: 'ctas',
+      title: 'CTAs',
+      description: 'ปุ่ม CTA',
+      type: 'array',
+      of: [{ type: ctaType.name }],
+    }),
   ],
-  
+
   preview: {
     select: {
       title: 'title.0.value',

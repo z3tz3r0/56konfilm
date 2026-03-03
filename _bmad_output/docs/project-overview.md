@@ -12,14 +12,14 @@
 
 ## Tech Stack Summary
 
-| Layer | Technology |
-|---|---|
+| Layer     | Technology              |
+| --------- | ----------------------- |
 | Framework | Next.js 16 (App Router) |
-| Language | TypeScript |
-| CMS | Sanity |
-| CSS | Tailwind 4 |
-| UI/UX | Radix UI, Framer Motion |
-| Auth | Custom JWT + bcrypt |
+| Language  | TypeScript              |
+| CMS       | Sanity                  |
+| CSS       | Tailwind 4              |
+| UI/UX     | Radix UI, Framer Motion |
+| Auth      | Custom JWT + bcrypt     |
 
 ## Directory Guide
 

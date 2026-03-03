@@ -49,10 +49,12 @@ The contact form adapts its fields and header based on the current Site Mode (Co
 **File:** `tests/support/factories/contact.factory.ts`
 
 **Exports:**
+
 - `createContactSubmission(overrides?)`
 - `createContactSubmissions(count)`
 
 **Example:**
+
 ```typescript
 const data = createContactSubmission({ type: 'wedding' });
 ```
@@ -87,6 +89,7 @@ const data = createContactSubmission({ type: 'wedding' });
 **File:** `tests/e2e/contact-form-routing.spec.ts`
 
 **Tasks:**
+
 - [ ] Create `src/app/[lang]/contact/page.tsx`
 - [ ] Create `src/components/features/contact/ContactForm.tsx`
 - [ ] Implement Zod schema for validation
@@ -97,6 +100,7 @@ const data = createContactSubmission({ type: 'wedding' });
 ### Test: Wedding Mode & Conditional Fields
 
 **Tasks:**
+
 - [ ] Implement `useMode` hook integration
 - [ ] Add conditional rendering for "Wedding Date" and "Venue"
 - [ ] Update header text based on mode
@@ -106,6 +110,7 @@ const data = createContactSubmission({ type: 'wedding' });
 ### Test: Transitions
 
 **Tasks:**
+
 - [ ] Wrap conditional fields in `AnimatePresence` + `motion.div`
 - [ ] Ensure `layout` prop is used for smooth resizing
 - [ ] **Mobile Support:** ModeSwitcher interaction must handle mobile menu state (Target-First)

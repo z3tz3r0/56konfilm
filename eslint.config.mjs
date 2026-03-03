@@ -3,16 +3,18 @@ import nextTypescript from 'eslint-config-next/typescript';
 import prettier from 'eslint-config-prettier';
 
 const config = [
-  { ignores: [
-    '.next/**',
-    'out/**',
-    'build/**',
-    'dist/**',
-    'play-results/**',
-    'playwright-report/**',
-    'test-results/**',
-    'next-env.d.ts',
-  ]},
+  {
+    ignores: [
+      '.next/**',
+      'out/**',
+      'build/**',
+      'dist/**',
+      'play-results/**',
+      'playwright-report/**',
+      'test-results/**',
+      'next-env.d.ts',
+    ],
+  },
   ...nextVitals,
   ...nextTypescript,
   {

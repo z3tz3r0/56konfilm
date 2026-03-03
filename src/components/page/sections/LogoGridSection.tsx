@@ -13,7 +13,9 @@ export default function LogoGridSection({ block }: LogoGridSectionProps) {
     <SectionShell background={block.background}>
       <div className="container mx-auto space-y-10">
         {block.title ? (
-          <h2 className="text-center text-2xl font-medium text-muted-foreground">{block.title}</h2>
+          <h2 className="text-muted-foreground text-center text-2xl font-medium">
+            {block.title}
+          </h2>
         ) : null}
         {block.logos?.length ? (
           <div className="grid items-stretch gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">

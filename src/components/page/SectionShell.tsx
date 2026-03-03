@@ -41,9 +41,9 @@ export default function SectionShell({
 }: SectionShellProps) {
   const backgroundClass =
     backgroundVariants[background ?? 'default'] ?? backgroundVariants.default;
-  const paddingClass = disablePadding ? '' : 'px-4 py-16 md:p-24';
+  const paddingClass = disablePadding ? '' : 'px-14 py-16 md:px-24';
   const videoAsset = media?.find((item) => item.mimeType?.startsWith('video'));
-  const imageAsset = media?.find((item) => item.image);
+  const imageAsset = media?.find((item) => item.image || item.url);
 
   const posterUrl = imageAsset?.image
     ? urlFor(imageAsset.image)
@@ -52,14 +52,14 @@ export default function SectionShell({
         .quality(75)
         .fit('clip')
         .url()
-    : undefined;
+    : (imageAsset?.url ?? undefined);
 
   const shouldRenderMedia = Boolean(videoAsset?.url || posterUrl);
 
   return (
     <section
       className={cn(
-        'relative isolate overflow-hidden w-full',
+        'relative isolate w-full overflow-hidden',
         paddingClass,
         backgroundClass,
         className
@@ -91,8 +91,8 @@ export default function SectionShell({
             />
           ) : null}
           {overlayClassName || overlayStyle ? (
-            <div 
-              className={cn('absolute inset-0', overlayClassName)} 
+            <div
+              className={cn('absolute inset-0', overlayClassName)}
               style={overlayStyle}
             />
           ) : null}

@@ -19,13 +19,13 @@ so that **I don't have to manually create 20 separate items one by one.**
 
 2. **Given** I upload a **JPEG/PNG** image
    **Then** the system creates a `galleryItem` with:
-     - `mediaType` = "image"
-     - `media.image` = [Reference to uploaded asset]
+   - `mediaType` = "image"
+   - `media.image` = [Reference to uploaded asset]
 
 3. **Given** I upload a **MP4/WebM** video
    **Then** the system creates a `galleryItem` with:
-     - `mediaType` = "video"
-     - `videoFile` = [Reference to uploaded asset]
+   - `mediaType` = "video"
+   - `videoFile` = [Reference to uploaded asset]
 
 4. **Given** the upload is in progress
    **Then** I should see visual feedback (e.g., toasts or a progress indicator) so I know it's working.
@@ -59,6 +59,7 @@ so that **I don't have to manually create 20 separate items one by one.**
 ## Dev Notes
 
 ### Architecture Guidelines
+
 - **Sanity Custom Inputs:**
   - DO NOT modify `node_modules`.
   - Use `import { MemberField, ArrayOfObjectsInputProps } from 'sanity'` (or relevant exports).
@@ -68,23 +69,28 @@ so that **I don't have to manually create 20 separate items one by one.**
   - **Patches:** functional updates `items.map(item => insert(item, 'after', [-1]))` might be needed to batch them or insert sequentially.
 
 ### Project Structure Notes
+
 - **Component Location:** `src/sanity/components/inputs/` is the correct place for Studio components.
 - **Type Safety:** Ensure strict typing for `galleryItem` construction to avoid schema errors.
 
 ### References
+
 - [Sanity Asset Upload API](https://www.sanity.io/docs/http-api-assets)
 - [Sanity Custom Inputs](https://www.sanity.io/docs/custom-input-widgets)
 
 ## Dev Agent Record
 
 ### Agent Model Used
+
 Gemini 2.0 Flash
 
 ### Debug Log References
+
 - Check browser console for upload errors (CORS or size limits).
 - Sanity Studio runs on port 3333 or inside Next.js at `/sanity-cms`.
 
 ### Completion Notes List
+
 - Implemented `MultiUploadArrayInput` using `@sanity/ui`.
 - Integrated drag-and-drop filtering for Images/Videos.
 - Registered component in `mediaGallerySection`.
@@ -94,9 +100,11 @@ Gemini 2.0 Flash
 - Added/updated unit tests for upload success and invalid file warning.
 
 ### File List
+
 - src/sanity/schemaTypes/sections/mediaGallerySection.ts
 - src/sanity/components/inputs/MultiUploadArrayInput.tsx
 - src/sanity/components/inputs/MultiUploadArrayInput.test.tsx
 
 ### Change Log
+
 - 2026-02-02: Code review fixes applied (parallel uploads, paste support, invalid file warnings, tests updated).

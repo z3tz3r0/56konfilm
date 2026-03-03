@@ -86,9 +86,11 @@ None.
 ## Required data-testid Attributes
 
 ### Mode Switcher Component
+
 - `mode-switcher` - Container (existing)
 
 ### Global Transition Component (New)
+
 - `curtain-wipe` - The full-screen overlay element that animates in/out.
 
 ---

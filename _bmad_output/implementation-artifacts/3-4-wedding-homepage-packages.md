@@ -42,7 +42,6 @@ so that **I can quickly decide if this studio fits my budget and vibe.**
 - [x] **Create `packagesSectionType.ts`** (`src/sanity/schemaTypes/sections/`)
   - Fields: `heading` (object: eyebrow, heading, body), `packages` (array of `packageItem`), `background` (string)
   - [x] Define preview to show section heading
-  
 - [x] **Register in schema index** (`src/sanity/schemaTypes/index.ts`)
   - Import and add `packagesSectionType` and `packageItemType`
 
@@ -70,7 +69,7 @@ so that **I can quickly decide if this studio fits my budget and vibe.**
 
 - [x] **Create query fragments** (`src/sanity/lib/queries/sections.ts`)
   - [x] Add `PACKAGES_SECTION` projection
-  - [x] Add `TESTIMONIAL_SECTION` projection  
+  - [x] Add `TESTIMONIAL_SECTION` projection
   - [x] Add `PHILOSOPHY_SECTION` projection
 
 - [x] **Update page queries** (`src/sanity/lib/queries.ts`)
@@ -147,30 +146,32 @@ so that **I can quickly decide if this studio fits my budget and vibe.**
 
 ### Technical Stack & Libraries
 
-| Library | Version | Usage |
-|---------|---------|-------|
-| Embla Carousel | via shadcn/ui | Testimonial carousel |
-| motion/react | latest | Section entrance animations |
-| Tailwind CSS v4 | 4.x | Styling with CSS variables |
-| Radix UI | via shadcn | Accessible primitives |
+| Library         | Version       | Usage                       |
+| --------------- | ------------- | --------------------------- |
+| Embla Carousel  | via shadcn/ui | Testimonial carousel        |
+| motion/react    | latest        | Section entrance animations |
+| Tailwind CSS v4 | 4.x           | Styling with CSS variables  |
+| Radix UI        | via shadcn    | Accessible primitives       |
 
 ### Design Asset References
 
-| Section | Desktop Asset | Mobile Asset |
-|---------|--------------|--------------|
-| Packages | `wedding/landing-page/section-packages-desktop.png` | `wedding/landing-page/section-package-mobile.png` |
+| Section     | Desktop Asset                                          | Mobile Asset                                          |
+| ----------- | ------------------------------------------------------ | ----------------------------------------------------- |
+| Packages    | `wedding/landing-page/section-packages-desktop.png`    | `wedding/landing-page/section-package-mobile.png`     |
 | Testimonial | `wedding/landing-page/section-testimonial-desktop.png` | `wedding/landing-page/section-testimonial-mobile.png` |
-| Philosophy | `wedding/landing-page/section-philosophy-desktop.png` | N/A (same on mobile) |
+| Philosophy  | `wedding/landing-page/section-philosophy-desktop.png`  | N/A (same on mobile)                                  |
 
 ### Design Specifications from Assets
 
 **Packages Section:**
+
 - 3 pricing tiers: Cherish Starter (2,000 THB), Forever Memories (5,000 THB), Grand Symphony (9,000 THB)
 - Featured tier has brown/beige background, others white
 - Each package: Title (serif), Price (large number + currency), Feature list (5 items), CTA button
 - CTA: "Start Now" button with outlined style
 
 **Testimonial Section:**
+
 - Heading: "STORIES FROM THOSE WHO CHOSE US" (all caps, spacing)
 - Quote card: cream/beige background, large decorative quote marks
 - Quote text: serif font, multiple lines
@@ -178,6 +179,7 @@ so that **I can quickly decide if this studio fits my budget and vibe.**
 - Navigation: Brown circular buttons with arrows, dot indicators
 
 **Philosophy Section:**
+
 - Single centered quote in elegant serif
 - Example: "We take our craft to heart as it's truly valuable in life"
 - Minimal styling, focus on typography

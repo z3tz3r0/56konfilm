@@ -51,7 +51,7 @@ export default function TwoColumnSection({ block }: TwoColumnSectionProps) {
         </div>
         {block.media?.image ? (
           <div className={cn('order-2 min-w-0', mediaColumnOrder)}>
-            <div className="bg-muted relative aspect-square overflow-hidden rounded-2xl md:aspect-auto md:h-full">
+            <div className="bg-muted relative aspect-square min-h-[272px] overflow-hidden rounded-2xl md:aspect-auto md:h-full">
               <Image
                 src={urlFor(block.media.image).quality(80).fit('clip').url()}
                 alt={block.media.alt ?? ''}

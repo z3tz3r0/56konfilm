@@ -1,7 +1,6 @@
 import { expect, test } from '../support/fixtures';
 
 test.describe('Wedding Mode Skinning', () => {
-  
   test.beforeEach(async () => {
     // page.on('console', msg => {
     //   const type = msg.type();
@@ -12,7 +11,10 @@ test.describe('Wedding Mode Skinning', () => {
     // });
   });
 
-  test('should apply Wedding theme variables when mode is active', async ({ page, setMode }) => {
+  test('should apply Wedding theme variables when mode is active', async ({
+    page,
+    setMode,
+  }) => {
     // GIVEN: User is in Wedding Mode
     await setMode('wedding');
     await page.goto('/');
@@ -28,7 +30,10 @@ test.describe('Wedding Mode Skinning', () => {
     await expect(body).toHaveCSS('color', 'rgb(91, 67, 57)'); // #5b4339
   });
 
-  test('should switch typography to Cormorant Garamond in Wedding Mode', async ({ page, setMode }) => {
+  test('should switch typography to Cormorant Garamond in Wedding Mode', async ({
+    page,
+    setMode,
+  }) => {
     // GIVEN: User is in Wedding Mode
     await setMode('wedding');
     await page.goto('/');
@@ -40,7 +45,10 @@ test.describe('Wedding Mode Skinning', () => {
     await expect(h1).toHaveCSS('font-family', /Cormorant Garamond/);
   });
 
-  test('should persist wedding skin across navigation', async ({ page, setMode }) => {
+  test('should persist wedding skin across navigation', async ({
+    page,
+    setMode,
+  }) => {
     // GIVEN: User is in Wedding Mode on Home
     await setMode('wedding');
     await page.goto('/');
@@ -48,16 +56,22 @@ test.describe('Wedding Mode Skinning', () => {
 
     // WHEN: User navigates to another page (e.g., Contact)
     // We navigate directly to test persistence logic, bypassing UI interaction flakiness
-    await page.goto('/en/contact'); 
+    await page.goto('/en/contact');
 
     // THEN: The mode should still be Wedding
     await expect(page.locator('html')).toHaveAttribute('data-mode', 'wedding');
-    
+
     // AND: Skinning variables should still apply
-    await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(250, 247, 242)');
+    await expect(page.locator('body')).toHaveCSS(
+      'background-color',
+      'rgb(250, 247, 242)'
+    );
   });
 
-  test('should revert to Production skin when toggled back', async ({ page, setMode }) => {
+  test('should revert to Production skin when toggled back', async ({
+    page,
+    setMode,
+  }) => {
     // GIVEN: User starts in Wedding Mode
     await setMode('wedding');
     await page.goto('/');
@@ -87,11 +101,17 @@ test.describe('Wedding Mode Skinning', () => {
     await expect(curtain).toBeHidden({ timeout: 10000 }); // Give time for animation + nav
 
     // THEN: The mode should be Production
-    await expect(page.locator('html')).toHaveAttribute('data-mode', 'production');
+    await expect(page.locator('html')).toHaveAttribute(
+      'data-mode',
+      'production'
+    );
 
     // AND: Background should be Midnight Black (#00040d: rgb(0, 4, 13))
-    await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(0, 4, 13)');
-    
+    await expect(page.locator('body')).toHaveCSS(
+      'background-color',
+      'rgb(0, 4, 13)'
+    );
+
     // AND: Font should be Sora
     const h1 = page.locator('h1').first();
     await expect(h1).toHaveCSS('font-family', /Sora/);

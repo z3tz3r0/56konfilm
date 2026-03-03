@@ -12,6 +12,7 @@ This document catalogs the React components used in the 56konfilm frontend.
 ## Sections
 
 These components correspond directly to Sanity schema types:
+
 - **HeroSection**: Cinematic hero with text overlay.
 - **TwoColumnSection**: Flexible 50/50 layout for narrative content.
 - **CardCollectionSection**: Multi-card layout for services or highlights.

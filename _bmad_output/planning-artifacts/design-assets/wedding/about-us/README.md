@@ -1,4 +1,5 @@
-## behind the scene section 
+## behind the scene section
+
 - should be a grid of videos and images.
 - it should be responsive where on desktop it should show 3 columns and on mobile it should show 1 column.
 - it should be able to handle both videos and images.

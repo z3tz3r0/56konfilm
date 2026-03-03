@@ -10,7 +10,10 @@ test.describe('Performance & Motion Tuning (Device Tiering)', () => {
 
     await page.goto('/en/work/atdd-magazine-test');
 
-    await expect(page.locator('html')).toHaveAttribute('data-device-tier', 'low');
+    await expect(page.locator('html')).toHaveAttribute(
+      'data-device-tier',
+      'low'
+    );
   });
 
   test('GIVEN high-end conditions WHEN page loads THEN app marks high tier', async ({
@@ -22,7 +25,10 @@ test.describe('Performance & Motion Tuning (Device Tiering)', () => {
 
     await page.goto('/en/work/atdd-magazine-test');
 
-    await expect(page.locator('html')).toHaveAttribute('data-device-tier', 'high');
+    await expect(page.locator('html')).toHaveAttribute(
+      'data-device-tier',
+      'high'
+    );
   });
 
   test('GIVEN low-power conditions WHEN project media renders THEN video autoplay is disabled', async ({
@@ -34,7 +40,10 @@ test.describe('Performance & Motion Tuning (Device Tiering)', () => {
 
     await page.goto('/en/work/atdd-magazine-test');
 
-    const video = page.getByTestId('gallery-item-video').locator('video').first();
+    const video = page
+      .getByTestId('gallery-item-video')
+      .locator('video')
+      .first();
     await expect(video).not.toHaveAttribute('autoplay', '');
   });
 });

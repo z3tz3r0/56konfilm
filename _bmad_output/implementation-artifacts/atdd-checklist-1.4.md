@@ -138,5 +138,6 @@ npx playwright test tests/e2e/bilingual-seo.spec.ts --headed
 **Failing Tests Created**: 4 E2E tests
 
 **Next Steps for DEV Team**:
+
 1. Run failing tests: `npx playwright test tests/e2e/bilingual-seo.spec.ts`
 2. Follow Implementation Checklist.

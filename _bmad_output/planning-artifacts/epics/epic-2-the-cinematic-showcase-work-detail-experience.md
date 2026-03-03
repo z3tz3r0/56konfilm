@@ -2,7 +2,6 @@
 
 Upgrade the existing `project` schema and `MediaGallery` components to support "Cinematic" capabilities (Video & Magazine Layouts) found in design assets.
 
-
 ## Story 2.0: Design & Performance Hardening (Immediate Fixes)
 
 As a **User**,
@@ -28,11 +27,12 @@ I want **to use the Modular Page Builder inside "Project" documents**,
 So that **I can create magazine-style layouts for case studies, not just simple text descriptions.**
 
 **CRITICAL DESIGN REQUIREMENT:**
+
 - **Strict Fidelity:** Implementations MUST strictly follow the breakdown in `_bmad_output/planning-artifacts/design-assets/`.
-- **Reference Assets:** 
+- **Reference Assets:**
   - `public/high-frame/R01_portfolio_production.png`
   - `_bmad_output/planning-artifacts/design-assets/production/portfolio/fullpage-desktop.png`
-- **Flexibility:** While the *default* order matches the design, the Admin MUST have the power to reorder these sections via Sanity Studio.
+- **Flexibility:** While the _default_ order matches the design, the Admin MUST have the power to reorder these sections via Sanity Studio.
 
 **Acceptance Criteria:**
 

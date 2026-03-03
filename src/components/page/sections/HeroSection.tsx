@@ -28,13 +28,17 @@ export default function HeroSection({ block, metadata }: HeroSectionProps) {
         </div>
       ) : null}
 
-      <div className="container relative z-10 mx-auto flex max-w-7xl flex-col items-center gap-6 text-center text-white">
+      <div className="relative z-10 container mx-auto flex max-w-7xl flex-col items-center gap-6 text-center text-white">
         {/* Project Metadata */}
         {metadata && (metadata.client || metadata.year) && (
-          <div className="animate-fade-in-up mb-2 flex items-center gap-3 text-sm font-medium uppercase tracking-[0.2em] text-white/70 md:text-base">
-            {metadata.client && <span data-testid="project-client">{metadata.client}</span>}
+          <div className="animate-fade-in-up mb-2 flex items-center gap-3 text-sm font-medium tracking-[0.2em] text-white/70 uppercase md:text-base">
+            {metadata.client && (
+              <span data-testid="project-client">{metadata.client}</span>
+            )}
             {metadata.client && metadata.year && <span>•</span>}
-            {metadata.year && <span data-testid="project-year">{metadata.year}</span>}
+            {metadata.year && (
+              <span data-testid="project-year">{metadata.year}</span>
+            )}
           </div>
         )}
 
@@ -51,7 +55,7 @@ export default function HeroSection({ block, metadata }: HeroSectionProps) {
             data-testid="project-services"
           >
             {metadata.services.map((service) => (
-              <span key={service} className="uppercase tracking-wide">
+              <span key={service} className="tracking-wide uppercase">
                 {service}
               </span>
             ))}

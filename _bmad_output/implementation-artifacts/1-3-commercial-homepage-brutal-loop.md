@@ -11,6 +11,7 @@ so that **I am instantly impressed by the "Brutal" aesthetic and production qual
 ## Acceptance Criteria
 
 ### 1. Hero Video Loop (Commercial Mode)
+
 - **Given** the user is in "Commercial Mode" (default)
 - **When** the Homepage loads
 - **Then** the Hero section must play a full-screen, muted, plays-inline video loop.
@@ -18,18 +19,21 @@ so that **I am instantly impressed by the "Brutal" aesthetic and production qual
 - **And** the video element must be strictly purely decorative (no controls, no audio toggle in Hero).
 
 ### 2. Parallax Typography ("The Brutal Statement")
+
 - **Given** the video is playing
 - **Then** the text "WE SHOOT HARD" (or CMS-configured equivalent) must be overlaid.
 - **And** this text must scroll/parallax with the page scroll (velocity-based skew or simple parallax speed difference).
 - **And** the typography must be bold, uppercase, and adhere to "Commercial" aesthetic (Inter/System fonts, stark white on dark).
 
 ### 3. Scroll & Velocity Interactions
+
 - **Given** the user scrolls down from the Hero
 - **When** the user scrubs through the page rapidly
 - **Then** the typography should react with subtle skewed transforms based on scroll velocity (motion/react `useVelocity` + `useTransform`).
 - **And** the frame rate must maintain 60fps (use `will-change: transform`).
 
 ### 4. Bilingual Compatibility
+
 - **Given** the user is on the Thai version
 - **When** the Hero renders
 - **Then** the "WE SHOOT HARD" text must be served in Thai (e.g., via Sanity `LOCALIZED` field).
@@ -71,17 +75,20 @@ so that **I am instantly impressed by the "Brutal" aesthetic and production qual
 ## Dev Notes
 
 ### Architecture & Patterns
+
 - **Library:** Use `motion/react` (not `framer-motion` package name if they differ in your version, but usually `framer-motion` is the package).
 - **Styling:** Use Tailwind v4. Use `cn()` for class merging.
 - **Sanity:** follow `Atomic GROQ Composition`. Use fragments.
 - **Icons:** Use `lucide-react`.
 
 ### Project Structure Notes
+
 - **Hero Section:** Located in `src/components/page/sections/HeroSection.tsx`.
 - **UI Components:** Reusable parts (like `ParallaxText`) should go in `src/components/ui/` if generic, or kept in `src/components/page/sections/hero/` if specific.
 - **Video Handling:** Do not commit large video files. Use a placeholder URL or Sanity asset.
 
 ### References
+
 - **Epic:** `_bmad_output/planning-artifacts/epics/epic-1-dual-identity-foundation-commercial-mode-the-brutal-core.md`
 - **UX Journey:** `Journey 1` in `user-journey-flows.md`.
 - **Visuals:** `production/landing-page/section-hero-desktop.png`.
@@ -89,12 +96,15 @@ so that **I am instantly impressed by the "Brutal" aesthetic and production qual
 ## Dev Agent Record
 
 ### Agent Model Used
+
 Antigravity (Claude 3.5 Sonnet)
 
 ### Debug Log References
+
 - Test Run: `e03345f1-e6df-4741-918a-7e1da6f9506b` (All Pass)
 
 ### Completion Notes List
+
 - Implemented `VideoLoop` with `IntersectionObserver` to optimize video playback (plays only when visible).
 - Implemented `ParallaxText` using `motion/react` with scroll velocity skew and parallax Y offset.
 - Use `Blur-up` strategy for video loading (Opacity transition from Poster to Video).
@@ -113,6 +123,7 @@ Antigravity (Claude 3.5 Sonnet)
 - **Test Fidelity:** Aligned test fixtures to `backgroundVideo` type and asserted no `controls` attribute.
 
 ### File List
+
 - src/sanity/schemaTypes/sections/heroSection.ts
 - src/sanity/schemaTypes/objects/backgroundMedia.ts
 - src/sanity/lib/queries/sections.ts
@@ -128,6 +139,7 @@ Antigravity (Claude 3.5 Sonnet)
 - tests/support/factories/hero.factory.ts
 
 ### Change Log
+
 - **2026-02-01 (Review Fixes):** Addressed 10 code review findings
   - **CRITICAL:** Fixed schema to support blur-up (video + poster), created test-hero page for E2E
   - **HIGH:** Fixed Thai font support, updated test navigation strategy
@@ -151,11 +163,13 @@ Date: 2026-01-31
 Outcome: Changes Requested
 
 Summary:
+
 - Critical: 2
 - High: 2
 - Medium: 4
 - Low: 2
 
 Notes:
+
 - Current schema constraints prevent delivering the promised "blur-up" poster for a background video without redesigning the data model.
 - The current Playwright approach claims "all pass" but fails locally and cannot reliably intercept server-side Sanity fetches; test strategy must be revised.

@@ -29,7 +29,7 @@ export function ContactForm({ lang = 'en' }: ContactFormProps) {
   const { form, onSubmit, isPending, isWedding } = useContactForm();
 
   return (
-    <div className="w-full max-w-lg mx-auto p-4 md:p-8">
+    <div className="mx-auto w-full max-w-lg p-4 md:p-8">
       <ContactHeader isWedding={isWedding} />
 
       <Form {...form}>
@@ -43,10 +43,12 @@ export function ContactForm({ lang = 'en' }: ContactFormProps) {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input 
-                    placeholder={isWedding ? "Your names" : "Agency / Company Name"} 
+                  <Input
+                    placeholder={
+                      isWedding ? 'Your names' : 'Agency / Company Name'
+                    }
                     autoComplete="name"
-                    {...field} 
+                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
@@ -85,11 +87,15 @@ export function ContactForm({ lang = 'en' }: ContactFormProps) {
               <FormItem>
                 <FormLabel>Message</FormLabel>
                 <FormControl>
-                  <Textarea 
-                    placeholder={isWedding ? "Tell us about your day…" : "Tell us about your project…"} 
-                    className="resize-none" 
+                  <Textarea
+                    placeholder={
+                      isWedding
+                        ? 'Tell us about your day…'
+                        : 'Tell us about your project…'
+                    }
+                    className="resize-none"
                     autoComplete="off"
-                    {...field} 
+                    {...field}
                   />
                 </FormControl>
                 <FormMessage />

@@ -2,7 +2,10 @@ import type { Page } from '@playwright/test';
 import { expect, test } from '../support/fixtures';
 
 test.describe('Smart Contact Form Routing', () => {
-  const ensureMenuOpenAndClick = async (page: Page, text: 'Wedding' | 'Production') => {
+  const ensureMenuOpenAndClick = async (
+    page: Page,
+    text: 'Wedding' | 'Production'
+  ) => {
     const mobileMenuBtn = page.getByTestId('mobile-menu-button');
     const getTargetButton = () =>
       page
@@ -40,12 +43,17 @@ test.describe('Smart Contact Form Routing', () => {
     venue: 'Grand Hotel',
   };
 
-  test('should display Commercial Inquiry by default (Production Mode)', async ({ page, setMode }) => {
+  test('should display Commercial Inquiry by default (Production Mode)', async ({
+    page,
+    setMode,
+  }) => {
     await setMode('production');
     await page.goto('/en/contact');
 
     // Header check
-    await expect(page.getByRole('heading', { name: /Commercial Inquiry/i })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: /Commercial Inquiry/i })
+    ).toBeVisible();
 
     // Fields check: Wedding specific fields should NOT be visible
     await expect(page.getByLabel(/^Wedding Date/i)).not.toBeVisible();
@@ -60,15 +68,23 @@ test.describe('Smart Contact Form Routing', () => {
     await page.getByRole('button', { name: /Send Message/i }).click();
 
     // Validate Toast Success
-    await expect(page.locator('li[data-sonner-toast]')).toContainText('Commercial Inquiry received', { timeout: 10000 });
+    await expect(page.locator('li[data-sonner-toast]')).toContainText(
+      'Commercial Inquiry received',
+      { timeout: 10000 }
+    );
   });
 
-  test('should display Wedding form in Wedding Mode', async ({ page, setMode }) => {
+  test('should display Wedding form in Wedding Mode', async ({
+    page,
+    setMode,
+  }) => {
     await setMode('wedding');
     await page.goto('/en/contact');
 
     // Header check
-    await expect(page.getByRole('heading', { name: /Tell us your love story/i })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: /Tell us your love story/i })
+    ).toBeVisible();
 
     // Fields check: Wedding specific fields SHOULD be visible
     await expect(page.getByLabel(/^Wedding Date/i)).toBeVisible();
@@ -79,16 +95,18 @@ test.describe('Smart Contact Form Routing', () => {
     await page.getByLabel(/^Email/i).fill(weddingData.email);
     await page.getByLabel(/^Venue/i).fill(weddingData.venue);
     await page.getByLabel(/^Message/i).fill(weddingData.message);
-    
+
     // Pick date
     await page.getByRole('button', { name: /Wedding Date/i }).click();
     // Click first enabled day in the current month
-    const firstEnabledDay = page.locator('button.rdp-day:not([disabled])').first();
+    const firstEnabledDay = page
+      .locator('button.rdp-day:not([disabled])')
+      .first();
     await firstEnabledDay.waitFor({ state: 'visible' });
     await firstEnabledDay.click();
-    
+
     // Ensure the popover closed
-    await page.keyboard.press('Escape'); 
+    await page.keyboard.press('Escape');
     await page.waitForTimeout(500);
 
     // Submit
@@ -96,26 +114,36 @@ test.describe('Smart Contact Form Routing', () => {
     await submitBtn.click();
 
     // Validate Toast Success
-    await expect(page.locator('li[data-sonner-toast]')).toContainText('Love story received', { timeout: 15000 });
+    await expect(page.locator('li[data-sonner-toast]')).toContainText(
+      'Love story received',
+      { timeout: 15000 }
+    );
   });
 
-  test('should transition fields when switching mode on the page', async ({ page, setMode }) => {
-     // Start in Commercial
-     await setMode('production');
-     await page.goto('/en/contact');
- 
-     // Verify Initial State
-     await expect(page.getByRole('heading', { name: /Commercial Inquiry/i })).toBeVisible();
-     await expect(page.getByLabel(/^Venue/i)).not.toBeVisible();
- 
-     // Switch to Wedding via UI (Navbar)
-     // The Navbar contains the ModeSwitcher
-     await ensureMenuOpenAndClick(page, 'Wedding');
+  test('should transition fields when switching mode on the page', async ({
+    page,
+    setMode,
+  }) => {
+    // Start in Commercial
+    await setMode('production');
+    await page.goto('/en/contact');
 
-     // Verify Transition on page
-     await expect(page.getByRole('heading', { name: /Tell us your love story/i })).toBeVisible();
-     
-     // Verify Animation/Presence of new field
-     await expect(page.getByLabel(/^Venue/i)).toBeVisible();
+    // Verify Initial State
+    await expect(
+      page.getByRole('heading', { name: /Commercial Inquiry/i })
+    ).toBeVisible();
+    await expect(page.getByLabel(/^Venue/i)).not.toBeVisible();
+
+    // Switch to Wedding via UI (Navbar)
+    // The Navbar contains the ModeSwitcher
+    await ensureMenuOpenAndClick(page, 'Wedding');
+
+    // Verify Transition on page
+    await expect(
+      page.getByRole('heading', { name: /Tell us your love story/i })
+    ).toBeVisible();
+
+    // Verify Animation/Presence of new field
+    await expect(page.getByLabel(/^Venue/i)).toBeVisible();
   });
 });

@@ -83,6 +83,7 @@ N/A - Using project's existing static pages (`/`) and navigation.
 ## Required data-testid Attributes
 
 ### ModeSwitcher component
+
 - `mode-switcher` - The container of the switcher.
 - `mobile-menu-button` - Hamburger menu for mobile tests.
 
@@ -95,6 +96,7 @@ N/A - Using project's existing static pages (`/`) and navigation.
 **File:** `tests/e2e/wedding-mode-skinning.spec.ts`
 
 **Tasks to make this test pass:**
+
 - [ ] Verify `ModeProvider` logic updates `html[data-mode]` client-side.
 - [ ] Ensure `layout.tsx` passes correct `initialMode` to `ModeProvider`.
 - [ ] Run test: `npm run test:e2e -- wedding-mode-skinning.spec.ts`
@@ -105,6 +107,7 @@ N/A - Using project's existing static pages (`/`) and navigation.
 **File:** `tests/e2e/wedding-mode-skinning.spec.ts`
 
 **Tasks to make this test pass:**
+
 - [ ] Verify `globals.css` defines `Cormorant Garamond` for `h1-h4` when `[data-mode='wedding']` (or root default).
 - [ ] Ensure font variable `--font-cormorant-garamond` is correctly loaded in `layout.tsx`.
 - [ ] Run test: `npm run test:e2e -- wedding-mode-skinning.spec.ts`
@@ -115,6 +118,7 @@ N/A - Using project's existing static pages (`/`) and navigation.
 **File:** `tests/e2e/wedding-mode-skinning.spec.ts`
 
 **Tasks to make this test pass:**
+
 - [ ] Debug `ModeProvider` to ensure it writes to document root `data-mode`.
 - [ ] Verify `next-themes` isn't conflicting (e.g. overwriting classes without using `data-mode`).
 - [ ] Run test: `npm run test:e2e -- wedding-mode-skinning.spec.ts`
@@ -139,6 +143,7 @@ npm run test:e2e -- --headed wedding-mode-skinning.spec.ts
 ### RED Phase (Complete) ✅
 
 **TEA Agent Responsibilities:**
+
 - ✅ All tests written and failing
 - ✅ Implementation checklist created
 

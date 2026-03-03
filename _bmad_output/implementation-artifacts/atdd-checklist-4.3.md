@@ -61,6 +61,7 @@ No new factories created for this story, but `createProject` from `tests/support
 ## Fixtures Created
 
 ### Sanity Auth Mock
+
 The tests use a `beforeEach` block to navigate to `/sanity-cms/login`, intercept the login API, and set a mock session cookie.
 
 ---
@@ -68,6 +69,7 @@ The tests use a `beforeEach` block to navigate to `/sanity-cms/login`, intercept
 ## Mock Requirements
 
 ### Sanity Asset Check Mock
+
 **Endpoint:** `**/data/query/**` (GROQ Query)
 **Success Response:** Simulated image metadata with `size: 50 * 1024 * 1024` to trigger validation.
 
@@ -76,6 +78,7 @@ The tests use a `beforeEach` block to navigate to `/sanity-cms/login`, intercept
 ## Required data-testid Attributes
 
 ### Sanity Studio Selectors (Standard & Custom)
+
 - `pane` - Studio sidebars and content panes
 - `pane-item` - Navigation items
 - `add-button` - The (+) button to create new documents/items
@@ -87,8 +90,10 @@ The tests use a `beforeEach` block to navigate to `/sanity-cms/login`, intercept
 ## Implementation Checklist
 
 ### Test: AC 2: Project Required Fields
+
 **File:** `tests/e2e/sanity/validation.spec.ts`
 **Tasks to make this test pass:**
+
 - [ ] Update `src/sanity/schemaTypes/projects.ts`
 - [ ] Add `.validation(Rule => Rule.required().error('Title is required'))` to `title`.
 - [ ] Add `.validation(Rule => Rule.required().error('Slug is required'))` to `slug`.
@@ -96,8 +101,10 @@ The tests use a `beforeEach` block to navigate to `/sanity-cms/login`, intercept
 - [ ] ✅ Test passes (green phase)
 
 ### Test: AC 1: Image Size Warning
+
 **File:** `tests/e2e/sanity/validation.spec.ts`
 **Tasks to make this test pass:**
+
 - [ ] Update `src/sanity/schemaTypes/objects/backgroundMedia.ts`
 - [ ] Implement `Rule.custom()` for image size using `context.getClient`.
 - [ ] Return `.warning('Image too large, please optimize < 1MB')` for assets > 1MB.
@@ -105,8 +112,10 @@ The tests use a `beforeEach` block to navigate to `/sanity-cms/login`, intercept
 - [ ] ✅ Test passes (green phase)
 
 ### Test: AC 3: No HTML Embed
+
 **File:** `tests/e2e/sanity/validation.spec.ts`
 **Tasks to make this test pass:**
+
 - [ ] Verify all sections in `src/sanity/schemaTypes/sections/` do not contain `code` or `html` field types.
 - [ ] Ensure `contentBlocks` in `projects.ts` does not include legacy embed types.
 - [ ] Run test: `npx playwright test tests/e2e/sanity/validation.spec.ts -g "AC 3"`
@@ -137,9 +146,11 @@ npx playwright test tests/e2e/sanity/validation.spec.ts --debug
 ## Red-Green-Refactor Workflow
 
 ### RED Phase (Complete) ✅
+
 The TEA Agent has verified that all tests fail initially as the implementation for story 4.3 is not yet present.
 
 ### GREEN Phase (DEV Team - Next Steps)
+
 1. Pick one failing test (Recommendation: AC 2 first).
 2. Implement minimal Sanity validation rules.
 3. Run the targeted test to verify green.
@@ -148,6 +159,7 @@ The TEA Agent has verified that all tests fail initially as the implementation f
 ---
 
 ## Knowledge Base References Applied
+
 - **fixture-architecture.md** - Applied for mocking auth and Studio environment.
 - **network-first.md** - Intercepting GROQ queries to simulate large assets.
 - **test-quality.md** - Atomic tests following Given-When-Then.
@@ -155,6 +167,7 @@ The TEA Agent has verified that all tests fail initially as the implementation f
 ---
 
 ## Test Execution Evidence
+
 All 3 tests failed in Chrome and Firefox as expected.
 
 ---

@@ -20,8 +20,13 @@ interface PageProps {
 
 export const dynamic = 'force-dynamic';
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const [{ lang, slug }, { mode }] = await Promise.all([params, resolvePreferences()]);
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const [{ lang, slug }, { mode }] = await Promise.all([
+    params,
+    resolvePreferences(),
+  ]);
   const [project, settings] = await Promise.all([
     fetchProject(slug, lang, mode),
     sanityFetch<SiteSettings | null>({
@@ -128,12 +133,12 @@ function getE2eMockProject(slug: string, mode: string): Project | null {
     overview: 'Mock overview for e2e validation.',
     siteMode: [mode as 'production' | 'wedding'],
     slug,
-      coverImage: {
-        asset: {
-          _ref: 'image-00000000000000000000000000000000-1920x1080-jpg',
-          _type: 'reference',
-        },
+    coverImage: {
+      asset: {
+        _ref: 'image-00000000000000000000000000000000-1920x1080-jpg',
+        _type: 'reference',
       },
+    },
     client: 'E2E Client',
     year: '2026',
     services: ['Direction', 'Post-Production'],
@@ -174,7 +179,9 @@ function getProjectVideoData(project: Project) {
   const mediaSection = project.contentBlocks?.find(
     (block) => block._type === 'mediaGallerySection'
   );
-  const firstVideo = mediaSection?.items?.find((item) => item.mediaType === 'video' && item.videoUrl);
+  const firstVideo = mediaSection?.items?.find(
+    (item) => item.mediaType === 'video' && item.videoUrl
+  );
   if (!firstVideo?.videoUrl) {
     return null;
   }
@@ -186,7 +193,10 @@ function getProjectVideoData(project: Project) {
 }
 
 export default async function ProjectPage({ params }: PageProps) {
-  const [{ lang, slug }, { mode }] = await Promise.all([params, resolvePreferences()]);
+  const [{ lang, slug }, { mode }] = await Promise.all([
+    params,
+    resolvePreferences(),
+  ]);
   const e2eProject = getE2eMockProject(slug, mode);
   const project = await fetchProject(slug, lang, mode);
   const resolvedProject = e2eProject
@@ -196,14 +206,12 @@ export default async function ProjectPage({ params }: PageProps) {
         client: project?.client ?? e2eProject.client,
         year: project?.year ?? e2eProject.year,
         services: project?.services ?? e2eProject.services,
-        contentBlocks:
-          project?.contentBlocks?.length
-            ? project.contentBlocks
-            : e2eProject.contentBlocks,
+        contentBlocks: project?.contentBlocks?.length
+          ? project.contentBlocks
+          : e2eProject.contentBlocks,
         nextProject: project?.nextProject ?? e2eProject.nextProject,
       }
     : project;
-
 
   if (!resolvedProject) {
     notFound();
@@ -228,7 +236,11 @@ export default async function ProjectPage({ params }: PageProps) {
 
   const videoData = getProjectVideoData(resolvedProject);
   const thumbnailUrl = resolvedProject.coverImage
-    ? urlFor(resolvedProject.coverImage).width(1280).height(720).fit('crop').url()
+    ? urlFor(resolvedProject.coverImage)
+        .width(1280)
+        .height(720)
+        .fit('crop')
+        .url()
     : undefined;
 
   const jsonLd = videoData
@@ -248,7 +260,10 @@ export default async function ProjectPage({ params }: PageProps) {
       {jsonLd ? <JsonLd data={jsonLd} /> : null}
       <PageBuilder page={pageDocument} metadata={metadata} />
       {resolvedProject.nextProject && (
-        <ProjectNavigation nextProject={resolvedProject.nextProject} mode={mode} />
+        <ProjectNavigation
+          nextProject={resolvedProject.nextProject}
+          mode={mode}
+        />
       )}
     </>
   );

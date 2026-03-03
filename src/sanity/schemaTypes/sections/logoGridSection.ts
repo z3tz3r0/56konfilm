@@ -7,7 +7,11 @@ export const logoGridSectionType = defineType({
   title: 'Logo Grid Section',
   type: 'object',
   fields: [
-    localizedStringField({ name: 'title', title: 'Title', description: 'หัวข้อของ Logo Grid' }),
+    localizedStringField({
+      name: 'title',
+      title: 'Title',
+      description: 'หัวข้อของ Logo Grid',
+    }),
     defineField({
       name: 'logos',
       title: 'Logos',
@@ -39,7 +43,10 @@ export const logoGridSectionType = defineType({
     },
     prepare({ title, logos, background }) {
       const count = Array.isArray(logos) ? logos.length : 0;
-      const subtitleParts = [background && background !== 'default' ? background : null, `${count} logo${count === 1 ? '' : 's'}`];
+      const subtitleParts = [
+        background && background !== 'default' ? background : null,
+        `${count} logo${count === 1 ? '' : 's'}`,
+      ];
       return {
         title: title || 'Logo Grid Section',
         subtitle: subtitleParts.filter(Boolean).join(' · '),

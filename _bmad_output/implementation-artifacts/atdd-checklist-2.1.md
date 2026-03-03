@@ -45,6 +45,7 @@ Enable the Modular Page Builder ("Magazine Layout") within Project documents to 
 **File:** `tests/support/factories/project.factory.ts`
 
 **Exports:**
+
 - `createProject(overrides?)` - Create single project with magazine fields
 - `createProjects(count)`
 
@@ -77,9 +78,9 @@ Enable the Modular Page Builder ("Magazine Layout") within Project documents to 
 - [ ] **Schema:** Modify `src/sanity/schemaTypes/projects.ts` to add `contentBlocks`, `client`, `services`, `year`.
 - [ ] **Query:** Update `src/sanity/lib/queries.ts` to fetch these new fields for project pages.
 - [ ] **Frontend:** Update `src/app/(site)/work/[slug]/page.tsx` to:
-    - [ ] Render the Metadata (`client`, `year`, `services`) with `data-testid`.
-    - [ ] Iterate over `contentBlocks` and render corresponding components.
-    - [ ] Ensure `data-sanity-type` attribute is added to section wrappers for testing.
+  - [ ] Render the Metadata (`client`, `year`, `services`) with `data-testid`.
+  - [ ] Iterate over `contentBlocks` and render corresponding components.
+  - [ ] Ensure `data-sanity-type` attribute is added to section wrappers for testing.
 - [ ] **Seed Data:** Create a project with slug `atdd-magazine-test` in Sanity (or mock it) for the E2E test.
 - [ ] Run test: `npm run test:e2e -- project-magazine-layout`
 - [ ] ✅ Test passes (green phase)
@@ -102,6 +103,7 @@ npm run test:e2e -- project-magazine-layout.spec.ts
 ### RED Phase (Complete) ✅
 
 **TEA Agent Responsibilities:**
+
 - ✅ Failing E2E test created
 - ✅ Project Factory created
 - ✅ `src/types/sanity.ts` updated with new types

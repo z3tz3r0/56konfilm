@@ -32,11 +32,17 @@ const Navbar = async ({ mode, settings, homeSlugs, lang }: NavbarProps) => {
   };
 
   return (
-    <header className="fixed z-50 w-screen bg-white/5">
-      <nav className="container mx-auto grid max-w-7xl grid-cols-2 items-center justify-between p-4 md:grid-cols-3">
-        <Link href={`/${lang}`} className={cn('text-xl font-bold', 'text-text-primary')}>
-          {settings?.siteTitle || '56KonFilm'}
-        </Link>
+    <header className="fixed z-50 w-screen bg-white/5 backdrop-blur-md">
+      <nav className="flex items-center justify-between gap-16 px-14 py-4">
+        <div className="flex flex-1 items-center gap-x-4">
+          <Link
+            href={`/${lang}`}
+            className={cn('text-xl font-bold', 'text-text-primary')}
+          >
+            {settings?.siteTitle || '56KonFilm'}
+          </Link>
+          <LanguageSwitcher />
+        </div>
 
         <Sheet>
           <SheetTrigger asChild className="justify-self-end md:hidden">
@@ -58,7 +64,10 @@ const Navbar = async ({ mode, settings, homeSlugs, lang }: NavbarProps) => {
 
             <div className="flex h-screen flex-col items-center justify-center gap-16 text-4xl font-bold">
               <nav className="-mt-16 flex flex-col items-center gap-8">
-                <Link href={`/${lang}`} className="hover:text-primary hover:underline">
+                <Link
+                  href={`/${lang}`}
+                  className="hover:text-primary hover:underline"
+                >
                   Home
                 </Link>
                 {(mode === 'production'
@@ -82,26 +91,25 @@ const Navbar = async ({ mode, settings, homeSlugs, lang }: NavbarProps) => {
           </SheetContent>
         </Sheet>
 
-        <div className="col-span-2 hidden md:grid md:grid-cols-subgrid">
-          <div className="flex items-center gap-4">
-            <ModeSwitcher homeSlugs={homeSlugs} lang={lang} />
-            <LanguageSwitcher />
-          </div>
+        <div className="flex items-center gap-4">
+          <ModeSwitcher homeSlugs={homeSlugs} lang={lang} />
+        </div>
 
-          <div className="col-start-2 flex items-center justify-between">
-            {(mode === 'production'
-              ? settings?.productionNav
-              : settings?.weddingNav
-            )?.map((item) => (
-              <Link
-                key={item.url}
-                href={withLang(item.url)}
-                className={cn('hover:underline', 'text-text-primary')}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
+        <div
+          className={`font-primary flex flex-1 items-center justify-end gap-x-8 ${mode === 'production' && 'text-sm'}`}
+        >
+          {(mode === 'production'
+            ? settings?.productionNav
+            : settings?.weddingNav
+          )?.map((item) => (
+            <Link
+              key={item.url}
+              href={withLang(item.url)}
+              className={cn('hover:underline', 'text-text-primary')}
+            >
+              {item.label}
+            </Link>
+          ))}
         </div>
       </nav>
     </header>

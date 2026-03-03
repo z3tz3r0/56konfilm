@@ -2,7 +2,7 @@ project_name: 56konfilm
 selected_track: bmad-method
 field_type: brownfield
 user_name: Z3tz3r0
-date_initialized: "2026-01-26T22:03:17+07:00"
+date_initialized: '2026-01-26T22:03:17+07:00'
 
 workflow_items:
   - phase: 0

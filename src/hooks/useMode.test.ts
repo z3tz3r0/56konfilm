@@ -17,13 +17,13 @@ describe('useMode Hook', () => {
       useModeStore.setState({ mode: 'production' });
     });
     mockSetTheme.mockClear();
-    
+
     // Clear cookie (simple mock)
     Object.defineProperty(document, 'cookie', {
       writable: true,
       value: '',
     });
-    
+
     // Clear data attributes
     document.documentElement.removeAttribute('data-mode');
   });
@@ -62,7 +62,9 @@ describe('useMode Hook', () => {
 
     expect(result.current.mode).toBe('production');
     expect(mockSetTheme).toHaveBeenCalledWith('dark');
-    expect(document.documentElement.getAttribute('data-mode')).toBe('production');
+    expect(document.documentElement.getAttribute('data-mode')).toBe(
+      'production'
+    );
     expect(document.cookie).toContain('mode=production');
   });
 });

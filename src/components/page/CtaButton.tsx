@@ -10,7 +10,11 @@ interface CtaButtonProps {
   fullWidth?: boolean;
 }
 
-export default function CtaButton({ cta, className, fullWidth }: CtaButtonProps) {
+export default function CtaButton({
+  cta,
+  className,
+  fullWidth,
+}: CtaButtonProps) {
   if (!cta?.label) {
     return null;
   }
@@ -22,7 +26,7 @@ export default function CtaButton({ cta, className, fullWidth }: CtaButtonProps)
     return (
       <span
         className={cn(
-          'border-border inline-flex items-center rounded-full border px-4 py-2 text-sm text-muted-foreground',
+          'border-border text-muted-foreground inline-flex items-center rounded-full border px-4 py-2 text-sm',
           fullWidth && 'w-full justify-center'
         )}
       >

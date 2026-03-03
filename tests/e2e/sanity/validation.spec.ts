@@ -5,9 +5,9 @@ import type { BrowserContext, Page } from '@playwright/test';
 import jwt from 'jsonwebtoken';
 
 import {
-    IMAGE_SIZE_WARNING_MESSAGE,
-    MAX_IMAGE_SIZE_BYTES,
-    validateImageAssetSizeWarning,
+  IMAGE_SIZE_WARNING_MESSAGE,
+  MAX_IMAGE_SIZE_BYTES,
+  validateImageAssetSizeWarning,
 } from '@/sanity/schemaTypes/objects/backgroundMedia';
 import { expect, test } from '../../support/fixtures';
 
@@ -29,12 +29,19 @@ const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
  */
 async function loginToStudio(page: Page, context: BrowserContext) {
   if (!cmsSessionSecret) {
-    test.skip(true, 'SANITY_CMS_SESSION_SECRET is required. See tests/README.md for setup.');
+    test.skip(
+      true,
+      'SANITY_CMS_SESSION_SECRET is required. See tests/README.md for setup.'
+    );
   }
 
-  const token = jwt.sign({ username: 'e2e-admin' }, cmsSessionSecret as string, {
-    expiresIn: '1h',
-  });
+  const token = jwt.sign(
+    { username: 'e2e-admin' },
+    cmsSessionSecret as string,
+    {
+      expiresIn: '1h',
+    }
+  );
 
   await context.addCookies([
     {
@@ -49,7 +56,9 @@ async function loginToStudio(page: Page, context: BrowserContext) {
 
   await page.goto('/sanity-cms');
   await expect(page).toHaveURL(/\/sanity-cms/);
-  await expect(page.locator('[data-testid="pane"]')).toBeVisible({ timeout: 30000 });
+  await expect(page.locator('[data-testid="pane"]')).toBeVisible({
+    timeout: 30000,
+  });
 }
 
 /**
@@ -68,12 +77,18 @@ test.describe('Sanity Studio Validation & Safeguards', () => {
     const publishButton = page.locator('[data-testid="publish-button"]');
     await expect(publishButton).toBeDisabled();
 
-    await expect(page.getByText('Project title is required before publishing.')).toBeVisible();
     await expect(
-      page.getByText('URL Slug is required for the project to be viewable on the site.')
+      page.getByText('Project title is required before publishing.')
     ).toBeVisible();
     await expect(
-      page.getByText('At least one site mode (Production/Wedding) must be selected.')
+      page.getByText(
+        'URL Slug is required for the project to be viewable on the site.'
+      )
+    ).toBeVisible();
+    await expect(
+      page.getByText(
+        'At least one site mode (Production/Wedding) must be selected.'
+      )
     ).toBeVisible();
   });
 

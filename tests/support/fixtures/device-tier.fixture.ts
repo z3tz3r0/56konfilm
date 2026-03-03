@@ -3,9 +3,9 @@
 
 import { test as base, expect } from '@playwright/test';
 import {
-    DeviceTierProfile,
-    createHighTierProfile,
-    createLowTierProfile,
+  DeviceTierProfile,
+  createHighTierProfile,
+  createLowTierProfile,
 } from '../factories/device-tier.factory';
 
 type DeviceTierFixture = {

@@ -1,6 +1,7 @@
 # Design Assets Index - 56konfilm
 
 ## Overview
+
 This index provides a comprehensive list of all visual design assets for 56konfilm. Assets are categorized by mode (**Production** vs. **Wedding**) and split by page/intent.
 
 ---
@@ -10,12 +11,14 @@ This index provides a comprehensive list of all visual design assets for 56konfi
 ### [Core Config & README](./production/README.md)
 
 ### [Common Components](./production/common/)
+
 - [README](./production/common/README.md)
 - [Navigation Desktop](./production/common/section-navigation-desktop.png)
 - [Navigation Mobile](./production/common/section-navigation-mobile.png)
 - [Contact Us Mobile](./production/common/section-contact-us-mobile.png)
 
 ### [Landing Page](./production/landing-page/)
+
 - [README](./production/landing-page/README.md)
 - [Fullpage Desktop](./production/landing-page/fullpage-landing-page-desktop.png)
 - [Fullpage Mobile](./production/landing-page/fullpage-landing-page-mobile.png)
@@ -34,6 +37,7 @@ This index provides a comprehensive list of all visual design assets for 56konfi
 - [Section: Who We Are Mobile](./production/landing-page/section-who-we-are-mobile.png)
 
 ### [Portfolio](./production/portfolio/)
+
 - [README](./production/portfolio/README.md)
 - [Fullpage Desktop](./production/portfolio/fullpage-desktop.png)
 - [Fullpage Mobile](./production/portfolio/fullpage-mobile.png)
@@ -44,6 +48,7 @@ This index provides a comprehensive list of all visual design assets for 56konfi
 - [Section: Previous Work Grid Mobile](./production/portfolio/section-previous-work-grid-mobile.png)
 
 ### [Services](./production/services/)
+
 - [README](./production/services/README.md)
 - [Fullpage Desktop](./production/services/fullpage-desktop.png)
 - [Fullpage Mobile](./production/services/fullpage-mobile.png)
@@ -57,6 +62,7 @@ This index provides a comprehensive list of all visual design assets for 56konfi
 - [Section: View Projects Mobile](./production/services/section-view-projects-mobile.png)
 
 ### [Contact Us](./production/contact-us/)
+
 - [README](./production/contact-us/README.md)
 - [Fullpage Desktop](./production/contact-us/fullpage-contact-us-desktop.png)
 - [Fullpage Mobile](./production/contact-us/fullpage-contact-us-mobile.png)
@@ -72,6 +78,7 @@ This index provides a comprehensive list of all visual design assets for 56konfi
 ## 💍 Wedding Mode (Studio)
 
 ### [Common Components](./wedding/common/)
+
 - [README](./wedding/common/README.md)
 - [Navigation Desktop](./wedding/common/section-navigation-desktop.png)
 - [Navigation Mobile](./wedding/common/section-navigation-mobile.png)
@@ -81,6 +88,7 @@ This index provides a comprehensive list of all visual design assets for 56konfi
 - [Contact Us Overlay Mobile](./wedding/common/section-contact-us-mobile.png)
 
 ### [Landing Page](./wedding/landing-page/)
+
 - [README](./wedding/landing-page/README.md)
 - [Fullpage Desktop](./wedding/landing-page/fullpage-desktop.png)
 - [Fullpage Mobile](./wedding/landing-page/fullpage-mobile.png)
@@ -98,6 +106,7 @@ This index provides a comprehensive list of all visual design assets for 56konfi
 - [Section: Testimonial Mobile](./wedding/landing-page/section-testimonial-mobile.png)
 
 ### [Portfolio](./wedding/portfolio/)
+
 - [README](./wedding/portfolio/README.md)
 - [Fullpage Desktop](./wedding/portfolio/fullpage-desktop.png)
 - [Fullpage Mobile](./wedding/portfolio/fullpage-mobile.png)
@@ -108,6 +117,7 @@ This index provides a comprehensive list of all visual design assets for 56konfi
 - [Section: Previous Works Grid Mobile](./wedding/portfolio/section-previous-works-grid-mobile.png)
 
 ### [Services](./wedding/services/)
+
 - [README](./wedding/services/README.md)
 - [Fullpage Desktop](./wedding/services/fullpage-desktop.png)
 - [Fullpage Mobile](./wedding/services/fullpage-mobile.png)
@@ -121,6 +131,7 @@ This index provides a comprehensive list of all visual design assets for 56konfi
 - [Section: View Portfolio Mobile](./wedding/services/section-view-portfolio-mobile.png)
 
 ### [Packages](./wedding/packages/)
+
 - [Fullpage Desktop](./wedding/packages/fullpage-desktop.png)
 - [Fullpage Mobile](./wedding/packages/fullpage-mobile.png)
 - [Section: Hero Desktop](./wedding/packages/section-hero-desktop.png)
@@ -129,6 +140,7 @@ This index provides a comprehensive list of all visual design assets for 56konfi
 - [Section: Pricing Packages Mobile](./wedding/packages/section-packages-mobile.png)
 
 ### [About Us / BTS](./wedding/about-us/)
+
 - [README](./wedding/about-us/README.md)
 - [Fullpage Desktop](./wedding/about-us/fullpage-desktop.png)
 - [Fullpage Mobile](./wedding/about-us/fullpage-mobile.png)
@@ -142,6 +154,7 @@ This index provides a comprehensive list of all visual design assets for 56konfi
 - [Section: Behind The Scenes Grid Mobile](./wedding/about-us/section-behind-blog-mobile.png)
 
 ### [Contact Us](./wedding/contact-us/)
+
 - [Fullpage Desktop](./wedding/contact-us/fullpage-desktop.png)
 - [Fullpage Mobile](./wedding/contact-us/fullpage-mobile.png)
 - [Section: Hero Desktop](./wedding/contact-us/section-hero-desktop.png)

@@ -22,7 +22,8 @@
 - Total tasks: 5
 - Estimated effort: 3 hours
 
-**Required data-testid Attributes**: 
+**Required data-testid Attributes**:
+
 - (None strictly required if utilizing `alt` text and ARIA roles, but `data-key` or `data-type` on gallery items recommended for debugging).
 
 **Next Steps for DEV Team**:

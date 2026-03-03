@@ -1,8 +1,8 @@
 import { defineField, defineType } from 'sanity';
 import {
-    ImageAssetValue,
-    SanityValidationContext,
-    validateImageAssetSizeWarning,
+  ImageAssetValue,
+  SanityValidationContext,
+  validateImageAssetSizeWarning,
 } from './backgroundMedia';
 import { localizedStringField } from './localized';
 
@@ -18,13 +18,19 @@ export const mediaBlockType = defineType({
       type: 'image',
       options: { hotspot: true },
       validation: (Rule) =>
-        Rule.required().custom((value, context) =>
-          validateImageAssetSizeWarning(
-            value as ImageAssetValue | undefined,
-            context as SanityValidationContext
+        Rule.required()
+          .custom((value, context) =>
+            validateImageAssetSizeWarning(
+              value as ImageAssetValue | undefined,
+              context as SanityValidationContext
+            )
           )
-        ).warning(),
+          .warning(),
     }),
-    localizedStringField({ name: 'alt', title: 'Alt Text', description: 'ข้อความอธิบายรูปภาพ' }),
+    localizedStringField({
+      name: 'alt',
+      title: 'Alt Text',
+      description: 'ข้อความอธิบายรูปภาพ',
+    }),
   ],
 });

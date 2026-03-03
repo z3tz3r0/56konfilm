@@ -32,6 +32,7 @@ so that **links shared on social media look professional and Google indexes the 
 ## Tasks / Subtasks
 
 ### Epic Task 1: Sanity Schema Enhancements
+
 - [x] **Create `seo` object schema** (`src/sanity/schemaTypes/objects/seo.ts`)
   - Fields: `title` (localized), `description` (localized), `ogImage` (image)
 - [x] **Update `Page` schema** (`src/sanity/schemaTypes/page.ts`)
@@ -42,6 +43,7 @@ so that **links shared on social media look professional and Google indexes the 
   - Add `seo` object for global fallback metadata.
 
 ### Epic Task 2: Metadata Core Implementation
+
 - [x] **Create `src/lib/metadata.ts` utility**
   - Implement a shared helper to construct metadata objects from Sanity SEO data.
   - Handle fallbacks to Global Settings.
@@ -53,12 +55,14 @@ so that **links shared on social media look professional and Google indexes the 
   - Implement dynamic `generateMetadata` fetching from the project document.
 
 ### Epic Task 3: Technical SEO (Sitemap & Robots)
+
 - [x] **Create `src/app/sitemap.ts`**
   - Fetch all pages and projects from Sanity and generate a valid Next.js sitemap.
 - [x] **Create `src/app/robots.ts`**
   - Implement environment-based rules (Allow for Prod, Disallow for others).
 
 ### Epic Task 4: Structured Data (JSON-LD)
+
 - [x] **Implement `JsonLd` component** (`src/components/seo/JsonLd.tsx`)
 - [x] **Add `VideoObject` to Project Detail pages**
   - Extract video metadata (title, thumbnail, upload date) from Sanity project document.
@@ -89,6 +93,7 @@ so that **links shared on social media look professional and Google indexes the 
 Antigravity (Codex v6)
 
 ### Debug Log References
+
 - 2026-02-07: RED phase verified with `npx playwright test tests/e2e/seo-metadata-perfection.spec.ts tests/e2e/seo-routes.spec.ts` (15 failures expected pre-implementation).
 - 2026-02-07: GREEN validation passed for SEO scope with `npx playwright test tests/e2e/seo-metadata-perfection.spec.ts tests/e2e/seo-routes.spec.ts --project=chromium` (5/5 passing).
 - 2026-02-07: Regression spot-check passed with `npx playwright test tests/e2e/mode-persistence.spec.ts tests/e2e/global-transition.spec.ts --project=chromium` (5/5 passing).
@@ -96,6 +101,7 @@ Antigravity (Codex v6)
 - 2026-02-07: `npx tsc --noEmit` currently blocked by pre-existing implicit-any errors in existing tests (`tests/e2e/contact-form-routing.spec.ts`, `tests/e2e/dual-context-about.spec.ts`).
 
 ### Implementation Plan
+
 - Introduced a reusable metadata builder (`src/lib/metadata.ts`) to centralize canonical/hreflang/open graph/twitter metadata generation with SEO fallback resolution from Settings.
 - Extended Sanity schema + GROQ projections to include `seo { title, description, ogImage }` for Settings/Page/Project and synchronized TypeScript interfaces.
 - Implemented technical SEO routes (`sitemap.ts`, `robots.ts`) as Next.js metadata routes using dynamic Sanity-driven slugs.
@@ -103,11 +109,13 @@ Antigravity (Codex v6)
 - Fixed runtime blocker by removing forbidden cookie writes from Server Component layout (`src/app/[lang]/[slug]/layout.tsx`) to prevent 500 errors during metadata route/page access.
 
 ### Completion Notes List
+
 - Implemented Story 4.1 end-to-end: schema updates, metadata utility adoption across app routes, dynamic sitemap/robots, and project-level VideoObject JSON-LD.
 - Added SEO-focused E2E coverage (`seo-metadata-perfection.spec.ts`, `seo-routes.spec.ts`) and stabilized assertions for robots header case and language switch fallback flow.
 - Updated project query composition to preserve existing fragment-based architecture while adding SEO projections and route slug queries.
 
 ### File List
+
 - src/sanity/schemaTypes/objects/seo.ts
 - src/sanity/schemaTypes/page.ts
 - src/sanity/schemaTypes/projects.ts
@@ -130,4 +138,5 @@ Antigravity (Codex v6)
 - tests/support/factories/seo.factory.ts
 
 ## Change Log
+
 - 2026-02-07: Implemented Story 4.1 SEO metadata architecture, Sanity SEO schema integration, dynamic technical SEO routes, and VideoObject structured data. Status moved to `review`.

@@ -91,7 +91,7 @@ export const ModeSwitcher = ({
         onClick={() => handleModeChange('production')}
         disabled={isPending || !!navTimerRef.current}
         className={cn(
-          'relative z-10 h-full cursor-pointer text-xs font-semibold tracking-[0.1em] uppercase',
+          'font-primary relative z-10 h-full cursor-pointer text-xs tracking-[0.8px] uppercase',
           isPending && 'cursor-not-allowed opacity-60'
         )}
         animate={{
@@ -112,7 +112,7 @@ export const ModeSwitcher = ({
         onClick={() => handleModeChange('wedding')}
         disabled={isPending || !!navTimerRef.current}
         className={cn(
-          'relative z-10 h-full cursor-pointer text-xs font-semibold tracking-[0.1em] uppercase',
+          'font-primary relative z-10 h-full cursor-pointer text-xs tracking-[0.8px] uppercase',
           isPending && 'cursor-not-allowed opacity-60'
         )}
         animate={{

@@ -22,9 +22,25 @@ export const twoColumnSectionType = defineType({
       },
       initialValue: 'textLeft',
     }),
-    defineField({ name: 'content', title: 'Content', description: 'เนื้อหาของ Two Column Section', type: localizedBlockType.name }),
-    defineField({ name: 'media', title: 'Media', description: 'สื่อของ Two Column Section', type: mediaBlockType.name }),
-    defineField({ name: 'ctas', title: 'CTAs', description: 'ปุ่ม CTA', type: 'array', of: [{ type: ctaType.name }] }),
+    defineField({
+      name: 'content',
+      title: 'Content',
+      description: 'เนื้อหาของ Two Column Section',
+      type: localizedBlockType.name,
+    }),
+    defineField({
+      name: 'media',
+      title: 'Media',
+      description: 'สื่อของ Two Column Section',
+      type: mediaBlockType.name,
+    }),
+    defineField({
+      name: 'ctas',
+      title: 'CTAs',
+      description: 'ปุ่ม CTA',
+      type: 'array',
+      of: [{ type: ctaType.name }],
+    }),
     defineField({
       name: 'background',
       title: 'Background',
@@ -48,7 +64,10 @@ export const twoColumnSectionType = defineType({
       media: 'media.image',
     },
     prepare({ heading, eyebrow, layout, media }) {
-      const subtitleParts = [eyebrow, layout === 'textRight' ? 'Media Left' : 'Text Left'];
+      const subtitleParts = [
+        eyebrow,
+        layout === 'textRight' ? 'Media Left' : 'Text Left',
+      ];
       return {
         title: heading || 'Two Column Section',
         subtitle: subtitleParts.filter(Boolean).join(' · '),

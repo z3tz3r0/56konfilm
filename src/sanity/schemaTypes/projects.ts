@@ -1,8 +1,8 @@
 import { defineField, defineType } from 'sanity';
 import {
-    ImageAssetValue,
-    SanityValidationContext,
-    validateImageAssetSizeWarning,
+  ImageAssetValue,
+  SanityValidationContext,
+  validateImageAssetSizeWarning,
 } from './objects/backgroundMedia';
 import { localizedStringField, localizedTextField } from './objects/localized';
 

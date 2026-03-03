@@ -1,6 +1,11 @@
 import { cookies, headers } from 'next/headers';
 
-import { type Locale, type SiteMode, isSupportedLocale, isSupportedMode } from '@/lib/preferences';
+import {
+  type Locale,
+  type SiteMode,
+  isSupportedLocale,
+  isSupportedMode,
+} from '@/lib/preferences';
 
 const FALLBACK_LOCALE: Locale = 'th';
 const DEFAULT_MODE: SiteMode = 'production';

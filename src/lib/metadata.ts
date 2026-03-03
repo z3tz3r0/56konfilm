@@ -59,17 +59,29 @@ type MetadataInput = {
 
 export function buildMetadata(input: MetadataInput): Metadata {
   const metadataBase = getMetadataBase();
-  const siteTitle = input.siteTitle || input.fallbackTitle || DEFAULT_SITE_TITLE;
-  const title = resolveSeoText(input.seo, input.fallbackSeo, 'title') || input.title || siteTitle;
-  const description = resolveSeoText(input.seo, input.fallbackSeo, 'description') || DEFAULT_DESCRIPTION;
+  const siteTitle =
+    input.siteTitle || input.fallbackTitle || DEFAULT_SITE_TITLE;
+  const title =
+    resolveSeoText(input.seo, input.fallbackSeo, 'title') ||
+    input.title ||
+    siteTitle;
+  const description =
+    resolveSeoText(input.seo, input.fallbackSeo, 'description') ||
+    DEFAULT_DESCRIPTION;
   const ogImageUrl =
-    getOgImageUrl(input.seo, input.fallbackSeo) || new URL('/favicon.ico', metadataBase).toString();
+    getOgImageUrl(input.seo, input.fallbackSeo) ||
+    new URL('/favicon.ico', metadataBase).toString();
 
-  const cleanPath = input.pathname.startsWith('/') ? input.pathname : `/${input.pathname}`;
+  const cleanPath = input.pathname.startsWith('/')
+    ? input.pathname
+    : `/${input.pathname}`;
 
   return {
     metadataBase,
-    title: cleanPath === `/${input.lang}` ? { default: siteTitle, template: `%s | ${siteTitle}` } : title,
+    title:
+      cleanPath === `/${input.lang}`
+        ? { default: siteTitle, template: `%s | ${siteTitle}` }
+        : title,
     description,
     alternates: {
       canonical: cleanPath,

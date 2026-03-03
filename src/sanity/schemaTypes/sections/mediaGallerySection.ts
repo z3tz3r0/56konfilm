@@ -9,11 +9,17 @@ export const mediaGallerySectionType = defineType({
   title: 'Media Gallery Section',
   type: 'object',
   fields: [
-    defineField({ name: 'heading', title: 'Heading', description: 'หัวข้อของ Media Gallery', type: localizedBlockType.name }),
+    defineField({
+      name: 'heading',
+      title: 'Heading',
+      description: 'หัวข้อของ Media Gallery',
+      type: localizedBlockType.name,
+    }),
     defineField({
       name: 'sourceType',
       title: 'Content Source',
-      description: 'เลือกว่าจะใช้รายการสื่อแบบ Manual หรือดึงจากรายการ Projects',
+      description:
+        'เลือกว่าจะใช้รายการสื่อแบบ Manual หรือดึงจากรายการ Projects',
       type: 'string',
       options: {
         list: [
@@ -37,7 +43,9 @@ export const mediaGallerySectionType = defineType({
       hidden: ({ parent }) => parent?.sourceType === 'projects',
       validation: (Rule) =>
         Rule.custom((value, context) => {
-          const sourceType = (context.parent as { sourceType?: string } | undefined)?.sourceType;
+          const sourceType = (
+            context.parent as { sourceType?: string } | undefined
+          )?.sourceType;
           if (sourceType === 'projects') return true;
           return value && value.length > 0
             ? true
@@ -59,14 +67,22 @@ export const mediaGallerySectionType = defineType({
       ],
       validation: (Rule) =>
         Rule.custom((value, context) => {
-          const sourceType = (context.parent as { sourceType?: string } | undefined)?.sourceType;
+          const sourceType = (
+            context.parent as { sourceType?: string } | undefined
+          )?.sourceType;
           if (sourceType !== 'projects') return true;
-          if (!value || value.length === 0) return 'กรุณาเลือกโปรเจกต์อย่างน้อย 1 รายการ';
+          if (!value || value.length === 0)
+            return 'กรุณาเลือกโปรเจกต์อย่างน้อย 1 รายการ';
           if (value.length > 6) return 'เลือกได้สูงสุด 6 โปรเจกต์';
           return true;
         }),
     }),
-    defineField({ name: 'cta', title: 'CTA', description: 'ปุ่ม CTA', type: ctaType.name }),
+    defineField({
+      name: 'cta',
+      title: 'CTA',
+      description: 'ปุ่ม CTA',
+      type: ctaType.name,
+    }),
     defineField({
       name: 'background',
       title: 'Background',
@@ -90,7 +106,10 @@ export const mediaGallerySectionType = defineType({
     },
     prepare({ heading, items, background }) {
       const count = Array.isArray(items) ? items.length : 0;
-      const subtitleParts = [background && background !== 'default' ? background : null, `${count} item${count === 1 ? '' : 's'}`];
+      const subtitleParts = [
+        background && background !== 'default' ? background : null,
+        `${count} item${count === 1 ? '' : 's'}`,
+      ];
       return {
         title: heading || 'Media Gallery Section',
         subtitle: subtitleParts.filter(Boolean).join(' · '),

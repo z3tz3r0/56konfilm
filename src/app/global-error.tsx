@@ -13,7 +13,9 @@ export default function GlobalError({
         <div className="text-center">
           <h1 className="text-4xl font-bold">Something went wrong</h1>
           <p className="mt-4 text-lg text-white/70">
-            {error.digest ? `Error ID: ${error.digest}` : 'An unexpected error occurred.'}
+            {error.digest
+              ? `Error ID: ${error.digest}`
+              : 'An unexpected error occurred.'}
           </p>
           <button
             onClick={reset}

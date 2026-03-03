@@ -58,13 +58,13 @@ Implement the final operational and quality polish for the site by enabling on-d
 
 ## Data Factories Created
 
-*None created for this story. Static mock JSON payloads are defined within test files to minimize dependency bloat for simple webhook verification.*
+_None created for this story. Static mock JSON payloads are defined within test files to minimize dependency bloat for simple webhook verification._
 
 ---
 
 ## Fixtures Created
 
-*No new fixtures created. Reused existing `setMode` and `siteMode` fixtures from `tests/support/fixtures/index.ts`.*
+_No new fixtures created. Reused existing `setMode` and `siteMode` fixtures from `tests/support/fixtures/index.ts`._
 
 ---
 
@@ -97,7 +97,7 @@ Implement the final operational and quality polish for the site by enabling on-d
 
 ## Required data-testid Attributes
 
-*No new data-testid attributes required. The tests rely on semantic selectors (header img) and API endpoints.*
+_No new data-testid attributes required. The tests rely on semantic selectors (header img) and API endpoints._
 
 ---
 
@@ -187,19 +187,19 @@ npx playwright test tests/api/revalidate.api.spec.ts --debug
 **Results:**
 
 ```
-  1) [chromium] › tests/api/revalidate.api.spec.ts:7:7 › Sanity Revalidation API › should return 401 if secret is missing 
+  1) [chromium] › tests/api/revalidate.api.spec.ts:7:7 › Sanity Revalidation API › should return 401 if secret is missing
      Expected: 401, Received: 404
 
-  2) [chromium] › tests/api/revalidate.api.spec.ts:24:7 › Sanity Revalidation API › should return 400 if payload is invalid 
+  2) [chromium] › tests/api/revalidate.api.spec.ts:24:7 › Sanity Revalidation API › should return 400 if payload is invalid
      Expected: 400, Received: 404
 
-  3) [chromium] › tests/api/revalidate.api.spec.ts:39:7 › Sanity Revalidation API › should return 200 and revalidate: true for valid payload 
+  3) [chromium] › tests/api/revalidate.api.spec.ts:39:7 › Sanity Revalidation API › should return 200 and revalidate: true for valid payload
      Expected: 200, Received: 404
 
-  4) [chromium] › tests/e2e/deployment/revalidation.spec.ts:3:7 › Deployment & Performance Polish › should have priority LCP image on the homepage 
+  4) [chromium] › tests/e2e/deployment/revalidation.spec.ts:3:7 › Deployment & Performance Polish › should have priority LCP image on the homepage
      Expected: "fetchpriority" attribute "high", Received: null
 
-  5) [chromium] › tests/e2e/deployment/revalidation.spec.ts:18:7 › Deployment & Performance Polish › should return 401 for unauthorized revalidation requests 
+  5) [chromium] › tests/e2e/deployment/revalidation.spec.ts:18:7 › Deployment & Performance Polish › should return 401 for unauthorized revalidation requests
      Expected: 401, Received: 404
 ```
 

@@ -62,8 +62,6 @@ so that **I don't have to switch modes every time I refresh or return to the sit
   - [x] Verify E2E (`tests/e2e/mode-persistence.spec.ts`) passes.
   - [x] Reference `testing-conventions.md` for `toHaveClass` assertions (checking `data-mode` and `class="dark/light"`).
 
-
-
 - **Review Follow-ups (AI)**
   - [x] [AI-Review][HIGH] Ensure first-load sets `mode=production` cookie when missing (AC1 requires MUST). [src/hooks/useMode.ts:36]
   - [x] [AI-Review][HIGH] Eliminate theme/layout flash: ensure server markup applies correct theme class/variables for `production` (not just client `defaultTheme`). [src/app/layout.tsx:47]
@@ -86,14 +84,15 @@ so that **I don't have to switch modes every time I refresh or return to the sit
 
 ### Implementation Status Analysis
 
-| Component | Status | Action Required |
-|-----------|--------|-----------------|
-| `src/hooks/useMode.ts` | ✅ Implemented | **Create New**. Must contain Zustand store and action logic. |
-| `src/components/providers/ModeProvider.tsx` | ✅ Implemented | **Create New**. Client Component wrapper for hydration. |
-| `src/components/navigation/ModeSwitcher.tsx` | ✅ Refactored | **Modify**. Remove `useState`/`document.cookie`. Replace with `useMode`. Preserve animation logic. |
-| `src/app/layout.tsx` | ✅ Updated | **Modify**. Read cookie headers. Wrap children with `ModeProvider` passing `initialMode`. |
+| Component                                    | Status         | Action Required                                                                                    |
+| -------------------------------------------- | -------------- | -------------------------------------------------------------------------------------------------- |
+| `src/hooks/useMode.ts`                       | ✅ Implemented | **Create New**. Must contain Zustand store and action logic.                                       |
+| `src/components/providers/ModeProvider.tsx`  | ✅ Implemented | **Create New**. Client Component wrapper for hydration.                                            |
+| `src/components/navigation/ModeSwitcher.tsx` | ✅ Refactored  | **Modify**. Remove `useState`/`document.cookie`. Replace with `useMode`. Preserve animation logic. |
+| `src/app/layout.tsx`                         | ✅ Updated     | **Modify**. Read cookie headers. Wrap children with `ModeProvider` passing `initialMode`.          |
 
 ### Architecture Compliance
+
 - **State Management**: Zustand 5.0 (encapsulated in hook/store).
 - **Styling**: `next-themes` + `data-mode` for Tailwind 4.
 - **Directory Structure**:
@@ -101,6 +100,7 @@ so that **I don't have to switch modes every time I refresh or return to the sit
   - Providers -> `src/components/providers/`
 
 ### Code Reference
+
 ```typescript
 import { SiteMode } from '@/lib/preferences';
 import { useTheme } from 'next-themes';
@@ -113,15 +113,18 @@ interface ModeState {
 ```
 
 ### Out of Scope
+
 - CurtainWipe Animation (handled in Story 1.2).
 - `middleware.ts` implementation (assumed handled or deferred; focus on Client/Server Component sync).
 
 ## Dev Agent Record
 
 ### Agent Model Used
+
 BMad Create-Story Workflow / Gemini 2.0 Flash (Quality Review Applied)
 
 ### File List
+
 - `src/hooks/useMode.ts`
 - `src/hooks/useMode.test.ts`
 - `src/components/providers/ModeProvider.tsx`
@@ -137,11 +140,13 @@ Date: 2026-01-30
 Outcome: Changes Requested (action items created)
 
 Summary:
+
 - High: 6
 - Medium: 3
 - Low: 1
 
 Notes:
+
 - AC1 is not fully met: first-load cookie `mode=production` is not guaranteed.
 - AC4 is at risk: initial CSS defaults to light variables; server does not guarantee `.dark` on first paint.
 - Server cookie parsing should validate supported values to avoid invalid mode/theme state.
@@ -152,12 +157,11 @@ Notes:
 - 2026-01-31: E2E smoke verified (`npm run test:e2e`: 18 passed). Status set to `done`.
 
 ### Completion Notes
+
 - **Implemented:** `useMode` hook with Zustand store, `ModeProvider` for hydration, and refactored `ModeSwitcher`.
 - **Sync Logic:** Store synchronizes `next-themes`, `document.cookie` (1-year expiry, Secure), and `data-mode` attribute.
 - **Zero Layout Shift:** `RootLayout` reads cookie to force `data-mode` and `defaultTheme` on server-side render. `ModeProvider` uses ref-guard to sync store synchronously.
-- **Testing:** 
+- **Testing:**
   - `src/hooks/useMode.test.ts`: 100% Pass (Vitest).
   - `tests/e2e/mode-persistence.spec.ts`: 100% Pass (Playwright) on Desktop (Chrome/Firefox) and Mobile Chrome. Robust mobile menu interaction logic implemented.
 - **Build:** Verified production build `npm run build` passes with no errors.
-
-

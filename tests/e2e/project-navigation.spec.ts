@@ -1,7 +1,10 @@
 import { expect, test } from '../support/fixtures';
 
 test.describe('Project Navigation', () => {
-  test('should navigate to next project with cinematic transition', async ({ page, setMode }) => {
+  test('should navigate to next project with cinematic transition', async ({
+    page,
+    setMode,
+  }) => {
     await setMode('production');
     // 1. Visit a project page
     await page.goto('/en/work/e2e-hybrid-gallery');
@@ -12,8 +15,10 @@ test.describe('Project Navigation', () => {
 
     // 3. Assert Navigation Card is visible
     await expect(nextProjectTitle).toBeVisible();
-    await expect(page.getByTestId('next-project-label')).toHaveText('Next Project');
-    
+    await expect(page.getByTestId('next-project-label')).toHaveText(
+      'Next Project'
+    );
+
     // 4. Click Next Project (Trigger Transition)
     await nextProjectTitle.click();
 
@@ -28,10 +33,16 @@ test.describe('Project Navigation', () => {
     await expect(curtain).toBeHidden({ timeout: 15000 });
 
     // 8. Mode should persist (no mode switch)
-    await expect(page.locator('html')).toHaveAttribute('data-mode', 'production');
+    await expect(page.locator('html')).toHaveAttribute(
+      'data-mode',
+      'production'
+    );
   });
 
-  test('should keep wedding mode when navigating to next project', async ({ page, setMode }) => {
+  test('should keep wedding mode when navigating to next project', async ({
+    page,
+    setMode,
+  }) => {
     await setMode('wedding');
     await page.goto('/en/work/e2e-hybrid-gallery');
 

@@ -1,7 +1,9 @@
 import { expect, test } from '@playwright/test';
 
 test.describe('Media Gallery (Hybrid Video Support)', () => {
-  test('should render mixed image and video grid items correctly', async ({ page }) => {
+  test('should render mixed image and video grid items correctly', async ({
+    page,
+  }) => {
     // GIVEN: The server is configured to return a mock project for slug 'e2e-hybrid-gallery'
     // (See src/app/[lang]/work/[slug]/page.tsx getE2eMockProject)
 
@@ -15,14 +17,17 @@ test.describe('Media Gallery (Hybrid Video Support)', () => {
     // THEN: The Video Item should be visible and use a <video> tag
     const videoFigure = page.getByTestId('gallery-item-video');
     await expect(videoFigure).toBeVisible();
-    
+
     // Check specific video tag properties
     const video = videoFigure.locator('video');
     await expect(video).toBeAttached();
     await expect(video).toBeVisible();
 
     // Verify correct source
-    await expect(video).toHaveAttribute('src', 'https://cdn.sanity.io/files/test/video.mp4');
+    await expect(video).toHaveAttribute(
+      'src',
+      'https://cdn.sanity.io/files/test/video.mp4'
+    );
 
     // THEN: The video should have required attributes for autoplay functionality
     await expect(video).toHaveAttribute('autoplay', '');

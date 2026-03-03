@@ -20,4 +20,5 @@ export const createProject = (overrides: Partial<Project> = {}): Project => ({
   ...overrides,
 });
 
-export const createProjects = (count: number) => Array.from({ length: count }, () => createProject());
+export const createProjects = (count: number) =>
+  Array.from({ length: count }, () => createProject());

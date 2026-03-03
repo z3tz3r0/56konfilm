@@ -129,6 +129,7 @@ so that **I can still view the content even if I don't see heavy parallax effect
 ### Git Intelligence Summary
 
 Recent commits indicate:
+
 - UI transition and motion typing were recently refactored (`abfd5f8`), so preserve those patterns.
 - E2E suite was hardened for flake resistance (`d962860`), so new tests should follow the same strict-locator and typed-helper style.
 - Sanity/schema strict typing is active (`7896bc5`), so avoid weak typing in newly introduced utility/hook modules.

@@ -37,7 +37,11 @@ export const galleryItemType = defineType({
       },
       hidden: ({ parent }) => parent?.mediaType !== 'video',
     }),
-    localizedStringField({ name: 'label', title: 'Label', description: 'ข้อความที่แสดงบนสื่อ' }),
+    localizedStringField({
+      name: 'label',
+      title: 'Label',
+      description: 'ข้อความที่แสดงบนสื่อ',
+    }),
   ],
   preview: {
     select: { title: 'label.0.value', media: 'media.image' },
@@ -46,4 +50,3 @@ export const galleryItemType = defineType({
     },
   },
 });
-

@@ -9,8 +9,9 @@ I want **the website to change its entire look and feel when I switch to Wedding
 So that **I feel I am in a romantic, studio environment rather than a raw production house.**
 
 **CRITICAL DESIGN REQUIREMENT:**
+
 - **Strict Fidelity:** Implementations MUST strictly follow the breakdown in `_bmad_output/planning-artifacts/design-assets/`.
-- **Reference Assets:** 
+- **Reference Assets:**
   - `public/high-frame/R00_Portfolio_Wedding.png`
   - `_bmad_output/planning-artifacts/design-assets/wedding/common/section-navigation-desktop.png`
 - **Flexibility:** Admin must be able to manage this content via Sanity, but the frontend presentation must map 1:1 to the design assets.

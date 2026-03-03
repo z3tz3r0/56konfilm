@@ -1,4 +1,3 @@
-
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ArrayOfObjectsInputProps } from 'sanity';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -34,16 +33,14 @@ vi.mock('@sanity/ui', () => ({
 
 describe('MultiUploadArrayInput', () => {
   const mockOnChange = vi.fn();
-  
+
   // Minimal mock of props required for the component
   const defaultProps: Partial<ArrayOfObjectsInputProps> = {
     onChange: mockOnChange,
     schemaType: {
       jsonType: 'array',
       name: 'items',
-      of: [
-        { name: 'galleryItem', type: { name: 'galleryItem' } } as any
-      ],
+      of: [{ name: 'galleryItem', type: { name: 'galleryItem' } } as any],
     } as any,
     members: [],
     renderDefault: vi.fn(), // If we wrap default
@@ -60,9 +57,11 @@ describe('MultiUploadArrayInput', () => {
     render(<MultiUploadArrayInput {...(defaultProps as any)} />);
 
     // WHEN: Dropping an image file
-    const file = new File(['dummy content'], 'test-image.png', { type: 'image/png' });
+    const file = new File(['dummy content'], 'test-image.png', {
+      type: 'image/png',
+    });
     const dropZone = screen.getByTestId('multi-upload-dropzone');
-    
+
     // Simulate Drag & Drop assertions (red phase - functionality not implemented)
     fireEvent.drop(dropZone, {
       dataTransfer: {
@@ -79,7 +78,9 @@ describe('MultiUploadArrayInput', () => {
     expect(mockOnChange).toHaveBeenCalled();
     const calls = mockOnChange.mock.calls;
     // Inspect patch content if needed, but presence is enough for now
-    const patchCall = calls.find(call => JSON.stringify(call).includes('setIfMissing'));
+    const patchCall = calls.find((call) =>
+      JSON.stringify(call).includes('setIfMissing')
+    );
     expect(patchCall).toBeDefined();
   });
 
@@ -90,20 +91,22 @@ describe('MultiUploadArrayInput', () => {
     render(<MultiUploadArrayInput {...(defaultProps as any)} />);
 
     // WHEN: Dropping a video file
-    const file = new File(['video content'], 'video.mp4', { type: 'video/mp4' });
+    const file = new File(['video content'], 'video.mp4', {
+      type: 'video/mp4',
+    });
     const dropZone = screen.getByTestId('multi-upload-dropzone');
-    
+
     fireEvent.drop(dropZone, {
       dataTransfer: {
         files: [file],
       },
     });
 
-    // THEN: Asset upload should be initiated for 'file' type usually, or 'image' if Sanity handles it, 
+    // THEN: Asset upload should be initiated for 'file' type usually, or 'image' if Sanity handles it,
     // but AC says "mediaType = video", "videoFile = ..."
     await waitFor(() => {
-        // Sanity client.assets.upload('file', ...) for videos usually
-        expect(mockUpload).toHaveBeenCalledWith('file', file, expect.anything());
+      // Sanity client.assets.upload('file', ...) for videos usually
+      expect(mockUpload).toHaveBeenCalledWith('file', file, expect.anything());
     });
   });
 
@@ -113,7 +116,7 @@ describe('MultiUploadArrayInput', () => {
 
     const file = new File(['content'], 'test.png', { type: 'image/png' });
     const dropZone = screen.getByTestId('multi-upload-dropzone');
-    
+
     fireEvent.drop(dropZone, { dataTransfer: { files: [file] } });
 
     await waitFor(() => {

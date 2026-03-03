@@ -31,10 +31,10 @@ export default function TestHeroPage() {
         image: {
           asset: {
             _ref: 'image-0000000000000000000000000000000000000000-1920x1080-jpg',
-            _type: 'reference'
-          }
-        }
-      }
+            _type: 'reference',
+          },
+        },
+      },
     ],
     ctas: [],
   };

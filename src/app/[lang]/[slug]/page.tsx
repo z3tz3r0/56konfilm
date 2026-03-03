@@ -8,8 +8,7 @@ import { SiteSettings } from '@/types/siteSettings';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-const IS_E2E =
-  process.env.E2E_TEST === '1';
+const IS_E2E = process.env.E2E_TEST === '1';
 
 interface PageProps {
   params: Promise<{
@@ -21,7 +20,9 @@ interface PageProps {
   }>;
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { lang, slug } = await params;
 
   const [page, settings] = await Promise.all([
@@ -154,19 +155,22 @@ async function fetchPageDocument(
           testimonials: [
             {
               _key: 'testimonial-1',
-              quote: 'We felt seen and heard from the first meeting. The film captured every emotion.',
+              quote:
+                'We felt seen and heard from the first meeting. The film captured every emotion.',
               authorName: 'Anya W.',
               authorTitle: 'Bride',
             },
             {
               _key: 'testimonial-2',
-              quote: 'Our families cried watching the highlight. It was cinematic and intimate.',
+              quote:
+                'Our families cried watching the highlight. It was cinematic and intimate.',
               authorName: 'Marcus L.',
               authorTitle: 'Groom',
             },
             {
               _key: 'testimonial-3',
-              quote: 'Absolutely stunning work. The team was calm, kind, and professional.',
+              quote:
+                'Absolutely stunning work. The team was calm, kind, and professional.',
               authorName: 'Pimchanok T.',
               authorTitle: 'Bride',
             },
@@ -185,7 +189,7 @@ async function fetchPageDocument(
   const page = await sanityFetch<PageDocument | null>({
     query: pageBySlugQuery,
     params: { slug, lang, mode },
-    tags: ['page', slug],
+    tags: [mode === 'production' ? 'productionPages' : 'weddingPages', slug],
   });
 
   return page;
