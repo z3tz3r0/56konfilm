@@ -12,6 +12,8 @@ export const structure: StructureResolver = (S) =>
       S.divider(),
       ...S.documentTypeListItems().filter(
         (item) =>
-          item.getId() !== 'settings' && item.getId() !== 'cmsCredentials'
+          item.getId() !== 'settings' &&
+          item.getId() !== 'cmsCredentials' &&
+          item.getId() !== 'page'
       ),
     ]);
