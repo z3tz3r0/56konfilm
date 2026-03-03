@@ -43,7 +43,9 @@ export default function SectionShell({
     backgroundVariants[background ?? 'default'] ?? backgroundVariants.default;
   const paddingClass = disablePadding ? '' : 'px-14 py-16 md:px-24';
   const videoAsset = media?.find((item) => item.mimeType?.startsWith('video'));
-  const imageAsset = media?.find((item) => item.image || item.url);
+  const imageAsset = media?.find(
+    (item) => item.image || (item.url && !item.mimeType?.startsWith('video'))
+  );
 
   const posterUrl = imageAsset?.image
     ? urlFor(imageAsset.image)
