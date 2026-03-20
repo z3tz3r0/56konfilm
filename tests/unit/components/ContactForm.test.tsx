@@ -2,7 +2,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 // @ts-ignore - Module does not exist yet
 import { ContactForm } from '@/components/features/contact/ContactForm';
-import { useMode } from '@/hooks/useMode';
+import { useMode } from '@shared/hooks/useMode';
 
 // Mock useMode
 vi.mock('@/hooks/useMode', () => ({

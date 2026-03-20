@@ -1,4 +1,4 @@
-import { type SchemaTypeDefinition } from 'sanity';
+import { Template } from 'sanity';
 import { cmsCredentialsType } from './cmsCredentials';
 import { backgroundMediaType } from './objects/backgroundMedia';
 import { cardItemType } from './objects/cardItem';
@@ -26,18 +26,18 @@ import { testimonialSectionType } from './sections/testimonialSection';
 import { timelineSectionType } from './sections/timelineSection';
 import { twoColumnSectionType } from './sections/twoColumnSection';
 import { settingsType } from './settings';
-import { productionType } from '@/sanity/schemaTypes/productionType';
-import { weddingType } from '@/sanity/schemaTypes/weddingType';
+// import { productionType } from '@/sanity/schemaTypes/productionType';
+// import { weddingType } from '@/sanity/schemaTypes/weddingType';
 
-export const schemaType: { types: SchemaTypeDefinition[] } = {
+export const schemaType = {
   types: [
     postType,
     settingsType,
     cmsCredentialsType, // Hidden from Studio UI but registered for API access
     projectType,
     pageType,
-    productionType,
-    weddingType,
+    // productionType,
+    // weddingType,
     heroSectionType,
     twoColumnSectionType,
     cardCollectionSectionType,
@@ -61,4 +61,27 @@ export const schemaType: { types: SchemaTypeDefinition[] } = {
     socialMediaType,
     seoObjectType,
   ],
+  // บังคับค่า siteMode โดยตัดสินใจจาก document ที่ user กดสร้าง
+  // จาก document 'Production Pages' หรือ 'Wedding Pages'?
+  templates: (prev: Template[]) => {
+    const defaultTemplate = [
+      {
+        id: 'production-pages',
+        title: 'Production Pages',
+        schemaType: 'page',
+        value: {
+          siteMode: 'production',
+        },
+      },
+      {
+        id: 'wedding-pages',
+        title: 'Wedding Pages',
+        schemaType: 'page',
+        value: {
+          siteMode: 'wedding',
+        },
+      },
+    ];
+    return [...prev, ...defaultTemplate];
+  },
 };

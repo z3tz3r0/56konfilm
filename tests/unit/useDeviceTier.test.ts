@@ -1,7 +1,6 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-
-import { useDeviceFeatureFlags, useDeviceTier } from '@/hooks/useDeviceTier';
+import { useDeviceTier } from '@shared/hooks';
 
 vi.mock('@/lib/performance/deviceTier', () => ({
   getDeviceCapabilities: vi.fn(() => ({
@@ -42,8 +41,8 @@ describe('useDeviceTier', () => {
     expect(result.current.useSimplifiedTransitions).toBe(true);
   });
 
-  it('useDeviceFeatureFlags returns subset flags plus initialization state', async () => {
-    const { result } = renderHook(() => useDeviceFeatureFlags());
+  it('useDeviceTier returns subset flags plus initialization state', async () => {
+    const { result } = renderHook(() => useDeviceTier());
 
     await waitFor(() => {
       expect(result.current.isInitialized).toBe(true);

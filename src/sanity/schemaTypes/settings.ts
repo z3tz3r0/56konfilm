@@ -1,5 +1,4 @@
 import { defineField, defineType } from 'sanity';
-
 import { localizedStringField, localizedTextField } from './objects/localized';
 import { socialMediaType } from './objects/socialMedia';
 
@@ -10,10 +9,12 @@ export const settingsType = defineType({
   groups: [
     { name: 'branding', title: 'Branding', default: true },
     { name: 'navigation', title: 'Navigation' },
-    { name: 'contact', title: 'Contact' },
+    { name: 'siteConfig', title: 'Site Configuration' },
+    { name: 'contact', title: 'Contact & Social' },
     { name: 'seo', title: 'SEO' },
   ],
   fields: [
+    // --- Branding ---
     defineField({
       name: 'favicon',
       title: 'Favicon',
@@ -28,10 +29,13 @@ export const settingsType = defineType({
     localizedStringField({
       name: 'siteTitle',
       title: 'Brand Name',
-      description: 'ชื่อแบรนด์หรือชื่อสตูดิโอ (ใช้ใน Navbar และเป็นค่าเริ่มต้นของ SEO)',
+      description:
+        'ชื่อแบรนด์หรือชื่อสตูดิโอ (ใช้ใน Navbar และเป็นค่าเริ่มต้นของ SEO)',
       group: 'branding',
       validation: (Rule) => Rule.required(),
     }),
+
+    // --- Navigation ---
     defineField({
       name: 'productionNav',
       title: 'Production Navigation',
@@ -88,6 +92,32 @@ export const settingsType = defineType({
         },
       ],
     }),
+
+    // --- Site Configuration ---
+    defineField({
+      name: 'productionPortfolioPage',
+      title: 'Portfolio Page for Production Mode',
+      description:
+        'เลือกหน้าพจที่คุณต้องการใช้แสดงรายการผลงานสำหรับโหมด "Production"',
+      type: 'reference',
+      to: [{ type: 'page' }],
+      group: 'siteConfig',
+      options: { filter: 'siteMode == "production"' },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'weddingPortfolioPage',
+      title: 'Portfolio Page for Wedding Mode',
+      description:
+        'เลือกหน้าพจที่คุณต้องการใช้แสดงรายการผลงานสำหรับโหมด "Wedding"',
+      type: 'reference',
+      to: [{ type: 'page' }],
+      group: 'siteConfig',
+      options: { filter: 'siteMode == "wedding"' },
+      validation: (Rule) => Rule.required(),
+    }),
+
+    // --- Contact & Social ---
     localizedStringField({
       name: 'companyTitle',
       title: 'Company Title',
@@ -131,10 +161,13 @@ export const settingsType = defineType({
       group: 'contact',
       of: [{ type: socialMediaType.name }],
     }),
+
+    // --- SEO ---
     defineField({
       name: 'seo',
       title: 'Global SEO Default',
-      description: 'ค่า SEO พื้นฐานของเว็บไซต์ (จะถูกใช้หากหน้าต่างๆ ไม่ได้ตั้งค่า SEO ไว้)',
+      description:
+        'ค่า SEO พื้นฐานของเว็บไซต์ (จะถูกใช้หากหน้าต่างๆ ไม่ได้ตั้งค่า SEO ไว้)',
       type: 'seo',
       group: 'seo',
     }),

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 // @ts-ignore - Module does not exist yet
 import { submitContactForm } from '@/actions/contact';
-import { ContactFormValues } from '@/lib/schemas/contact';
+import { ContactFormValues } from '@features/contact-section/validation';
 
 describe('submitContactForm Server Action', () => {
   it('should return error for invalid data', async () => {

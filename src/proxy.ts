@@ -1,117 +1,83 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-import { selectPreferences } from '@/lib/i18nUtils';
-
-const PUBLIC_FILE = /\.(.*)$/;
+import { SUPPORTED_LOCALES, SUPPORTED_SITE_MODES } from '@shared/config';
+import { derivePreferences } from '@shared/lib/i18n';
+import { isSupportedLocale, isSupportedMode } from '@/shared/utils';
 
 export function proxy(request: NextRequest) {
-  const pathname = request.nextUrl.pathname;
+  const { pathname } = request.nextUrl;
 
-  // 1. Skip public files and API routes (already handled by matcher, but good safety)
+  // --- 1) ข้ามไฟล์ระบบและหลังบ้าน ---
+  // เช็กซ้ำอีกครั้งเพื่อความปลอดภัยสูงสุด (Double Check)
   if (
-    PUBLIC_FILE.test(pathname) ||
     pathname.startsWith('/_next') ||
     pathname.includes('/api/') ||
-    pathname.startsWith('/sanity-cms')
+    pathname.startsWith('/sanity-cms') ||
+    pathname.startsWith('/assets') ||
+    ['/favicon.ico', '/robots.txt', '/sitemap.xml'].includes(pathname)
   ) {
     return NextResponse.next();
   }
 
-  // 2. Check for locale in path
-  const pathnameIsMissingLocale = (['en', 'th'] as const).every(
-    (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
-  );
+  // --- 2) เช็กโครงสร้าง /[lang]/[mode] ---
+  const pathSegments = pathname.split('/').filter(Boolean);
+  const urlLang = SUPPORTED_LOCALES.find((lang) => lang === pathSegments[0]);
+  const urlMode = SUPPORTED_SITE_MODES.find((mode) => mode === pathSegments[1]);
 
-  // 3. Resolve preferences
-  // We pass 'null' for queryLocale because we are now path-based,
-  // but if we wanted to support ?lang= override, we could keep it.
-  const { locale, mode, shouldPersistLocale, shouldPersistMode } =
-    selectPreferences({
-      queryLocale: request.nextUrl.searchParams.get('lang'),
-      queryMode: request.nextUrl.searchParams.get('mode'),
-      cookieLocale: request.cookies.get('lang')?.value,
-      cookieMode: request.cookies.get('mode')?.value,
-      acceptLanguage: request.headers.get('accept-language'),
-    });
+  // --- 2.1) ถ้า Path มีครบทั้ง /[lang]/[mode] แล้ว
+  // ปล. สลับ logic ใช้ URL เป็น Single Source of truth
+  // เพื่อลดเวลาในการคำนวณของ middlewares
+  if (urlLang && urlMode) {
+    const response = NextResponse.next();
 
-  // 4. Redirect if locale is missing in path
-  if (pathnameIsMissingLocale) {
-    const newUrl = new URL(
-      `/${locale}${pathname.startsWith('/') ? '' : '/'}${pathname}`,
-      request.url
-    );
-    // Preserve query params
-    newUrl.search = request.nextUrl.search;
-
-    const response = NextResponse.redirect(newUrl);
-
-    // Set cookies on redirect if needed
-    if (shouldPersistLocale || request.cookies.get('lang')?.value !== locale) {
-      response.cookies.set({
-        name: 'lang',
-        value: locale,
-        path: '/',
-        maxAge: 60 * 60 * 24 * 365,
-      });
+    // Sync คุกกี้ให้ตรงกับ Path (Path is Truth)
+    if (request.cookies.get('lang')?.value !== urlLang) {
+      response.cookies.set('lang', urlLang, { path: '/', maxAge: 31536000 });
     }
-
-    if (shouldPersistMode || request.cookies.get('mode')?.value !== mode) {
-      response.cookies.set({
-        name: 'mode',
-        value: mode,
-        path: '/',
-        maxAge: 60 * 60 * 24 * 365,
-      });
+    if (request.cookies.get('mode')?.value !== urlMode) {
+      response.cookies.set('mode', urlMode, { path: '/', maxAge: 31536000 });
     }
 
     return response;
   }
 
-  // 5. If locale matches path, we can still update cookies if they drift
-  // (e.g. user manually navigated to /th but cookie was en)
-  // Extract locale from path
-  const pathLocale = (['en', 'th'] as const).find(
-    (l) => pathname.startsWith(`/${l}/`) || pathname === `/${l}`
-  );
+  // --- 2.2) ถ้า Path ไม่ครบ (เช่นเข้า / หรือ /th หรือ /production) ---
+  // ให้ตัดสินใจเลือก Locale/Mode ที่เหมาะสมที่สุด
+  const { locale: targetLocale, mode: targetMode } = derivePreferences({
+    urlLocale: urlLang || request.nextUrl.searchParams.get('lang'),
+    urlMode: urlMode || request.nextUrl.searchParams.get('mode'),
+    cookieLocale: request.cookies.get('lang')?.value,
+    cookieMode: request.cookies.get('mode')?.value,
+    acceptLanguage: request.headers.get('accept-language'),
+  });
 
-  const response = NextResponse.next();
+  // --- 3) สร้าง URL ใหม่ในรูปแบบ /[targetLocale]/[targetMode]/[...ส่วนที่เหลือ] ---
+  // โดยเราจะเอาส่วนที่ไม่ใช่ lang หรือ mode (ที่ตรงกับระบบของเรา) เท่านั้น
+  // ค่าที่เอา เช่น xyz, ads เป็นต้น
+  const remainingSegments = pathSegments.filter((segment) => {
+    const isAnyLocale = isSupportedLocale(segment);
+    const isAnyMode = isSupportedMode(segment);
+    return !isAnyLocale && !isAnyMode;
+  });
 
-  // If path has a valid locale, sync cookie to THAT locale (Path is Truth)
-  if (pathLocale && request.cookies.get('lang')?.value !== pathLocale) {
-    response.cookies.set({
-      name: 'lang',
-      value: pathLocale,
-      path: '/',
-      maxAge: 60 * 60 * 24 * 365,
-    });
-  } else if (
-    !pathLocale &&
-    (shouldPersistLocale || request.cookies.get('lang')?.value !== locale)
-  ) {
-    // If no path locale (should cause redirect above, but fallback), sync preference
-    response.cookies.set({
-      name: 'lang',
-      value: locale,
-      path: '/',
-      maxAge: 60 * 60 * 24 * 365,
-    });
-  }
+  const newPathname = `/${targetLocale}/${targetMode}/${remainingSegments.join('/')}`;
+  if (newPathname === pathname) return NextResponse.next();
 
-  if (shouldPersistMode || request.cookies.get('mode')?.value !== mode) {
-    response.cookies.set({
-      name: 'mode',
-      value: mode,
-      path: '/',
-      maxAge: 60 * 60 * 24 * 365,
-    });
-  }
+  // ลบ trailing slash ถ้ามี (ยกเว้นหน้า root)
+  const cleanPathname =
+    newPathname.replace(/\/$/, '') || `/${targetLocale}/${targetMode}`;
+
+  const redirectUrl = new URL(cleanPathname, request.url);
+  redirectUrl.search = request.nextUrl.search; // เก็บ Query Params ไว้
+
+  const response = NextResponse.redirect(redirectUrl);
+  response.cookies.set('lang', targetLocale, { path: '/', maxAge: 31536000 });
+  response.cookies.set('mode', targetMode, { path: '/', maxAge: 31536000 });
 
   return response;
 }
 
 export const config = {
   matcher: [
-    // Skip all internal paths (_next), API, assets, favicon, sanity-cms
-    '/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|sanity-cms).*)',
+    '/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|sanity-cms|robots.txt|sitemap.xml).*)',
   ],
 };

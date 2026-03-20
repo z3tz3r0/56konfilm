@@ -1,6 +1,9 @@
 'use server';
 
-import { contactFormSchema, ContactFormValues } from '@/lib/schemas/contact';
+import {
+  contactFormSchema,
+  ContactFormValues,
+} from '@features/contact-section/validation';
 
 type ActionState = {
   success: boolean;

@@ -48,7 +48,7 @@ export const logoGridSectionType = defineType({
         `${count} logo${count === 1 ? '' : 's'}`,
       ];
       return {
-        title: title || 'Logo Grid Section',
+        title: title ? `${title} section` : 'Logo Grid Section',
         subtitle: subtitleParts.filter(Boolean).join(' · '),
       };
     },

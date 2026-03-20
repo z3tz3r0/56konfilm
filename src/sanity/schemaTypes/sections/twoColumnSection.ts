@@ -58,18 +58,16 @@ export const twoColumnSectionType = defineType({
   ],
   preview: {
     select: {
-      heading: 'content.heading.0.value',
       eyebrow: 'content.eyebrow.0.value',
       layout: 'layout',
       media: 'media.image',
     },
-    prepare({ heading, eyebrow, layout, media }) {
+    prepare({ eyebrow, layout, media }) {
       const subtitleParts = [
-        eyebrow,
         layout === 'textRight' ? 'Media Left' : 'Text Left',
       ];
       return {
-        title: heading || 'Two Column Section',
+        title: eyebrow ? `${eyebrow} section` : 'Two Column Section',
         subtitle: subtitleParts.filter(Boolean).join(' · '),
         media,
       };

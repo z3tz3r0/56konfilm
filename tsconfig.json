@@ -13,13 +13,19 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
+    /* File System Consistency */
+    "forceConsistentCasingInFileNames": true,
     "plugins": [
       {
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["src/*"],
+      "@features/*": ["src/features/*"],
+      "@services/*": ["src/services/*"],
+      "@shared/*": ["src/shared/*"]
     }
   },
   "include": [

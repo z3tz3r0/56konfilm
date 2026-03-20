@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 // @ts-ignore - Module does not exist yet (Red Phase)
-import { contactFormSchema } from '@/lib/schemas/contact';
+import { contactFormSchema } from '@features/contact-section/validation';
 
 describe('Contact Form Validation', () => {
   it('should validate a valid commercial inquiry', () => {

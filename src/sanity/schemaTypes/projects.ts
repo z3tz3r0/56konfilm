@@ -47,21 +47,16 @@ export const projectType = defineType({
       title: 'Site Mode',
       description:
         'เลือกโหมดที่ต้องการให้โปรเจกต์นี้แสดงผล (สามารถเลือกได้ทั้งคู่หากเป็นงานที่เข้าข่ายทั้ง Production และ Wedding)',
-      type: 'array',
+      type: 'string',
       group: 'main',
-      of: [{ type: 'string' }],
       options: {
         list: [
           { title: 'Production', value: 'production' },
           { title: 'Wedding', value: 'wedding' },
         ],
+        layout: 'radio',
       },
-      validation: (Rule) =>
-        Rule.required()
-          .min(1)
-          .error(
-            'At least one site mode (Production/Wedding) must be selected.'
-          ),
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'client',

@@ -61,7 +61,7 @@ export const cardCollectionSectionType = defineType({
         `${count} card${count === 1 ? '' : 's'}`,
       ];
       return {
-        title: title || 'Card Collection',
+        title: title ? `${title} section` : 'Card Collection',
         subtitle: subtitleParts.filter(Boolean).join(' · '),
       };
     },

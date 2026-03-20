@@ -45,18 +45,18 @@ export const timelineSectionType = defineType({
   ],
   preview: {
     select: {
-      heading: 'heading.heading.0.value',
+      title: 'heading.heading.0.value',
       steps: 'steps',
       background: 'background',
     },
-    prepare({ heading, steps, background }) {
+    prepare({ title, steps, background }) {
       const count = Array.isArray(steps) ? steps.length : 0;
       const subtitleParts = [
         background && background !== 'default' ? background : null,
         `${count} step${count === 1 ? '' : 's'}`,
       ];
       return {
-        title: heading || 'Timeline Section',
+        title: title ? `${title} section` : 'Timeline Section',
         subtitle: subtitleParts.filter(Boolean).join(' · '),
       };
     },

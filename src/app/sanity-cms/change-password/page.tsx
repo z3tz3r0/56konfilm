@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { verifySession } from '@/lib/auth';
+import { verifySession } from '@shared/lib/auth';
 import ChangePasswordForm from './ChangePasswordForm';
 
 export const metadata = {

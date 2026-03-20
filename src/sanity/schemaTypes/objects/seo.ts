@@ -41,7 +41,10 @@ export const seoObjectType = defineType({
           if (enDesc.length > 160 || thDesc.length > 160) {
             return 'Description is too long (over 160 chars). It might be truncated.';
           }
-          if ((enDesc.length > 0 && enDesc.length < 50) || (thDesc.length > 0 && thDesc.length < 50)) {
+          if (
+            (enDesc.length > 0 && enDesc.length < 50) ||
+            (thDesc.length > 0 && thDesc.length < 50)
+          ) {
             return 'Description is a bit short. Try to add more details for better SEO.';
           }
           return true;

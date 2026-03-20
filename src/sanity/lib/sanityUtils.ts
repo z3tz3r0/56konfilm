@@ -1,4 +1,4 @@
-import { SiteMode } from '@/lib/preferences';
+import { SiteMode } from '@shared/config';
 import { localizedStringField } from '@/sanity/schemaTypes/objects/localized';
 import { defineField, defineType, SlugValidationContext } from 'sanity';
 
@@ -22,7 +22,7 @@ async function validateSlugUniquenessByMode(
 
   const client = getClient({ apiVersion: '2023-01-01' });
   const cleanId = id.replace(/^drafts\./, '');
-  const mode = (document as { siteMode?: string })?.siteMode || 'production';
+  const mode = document?.siteMode || 'production';
   const slugCandidate = slug as string | { current?: string } | undefined;
   const slugValue =
     typeof slugCandidate === 'string'
@@ -43,23 +43,17 @@ async function validateSlugUniquenessByMode(
   };
 
   const query = `
-    count(*[
-      _type in ["productionPages", "weddingPages"] && 
-      slug.current == $slug &&
-      !(_id in [$draft, $published]) &&
-      (
-        // 1. ถ้าหน้าปัจจุบันเป็น 'both' ต้องไม่ซ้ำกับใครเลยในชื่อนี้
-        $mode == "both" || 
-        
-        // 2. ถ้าหน้าปัจจุบันเป็น 'production' หรือ 'wedding'
-        // ให้เช็กเฉพาะหน้าที่อยู่ในโหมดเดียวกัน หรือหน้าที่เป็น 'both'
-        (
-          coalesce(siteMode, "production") == $mode || 
-          coalesce(siteMode, "production") == "both"
-        )
-      )
-    ])
-  `;
+  count(*[
+    // 1. เลือกเช็กเฉพาะประเภทที่ตรงกับโหมดปัจจุบัน
+      (siteMode == $mode && _type == "page") && 
+    
+    // 2. เช็ก Slug ที่ซ้ำกัน
+    slug.current == $slug &&
+    
+    // 3. ยกเว้นตัวมันเอง (ทั้งฉบับร่างและตัวจริง)
+    !(_id in [$draft, $published])
+  ])
+`;
 
   try {
     const result = await client.fetch(query, params);
