@@ -1,6 +1,5 @@
-import { sanityFetch } from '@/sanity/lib/live';
 import { env } from '@shared/config';
-import { ClientReturn, ContentSourceMap, createClient } from 'next-sanity';
+import { createClient } from 'next-sanity';
 
 const projectId = env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = env.NEXT_PUBLIC_SANITY_DATASET;

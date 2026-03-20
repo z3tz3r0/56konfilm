@@ -1,14 +1,13 @@
 import { ImageSource } from './sanity';
-import { PageContentBlock } from './pageBlock';
 import { SiteMode } from '@shared/config';
 
-interface PageDocument {
+interface PageDocument<TBlocks = unknown> {
   title?: string;
   slug: string;
   seoTitle?: string;
   seo?: SeoFields;
   siteMode: SiteMode;
-  contentBlocks?: PageContentBlock[];
+  contentBlocks?: TBlocks[];
 }
 
 interface SeoFields {

@@ -1,7 +1,10 @@
-import { PageDocument } from '@shared/types';
 import { SiteMode } from '@shared/config';
+import { FullPageDocument } from '@/features/PageBuilder';
 
-export function getMockPage(mode: SiteMode, slug: string): PageDocument | null {
+export function getMockPage(
+  mode: SiteMode,
+  slug: string
+): FullPageDocument | null {
   // ข้อมูลหน้า About
   if (slug === 'about') {
     return {

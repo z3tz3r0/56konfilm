@@ -1,30 +1,8 @@
 import { ImageSource } from './sanity';
-import { CardCollectionSectionBlock } from '@features/card-collection-section/types';
-import { CtaBannerSectionBlock } from '@features/cta-banner-section/types/ctaBannerBlock.types';
-import { HeroSectionBlock } from '@features/hero-section/types';
-import { LogoGridSectionBlock } from '@features/logo-grid-section/types';
-import { MediaGallerySectionBlock } from '@features/media-gallery-section/types';
-import { PackagesSectionBlock } from '@features/package-section/types';
-import { PhilosophySectionBlock } from '@features/philosophy-section/types';
-import { TestimonialSectionBlock } from '@features/testimonial-section/types';
-import { TimelineSectionBlock } from '@features/timeline-section/types';
-import { TwoColumnSectionBlock } from '@features/two-column-section/types';
 
 interface BaseBlock {
   _key?: string;
 }
-
-type PageContentBlock =
-  | HeroSectionBlock
-  | TwoColumnSectionBlock
-  | CardCollectionSectionBlock
-  | TimelineSectionBlock
-  | MediaGallerySectionBlock
-  | LogoGridSectionBlock
-  | CtaBannerSectionBlock
-  | PackagesSectionBlock
-  | TestimonialSectionBlock
-  | PhilosophySectionBlock;
 
 // Content Cta
 type LinkType = 'internal' | 'external' | null;
@@ -51,10 +29,4 @@ interface BackgroundMediaItem {
   image?: ImageSource;
 }
 
-export type {
-  BaseBlock,
-  PageContentBlock,
-  ContentCta,
-  MediaItem,
-  BackgroundMediaItem,
-};
+export type { BaseBlock, ContentCta, MediaItem, BackgroundMediaItem };

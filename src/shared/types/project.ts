@@ -1,9 +1,8 @@
-import { PageContentBlock } from './pageBlock';
 import { SeoFields } from './page';
 import { ImageSource } from './sanity';
 import { SiteMode } from '@shared/config';
 
-interface Project {
+interface Project<TBlocks = unknown> {
   _id: string;
   title: string;
   overview: string;
@@ -14,7 +13,7 @@ interface Project {
   client?: string;
   services?: string[];
   year?: string;
-  contentBlocks?: PageContentBlock[];
+  contentBlocks?: TBlocks[];
   publishedAt?: string;
   seo?: SeoFields;
   nextProject?: NextProject;

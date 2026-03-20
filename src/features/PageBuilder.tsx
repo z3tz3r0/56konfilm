@@ -1,6 +1,16 @@
 import dynamic from 'next/dynamic';
-import { HeroSection } from '@features/hero-section/components';
-import { PageContentBlock, PageDocument } from '@shared/types';
+import { PageDocument } from '@shared/types';
+import { HeroSection } from './hero-section/components';
+import { HeroSectionBlock } from './hero-section/types';
+import { TwoColumnSectionBlock } from './two-column-section/types';
+import { CardCollectionSectionBlock } from './card-collection-section/types';
+import { TimelineSectionBlock } from './timeline-section/types';
+import { MediaGallerySectionBlock } from './media-gallery-section/types';
+import { LogoGridSectionBlock } from './logo-grid-section/types';
+import { CtaBannerSectionBlock } from './cta-banner-section/types';
+import { PackagesSectionBlock } from './package-section/types';
+import { TestimonialSectionBlock } from './testimonial-section/types';
+import { PhilosophySectionBlock } from './philosophy-section/types';
 import { Locale, SiteMode } from '@shared/config';
 
 const TwoColumnSection = dynamic(
@@ -32,8 +42,22 @@ const PhilosophySection = dynamic(
   () => import('@features/philosophy-section/components/PhilosophySection')
 );
 
+type PageContentBlock =
+  | HeroSectionBlock
+  | TwoColumnSectionBlock
+  | CardCollectionSectionBlock
+  | TimelineSectionBlock
+  | MediaGallerySectionBlock
+  | LogoGridSectionBlock
+  | CtaBannerSectionBlock
+  | PackagesSectionBlock
+  | TestimonialSectionBlock
+  | PhilosophySectionBlock;
+
+type FullPageDocument = PageDocument<PageContentBlock>;
+
 interface PageBuilderProps {
-  page: PageDocument;
+  page: FullPageDocument;
   lang: Locale;
   mode: SiteMode;
   metadata?: {
@@ -44,7 +68,7 @@ interface PageBuilderProps {
   enableSignature?: boolean;
 }
 
-export default function PageBuilder({
+function PageBuilder({
   page,
   lang,
   mode,
@@ -132,3 +156,6 @@ function hashBlocks(blocks: PageContentBlock[]) {
   }
   return `v1:${hash}`;
 }
+
+export default PageBuilder;
+export type { PageContentBlock, FullPageDocument };

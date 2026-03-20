@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 // @ts-ignore - Module does not exist yet
-import { submitContactForm } from '@/actions/contact';
+import { submitContactForm } from '@/features/contact-section/actions';
 import { ContactFormValues } from '@features/contact-section/validation';
 
 describe('submitContactForm Server Action', () => {

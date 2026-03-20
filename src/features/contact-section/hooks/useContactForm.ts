@@ -1,6 +1,6 @@
 'use client';
 
-import { submitContactForm } from '@/actions/contact';
+import { submitContactForm } from '@/features/contact-section/actions';
 import { useMode } from '@shared/hooks';
 import {
   contactFormSchema,

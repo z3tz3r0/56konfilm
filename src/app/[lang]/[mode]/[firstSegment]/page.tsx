@@ -1,4 +1,4 @@
-import PageBuilder from '@features/PageBuilder';
+import PageBuilder, { FullPageDocument } from '@features/PageBuilder';
 import { buildMetadata } from '@shared/lib/seo';
 import { Locale, SiteMode } from '@shared/config';
 import { Metadata } from 'next';
@@ -44,7 +44,7 @@ export default async function Page({ params, searchParams }: PageProps) {
   const mockParams = await searchParams;
   const isMockMode = process.env.E2E_TEST === '1' || mockParams?.e2e === '1';
 
-  const page = isMockMode
+  const page: FullPageDocument | null = isMockMode
     ? getMockPage(mode, firstSegment)
     : await ContentService.getPage({ lang, mode, slug: firstSegment });
   if (!page) notFound();

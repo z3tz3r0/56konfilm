@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { SUPPORTED_LOCALES, SUPPORTED_SITE_MODES } from '@shared/config';
 import { derivePreferences } from '@shared/lib/i18n';
-import { isSupportedLocale, isSupportedMode } from '@/shared/utils';
+import { isSupportedLocale, isSupportedMode } from '@shared/utils';
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;

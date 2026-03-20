@@ -8,7 +8,8 @@ import {
   projectBySlugQuery,
   settingsQuery,
 } from '@/sanity/lib/queries';
-import { PageDocument, PageSlugs, Project, SiteSettings } from '@shared/types';
+import { PageSlugs, Project, SiteSettings } from '@shared/types';
+import { FullPageDocument, PageContentBlock } from '@features/PageBuilder';
 
 interface BaseParams {
   lang: Locale;
@@ -19,7 +20,7 @@ interface BaseParams {
 export class ContentService extends SanityBaseService {
   // --- Page ---
   static async getPage({ lang, mode, slug }: BaseParams) {
-    return this.fetch<PageDocument | null>({
+    return this.fetch<FullPageDocument | null>({
       query: pageBySlugQuery,
       params: {
         lang,
@@ -45,7 +46,7 @@ export class ContentService extends SanityBaseService {
 
   // --- Project ---
   static async getProject({ lang, mode, slug }: BaseParams) {
-    return this.fetch<Project | null>({
+    return this.fetch<Project<PageContentBlock> | null>({
       query: projectBySlugQuery,
       params: { lang, mode, slug },
       tags: [
