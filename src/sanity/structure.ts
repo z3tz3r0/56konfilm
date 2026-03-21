@@ -1,3 +1,4 @@
+import { env } from '@shared/config';
 import type {
   // StructureBuilder,
   StructureResolver,
@@ -87,6 +88,7 @@ export const structure: StructureResolver = (S) =>
           S.documentList()
             .title('Production Pages')
             .filter('_type == "page" && siteMode == "production"')
+            .apiVersion(env.NEXT_PUBLIC_SANITY_API_VERSION)
             .initialValueTemplates([
               S.initialValueTemplateItem('production-pages'),
             ])
@@ -100,6 +102,7 @@ export const structure: StructureResolver = (S) =>
           S.documentList()
             .title('Wedding Pages')
             .filter('_type == "page" && siteMode == "wedding"')
+            .apiVersion(env.NEXT_PUBLIC_SANITY_API_VERSION)
             .initialValueTemplates([
               S.initialValueTemplateItem('wedding-pages'),
             ])

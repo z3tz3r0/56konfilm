@@ -102,7 +102,9 @@ export const settingsType = defineType({
       type: 'reference',
       to: [{ type: 'page' }],
       group: 'siteConfig',
-      options: { filter: 'siteMode == "production"' },
+      options: {
+        filter: 'siteMode == "production"',
+      },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -113,7 +115,9 @@ export const settingsType = defineType({
       type: 'reference',
       to: [{ type: 'page' }],
       group: 'siteConfig',
-      options: { filter: 'siteMode == "wedding"' },
+      options: {
+        filter: 'siteMode == "wedding"',
+      },
       validation: (Rule) => Rule.required(),
     }),
 
