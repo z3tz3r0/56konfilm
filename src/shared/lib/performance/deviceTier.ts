@@ -52,7 +52,7 @@ function classifyDeviceTier(
 
   if (prefersReducedMotion || saveData) return 'low';
   if (hardwareConcurrency > 0 && hardwareConcurrency <= 2) return 'low';
-  if (hardwareConcurrency <= 4) return 'medium';
+  if (hardwareConcurrency > 0 && hardwareConcurrency <= 4) return 'medium';
   return 'high';
 }
 
