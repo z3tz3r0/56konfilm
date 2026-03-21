@@ -60,14 +60,16 @@ if (!parsed.success) {
   if (process.env.NODE_ENV !== 'test') {
     throw new Error('❌ Missing or Invalid environment variables');
   }
-  
-  console.warn('⚠️  Continuing tests with potentially invalid environment variables.');
+
+  console.warn(
+    '⚠️  Continuing tests with potentially invalid environment variables.'
+  );
 }
 
 // In tests, we prefer to have something even if it failed validation.
 // Using defaults for missing fields when possible.
-export const env = parsed.success 
-  ? parsed.data 
+export const env = parsed.success
+  ? parsed.data
   : envSchema.parse({
       NODE_ENV: process.env.NODE_ENV,
       NEXT_PUBLIC_SANITY_PROJECT_ID: 'test-project',
