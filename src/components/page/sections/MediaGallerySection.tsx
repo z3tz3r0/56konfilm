@@ -17,6 +17,7 @@ import { VideoItem } from './media-gallery/VideoItem';
 
 interface MediaGallerySectionProps {
   block: MediaGallerySectionBlock;
+  lang: string;
 }
 
 const containerVariants = {
@@ -44,9 +45,10 @@ const itemVariants = {
 
 export default function MediaGallerySection({
   block,
+  lang: propLang,
 }: MediaGallerySectionProps) {
   const params = useParams();
-  const lang = (params?.lang as string) || 'en';
+  const lang = propLang || (params?.lang as string) || 'en';
   const alignClass = getAlignmentClass(block.heading?.align);
   const isCentered = block.heading?.align === 'center';
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
@@ -169,6 +171,7 @@ export default function MediaGallerySection({
 
         <CtaGroup
           ctas={block.cta ? [block.cta] : undefined}
+          lang={lang}
           alignment={block.heading?.align}
         />
       </div>

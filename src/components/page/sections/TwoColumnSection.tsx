@@ -9,9 +9,13 @@ import { TwoColumnSectionBlock } from '@/types/sanity';
 
 interface TwoColumnSectionProps {
   block: TwoColumnSectionBlock;
+  lang: string;
 }
 
-export default function TwoColumnSection({ block }: TwoColumnSectionProps) {
+export default function TwoColumnSection({
+  block,
+  lang,
+}: TwoColumnSectionProps) {
   const isTextLeft = block.layout !== 'textRight';
   const textColumnOrder = isTextLeft ? 'md:order-1' : 'md:order-2';
   const mediaColumnOrder = isTextLeft ? 'md:order-2' : 'md:order-1';
@@ -44,6 +48,7 @@ export default function TwoColumnSection({ block }: TwoColumnSectionProps) {
           ) : null}
           <CtaGroup
             ctas={block.ctas}
+            lang={lang}
             alignment={block.content?.align}
             className="md:max-w-xs"
             fullWidth

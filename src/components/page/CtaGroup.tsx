@@ -6,6 +6,7 @@ import { getJustifyClass } from './utils';
 
 interface CtaGroupProps {
   ctas?: ContentCta[];
+  lang?: string;
   className?: string;
   alignment?: string;
   fullWidth?: boolean;
@@ -13,6 +14,7 @@ interface CtaGroupProps {
 
 export default function CtaGroup({
   ctas,
+  lang,
   alignment,
   className,
   fullWidth,
@@ -37,6 +39,7 @@ export default function CtaGroup({
         <CtaButton
           key={cta.externalUrl ?? cta.pageRef?.slug ?? cta.label}
           cta={cta}
+          lang={lang}
           className={className}
           fullWidth={!!fullWidth}
         />

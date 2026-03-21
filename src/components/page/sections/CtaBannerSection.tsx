@@ -6,9 +6,13 @@ import { CtaBannerSectionBlock } from '@/types/sanity';
 
 interface CtaBannerSectionProps {
   block: CtaBannerSectionBlock;
+  lang: string;
 }
 
-export default function CtaBannerSection({ block }: CtaBannerSectionProps) {
+export default function CtaBannerSection({
+  block,
+  lang,
+}: CtaBannerSectionProps) {
   // const isTextLeft = block.layout !== 'textRight';
   const alignClass = getAlignmentClass(block.content?.align);
 
@@ -81,7 +85,11 @@ export default function CtaBannerSection({ block }: CtaBannerSectionProps) {
               {block.content.body}
             </p>
           ) : null}
-          <CtaGroup ctas={block.ctas} alignment={block.content?.align} />
+          <CtaGroup
+            ctas={block.ctas}
+            lang={lang}
+            alignment={block.content?.align}
+          />
         </div>
       </div>
     </SectionShell>

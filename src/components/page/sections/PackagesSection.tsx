@@ -9,6 +9,7 @@ import { PackagesSectionBlock } from '@/types/sanity';
 
 interface PackagesSectionProps {
   block: PackagesSectionBlock;
+  lang: string;
 }
 
 const containerVariants = {
@@ -34,7 +35,10 @@ const itemVariants = {
   },
 } satisfies Variants;
 
-export default function PackagesSection({ block }: PackagesSectionProps) {
+export default function PackagesSection({
+  block,
+  lang,
+}: PackagesSectionProps) {
   const defaultBackground = !block.background || block.background === 'default';
 
   return (
@@ -127,6 +131,7 @@ export default function PackagesSection({ block }: PackagesSectionProps) {
                     {pkg.cta ? (
                       <CtaButton
                         cta={pkg.cta}
+                        lang={lang}
                         className={cn(
                           'border border-current bg-transparent text-current hover:bg-white/10',
                           !isFeatured && 'text-primary'

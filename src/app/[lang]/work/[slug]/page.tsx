@@ -258,7 +258,7 @@ export default async function ProjectPage({ params }: PageProps) {
   return (
     <>
       {jsonLd ? <JsonLd data={jsonLd} /> : null}
-      <PageBuilder page={pageDocument} metadata={metadata} />
+      <PageBuilder page={pageDocument} lang={lang} metadata={metadata} />
       {resolvedProject.nextProject && (
         <ProjectNavigation
           nextProject={resolvedProject.nextProject}

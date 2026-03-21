@@ -8,6 +8,7 @@ import { CardCollectionSectionBlock } from '@/types/sanity';
 
 interface CardCollectionSectionProps {
   block: CardCollectionSectionBlock;
+  lang: string;
 }
 
 const columnsMap: Record<number, string> = {
@@ -19,6 +20,7 @@ const columnsMap: Record<number, string> = {
 
 export default function CardCollectionSection({
   block,
+  lang,
 }: CardCollectionSectionProps) {
   const columnsClass = columnsMap[block.columns ?? 3] ?? columnsMap[3];
 
@@ -71,7 +73,7 @@ export default function CardCollectionSection({
                   <p className="text-foreground text-sm">{card.body}</p>
                 ) : null}
                 <div className="mt-auto pt-4">
-                  {card.cta ? <CtaButton cta={card.cta} /> : null}
+                  {card.cta ? <CtaButton cta={card.cta} lang={lang} /> : null}
                 </div>
               </article>
             ))}

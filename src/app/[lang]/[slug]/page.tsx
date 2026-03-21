@@ -206,5 +206,5 @@ export default async function Page({ params, searchParams }: PageProps) {
     notFound();
   }
 
-  return <PageBuilder page={page} enableSignature={IS_E2E} />;
+  return <PageBuilder page={page} lang={lang} enableSignature={IS_E2E} />;
 }

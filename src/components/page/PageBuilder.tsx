@@ -33,6 +33,7 @@ const PhilosophySection = dynamic(
 
 interface PageBuilderProps {
   page: PageDocument;
+  lang: string;
   metadata?: {
     client?: string;
     year?: string;
@@ -43,6 +44,7 @@ interface PageBuilderProps {
 
 export default function PageBuilder({
   page,
+  lang,
   metadata,
   enableSignature,
 }: PageBuilderProps) {
@@ -65,7 +67,7 @@ export default function PageBuilder({
       data-testid="page-content"
       data-content-signature={contentSignature}
     >
-      {blocks.map((block, index) => renderBlock(block, index, metadata))}
+      {blocks.map((block, index) => renderBlock(block, index, lang, metadata))}
     </div>
   );
 }
@@ -73,27 +75,30 @@ export default function PageBuilder({
 function renderBlock(
   block: PageContentBlock,
   index: number,
+  lang: string,
   metadata?: PageBuilderProps['metadata']
 ) {
   const key = block._key ?? `${block._type}-${index}`;
 
   switch (block._type) {
     case 'heroSection':
-      return <HeroSection key={key} block={block} metadata={metadata} />;
+      return (
+        <HeroSection key={key} block={block} lang={lang} metadata={metadata} />
+      );
     case 'twoColumnSection':
-      return <TwoColumnSection key={key} block={block} />;
+      return <TwoColumnSection key={key} block={block} lang={lang} />;
     case 'cardCollectionSection':
-      return <CardCollectionSection key={key} block={block} />;
+      return <CardCollectionSection key={key} block={block} lang={lang} />;
     case 'timelineSection':
-      return <TimelineSection key={key} block={block} />;
+      return <TimelineSection key={key} block={block} lang={lang} />;
     case 'mediaGallerySection':
-      return <MediaGallerySection key={key} block={block} />;
+      return <MediaGallerySection key={key} block={block} lang={lang} />;
     case 'logoGridSection':
       return <LogoGridSection key={key} block={block} />;
     case 'ctaBannerSection':
-      return <CtaBannerSection key={key} block={block} />;
+      return <CtaBannerSection key={key} block={block} lang={lang} />;
     case 'packagesSection':
-      return <PackagesSection key={key} block={block} />;
+      return <PackagesSection key={key} block={block} lang={lang} />;
     case 'testimonialSection':
       return <TestimonialSection key={key} block={block} />;
     case 'philosophySection':

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { withLang } from '@/lib/urls';
 import { cn } from '@/lib/utils';
 import { SiteSettings } from '@/types/siteSettings';
 import { Menu } from 'lucide-react';
@@ -24,13 +25,6 @@ interface NavbarProps {
 }
 
 const Navbar = async ({ mode, settings, homeSlugs, lang }: NavbarProps) => {
-  const withLang = (href: string) => {
-    if (href.startsWith('http')) return href;
-    if (href.startsWith('/en') || href.startsWith('/th')) return href;
-    if (href === '/') return `/${lang}`;
-    return `/${lang}${href.startsWith('/') ? '' : '/'}${href}`;
-  };
-
   return (
     <header className="fixed z-50 w-screen bg-white/5 backdrop-blur-md">
       <nav className="flex items-center justify-between gap-16 px-14 py-4">
@@ -76,7 +70,7 @@ const Navbar = async ({ mode, settings, homeSlugs, lang }: NavbarProps) => {
                 )?.map((item) => (
                   <Link
                     key={item.url}
-                    href={withLang(item.url)}
+                    href={withLang(item.url, lang)}
                     className="hover:text-primary hover:underline"
                   >
                     {item.label}
@@ -104,7 +98,7 @@ const Navbar = async ({ mode, settings, homeSlugs, lang }: NavbarProps) => {
           )?.map((item) => (
             <Link
               key={item.url}
-              href={withLang(item.url)}
+              href={withLang(item.url, lang)}
               className={cn('hover:underline', 'text-text-primary')}
             >
               {item.label}

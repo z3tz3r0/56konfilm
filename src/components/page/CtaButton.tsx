@@ -1,17 +1,20 @@
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
+import { withLang } from '@/lib/urls';
 import { cn } from '@/lib/utils';
 import { ContentCta } from '@/types/sanity';
 
 interface CtaButtonProps {
   cta: ContentCta;
+  lang?: string;
   className?: string;
   fullWidth?: boolean;
 }
 
 export default function CtaButton({
   cta,
+  lang = 'en',
   className,
   fullWidth,
 }: CtaButtonProps) {
@@ -19,7 +22,7 @@ export default function CtaButton({
     return null;
   }
 
-  const { href, isExternal } = resolveCta(cta);
+  const { href, isExternal } = resolveCta(cta, lang);
   const variant = mapCtaVariant(cta.style);
 
   if (!href) {
@@ -52,7 +55,10 @@ export default function CtaButton({
   );
 }
 
-function resolveCta(cta: ContentCta): {
+function resolveCta(
+  cta: ContentCta,
+  lang: string
+): {
   href: string | null;
   isExternal: boolean;
 } {
@@ -61,7 +67,7 @@ function resolveCta(cta: ContentCta): {
   }
 
   if (cta.linkType === 'internal' && cta.pageRef?.slug) {
-    return { href: `/${cta.pageRef.slug}`, isExternal: false };
+    return { href: withLang(`/${cta.pageRef.slug}`, lang), isExternal: false };
   }
 
   return { href: null, isExternal: false };

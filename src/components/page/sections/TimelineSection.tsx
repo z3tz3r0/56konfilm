@@ -14,10 +14,14 @@ import Image from 'next/image';
 
 interface TimelineSectionProps {
   block: TimelineSectionBlock;
+  lang: string;
 }
 type TimelineStep = NonNullable<TimelineSectionBlock['steps']>[number];
 
-export default function TimelineSection({ block }: TimelineSectionProps) {
+export default function TimelineSection({
+  block,
+  lang,
+}: TimelineSectionProps) {
   const alignClass = getAlignmentClass(block.heading?.align);
   const steps = [...(block.steps ?? [])].sort(
     (a, b) => (a.order ?? 0) - (b.order ?? 0)
@@ -122,6 +126,7 @@ export default function TimelineSection({ block }: TimelineSectionProps) {
         <div className="mx-auto w-full">
           <CtaGroup
             ctas={block.cta ? [block.cta] : undefined}
+            lang={lang}
             alignment={block.heading?.align}
           />
         </div>

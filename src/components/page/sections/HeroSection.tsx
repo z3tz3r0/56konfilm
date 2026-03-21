@@ -5,6 +5,7 @@ import ParallaxText from './hero/ParallaxText';
 
 interface HeroSectionProps {
   block: HeroSectionBlock;
+  lang: string;
   metadata?: {
     client?: string;
     year?: string;
@@ -12,7 +13,11 @@ interface HeroSectionProps {
   };
 }
 
-export default function HeroSection({ block, metadata }: HeroSectionProps) {
+export default function HeroSection({
+  block,
+  lang,
+  metadata,
+}: HeroSectionProps) {
   return (
     <SectionShell
       className="flex h-screen items-center justify-center"
@@ -65,7 +70,9 @@ export default function HeroSection({ block, metadata }: HeroSectionProps) {
         {block.tagline ? (
           <p className="text-lg text-white/85 md:text-xl">{block.tagline}</p>
         ) : null}
-        {block.ctas ? <CtaGroup ctas={block.ctas} alignment="center" /> : null}
+        {block.ctas ? (
+          <CtaGroup ctas={block.ctas} lang={lang} alignment="center" />
+        ) : null}
       </div>
     </SectionShell>
   );
