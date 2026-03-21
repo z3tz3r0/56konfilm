@@ -2,7 +2,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { useDeviceTier } from '@shared/hooks';
 
-vi.mock('@/lib/performance/deviceTier', () => ({
+vi.mock('@shared/lib/performance', () => ({
   getDeviceCapabilities: vi.fn(() => ({
     hardwareConcurrency: 2,
     saveData: true,
@@ -49,6 +49,8 @@ describe('useDeviceTier', () => {
     });
 
     expect(result.current).toEqual({
+      tier: 'low',
+      isLowPower: true,
       allowHeavyMotion: false,
       allowVideoAutoplay: false,
       useSimplifiedTransitions: true,

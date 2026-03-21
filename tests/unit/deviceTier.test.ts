@@ -136,7 +136,6 @@ describe('deviceTier', () => {
       expect(capabilities).toEqual({
         hardwareConcurrency: 4,
         saveData: false,
-        effectiveType: null,
         prefersReducedMotion: false,
       });
     });
