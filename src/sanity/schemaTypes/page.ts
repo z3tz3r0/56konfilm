@@ -37,6 +37,10 @@ export const pageType = defineType({
       initialValue: 'production',
       validation: (Rule) => Rule.required(),
       group: 'settings',
+      hidden: ({ document }) =>
+        ['portfolio', 'services'].includes(
+          (document?.slug as { current?: string })?.current || ''
+        ),
     }),
     defineField({
       name: 'slug',
