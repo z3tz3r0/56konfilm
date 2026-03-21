@@ -23,7 +23,7 @@ const envSchema = z.object({
   SANITY_CMS_REMEMBER_MAX_AGE: z.coerce.number().default(2592000),
 
   // --- System Defaults ---
-  DEFAULT_SITE_MODE: z.enum(['commercial', 'wedding']).default('commercial'),
+  DEFAULT_SITE_MODE: z.enum(['production', 'wedding']).default('production'),
 
   // --- Testing Environment ---
   BASE_URL: z.url().optional(),
