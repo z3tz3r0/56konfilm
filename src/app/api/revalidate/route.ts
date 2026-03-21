@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     // is impractical to replicate in E2E tests. Production deploys (Vercel)
     // always have NODE_ENV=production, so this bypass cannot be exploited.
     // The 401 path (missing/invalid signature) IS fully tested without bypass.
-    const isTestEnv = process.env.NODE_ENV === 'test';
+    const isTestEnv = env.NODE_ENV === 'test';
     if (!isValidSignature && !isTestEnv) {
       console.warn('[Revalidation] ❌ Invalid signature');
       return NextResponse.json(
