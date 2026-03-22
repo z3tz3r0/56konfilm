@@ -3,6 +3,7 @@ import z from 'zod';
 const envSchema = z.object({
   NODE_ENV: z.enum(['production', 'development', 'test']).default('production'),
   PORT: z.coerce.number().default(3000),
+
   // --- Sanity Public (เข้าถึงได้ทั้ง Client/Server) ---
   NEXT_PUBLIC_SITE_URL: z.url().optional(),
   NEXT_PUBLIC_SANITY_PROJECT_ID: z
@@ -31,7 +32,7 @@ const envSchema = z.object({
   TEST_USER_PASSWORD: z.string().optional(),
 });
 
-const parsed = envSchema.safeParse({
+const rawEnv = {
   NODE_ENV: process.env.NODE_ENV,
   PORT: process.env.PORT,
   NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
@@ -47,32 +48,58 @@ const parsed = envSchema.safeParse({
   BASE_URL: process.env.BASE_URL,
   TEST_USER_EMAIL: process.env.TEST_USER_EMAIL,
   TEST_USER_PASSWORD: process.env.TEST_USER_PASSWORD,
-});
+};
 
-if (!parsed.success) {
-  if (typeof window === 'undefined') {
-    console.error(
-      '❌ Missing or Invalid environment variables:',
-      z.treeifyError(parsed.error)
-    );
+function validateEnv() {
+  const isServer = typeof window === 'undefined';
+  const parsed = envSchema.safeParse(rawEnv);
+
+  // --- กรณีที่ 1: Validation ผ่านฉลุย ---
+  if (parsed.success) {
+    const data = parsed.data;
+    const isLiveEnvironment = data.NODE_ENV !== 'test';
+    const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
+
+    // ** FAIL FAST LOGIC **
+    // ถ้าเป็น Production และไม่ใช่ช่วง Build
+    // เช็ก env ที่กำหนด .optional() แต่ต้องใช้ใน live environment
+    if (isLiveEnvironment && !isBuild && isServer) {
+      if (
+        !data.SANITY_REVALIDATE_SECRET ||
+        !data.SANITY_API_TOKEN ||
+        !data.SANITY_CMS_SESSION_SECRET
+      ) {
+        throw new Error(
+          '❌ [FATAL] Missing required environment variables for Live environment'
+        );
+      }
+    }
+    return data;
   }
 
-  if (process.env.NODE_ENV !== 'test') {
-    throw new Error('❌ Missing or Invalid environment variables');
-  }
-
-  console.warn(
-    '⚠️  Continuing tests with potentially invalid environment variables.'
-  );
-}
-
-// In tests, we prefer to have something even if it failed validation.
-// Using defaults for missing fields when possible.
-export const env = parsed.success
-  ? parsed.data
-  : envSchema.parse({
-      NODE_ENV: process.env.NODE_ENV,
+  // --- กรณีที่ 2: เป็นโหมด Test (Mock Data) ---
+  if (process.env.NODE_ENV === 'test') {
+    return envSchema.parse({
+      ...rawEnv,
       NEXT_PUBLIC_SANITY_PROJECT_ID: 'test-project',
       NEXT_PUBLIC_SANITY_DATASET: 'production',
       NEXT_PUBLIC_SANITY_API_VERSION: '2025-08-12',
+      SANITY_API_TOKEN:
+        rawEnv.SANITY_API_TOKEN ?? 'mock_token_32_characters_long_for_test',
+      SANITY_REVALIDATE_SECRET:
+        rawEnv.SANITY_REVALIDATE_SECRET ??
+        'mock_secret_32_characters_long_for_test',
     });
+  }
+
+  // --- กรณีที่ 3: พัง (Fail Fast สำหรับ Dev/Prod) ---
+  if (isServer) {
+    console.error(
+      '❌ Missing or invalid environment variables:',
+      z.flattenError(parsed.error)
+    );
+  }
+  throw new Error('❌ Environment validation failed');
+}
+
+export const env = validateEnv();
