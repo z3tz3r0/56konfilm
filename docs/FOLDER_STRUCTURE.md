@@ -85,4 +85,4 @@ To prevent confusion with **Sanity CMS Schemas**, we follow these naming rules:
 
 To maintain this structure and prevent "Spaghetti Code", we enforce strict import policies.
 
-PLEASE REFER TO: docs/IMPORT_POLICIES.md
+PLEASE REFER TO: [docs/IMPORT_POLICIES.md](https://github.com/z3tz3r0/56konfilm/blob/main/docs/IMPORT_POLICIES.md)
