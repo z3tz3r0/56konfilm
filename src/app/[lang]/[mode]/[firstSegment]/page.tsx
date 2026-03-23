@@ -49,5 +49,12 @@ export default async function Page({ params, searchParams }: PageProps) {
     : await ContentService.getPage({ lang, mode, slug: firstSegment });
   if (!page) notFound();
 
-  return <PageBuilder page={page} enableSignature={isMockMode} />;
+  return (
+    <PageBuilder
+      page={page}
+      lang={lang}
+      mode={mode}
+      enableSignature={isMockMode}
+    />
+  );
 }

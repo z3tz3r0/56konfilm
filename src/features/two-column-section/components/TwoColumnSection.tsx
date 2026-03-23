@@ -4,15 +4,18 @@ import { getAlignmentClass } from '@shared/utils';
 import { cn } from '@shared/utils';
 import { urlFor } from '@/sanity/lib/image';
 import { TwoColumnSectionBlock } from '../types';
+import { Locale, SiteMode } from '@shared/config';
 
 interface TwoColumnSectionProps {
   block: TwoColumnSectionBlock;
-  lang: string;
+  lang: Locale;
+  mode: SiteMode;
 }
 
 export default function TwoColumnSection({
   block,
   lang,
+  mode,
 }: TwoColumnSectionProps) {
   const isTextLeft = block.layout !== 'textRight';
   const textColumnOrder = isTextLeft ? 'md:order-1' : 'md:order-2';
@@ -47,6 +50,7 @@ export default function TwoColumnSection({
           <CtaGroup
             ctas={block.ctas}
             lang={lang}
+            mode={mode}
             alignment={block.content?.align}
             className="md:max-w-xs"
             fullWidth

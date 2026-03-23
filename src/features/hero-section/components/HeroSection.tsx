@@ -1,9 +1,11 @@
+import { Locale, SiteMode } from '@shared/config';
 import { HeroSectionBlock } from '@features/hero-section/types';
 import { CtaGroup, ParallaxText, SectionShell } from '@shared/components';
 
 interface HeroSectionProps {
   block: HeroSectionBlock;
-  lang: string;
+  lang: Locale;
+  mode: SiteMode;
   metadata?: {
     client?: string;
     year?: string;
@@ -14,6 +16,7 @@ interface HeroSectionProps {
 export default function HeroSection({
   block,
   lang,
+  mode,
   metadata,
 }: HeroSectionProps) {
   return (
@@ -69,7 +72,12 @@ export default function HeroSection({
           <p className="text-lg text-white/85 md:text-xl">{block.tagline}</p>
         ) : null}
         {block.ctas ? (
-          <CtaGroup ctas={block.ctas} lang={lang} alignment="center" />
+          <CtaGroup
+            ctas={block.ctas}
+            lang={lang}
+            mode={mode}
+            alignment="center"
+          />
         ) : null}
       </div>
     </SectionShell>

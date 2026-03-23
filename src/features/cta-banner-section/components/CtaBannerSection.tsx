@@ -1,15 +1,18 @@
 import { CtaGroup, SectionShell } from '@shared/components';
 import { cn, getAlignmentClass } from '@shared/utils';
 import { CtaBannerSectionBlock } from '../types';
+import { Locale, SiteMode } from '@shared/config';
 
 interface CtaBannerSectionProps {
   block: CtaBannerSectionBlock;
-  lang: string;
+  lang: Locale;
+  mode: SiteMode;
 }
 
 export default function CtaBannerSection({
   block,
   lang,
+  mode,
 }: CtaBannerSectionProps) {
   // const isTextLeft = block.layout !== 'textRight';
   const alignClass = getAlignmentClass(block.content?.align);
@@ -86,6 +89,7 @@ export default function CtaBannerSection({
           <CtaGroup
             ctas={block.ctas}
             lang={lang}
+            mode={mode}
             alignment={block.content?.align}
           />
         </div>

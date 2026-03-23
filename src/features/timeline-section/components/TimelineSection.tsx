@@ -12,16 +12,19 @@ import { cn } from '@shared/utils';
 import { urlFor } from '@/sanity/lib/image';
 import { TimelineSectionBlock } from '../types';
 import Image from 'next/image';
+import { Locale, SiteMode } from '@shared/config';
 
 interface TimelineSectionProps {
   block: TimelineSectionBlock;
-  lang: string;
+  lang: Locale;
+  mode: SiteMode;
 }
 type TimelineStep = NonNullable<TimelineSectionBlock['steps']>[number];
 
 export default function TimelineSection({
   block,
   lang,
+  mode,
 }: TimelineSectionProps) {
   const alignClass = getAlignmentClass(block.heading?.align);
   const steps = [...(block.steps ?? [])].sort(
@@ -128,6 +131,7 @@ export default function TimelineSection({
           <CtaGroup
             ctas={block.cta ? [block.cta] : undefined}
             lang={lang}
+            mode={mode}
             alignment={block.heading?.align}
           />
         </div>

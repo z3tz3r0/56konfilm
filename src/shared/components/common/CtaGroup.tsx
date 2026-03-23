@@ -1,10 +1,12 @@
 import { cn, getJustifyClass } from '@shared/utils';
 import { ContentCta } from '@shared/types';
 import { CtaButton } from '@shared/components';
+import { Locale, SiteMode } from '@shared/config';
 
 interface CtaGroupProps {
   ctas?: ContentCta[];
-  lang?: string;
+  lang?: Locale;
+  mode: SiteMode;
   className?: string;
   alignment?: string;
   fullWidth?: boolean;
@@ -13,6 +15,7 @@ interface CtaGroupProps {
 export default function CtaGroup({
   ctas,
   lang,
+  mode,
   alignment,
   className,
   fullWidth,
@@ -38,6 +41,7 @@ export default function CtaGroup({
           key={cta.externalUrl ?? cta.pageRef?.slug ?? cta.label}
           cta={cta}
           lang={lang}
+          mode={mode}
           className={className}
           fullWidth={!!fullWidth}
         />

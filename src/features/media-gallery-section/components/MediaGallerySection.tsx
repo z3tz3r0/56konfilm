@@ -11,10 +11,12 @@ import { cn } from '@shared/utils';
 import { urlFor } from '@/sanity/lib/image';
 import { MediaGallerySectionBlock } from '../types';
 import { GalleryCard, VideoItem } from '.';
+import { Locale, SiteMode } from '@shared/config';
 
 interface MediaGallerySectionProps {
   block: MediaGallerySectionBlock;
-  lang: string;
+  lang: Locale;
+  mode: SiteMode;
 }
 
 const containerVariants = {
@@ -43,6 +45,7 @@ const itemVariants = {
 export default function MediaGallerySection({
   block,
   lang: propLang,
+  mode,
 }: MediaGallerySectionProps) {
   const params = useParams();
   const lang = propLang || (params?.lang as string) || 'en';
@@ -169,6 +172,7 @@ export default function MediaGallerySection({
         <CtaGroup
           ctas={block.cta ? [block.cta] : undefined}
           lang={lang}
+          mode={mode}
           alignment={block.heading?.align}
         />
       </div>

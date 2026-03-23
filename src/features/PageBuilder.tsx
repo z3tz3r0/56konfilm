@@ -113,10 +113,18 @@ function renderBlock(
   switch (block._type) {
     case 'heroSection':
       return (
-        <HeroSection key={key} block={block} lang={lang} metadata={metadata} />
+        <HeroSection
+          key={key}
+          block={block}
+          lang={lang}
+          mode={mode}
+          metadata={metadata}
+        />
       );
     case 'twoColumnSection':
-      return <TwoColumnSection key={key} block={block} lang={lang} />;
+      return (
+        <TwoColumnSection key={key} block={block} lang={lang} mode={mode} />
+      );
     case 'cardCollectionSection':
       return (
         <CardCollectionSection
@@ -127,13 +135,19 @@ function renderBlock(
         />
       );
     case 'timelineSection':
-      return <TimelineSection key={key} block={block} lang={lang} />;
+      return (
+        <TimelineSection key={key} block={block} lang={lang} mode={mode} />
+      );
     case 'mediaGallerySection':
-      return <MediaGallerySection key={key} block={block} lang={lang} />;
+      return (
+        <MediaGallerySection key={key} block={block} lang={lang} mode={mode} />
+      );
     case 'logoGridSection':
       return <LogoGridSection key={key} block={block} />;
     case 'ctaBannerSection':
-      return <CtaBannerSection key={key} block={block} lang={lang} />;
+      return (
+        <CtaBannerSection key={key} block={block} lang={lang} mode={mode} />
+      );
     case 'packagesSection':
       return (
         <PackagesSection key={key} block={block} lang={lang} mode={mode} />
