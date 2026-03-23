@@ -1,4 +1,4 @@
-import { MediaGallerySectionBlock } from '@/types/sanity';
+import { MediaGallerySectionBlock } from '@features/media-gallery-section/types';
 import { faker } from '@faker-js/faker';
 
 // TODO: Update src/types/sanity.ts to include these fields during implementation

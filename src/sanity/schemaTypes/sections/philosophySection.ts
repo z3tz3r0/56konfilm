@@ -34,8 +34,9 @@ export const philosophySectionType = defineType({
     },
     prepare({ quote, background }) {
       return {
-        title: quote || 'Philosophy Section',
-        subtitle: background && background !== 'default' ? background : '',
+        title: 'Philosophy Section',
+        subtitle: quote ?? '',
+        media: background && background !== 'default' ? background : '',
       };
     },
   },

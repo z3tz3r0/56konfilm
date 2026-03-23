@@ -1,0 +1,15 @@
+echo "⌛ Running pre-commit hooks..."
+
+# Run lint-staged
+echo "📝 Checking staged files..."
+pnpm lint-staged
+
+# Run prettier
+echo "🔍 Prettier..."
+pnpm format
+
+# Run type check
+echo "🔍 Type checking..."
+pnpm type-check
+
+echo "✅ Done!"

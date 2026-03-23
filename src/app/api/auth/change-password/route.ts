@@ -7,8 +7,8 @@ import {
   updatePasswordInSanity,
   validatePasswordStrength,
   verifySession,
-} from '@/lib/auth';
-import { checkPasswordChangeRateLimit } from '@/lib/rateLimit';
+  checkPasswordChangeRateLimit,
+} from '@shared/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {

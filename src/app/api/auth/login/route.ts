@@ -4,9 +4,10 @@ import {
   getCredentialsFromSanity,
   verifyPassword,
   createSession,
-} from '@/lib/auth';
-import { checkLoginRateLimit, getClientIP } from '@/lib/rateLimit';
-import { nodeEnv } from '@/sanity/env';
+  getClientIP,
+  checkLoginRateLimit,
+} from '@shared/lib/auth';
+import { env } from '@shared/config';
 
 export async function POST(request: NextRequest) {
   try {
@@ -75,7 +76,7 @@ export async function POST(request: NextRequest) {
     const cookieStore = await cookies();
     cookieStore.set('sanity-cms-session', token, {
       httpOnly: true,
-      secure: nodeEnv === 'production',
+      secure: env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge,
       path: '/',

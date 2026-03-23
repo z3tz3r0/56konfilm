@@ -100,18 +100,18 @@ export const mediaGallerySectionType = defineType({
   ],
   preview: {
     select: {
-      heading: 'heading.heading.0.value',
+      title: 'heading.heading.0.value',
       items: 'items',
       background: 'background',
     },
-    prepare({ heading, items, background }) {
+    prepare({ title, items, background }) {
       const count = Array.isArray(items) ? items.length : 0;
       const subtitleParts = [
         background && background !== 'default' ? background : null,
         `${count} item${count === 1 ? '' : 's'}`,
       ];
       return {
-        title: heading || 'Media Gallery Section',
+        title: title ? `${title} section` : 'Media Gallery Section',
         subtitle: subtitleParts.filter(Boolean).join(' · '),
       };
     },

@@ -11,14 +11,14 @@ import { internationalizedArray } from 'sanity-plugin-internationalized-array';
 import { structureTool } from 'sanity/structure';
 
 // Go to https://www.sanity.io/docs/api-versioning to learn how API versioning works
-import { apiVersion, dataset, projectId } from './src/sanity/env';
+import { env } from '@shared/config';
 import { schemaType } from './src/sanity/schemaTypes';
 import { structure } from './src/sanity/structure';
 
 export default defineConfig({
   basePath: '/sanity-cms',
-  projectId,
-  dataset,
+  projectId: env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  dataset: env.NEXT_PUBLIC_SANITY_DATASET,
   // Add and edit the content schema in the './sanity/schemaTypes' folder
   schema: schemaType,
   plugins: [
@@ -72,7 +72,7 @@ export default defineConfig({
     }),
     // Vision is for querying with GROQ from inside the Studio
     // https://www.sanity.io/docs/the-vision-plugin
-    visionTool({ defaultApiVersion: apiVersion }),
+    visionTool({ defaultApiVersion: env.NEXT_PUBLIC_SANITY_API_VERSION }),
     colorInput(),
   ],
 });

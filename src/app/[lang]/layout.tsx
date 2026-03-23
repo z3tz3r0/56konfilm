@@ -1,11 +1,9 @@
-import { ModeProvider } from '@/components/providers/ModeProvider';
-import MotionProvider from '@/components/providers/MotionProvider';
-import { ThemeProvider } from '@/components/ui/theme-provider';
-import { buildMetadata } from '@/lib/metadata';
-import { isSupportedMode, type SiteMode } from '@/lib/preferences';
-import type { Metadata } from 'next';
+import { ModeProvider, MotionProvider, ThemeProvider } from '@shared/providers';
+import { MODE_TO_THEME } from '@shared/config';
 import {
+  Anuphan,
   Cormorant_Garamond,
+  IBM_Plex_Sans_Thai,
   Manrope,
   Noto_Sans_Thai,
   Sora,
@@ -13,67 +11,47 @@ import {
 import { cookies } from 'next/headers';
 import { Toaster } from 'sonner';
 import '../globals.css';
+import { isSupportedLocale, isSupportedMode } from '@shared/utils';
+import Script from 'next/script';
+import { env } from '@shared/config';
+import { ReactNode } from 'react';
 
+// --- Production Fonts ---
 const sora = Sora({
   variable: '--font-sora',
   subsets: ['latin', 'latin-ext'],
   display: 'swap',
 });
-
-const cormorantGaramond = Cormorant_Garamond({
-  variable: '--font-cormorant-garamond',
-  subsets: ['latin', 'latin-ext'],
-  display: 'swap',
-});
-
-const manrope = Manrope({
-  variable: '--font-manrope',
-  subsets: ['latin', 'latin-ext'],
-  display: 'swap',
-});
-
 const notoSansThai = Noto_Sans_Thai({
   variable: '--font-noto-sans-thai',
   subsets: ['thai'],
   display: 'swap',
 });
 
-import { sanityFetch } from '@/sanity/lib/fetch';
-import { settingsQuery } from '@/sanity/lib/queries';
-import { SiteSettings } from '@/types/siteSettings';
+// --- Wedding Fonts
+const cormorantGaramond = Cormorant_Garamond({
+  variable: '--font-cormorant-garamond',
+  subsets: ['latin', 'latin-ext'],
+  display: 'swap',
+});
+const ibmPlexSansThai = IBM_Plex_Sans_Thai({
+  variable: '--font-ibm-plex-sans-thai',
+  weight: ['400', '500', '600', '700'],
+  subsets: ['thai'],
+  display: 'swap',
+});
 
-type Props = {
-  params: Promise<{ lang: string }>;
-};
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { lang } = await params;
-  const settings = await sanityFetch<SiteSettings | null>({
-    query: settingsQuery,
-    params: { lang },
-    tags: ['settings'],
-  });
-
-  const metadata = buildMetadata({
-    lang,
-    pathname: `/${lang}`,
-    fallbackTitle: settings?.siteTitle || '56KonFilm',
-    fallbackSeo: settings?.seo,
-    siteTitle: settings?.siteTitle,
-  });
-
-  return {
-    ...metadata,
-    icons: settings?.favicon
-      ? [{ rel: 'icon', url: settings.favicon }]
-      : undefined,
-  };
-}
-
-const MODE_TO_THEME: Record<SiteMode, 'dark' | 'light'> = {
-  production: 'dark',
-  wedding: 'light',
-};
+// --- Body Fonts ---
+const manrope = Manrope({
+  variable: '--font-manrope',
+  subsets: ['latin', 'latin-ext'],
+  display: 'swap',
+});
+const anuphan = Anuphan({
+  variable: '--font-anuphan',
+  subsets: ['thai'],
+  display: 'swap',
+});
 
 export async function generateStaticParams() {
   return [{ lang: 'en' }, { lang: 'th' }];
@@ -83,26 +61,37 @@ export default async function RootLayout({
   children,
   params,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
   params: Promise<{ lang: string }>;
 }>) {
-  const [{ lang }, cookieStore] = await Promise.all([params, cookies()]);
+  const { lang } = await params;
+  const safeLang = isSupportedLocale(lang) ? lang : 'en';
+
+  const cookieStore = await cookies();
   const cookieMode = cookieStore.get('mode')?.value;
-  const initialMode: SiteMode =
-    cookieMode && isSupportedMode(cookieMode)
-      ? (cookieMode as SiteMode)
-      : 'production';
+
+  const initialMode =
+    cookieMode && isSupportedMode(cookieMode) ? cookieMode : 'production';
   const initialTheme = MODE_TO_THEME[initialMode];
 
   return (
     <html
-      lang={lang}
+      lang={safeLang}
       suppressHydrationWarning
       data-mode={initialMode}
       style={{ colorScheme: initialTheme }}
-      className={`${sora.variable} ${cormorantGaramond.variable} ${manrope.variable} ${notoSansThai.variable} antialiased`}
+      className={`${sora.variable} ${cormorantGaramond.variable} ${manrope.variable} ${notoSansThai.variable} ${ibmPlexSansThai.variable} ${anuphan.variable} antialiased`}
     >
-      <body className="font-body">
+      <head>
+        {env.NODE_ENV === 'development' && (
+          <Script
+            src="//unpkg.com/react-grab/dist/index.global.js"
+            crossOrigin="anonymous"
+            strategy="beforeInteractive"
+          />
+        )}
+      </head>
+      <body>
         <ThemeProvider
           attribute="class"
           defaultTheme={initialTheme}

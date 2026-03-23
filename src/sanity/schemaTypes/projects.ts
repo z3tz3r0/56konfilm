@@ -20,7 +20,8 @@ export const projectType = defineType({
     localizedStringField({
       name: 'title',
       title: 'Title',
-      description: 'หัวข้อโปรเจกต์',
+      description:
+        'ชื่อโปรเจกต์ (จะแสดงเป็นหัวข้อหลักของหน้า และใช้เป็นชื่อสำหรับ SEO หากไม่ได้ตั้งค่าแยกต่างหาก แนะนำให้ใส่คีย์เวิร์ดสำคัญที่คนมักจะค้นหา)',
       group: 'main',
       validation: (Rule) =>
         Rule.required().error('Project title is required before publishing.'),
@@ -28,7 +29,8 @@ export const projectType = defineType({
     defineField({
       name: 'slug',
       title: 'Slug',
-      description: 'URL ที่จะแสดงผลสำหรับโปรเจกต์นี้',
+      description:
+        'ส่วนของ URL ที่ระบุโปรเจกต์นี้ (เช่น "my-awesome-project") ควรเป็นภาษาอังกฤษตัวเล็กและขีดกลางเท่านั้น พยายามให้สั้นและสื่อความหมายเพื่อผลดีต่อ SEO',
       type: 'slug',
       group: 'main',
       options: {
@@ -43,41 +45,38 @@ export const projectType = defineType({
     defineField({
       name: 'siteMode',
       title: 'Site Mode',
-      description: 'โปรเจกต์นี้จะแสดงในโหมดไหน',
-      type: 'array',
+      description:
+        'เลือกโหมดที่ต้องการให้โปรเจกต์นี้แสดงผล (สามารถเลือกได้ทั้งคู่หากเป็นงานที่เข้าข่ายทั้ง Production และ Wedding)',
+      type: 'string',
       group: 'main',
-      of: [{ type: 'string' }],
       options: {
         list: [
           { title: 'Production', value: 'production' },
           { title: 'Wedding', value: 'wedding' },
         ],
+        layout: 'radio',
       },
-      validation: (Rule) =>
-        Rule.required()
-          .min(1)
-          .error(
-            'At least one site mode (Production/Wedding) must be selected.'
-          ),
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'client',
       title: 'Client',
-      description: 'ลูกค้า / เจ้าของงาน (e.g., Toyota, PTT)',
+      description: 'ชื่อลูกค้าหรือแบรนด์เจ้าของงาน (เช่น Toyota, PTT, SCG)',
       type: 'string',
       group: 'metadata',
     }),
     defineField({
       name: 'year',
       title: 'Year',
-      description: 'ปีที่ผลิต (e.g., "2024")',
+      description: 'ปีที่ผลิตหรือปีที่จัดงาน (เช่น "2024", "2025")',
       type: 'string',
       group: 'metadata',
     }),
     defineField({
       name: 'services',
       title: 'Services',
-      description: 'บริการที่ทำ (e.g., Production, Editing, Color Grading)',
+      description:
+        'ระบุบริการที่เกี่ยวข้อง (เช่น Video Production, Cinematic Editing, Color Grading) ช่วยให้คนเข้าใจขอบเขตงานได้ง่ายขึ้น',
       type: 'array',
       group: 'metadata',
       of: [{ type: 'string' }],
@@ -85,13 +84,15 @@ export const projectType = defineType({
     localizedTextField({
       name: 'overview',
       title: 'Overview',
-      description: 'รายละเอียดโปรเจกต์',
+      description:
+        'รายละเอียดหรือบทสรุปสั้นๆ ของโปรเจกต์ (แนะนำให้เขียนให้น่าสนใจและมีคีย์เวิร์ดที่เกี่ยวข้อง เพื่อช่วยให้ Search Engine ตรวจเจอได้ดีขึ้น)',
       group: 'main',
     }),
     defineField({
       name: 'coverImage',
       title: 'Cover Image',
-      description: 'รูปภาพหน้าปกโปรเจกต์',
+      description:
+        'รูปภาพหน้าปกที่จะใช้แสดงในหน้า Gallery และเป็นภาพแรกที่คนจะเห็น ควรใช้รูปภาพคุณภาพสูงที่สื่อถึงงานได้ดีที่สุด',
       type: 'image',
       group: 'main',
       options: { hotspot: true },
@@ -106,7 +107,8 @@ export const projectType = defineType({
     defineField({
       name: 'contentBlocks',
       title: 'Content Blocks',
-      description: 'เนื้อหาในรูปแบบ Magazine Layout',
+      description:
+        'ส่วนสำหรับจัดการเนื้อหาภายในหน้าโปรเจกต์ สามารถเพิ่มรูปภาพหรือวิดีโอเพิ่มเติมในรูปแบบ Magazine Layout ได้',
       group: 'content',
       type: 'array',
       of: [
@@ -119,7 +121,7 @@ export const projectType = defineType({
     defineField({
       name: 'publishedAt',
       title: 'Published at',
-      description: 'วันที่เผยแพร่',
+      description: 'วันที่เผยแพร่ (ใช้สำหรับจัดลำดับการแสดงผลของโปรเจกต์)',
       type: 'datetime',
       group: 'metadata',
       initialValue: () => new Date().toISOString(),
@@ -127,9 +129,24 @@ export const projectType = defineType({
     defineField({
       name: 'seo',
       title: 'SEO',
-      description: 'Metadata สำหรับ Search และ Social',
+      description:
+        'การตั้งค่า Meta Tags สำหรับการแชร์ลง Social Media หรือการแสดงผลบน Google แบบเฉพาะเจาะจง (หากไม่ใส่ ระบบจะดึงข้อมูลจาก Title และ Overview ให้อัตโนมัติ)',
       type: 'seo',
       group: 'seo',
     }),
   ],
+  preview: {
+    select: {
+      title: 'title.0.value',
+      subtitle: 'client',
+      media: 'coverImage',
+    },
+    prepare({ title, subtitle, media }) {
+      return {
+        title: title || 'Untitled Project',
+        subtitle: subtitle || 'No client specified',
+        media,
+      };
+    },
+  },
 });

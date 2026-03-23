@@ -6,10 +6,10 @@
 
 import {
   classifyDeviceTier,
+  DeviceCapabilities,
   getDeviceCapabilities,
   getTierFeatureFlags,
-  type DeviceCapabilities,
-} from '@/lib/performance/deviceTier';
+} from '@shared/lib/performance';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('deviceTier', () => {
@@ -17,7 +17,6 @@ describe('deviceTier', () => {
     const baseCapabilities: DeviceCapabilities = {
       hardwareConcurrency: 8,
       saveData: false,
-      effectiveType: '4g',
       prefersReducedMotion: false,
     };
 
@@ -42,37 +41,12 @@ describe('deviceTier', () => {
       expect(tier).toBe('low');
     });
 
-    it('returns "low" for 2g network', () => {
-      const tier = classifyDeviceTier({
-        ...baseCapabilities,
-        effectiveType: '2g',
-      });
-      expect(tier).toBe('low');
-    });
-
-    it('returns "low" for slow-2g network', () => {
-      const tier = classifyDeviceTier({
-        ...baseCapabilities,
-        effectiveType: 'slow-2g',
-      });
-      expect(tier).toBe('low');
-    });
-
     it('returns "low" for low hardware concurrency (1-2 cores)', () => {
       const tier = classifyDeviceTier({
         ...baseCapabilities,
         hardwareConcurrency: 2,
       });
       expect(tier).toBe('low');
-    });
-
-    it('returns "medium" for 3g network with limited cores (3-4)', () => {
-      const tier = classifyDeviceTier({
-        ...baseCapabilities,
-        effectiveType: '3g',
-        hardwareConcurrency: 4,
-      });
-      expect(tier).toBe('medium');
     });
 
     it('returns "medium" for medium hardware concurrency (3-4 cores)', () => {
@@ -104,7 +78,6 @@ describe('deviceTier', () => {
       const tier = classifyDeviceTier({
         hardwareConcurrency: 16,
         saveData: false,
-        effectiveType: '4g',
         prefersReducedMotion: true,
       });
       expect(tier).toBe('low');
@@ -163,7 +136,6 @@ describe('deviceTier', () => {
       expect(capabilities).toEqual({
         hardwareConcurrency: 4,
         saveData: false,
-        effectiveType: null,
         prefersReducedMotion: false,
       });
     });
@@ -201,7 +173,6 @@ describe('deviceTier', () => {
 
       const capabilities = getDeviceCapabilities();
       expect(capabilities.saveData).toBe(true);
-      expect(capabilities.effectiveType).toBe('3g');
     });
 
     it('handles missing connection API gracefully (Safari)', () => {
@@ -218,7 +189,6 @@ describe('deviceTier', () => {
 
       const capabilities = getDeviceCapabilities();
       expect(capabilities.saveData).toBe(false);
-      expect(capabilities.effectiveType).toBe(null);
     });
 
     it('reads prefers-reduced-motion media query', () => {

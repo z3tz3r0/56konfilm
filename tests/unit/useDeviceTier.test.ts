@@ -1,9 +1,8 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { useDeviceTier } from '@shared/hooks';
 
-import { useDeviceFeatureFlags, useDeviceTier } from '@/hooks/useDeviceTier';
-
-vi.mock('@/lib/performance/deviceTier', () => ({
+vi.mock('@shared/lib/performance', () => ({
   getDeviceCapabilities: vi.fn(() => ({
     hardwareConcurrency: 2,
     saveData: true,
@@ -42,14 +41,16 @@ describe('useDeviceTier', () => {
     expect(result.current.useSimplifiedTransitions).toBe(true);
   });
 
-  it('useDeviceFeatureFlags returns subset flags plus initialization state', async () => {
-    const { result } = renderHook(() => useDeviceFeatureFlags());
+  it('useDeviceTier returns subset flags plus initialization state', async () => {
+    const { result } = renderHook(() => useDeviceTier());
 
     await waitFor(() => {
       expect(result.current.isInitialized).toBe(true);
     });
 
     expect(result.current).toEqual({
+      tier: 'low',
+      isLowPower: true,
       allowHeavyMotion: false,
       allowVideoAutoplay: false,
       useSimplifiedTransitions: true,
