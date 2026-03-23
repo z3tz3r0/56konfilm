@@ -38,7 +38,7 @@ To ensure long-term maintainability, the codebase follows strict standards:
 - **Unidirectional Dependencies:** Shared layers never import from Feature layers.
 - **Naming Conventions:** Kebab-case for folders, PascalCase for Components, and camelCase for files.
 - **Validated Env:** Strict environment variable checking via Zod.
-- **Strategic Colocation:** We keep logic, types, and styles close to the components they serve. This reduces complexity and improves developer velocity. Detailed rules can be found in our [Folder Structure Docs](https://github.com/z3tz3r0/56konfilm/tree/main/docs/FOLDER_STRUCTURE.md).
+- **Strategic Colocation:** We keep logic, types, and styles close to the components they serve. This reduces complexity and improves developer velocity. Detailed rules can be found in our [Folder Structure Docs](https://github.com/z3tz3r0/56konfilm/blob/main/docs/FOLDER_STRUCTURE.md).
 
 ## 🛠️ Technology Stack
 
@@ -52,8 +52,8 @@ To ensure long-term maintainability, the codebase follows strict standards:
 
 For detailed guidelines on how to contribute or understand the codebase, please refer to:
 
-- 📂 [Folder Structure](https://github.com/z3tz3r0/56konfilm/tree/main/docs/FOLDER_STRUCTURE.md) - How we organize our files.
-- 🔗 [Import Policies](https://github.com/z3tz3r0/56konfilm/tree/main/docs/IMPORT_POLICIES.md) - Rules for dependencies and barrel exports.
+- 📂 [Folder Structure](https://github.com/z3tz3r0/56konfilm/blob/main/docs/FOLDER_STRUCTURE.md) - How we organize our files.
+- 🔗 [Import Policies](https://github.com/z3tz3r0/56konfilm/blob/main/docs/IMPORT_POLICIES.md) - Rules for dependencies and barrel exports.
 
 ## 👨‍💻 Highlights for Recruiters & Partners
 
