@@ -1,6 +1,6 @@
 import { defineField, defineType } from 'sanity';
 import { localizedStringField } from './objects/localized';
-import { validateSlugUniquenessByMode } from '@/sanity/lib/sanityUtils';
+import { validateSlugUniquenessByMode } from '@/sanity/lib/slug';
 
 export const pageType = defineType({
   name: 'page',

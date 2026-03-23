@@ -3,7 +3,7 @@ import { Button } from '@shared/components';
 import { cn } from '@shared/utils';
 import { ContentCta } from '@shared/types';
 import { Locale, SiteMode } from '@shared/config';
-import { withContextPrefix } from '@/shared/lib/url/urls';
+import { withContextPrefix } from '@/shared/lib/url';
 
 interface CtaButtonProps {
   cta: ContentCta;

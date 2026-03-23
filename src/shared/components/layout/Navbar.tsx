@@ -11,7 +11,7 @@ import {
 } from '@shared/components';
 import { Locale, SiteMode } from '@shared/config';
 import { SiteSettings } from '@shared/types';
-import { withContextPrefix } from '@/shared/lib/url/urls';
+import { withContextPrefix } from '@/shared/lib/url';
 
 interface NavbarProps {
   settings: SiteSettings;
