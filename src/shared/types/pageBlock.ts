@@ -1,0 +1,32 @@
+import { ImageSource } from './sanity';
+
+interface BaseBlock {
+  _key?: string;
+}
+
+// Content Cta
+type LinkType = 'internal' | 'external' | null;
+type CtaStyle = 'primary' | 'secondary' | 'link' | null;
+interface ContentCta {
+  label?: string;
+  style: CtaStyle;
+  linkType: LinkType;
+  pageRef?: { slug?: string };
+  externalUrl?: string;
+}
+
+interface MediaItem {
+  _key?: string;
+  image?: ImageSource;
+  alt?: string;
+}
+
+interface BackgroundMediaItem {
+  _key?: string;
+  _type: string;
+  url?: string;
+  mimeType?: string;
+  image?: ImageSource;
+}
+
+export type { BaseBlock, ContentCta, MediaItem, BackgroundMediaItem };

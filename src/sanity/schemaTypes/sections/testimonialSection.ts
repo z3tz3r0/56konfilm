@@ -38,18 +38,17 @@ export const testimonialSectionType = defineType({
   ],
   preview: {
     select: {
-      title: 'heading.heading.0.value',
       testimonials: 'testimonials',
       background: 'background',
     },
-    prepare({ title, testimonials, background }) {
+    prepare({ testimonials, background }) {
       const count = Array.isArray(testimonials) ? testimonials.length : 0;
       const subtitleParts = [
         background && background !== 'default' ? background : null,
         `${count} testimonial${count === 1 ? '' : 's'}`,
       ];
       return {
-        title: title || 'Testimonial Section',
+        title: 'Testimonial Section',
         subtitle: subtitleParts.filter(Boolean).join(' · '),
       };
     },

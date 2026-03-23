@@ -22,6 +22,33 @@ const config = [
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '../../../*',
+              message:
+                'Relative imports deeper than 3 levels are not allowed. Use absolute imports instead.',
+            },
+          ],
+        },
+      ],
+      // Console rules - prevent console statements in production code
+      'no-console': [
+        'error',
+        {
+          allow: ['error', 'info', 'debug'],
+        },
+      ],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+        },
+      ],
     },
   },
   prettier,

@@ -1,6 +1,6 @@
+import { HeroSection } from '@features/hero-section/components';
+import { HeroSectionBlock } from '@features/hero-section/types';
 import type { Metadata } from 'next';
-import HeroSection from '@/components/page/sections/HeroSection';
-import { HeroSectionBlock } from '@/types/sanity';
 import { notFound } from 'next/navigation';
 
 export const metadata: Metadata = {
@@ -9,9 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default function TestHeroPage() {
-  if (process.env.E2E_TEST !== '1') {
-    notFound();
-  }
+  if (process.env.E2E_TEST !== '1') notFound();
 
   const mockHeroBlock: HeroSectionBlock = {
     _type: 'heroSection',
@@ -41,7 +39,7 @@ export default function TestHeroPage() {
 
   return (
     <div data-testid="test-hero-page">
-      <HeroSection block={mockHeroBlock} />
+      <HeroSection lang="th" mode={'production'} block={mockHeroBlock} />
     </div>
   );
 }

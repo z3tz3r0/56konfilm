@@ -41,13 +41,12 @@ export const heroSectionType = defineType({
 
   preview: {
     select: {
-      title: 'title.0.value',
-      tagline: 'tagline.0.value',
+      tagline: 'title.0.value',
       media: 'backgroundMedia.mediaAsset[0]',
     },
-    prepare({ title, tagline, media }) {
+    prepare({ tagline, media }) {
       return {
-        title: title || 'Hero Section',
+        title: 'Hero section',
         subtitle: tagline || 'Hero Section',
         media,
       };

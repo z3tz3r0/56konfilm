@@ -10,7 +10,7 @@
 import { NextStudio } from 'next-sanity/studio';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import { verifySession } from '@/lib/auth';
+import { verifySession } from '@shared/lib/auth';
 import config from '../../../../sanity.config';
 
 export const dynamic = 'force-dynamic';

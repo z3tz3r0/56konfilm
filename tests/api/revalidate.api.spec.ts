@@ -2,7 +2,6 @@ import { expect, test } from '@playwright/test';
 
 test.describe('Sanity Revalidation API', () => {
   const REVALIDATE_PATH = '/api/revalidate';
-  const VALID_SECRET = 'test-secret';
 
   test('should return 401 if secret is missing', async ({ request }) => {
     // GIVEN: A request without authorization secret

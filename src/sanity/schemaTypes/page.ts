@@ -1,18 +1,18 @@
 import { defineField, defineType } from 'sanity';
 import { localizedStringField } from './objects/localized';
+import { validateSlugUniquenessByMode } from '@/sanity/lib/slug';
 
 export const pageType = defineType({
   name: 'page',
-  title: 'Page',
   type: 'document',
   groups: [
     { name: 'settings', title: 'Settings', default: true },
-    { name: 'commercial', title: 'Commercial Content' },
-    { name: 'wedding', title: 'Wedding Content' },
+    { name: 'commercialSections', title: 'Section Management' },
+    { name: 'weddingSections', title: 'Section Management' },
     { name: 'seo', title: 'SEO' },
   ],
   fields: [
-    // Settings Tab
+    // --- Settings ---
     localizedStringField({
       name: 'page',
       title: 'Page Name',
@@ -22,19 +22,15 @@ export const pageType = defineType({
     }),
     defineField({
       name: 'siteMode',
-      title: 'Site Mode',
-      description:
-        'หน้านี้จะแสดงผลในโหมดไหน (Production: สำหรับงานโฆษณา/ธุรกิจ, Wedding: สำหรับงานแต่งงาน, Both: แสดงทั้งสองโหมด)',
       type: 'string',
+      // hidden: true, // ซ่อนไว้เพราะล็อกค่าตาม document ที่เรียกใช้แล้ว
       options: {
         list: [
           { title: 'Production', value: 'production' },
           { title: 'Wedding', value: 'wedding' },
-          { title: 'Both (Dual-Mode)', value: 'both' },
         ],
         layout: 'radio',
       },
-      initialValue: 'production',
       validation: (Rule) => Rule.required(),
       group: 'settings',
       hidden: ({ document }) =>
@@ -50,83 +46,19 @@ export const pageType = defineType({
       type: 'slug',
       options: {
         source: 'page',
-        isUnique: async (slug, context) => {
-          const document = context?.document;
-          const getClient = context?.getClient;
-
-          if (!document || !getClient) {
-            return true;
-          }
-
-          // During early draft initialization, Studio can call isUnique before revision is ready.
-          const id = document?._id;
-
-          if (!id) {
-            return true;
-          }
-
-          const client = getClient({ apiVersion: '2023-01-01' });
-          const cleanId = id.replace(/^drafts\./, '');
-          const mode = (document as { siteMode?: string })?.siteMode || 'production';
-          const slugCandidate = slug as
-            | string
-            | { current?: string }
-            | undefined;
-          const slugValue =
-            typeof slugCandidate === 'string'
-              ? slugCandidate
-              : typeof slugCandidate?.current === 'string'
-                ? slugCandidate.current
-                : '';
-
-          if (!slugValue) {
-            return true;
-          }
-
-          const params = {
-            draft: `drafts.${cleanId}`,
-            published: cleanId,
-            slug: slugValue,
-            mode,
-          };
-
-          const query =
-            mode === 'both'
-              ? `count(*[
-                  _type == "page" &&
-                  slug.current == $slug &&
-                  !(_id in [$draft, $published])
-                ])`
-              : `count(*[
-                  _type == "page" &&
-                  slug.current == $slug &&
-                  !(_id in [$draft, $published]) &&
-                  (
-                    coalesce(siteMode, "production") == $mode ||
-                    siteMode == "both"
-                  )
-                ])`;
-
-          try {
-            const result = await client.fetch(query, params);
-            return result === 0;
-          } catch (error) {
-            console.warn('Slug uniqueness check failed', error);
-            return true;
-          }
-        },
+        isUnique: validateSlugUniquenessByMode,
       },
       group: 'settings',
       validation: (Rule) => Rule.required(),
     }),
 
-    // Commercial Content Tab
+    // --- Sections Management ---
     defineField({
-      name: 'contentBlocks',
-      title: 'Content Blocks (Commercial)',
+      name: 'commercialSections',
+      title: 'Commercial Sections',
       description:
-        'ส่วนสำหรับจัดการเนื้อหาในโหมด Commercial (สามารถเพิ่ม/ลบ หรือจัดลำดับ section ต่างๆ ได้อย่างอิสระ)',
-      group: 'commercial',
+        'ส่วนสำหรับจัดการเนื้อหาของหน้านี้ (สามารถเพิ่ม/ลบ หรือจัดลำดับ section ต่างๆ ได้อย่างอิสระ)',
+      group: 'commercialSections',
       type: 'array',
       of: [
         { type: 'heroSection' },
@@ -140,24 +72,25 @@ export const pageType = defineType({
         { type: 'testimonialSection' },
         { type: 'philosophySection' },
       ],
-      hidden: ({ document }) => document?.siteMode === 'wedding',
+      hidden: ({ document }) => document?.siteMode !== 'production',
       validation: (Rule) =>
         Rule.custom((value, context) => {
-          const mode = context.document?.siteMode;
-          if (mode === 'both' || mode === 'production') {
-            return value && value.length > 0
-              ? true
-              : 'Commercial content blocks are required for this site mode.';
-          }
+          // ถ้าโหมดไม่ใช่ production ไม่ต้องตรวจ (ปล่อยผ่าน)
+          if (context.document?.siteMode !== 'production') return true;
+
+          // ถ้าเป็นโหมด production ต้องมีข้อมูลอย่างน้อย 1 ตัว
+          if (!value || value.length === 0)
+            return 'Page sections are required.';
+
           return true;
         }),
     }),
     defineField({
-      name: 'contentBlocksWedding',
-      title: 'Content Blocks (Wedding)',
+      name: 'weddingSections',
+      title: 'Wedding Sections',
       description:
-        'ส่วนสำหรับจัดการเนื้อหาในโหมด Wedding (สามารถออกแบบเนื้อหาให้แตกต่างจากโหมด Commercial ได้อย่างสิ้นเชิง)',
-      group: 'wedding',
+        'ส่วนสำหรับจัดการเนื้อหาของหน้านี้ (สามารถเพิ่ม/ลบ หรือจัดลำดับ section ต่างๆ ได้อย่างอิสระ)',
+      group: 'weddingSections',
       type: 'array',
       of: [
         { type: 'heroSection' },
@@ -171,20 +104,21 @@ export const pageType = defineType({
         { type: 'testimonialSection' },
         { type: 'philosophySection' },
       ],
-      hidden: ({ document }) => document?.siteMode === 'production',
+      hidden: ({ document }) => document?.siteMode !== 'wedding',
       validation: (Rule) =>
         Rule.custom((value, context) => {
-          const mode = context.document?.siteMode;
-          if (mode === 'both' || mode === 'wedding') {
-            return value && value.length > 0
-              ? true
-              : 'Wedding content blocks are required for this site mode.';
-          }
+          // ถ้าโหมดไม่ใช่ wedding ไม่ต้องตรวจ (ปล่อยผ่าน)
+          if (context.document?.siteMode !== 'wedding') return true;
+
+          // ถ้าเป็นโหมด wedding ต้องมีข้อมูลอย่างน้อย 1 ตัว
+          if (!value || value.length === 0)
+            return 'Page sections are required.';
+
           return true;
         }),
     }),
 
-    // SEO Tab
+    // --- SEO ---
     localizedStringField({
       name: 'seoTitle',
       title: 'SEO Title',
@@ -204,11 +138,13 @@ export const pageType = defineType({
   preview: {
     select: {
       title: 'page.0.value',
+      mode: 'siteMode',
       slug: 'slug.current',
     },
-    prepare({ title, slug }) {
+    prepare({ title, mode, slug }) {
+      const CapitalizedMode = mode === 'production' ? 'Production' : 'Wedding';
       return {
-        title: title || 'Untitled Page',
+        title: `${CapitalizedMode} — ${title}` || 'Untitled Page',
         subtitle: slug || 'No slug',
       };
     },

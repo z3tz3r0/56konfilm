@@ -5,7 +5,7 @@ import { mediaBlockType } from '../objects/mediaBlock';
 
 export const ctaBannerSectionType = defineType({
   name: 'ctaBannerSection',
-  title: 'CTA Banner Section',
+  title: 'CTA Section',
   type: 'object',
   fields: [
     defineField({
@@ -101,16 +101,15 @@ export const ctaBannerSectionType = defineType({
   ],
   preview: {
     select: {
-      heading: 'content.heading.0.value',
       layout: 'layout',
       media: 'media.image',
     },
-    prepare({ heading, layout, media }) {
+    prepare({ layout, media }) {
       const subtitleParts = [
         layout === 'textRight' ? 'Text Right' : 'Text Left',
       ];
       return {
-        title: heading || 'CTA Banner Section',
+        title: 'CTA section',
         subtitle: subtitleParts.filter(Boolean).join(' · '),
         media,
       };

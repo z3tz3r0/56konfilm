@@ -6,12 +6,20 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
+      '@features': resolve(__dirname, './src/features'),
+      '@services': resolve(__dirname, './src/services'),
+      '@shared': resolve(__dirname, './src/shared'),
     },
   },
   test: {
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./tests/setup.ts'],
-    exclude: ['tests/e2e/**', 'play-results/**', 'node_modules/**'],
+    exclude: [
+      'tests/e2e/**',
+      'tests/api/**',
+      'play-results/**',
+      'node_modules/**',
+    ],
   },
 });

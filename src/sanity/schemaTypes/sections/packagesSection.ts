@@ -49,7 +49,7 @@ export const packagesSectionType = defineType({
         `${count} package${count === 1 ? '' : 's'}`,
       ];
       return {
-        title: title || 'Packages Section',
+        title: title ? `${title} section` : 'Packages Section',
         subtitle: subtitleParts.filter(Boolean).join(' · '),
       };
     },
