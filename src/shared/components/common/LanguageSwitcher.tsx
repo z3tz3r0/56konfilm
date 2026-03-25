@@ -50,7 +50,7 @@ export default function LanguageSwitcher({
           router.push(getPathFor(value, safeMode));
         }}
       >
-        <SelectTrigger className={''}>
+        <SelectTrigger>
           <SelectValue />
         </SelectTrigger>
         <SelectContent position="popper" align="start">

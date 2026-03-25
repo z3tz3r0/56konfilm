@@ -76,8 +76,8 @@ export default function NavbarScrollController({
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('touchstart', handleDragStart, { passive: true });
     window.addEventListener('touchend', handleDragEnd, { passive: true });
-    window.addEventListener('mousedown', handleDragStart);
-    window.addEventListener('mouseup', handleDragEnd);
+    window.addEventListener('mousedown', handleDragStart, { passive: true });
+    window.addEventListener('mouseup', handleDragEnd, { passive: true });
 
     onScroll();
 

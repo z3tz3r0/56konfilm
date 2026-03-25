@@ -3,7 +3,7 @@ import { buildMetadata } from '@shared/lib/seo';
 import { Locale, SiteMode } from '@shared/config';
 import { Metadata } from 'next';
 import { ContentService } from '@/services';
-import { getMockPage } from './page.test';
+import { getMockPage } from './page.mock';
 import { notFound } from 'next/navigation';
 
 interface PageProps {
