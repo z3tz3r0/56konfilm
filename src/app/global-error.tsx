@@ -9,7 +9,7 @@ export default function GlobalError({
 }) {
   return (
     <html lang="en">
-      <body className="bg-background flex min-h-screen items-center justify-center text-white">
+      <body className="flex min-h-screen items-center justify-center bg-[#00040d] text-white">
         <div className="text-center">
           <h1 className="text-4xl font-bold">Something went wrong</h1>
           <p className="mt-4 text-lg text-white/70">

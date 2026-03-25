@@ -17,11 +17,11 @@ export const settingsQuery = groq`*[_type == "settings"][0] {
     "favicon": favicon,
     "siteTitle": ${LOCALIZED('siteTitle')},
     ${SEO_PROJECTION},
-    "productionNav": productionNav[]{
+    "productionNav": productionNav[defined(url->slug.current)][]{
       "label": ${LOCALIZED('label')},
       "url": url->slug.current
     },
-    "weddingNav": weddingNav[]{
+    "weddingNav": weddingNav[defined(url->slug.current)][]{
       "label": ${LOCALIZED('label')},
       "url": url->slug.current
     },
