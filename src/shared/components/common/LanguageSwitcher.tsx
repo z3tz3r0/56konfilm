@@ -9,12 +9,7 @@ import {
   SelectValue,
 } from '@shared/components';
 import { isSupportedLocale, isSupportedMode } from '@shared/utils';
-import {
-  Locale,
-  SiteMode,
-  SUPPORTED_LOCALES,
-  SUPPORTED_SITE_MODES,
-} from '@shared/config';
+import { Locale, SiteMode } from '@shared/config';
 import { usePathname, useRouter } from 'next/navigation';
 
 interface LanguageSwitcherProps {
@@ -33,15 +28,13 @@ export default function LanguageSwitcher({
   // Current paths SHOULD be /en/... or /th/... via proxy redirect.
   // If we are somehow on root (e.g. before hydration redirect completes?), default to 'en'.
   const isLangSupported = isSupportedLocale(pathSegments[0]);
-  const currentLang = isLangSupported ? pathSegments[0] : lang;
-  const currentMode = isSupportedMode(pathSegments[1]) ? pathSegments[1] : mode;
+  const safeLang = isLangSupported ? pathSegments[0] : lang;
+  const safeMode = isSupportedMode(pathSegments[1]) ? pathSegments[1] : mode;
 
   const getPathFor = (targetLocale: string, targetMode: string) => {
     if (isLangSupported) {
       const filteredSegments = pathSegments.filter(
-        (part) =>
-          !SUPPORTED_LOCALES.includes(part as Locale) &&
-          !SUPPORTED_SITE_MODES.includes(part as SiteMode)
+        (part) => !isSupportedLocale(part) && !isSupportedMode(part)
       );
       return `/${targetLocale}/${targetMode}/${filteredSegments.join('/')}`;
     }
@@ -52,9 +45,9 @@ export default function LanguageSwitcher({
   return (
     <div className="flex items-center gap-2">
       <Select
-        defaultValue={currentLang}
+        defaultValue={safeLang}
         onValueChange={(value) => {
-          router.push(getPathFor(value, currentMode));
+          router.push(getPathFor(value, safeMode));
         }}
       >
         <SelectTrigger>

@@ -1,6 +1,6 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ContactForm } from '@/features/contact-section/components/ContactForm';
+import { ContactForm } from '@features/contact-section/components/ContactForm';
 import { useMode } from '@shared/hooks';
 
 // Mock useMode
@@ -13,7 +13,7 @@ vi.mock('@shared/hooks', async (importOriginal) => {
 });
 
 // Mock server action
-vi.mock('@/features/contact-section/actions', () => ({
+vi.mock('@features/contact-section/actions', () => ({
   submitContactForm: vi.fn(),
 }));
 

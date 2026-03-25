@@ -1,5 +1,5 @@
 import { SiteMode } from '@shared/config';
-import { FullPageDocument } from '@/features/PageBuilder';
+import { FullPageDocument } from '@features/PageBuilder';
 
 export function getMockPage(
   mode: SiteMode,
