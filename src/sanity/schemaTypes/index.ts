@@ -26,8 +26,6 @@ import { testimonialSectionType } from './sections/testimonialSection';
 import { timelineSectionType } from './sections/timelineSection';
 import { twoColumnSectionType } from './sections/twoColumnSection';
 import { settingsType } from './settings';
-// import { productionType } from '@/sanity/schemaTypes/productionType';
-// import { weddingType } from '@/sanity/schemaTypes/weddingType';
 
 export const schemaType = {
   types: [
@@ -36,8 +34,6 @@ export const schemaType = {
     cmsCredentialsType, // Hidden from Studio UI but registered for API access
     projectType,
     pageType,
-    // productionType,
-    // weddingType,
     heroSectionType,
     twoColumnSectionType,
     cardCollectionSectionType,

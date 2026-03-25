@@ -19,11 +19,11 @@ export const settingsQuery = groq`*[_type == "settings"][0] {
     ${SEO_PROJECTION},
     "productionNav": productionNav[]{
       "label": ${LOCALIZED('label')},
-      url
+      "url": url->slug.current
     },
     "weddingNav": weddingNav[]{
       "label": ${LOCALIZED('label')},
-      url
+      "url": url->slug.current
     },
     "productionPortfolioSlug": productionPortfolioPage->slug.current,
     "weddingPortfolioSlug": weddingPortfolioPage->slug.current,

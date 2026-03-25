@@ -23,7 +23,7 @@ export const pageType = defineType({
     defineField({
       name: 'siteMode',
       type: 'string',
-      // hidden: true, // ซ่อนไว้เพราะล็อกค่าตาม document ที่เรียกใช้แล้ว
+      hidden: true, // ซ่อนไว้เพราะล็อกค่าตาม document ที่เรียกใช้แล้ว
       options: {
         list: [
           { title: 'Production', value: 'production' },
@@ -33,10 +33,6 @@ export const pageType = defineType({
       },
       validation: (Rule) => Rule.required(),
       group: 'settings',
-      hidden: ({ document }) =>
-        ['portfolio', 'services'].includes(
-          (document?.slug as { current?: string })?.current || ''
-        ),
     }),
     defineField({
       name: 'slug',

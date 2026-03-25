@@ -1,4 +1,4 @@
-import { Locale, SiteMode } from '@/shared/config';
+import { Locale, SiteMode } from '@shared/config';
 import { SanityImageSource } from '@sanity/image-url';
 
 interface SanityColor {
