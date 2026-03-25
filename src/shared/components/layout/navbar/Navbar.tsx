@@ -57,7 +57,7 @@ export default async function Navbar({ settings, lang, mode }: NavbarProps) {
             const fullHref = withContextPrefix({ href: item.url, lang, mode });
             return (
               <ActiveLink
-                key={item.url}
+                key={fullHref}
                 href={fullHref}
                 className={'hover:underline'}
                 activeClassName="text-text-primary font-semibold"
@@ -101,7 +101,7 @@ export default async function Navbar({ settings, lang, mode }: NavbarProps) {
 
                   return (
                     <ActiveLink
-                      key={item.url}
+                      key={fullHref}
                       href={fullHref}
                       className="text-text-secondary hover:underline"
                       activeClassName="text-primary underline"
