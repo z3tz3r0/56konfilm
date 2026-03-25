@@ -9,12 +9,7 @@ import {
   SelectValue,
 } from '@shared/components';
 import { isSupportedLocale, isSupportedMode } from '@shared/utils';
-import {
-  Locale,
-  SiteMode,
-  SUPPORTED_LOCALES,
-  SUPPORTED_SITE_MODES,
-} from '@shared/config';
+import { Locale, SiteMode } from '@shared/config';
 import { usePathname, useRouter } from 'next/navigation';
 
 interface LanguageSwitcherProps {
