@@ -20,8 +20,8 @@ export const seoObjectType = defineType({
       validation: (Rule) =>
         Rule.custom((value) => {
           if (!value || !Array.isArray(value)) return true;
-          const enTitle = value.find((v) => v._key === 'en')?.value || '';
-          const thTitle = value.find((v) => v._key === 'th')?.value || '';
+          const enTitle = value.find((v) => v.language === 'en')?.value || '';
+          const thTitle = value.find((v) => v.language === 'th')?.value || '';
           if (enTitle.length > 60 || thTitle.length > 60) {
             return 'Title is too long (over 60 chars). It might be truncated in search results.';
           }
@@ -36,8 +36,8 @@ export const seoObjectType = defineType({
       validation: (Rule) =>
         Rule.custom((value) => {
           if (!value || !Array.isArray(value)) return true;
-          const enDesc = value.find((v) => v._key === 'en')?.value || '';
-          const thDesc = value.find((v) => v._key === 'th')?.value || '';
+          const enDesc = value.find((v) => v.language === 'en')?.value || '';
+          const thDesc = value.find((v) => v.language === 'th')?.value || '';
           if (enDesc.length > 160 || thDesc.length > 160) {
             return 'Description is too long (over 160 chars). It might be truncated.';
           }

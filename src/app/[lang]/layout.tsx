@@ -93,7 +93,7 @@ export default async function RootLayout({
       </head>
       <body>
         <ThemeProvider
-          attribute="data-theme"
+          attribute="class"
           defaultTheme={initialTheme}
           enableSystem={false}
           disableTransitionOnChange
