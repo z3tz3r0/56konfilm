@@ -53,11 +53,7 @@ const rawEnv = {
 function validateEnv() {
   const isServer = typeof window === 'undefined';
   const parsed = envSchema.safeParse(rawEnv);
-
-  const isCI =
-    process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
   const isLighthouse = process.env.LHCI === 'true';
-  const isSkipValidation = isCI || isLighthouse;
 
   // --- กรณีที่ 1: Validation ผ่านฉลุย ---
   if (parsed.success) {
@@ -68,7 +64,7 @@ function validateEnv() {
     // ** FAIL FAST LOGIC **
     // ถ้าเป็น Production และไม่ใช่ช่วง Build
     // เช็ก env ที่กำหนด .optional() แต่ต้องใช้ใน live environment
-    if (isLiveEnvironment && !isBuild && isServer && !isSkipValidation) {
+    if (isLiveEnvironment && !isBuild && isServer && !isLighthouse) {
       if (
         !data.SANITY_REVALIDATE_SECRET ||
         !data.SANITY_API_TOKEN ||
@@ -83,7 +79,7 @@ function validateEnv() {
   }
 
   // --- กรณีที่ 2: เป็นโหมด Test (Mock Data) ---
-  if (process.env.NODE_ENV === 'test' || isSkipValidation) {
+  if (process.env.NODE_ENV === 'test' || isLighthouse) {
     return envSchema.parse({
       ...rawEnv,
       NEXT_PUBLIC_SANITY_PROJECT_ID:

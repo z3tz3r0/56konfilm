@@ -29,7 +29,7 @@ export default function CtaButton({
 
   return (
     <Link
-      href={href ?? '#'}
+      href={href ?? ''}
       className={cn(fullWidth && 'block w-full')}
       {...(isExternal && { target: '_blank', rel: 'noopener noreferrer' })}
     >
