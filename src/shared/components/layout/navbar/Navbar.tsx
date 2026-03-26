@@ -1,11 +1,12 @@
 import Link from 'next/link';
-import { Menu } from 'lucide-react';
 import {
   Button,
   LanguageSwitcher,
   ModeSwitcher,
   Sheet,
   SheetContent,
+  SheetDescription,
+  SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from '@shared/components';
@@ -81,14 +82,19 @@ export default async function Navbar({ settings, lang, mode }: NavbarProps) {
               variant="ghost"
               size="icon"
               data-testid="mobile-menu-button"
-              className={'text-text-secondary'}
+              className={'text-text-secondary text-xl'}
             >
-              <Menu />
+              ☰
             </Button>
           </SheetTrigger>
           <SheetContent className="w-full">
             <VisuallyHidden.Root asChild>
-              <SheetTitle>Navigation menu</SheetTitle>
+              <SheetHeader>
+                <SheetTitle>Navigation menu</SheetTitle>
+                <SheetDescription>
+                  Navigation menu for navigating the website.
+                </SheetDescription>
+              </SheetHeader>
             </VisuallyHidden.Root>
             <div className="flex h-screen flex-col items-center justify-center gap-16 text-4xl font-bold">
               <nav className="flex flex-col items-center gap-8">

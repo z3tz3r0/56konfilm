@@ -53,6 +53,7 @@ const rawEnv = {
 function validateEnv() {
   const isServer = typeof window === 'undefined';
   const parsed = envSchema.safeParse(rawEnv);
+  const isLighthouse = process.env.LHCI === 'true';
 
   // --- กรณีที่ 1: Validation ผ่านฉลุย ---
   if (parsed.success) {
@@ -63,7 +64,7 @@ function validateEnv() {
     // ** FAIL FAST LOGIC **
     // ถ้าเป็น Production และไม่ใช่ช่วง Build
     // เช็ก env ที่กำหนด .optional() แต่ต้องใช้ใน live environment
-    if (isLiveEnvironment && !isBuild && isServer) {
+    if (isLiveEnvironment && !isBuild && isServer && !isLighthouse) {
       if (
         !data.SANITY_REVALIDATE_SECRET ||
         !data.SANITY_API_TOKEN ||
@@ -78,10 +79,11 @@ function validateEnv() {
   }
 
   // --- กรณีที่ 2: เป็นโหมด Test (Mock Data) ---
-  if (process.env.NODE_ENV === 'test') {
+  if (process.env.NODE_ENV === 'test' || isLighthouse) {
     return envSchema.parse({
       ...rawEnv,
-      NEXT_PUBLIC_SANITY_PROJECT_ID: 'test-project',
+      NEXT_PUBLIC_SANITY_PROJECT_ID:
+        rawEnv.NEXT_PUBLIC_SANITY_PROJECT_ID ?? 'test-project',
       NEXT_PUBLIC_SANITY_DATASET: 'production',
       NEXT_PUBLIC_SANITY_API_VERSION: '2025-08-12',
       SANITY_API_TOKEN:

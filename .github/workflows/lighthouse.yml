@@ -14,7 +14,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '24.14.1'
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -40,6 +40,7 @@ jobs:
       - name: Build site
         run: pnpm run build
         env:
+          LHCI: true
           NEXT_PUBLIC_SITE_URL: http://localhost:3000
           # We need dummy values for build-time Sanity connection if ISR is enabled
           NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
@@ -48,4 +49,7 @@ jobs:
       - name: Run Lighthouse CI
         run: npx lhci autorun
         env:
+          LHCI: true
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+          NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}

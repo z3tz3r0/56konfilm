@@ -54,7 +54,9 @@ export const postType = defineType({
         return { title: 'Untitled' };
       }
 
-      const defaultLang = title.find((t: { _key: string }) => t._key === 'en');
+      const defaultLang = title.find(
+        (t: { language: string }) => t.language === 'en'
+      );
 
       return { title: defaultLang?.value || title[0].value || 'Unititled' };
     },
