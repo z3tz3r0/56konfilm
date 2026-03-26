@@ -27,18 +27,24 @@ export default function CtaButton({
   const { href, isExternal } = resolveCta(cta, lang, mode);
   const variant = mapCtaVariant(cta.style);
 
+  const buttonElement = (
+    <Button
+      variant={variant}
+      className={cn(fullWidth && 'w-full justify-center', className)}
+    >
+      {cta.label}
+    </Button>
+  );
+
+  if (!href) return buttonElement;
+
   return (
     <Link
-      href={href ?? ''}
+      href={href}
       className={cn(fullWidth && 'block w-full')}
       {...(isExternal && { target: '_blank', rel: 'noopener noreferrer' })}
     >
-      <Button
-        variant={variant}
-        className={cn(fullWidth && 'w-full justify-center', className)}
-      >
-        {cta.label}
-      </Button>
+      {buttonElement}
     </Link>
   );
 }
