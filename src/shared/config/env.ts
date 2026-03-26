@@ -86,7 +86,8 @@ function validateEnv() {
   if (process.env.NODE_ENV === 'test' || isSkipValidation) {
     return envSchema.parse({
       ...rawEnv,
-      NEXT_PUBLIC_SANITY_PROJECT_ID: 'test-project',
+      NEXT_PUBLIC_SANITY_PROJECT_ID:
+        rawEnv.NEXT_PUBLIC_SANITY_PROJECT_ID ?? 'test-project',
       NEXT_PUBLIC_SANITY_DATASET: 'production',
       NEXT_PUBLIC_SANITY_API_VERSION: '2025-08-12',
       SANITY_API_TOKEN:
