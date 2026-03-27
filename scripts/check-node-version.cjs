@@ -1,6 +1,6 @@
 const requiredMajor = 24;
-const requiredMinor = 5;
-const requiredPatch = 0;
+const requiredMinor = 14;
+const requiredPatch = 1;
 
 if (process.env.SKIP_NODE_CHECK === '1') {
   process.exit(0);

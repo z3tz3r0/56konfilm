@@ -5,7 +5,13 @@ import { groq } from 'next-sanity';
  * Usage: "title": ${LOCALIZED('title')}
  */
 export const LOCALIZED = (field: string) =>
-  groq`coalesce(${field}[_key == $lang][0].value, ${field}[_key == "en"][0].value, ${field}[0].value)`;
+  groq`coalesce(
+    ${field}[language == $lang][0].value,
+    ${field}[_key == $lang][0].value,
+    ${field}[language == "en"][0].value,
+    ${field}[_key == "en"][0].value,
+    ${field}[0].value
+  )`;
 
 /**
  * Common Image projection
