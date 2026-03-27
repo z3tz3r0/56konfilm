@@ -2,6 +2,32 @@ import { defineField, defineType } from 'sanity';
 import { localizedStringField, localizedTextField } from './objects/localized';
 import { socialMediaType } from './objects/socialMedia';
 
+function createNavItemPreview() {
+  return {
+    select: {
+      title: 'label',
+      url: 'url',
+    },
+    prepare(selection: {
+      title?: Array<{ language: string; value: string }>;
+      url?: { _ref?: string };
+    }) {
+      const { title, url } = selection;
+      const urlRef = url?._ref;
+      const label = Array.isArray(title)
+        ? title.find((item) => item.language === 'en')?.value ||
+          title[0]?.value ||
+          'No Label'
+        : 'No Label';
+
+      return {
+        title: label,
+        subtitle: urlRef ? `Linked to page` : '⚠️ No URL selected',
+      };
+    },
+  };
+}
+
 export const settingsType = defineType({
   name: 'settings',
   title: 'Global Settings',
@@ -63,6 +89,7 @@ export const settingsType = defineType({
               validation: (Rule) => Rule.required(),
             }),
           ],
+          preview: createNavItemPreview(),
         },
       ],
     }),
@@ -93,6 +120,7 @@ export const settingsType = defineType({
               validation: (Rule) => Rule.required(),
             }),
           ],
+          preview: createNavItemPreview(),
         },
       ],
     }),
