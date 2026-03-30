@@ -1,5 +1,4 @@
-import { HeroSection } from '@features/hero-section/components';
-import { HeroSectionBlock } from '@features/hero-section/types';
+import { HeroSection, HeroSectionBlock } from '@features/hero-section/';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 

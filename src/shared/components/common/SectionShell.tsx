@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { ReactNode } from 'react';
+import { Activity, ReactNode } from 'react';
 import { cn } from '@shared/utils';
 import { urlFor } from '@/sanity/lib/image';
 import { BackgroundMediaItem } from '@shared/types';
@@ -23,6 +23,7 @@ interface SectionShellProps {
   children: ReactNode;
   videoPriority?: boolean; // Hero should use true, others false
   enableVideoObserver?: boolean; // Enable IntersectionObserver for non-hero sections
+  shapeDivider?: boolean;
 }
 
 export default function SectionShell({
@@ -37,6 +38,7 @@ export default function SectionShell({
   children,
   videoPriority = false,
   enableVideoObserver = false,
+  shapeDivider = false,
 }: SectionShellProps) {
   const backgroundClass =
     backgroundVariants[background ?? 'default'] ?? backgroundVariants.default;
@@ -99,6 +101,19 @@ export default function SectionShell({
           ) : null}
         </div>
       ) : null}
+
+      {/* Shape Divider */}
+      <Activity mode={shapeDivider ? 'visible' : 'hidden'}>
+        <div className="absolute inset-x-0 bottom-0 h-[80px] overflow-hidden">
+          <svg
+            viewBox="0 0 1280 80"
+            preserveAspectRatio="none"
+            className="h-full w-full"
+          >
+            <path fill="var(--color-ivory-white)" d="M0,80 Q640 0,1280 80" />
+          </svg>
+        </div>
+      </Activity>
     </section>
   );
 }

@@ -1,4 +1,4 @@
-import { HeroSectionBlock } from '@features/hero-section/types';
+import { HeroSectionBlock } from '@features/hero-section';
 
 export const createHeroSection = (
   overrides: Partial<HeroSectionBlock> = {}
