@@ -14,8 +14,7 @@ export type ImageAssetValue = {
 /** Type for Sanity validation context with client access */
 export type SanityValidationContext = {
   getClient?: (options: { apiVersion: string }) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    fetch: (query: string, params: Record<string, string>) => Promise<any>;
+    fetch: (query: string, params: Record<string, string>) => Promise<unknown>;
   };
 };
 

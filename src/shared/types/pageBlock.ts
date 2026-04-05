@@ -29,4 +29,17 @@ interface BackgroundMediaItem {
   image?: ImageSource;
 }
 
-export type { BaseBlock, ContentCta, MediaItem, BackgroundMediaItem };
+interface SectionHeading {
+  eyebrow?: string;
+  heading?: string;
+  body?: string;
+  align?: string;
+}
+
+export type {
+  BaseBlock,
+  ContentCta,
+  MediaItem,
+  BackgroundMediaItem,
+  SectionHeading,
+};

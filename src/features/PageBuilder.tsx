@@ -1,5 +1,6 @@
 import dynamic from 'next/dynamic';
 import { PageDocument } from '@shared/types';
+import { SectionErrorBoundary } from '@shared/components';
 import { HeroSection } from './hero-section/components';
 import { HeroSectionBlock } from './hero-section/types';
 import { TwoColumnSectionBlock } from './two-column-section/types';
@@ -94,9 +95,14 @@ function PageBuilder({
       data-testid="page-content"
       data-content-signature={contentSignature}
     >
-      {blocks.map((block, index) =>
-        renderBlock(block, index, lang, mode, metadata)
-      )}
+      {blocks.map((block, index) => (
+        <SectionErrorBoundary
+          key={block._key ?? `${block._type}-${index}`}
+          sectionType={block._type}
+        >
+          {renderBlock(block, index, lang, mode, metadata)}
+        </SectionErrorBoundary>
+      ))}
     </div>
   );
 }

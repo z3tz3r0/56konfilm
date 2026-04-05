@@ -9,41 +9,29 @@ interface CtaBannerSectionProps {
   mode: SiteMode;
 }
 
+function getOverlayConfig(overlay?: CtaBannerSectionBlock['overlay']) {
+  // Explicitly disabled
+  if (overlay?.enabled === false) return {};
+  // Custom overlay settings from CMS
+  if (overlay) {
+    return {
+      overlayStyle: {
+        backgroundColor: overlay.color?.hex ?? '#000000',
+        opacity: (overlay.opacity ?? 60) / 100,
+      },
+    };
+  }
+  // No overlay config → default dark overlay
+  return { overlayClassName: 'bg-black/60' };
+}
+
 export default function CtaBannerSection({
   block,
   lang,
   mode,
 }: CtaBannerSectionProps) {
-  // const isTextLeft = block.layout !== 'textRight';
   const alignClass = getAlignmentClass(block.content?.align);
-
-  // Overlay Logic
-  const overlayEnabled = block.overlay?.enabled ?? true; // Default to true if undefined
-  const overlayColor = block.overlay?.color?.hex ?? '#000000';
-  const overlayOpacity = (block.overlay?.opacity ?? 60) / 100;
-
-  const overlayStyle = overlayEnabled
-    ? { backgroundColor: overlayColor, opacity: overlayOpacity }
-    : undefined;
-
-  // If overlay is explicitly disabled in new schema, we don't want the default class either.
-  // But if block.overlay is undefined (old data), we kept the default behavior in previous step?
-  // Actually, let's strictly follow the explicit configuration if present,
-  // otherwise fallback to the "Premium Design" default we just established (bg-black/60).
-
-  // Refined Logic:
-  // 1. If block.overlay exists -> use its settings.
-  // 2. If block.overlay is missing -> use default 'bg-black/60'.
-
-  const finalOverlayStyle = block.overlay ? overlayStyle : undefined;
-  const finalOverlayClass = block.overlay ? undefined : 'bg-black/60';
-
-  // Hide overlay if enabled is explicitly false
-  if (block.overlay && !block.overlay.enabled) {
-    // Pass nothing or display none logic handled by SectionShell?
-    // SectionShell renders if overlayClassName OR overlayStyle is present.
-    // So if enabled is false, we ensure both are undefined.
-  }
+  const overlay = getOverlayConfig(block.overlay);
 
   return (
     <SectionShell
@@ -53,12 +41,8 @@ export default function CtaBannerSection({
           ? [{ _type: 'image', image: block.media.image }]
           : undefined
       }
-      overlayClassName={
-        block.overlay?.enabled === false ? undefined : finalOverlayClass
-      }
-      overlayStyle={
-        block.overlay?.enabled === false ? undefined : finalOverlayStyle
-      }
+      overlayClassName={overlay.overlayClassName}
+      overlayStyle={overlay.overlayStyle}
     >
       <div className="relative z-10 container mx-auto">
         <div className={cn('mx-auto flex flex-col gap-6', alignClass)}>

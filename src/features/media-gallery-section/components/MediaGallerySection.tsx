@@ -1,12 +1,15 @@
 'use client';
 
-import { m, type Variants } from 'motion/react';
+import { m } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { CtaGroup, SectionShell } from '@shared/components';
-import { getAlignmentClass } from '@shared/utils';
+import { CtaGroup, SectionHeader, SectionShell } from '@shared/components';
 import { useDeviceTier } from '@shared/hooks';
+import {
+  staggerContainerVariants,
+  fadeUpItemVariants,
+} from '@shared/lib/motion';
 import { cn } from '@shared/utils';
 import { urlFor } from '@/sanity/lib/image';
 import { MediaGallerySectionBlock } from '../types';
@@ -19,29 +22,6 @@ interface MediaGallerySectionProps {
   mode: SiteMode;
 }
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-} satisfies Variants;
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-      ease: 'easeOut',
-    },
-  },
-} satisfies Variants;
-
 export default function MediaGallerySection({
   block,
   lang: propLang,
@@ -49,11 +29,10 @@ export default function MediaGallerySection({
 }: MediaGallerySectionProps) {
   const params = useParams();
   const lang = propLang || (params?.lang as string) || 'en';
-  const alignClass = getAlignmentClass(block.heading?.align);
   const isCentered = block.heading?.align === 'center';
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
   const useLiteMotion = isInitialized && !allowHeavyMotion;
-  const variants = useLiteMotion ? undefined : itemVariants;
+  const variants = useLiteMotion ? undefined : fadeUpItemVariants;
   const mediaClassName = useLiteMotion
     ? 'object-cover transition-none'
     : 'object-cover transition-transform duration-700 ease-out group-hover:scale-105';
@@ -61,29 +40,12 @@ export default function MediaGallerySection({
   return (
     <SectionShell background={block.background} sanityType={block._type}>
       <div className="container mx-auto space-y-12">
-        <header
-          className={cn(
-            'flex flex-col gap-4 text-balance',
-            alignClass,
-            isCentered && 'mx-auto text-center'
-          )}
-        >
-          {block.heading?.eyebrow ? (
-            <span className="text-primary text-sm font-semibold tracking-[0.2em] uppercase">
-              {block.heading.eyebrow}
-            </span>
-          ) : null}
-          {block.heading?.heading ? (
-            <h2 className="text-3xl font-semibold md:text-4xl lg:text-5xl">
-              {block.heading.heading}
-            </h2>
-          ) : null}
-          {block.heading?.body ? (
-            <p className="text-muted-foreground max-w-3xl text-lg leading-relaxed font-light wrap-break-word">
-              {block.heading.body}
-            </p>
-          ) : null}
-        </header>
+        <SectionHeader
+          heading={block.heading}
+          className={cn('gap-4 text-balance', isCentered && 'mx-auto')}
+          headingClassName="lg:text-5xl"
+          bodyClassName="text-lg font-light wrap-break-word"
+        />
 
         {block.items?.length ? (
           <m.div
@@ -91,7 +53,7 @@ export default function MediaGallerySection({
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-100px' }}
-            variants={useLiteMotion ? undefined : containerVariants}
+            variants={useLiteMotion ? undefined : staggerContainerVariants}
             transition={useLiteMotion ? { duration: 0.2 } : undefined}
           >
             {block.items.map((item, index) => {

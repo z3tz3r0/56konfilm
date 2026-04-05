@@ -17,7 +17,6 @@ export function useContactForm() {
   const currentType = mode === 'wedding' ? 'wedding' : 'commercial';
 
   const form = useForm<ContactFormValues, unknown, ContactFormValues>({
-    // @ts-expect-error - z.coerce input type differs from resolver output type for discriminated union
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
       type: currentType,

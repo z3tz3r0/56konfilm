@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { CtaButton, SectionShell } from '@shared/components';
 import { cn } from '@shared/utils';
-import { urlFor } from '@/sanity/lib/image';
+import { getImageUrl, THUMBNAIL_IMAGE } from '@/sanity/lib/image';
 import { CardCollectionSectionBlock } from '@features/card-collection-section/types';
 import { Locale, SiteMode } from '@shared/config';
 
@@ -53,11 +53,7 @@ export default function CardCollectionSection({
                 {card.icon ? (
                   <div className="bg-primary/10 relative h-12 w-12 overflow-hidden rounded-full">
                     <Image
-                      src={urlFor(card.icon)
-                        .width(96)
-                        .height(96)
-                        .fit('clip')
-                        .url()}
+                      src={getImageUrl(card.icon, THUMBNAIL_IMAGE)}
                       alt={card.title ?? 'Icon'}
                       fill
                       sizes="48px"

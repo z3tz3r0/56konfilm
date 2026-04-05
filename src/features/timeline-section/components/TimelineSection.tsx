@@ -1,4 +1,3 @@
-import { getAlignmentClass } from '@shared/utils';
 import {
   Card,
   CardContent,
@@ -6,10 +5,11 @@ import {
   CarouselContent,
   CarouselItem,
   CtaGroup,
+  SectionHeader,
   SectionShell,
 } from '@shared/components';
 import { cn } from '@shared/utils';
-import { urlFor } from '@/sanity/lib/image';
+import { getImageUrl, THUMBNAIL_IMAGE } from '@/sanity/lib/image';
 import { TimelineSectionBlock } from '../types';
 import Image from 'next/image';
 import { Locale, SiteMode } from '@shared/config';
@@ -26,7 +26,6 @@ export default function TimelineSection({
   lang,
   mode,
 }: TimelineSectionProps) {
-  const alignClass = getAlignmentClass(block.heading?.align);
   const steps = [...(block.steps ?? [])].sort(
     (a, b) => (a.order ?? 0) - (b.order ?? 0)
   );
@@ -34,23 +33,7 @@ export default function TimelineSection({
   return (
     <SectionShell background={block.background}>
       <div className="container mx-auto space-y-12">
-        <header className={cn('flex flex-col gap-3', alignClass)}>
-          {block.heading?.eyebrow ? (
-            <span className="text-primary text-sm font-semibold tracking-[0.2em] uppercase">
-              {block.heading.eyebrow}
-            </span>
-          ) : null}
-          {block.heading?.heading ? (
-            <h2 className="text-3xl font-semibold md:text-4xl">
-              {block.heading.heading}
-            </h2>
-          ) : null}
-          {block.heading?.body ? (
-            <p className="text-muted-foreground max-w-3xl text-base">
-              {block.heading.body}
-            </p>
-          ) : null}
-        </header>
+        <SectionHeader heading={block.heading} />
 
         {steps.length ? (
           <div className="relative isolate mx-auto mt-8 md:mt-16">
@@ -168,7 +151,7 @@ function TimelineCard({
           {step.icon ? (
             <div className="relative size-12 shrink-0">
               <Image
-                src={urlFor(step.icon).width(96).height(96).fit('clip').url()}
+                src={getImageUrl(step.icon, THUMBNAIL_IMAGE)}
                 alt=""
                 fill
                 className="object-contain"
