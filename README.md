@@ -46,7 +46,9 @@ To ensure long-term maintainability, the codebase follows strict standards:
 - **CMS**: Sanity Studio (embedded at `/sanity-cms` with custom structure + localized workflow)
 - **Styling**: Tailwind CSS with `next/font` (Geist) and SVG/icon support
 - **Data Fetching**: `next-sanity` client with typed GROQ queries and server-side caching
-- **Quality Control:** TypeScript, Husky (Pre-commit hooks), ESLint, and Prettier
+- **Testing**: Vitest (unit) + Playwright (E2E) + Lighthouse CI (performance)
+- **Quality Control:** TypeScript strict mode, Husky (Pre-commit hooks), ESLint, and Prettier
+- **CI/CD**: GitHub Actions (test + type-check + lint on PR, Lighthouse on PR to main)
 
 ## 📝 Documentation
 
@@ -54,6 +56,7 @@ For detailed guidelines on how to contribute or understand the codebase, please 
 
 - 📂 [Folder Structure](https://github.com/z3tz3r0/56konfilm/blob/main/docs/FOLDER_STRUCTURE.md) - How we organize our files.
 - 🔗 [Import Policies](https://github.com/z3tz3r0/56konfilm/blob/main/docs/IMPORT_POLICIES.md) - Rules for dependencies and barrel exports.
+- 🛡️ [Sanity Query Safeguards](https://github.com/z3tz3r0/56konfilm/blob/main/docs/SANITY_MCP_GUIDELINES.md) - Rules for AI agents interacting with Sanity content.
 
 ## 👨‍💻 Highlights for Recruiters & Partners
 
@@ -66,7 +69,7 @@ For detailed guidelines on how to contribute or understand the codebase, please 
 
 ### Prerequisites
 
-- Node.js: 24.5
+- Node.js: >=24.14.1 <25
 - Package Manager: pnpm
 
 ### Getting Started
@@ -111,7 +114,7 @@ To enable on-demand revalidation, configure a webhook in the Sanity project mana
 ## 🗺️ Roadmap
 
 - Finish UI components for all section types and connect them to live Sanity content.
-- Extend testing coverage (`npm run lint` currently flags placeholder `any` types) and introduce visual regression snapshots once the design stabilizes.
+- Extend testing coverage and introduce visual regression snapshots once the design stabilizes.
 - Integrate analytics and lightweight lead-gen forms tailored to 56KON Film business goals.
 
 ## ☎️ Contact

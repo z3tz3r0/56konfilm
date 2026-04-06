@@ -47,6 +47,7 @@ next-env.d.ts
 # AGENTS.md and GEMINI.md are now allowed for documentation purposes.
 
 .cursor
+.mcp.json
 .gemini/
 gha-creds-*.json
 

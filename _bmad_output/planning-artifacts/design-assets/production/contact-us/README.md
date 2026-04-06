@@ -1,1 +1,0 @@
-- map section should actually pull the google map link and use it as an iframe to display the map (or other method that you think is better).

@@ -1,1 +1,0 @@
-- each section-hero-\* should be a video or image. it should be full screen and cover the entire screen. it should have a play button in the center if it's a video.

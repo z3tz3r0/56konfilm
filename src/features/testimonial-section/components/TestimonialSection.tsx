@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { m, type Variants } from 'motion/react';
+import { m } from 'motion/react';
 import Image from 'next/image';
 import {
   Carousel,
@@ -9,28 +9,18 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  SectionHeader,
   SectionShell,
   type CarouselApi,
 } from '@shared/components';
+import { fadeUpItemVariants } from '@shared/lib/motion';
 import { cn } from '@shared/utils';
-import { urlFor } from '@/sanity/lib/image';
+import { getImageUrl, THUMBNAIL_IMAGE } from '@/sanity/lib/image';
 import { TestimonialSectionBlock } from '../types';
 
 interface TestimonialSectionProps {
   block: TestimonialSectionBlock;
 }
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: 'easeOut',
-    },
-  },
-} satisfies Variants;
 
 export default function TestimonialSection({ block }: TestimonialSectionProps) {
   const defaultBackground = !block.background || block.background === 'default';
@@ -63,18 +53,11 @@ export default function TestimonialSection({ block }: TestimonialSectionProps) {
       className={cn(defaultBackground && 'bg-background')}
     >
       <div className="container mx-auto max-w-5xl space-y-10">
-        <header className="mx-auto flex max-w-3xl flex-col items-center gap-3 text-center">
-          {block.heading?.eyebrow ? (
-            <span className="text-primary text-sm font-semibold tracking-[0.3em] uppercase">
-              {block.heading.eyebrow}
-            </span>
-          ) : null}
-          {block.heading?.heading ? (
-            <h2 className="text-3xl font-semibold md:text-5xl">
-              {block.heading.heading}
-            </h2>
-          ) : null}
-        </header>
+        <SectionHeader
+          heading={block.heading}
+          className="mx-auto max-w-3xl items-center text-center"
+          headingClassName="md:text-5xl"
+        />
 
         {block.testimonials?.length ? (
           <div className="relative">
@@ -92,7 +75,7 @@ export default function TestimonialSection({ block }: TestimonialSectionProps) {
                       initial="hidden"
                       whileInView="visible"
                       viewport={{ once: true, margin: '-100px' }}
-                      variants={itemVariants}
+                      variants={fadeUpItemVariants}
                       data-testid={
                         index === current ? 'testimonial-item' : undefined
                       }
@@ -115,11 +98,10 @@ export default function TestimonialSection({ block }: TestimonialSectionProps) {
                         {testimonial.authorImage ? (
                           <div className="border-border/60 relative size-12 overflow-hidden rounded-full border">
                             <Image
-                              src={urlFor(testimonial.authorImage)
-                                .width(96)
-                                .height(96)
-                                .fit('clip')
-                                .url()}
+                              src={getImageUrl(
+                                testimonial.authorImage,
+                                THUMBNAIL_IMAGE
+                              )}
                               alt={testimonial.authorName ?? 'Author'}
                               fill
                               className="object-cover"

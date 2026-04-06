@@ -11,6 +11,7 @@ src/
 │       └── [mode]/           # Production | Wedding
 │           └── _components/  # Private components for specific routes
 ├── 📁 features/              # 🚀 Feature Layer (Page builder sections)
+│   ├── PageBuilder.tsx       # Section renderer with per-section error boundaries
 │   ├── hero-section/
 |   |   ├── actions/         # ⚡ Server Actions (MUST contain 'use server')
 │   │   ├── components/
@@ -23,15 +24,15 @@ src/
 │   └── ContentService.ts     # Centralized fetching logic
 └── 📁 shared/                # 🔧 Shared Utilities & Core Foundation
     ├── components/
-    │   ├── common/           # Smart/Context-aware components (ModeSwitcher, LanguageSwitcher)
+    │   ├── common/           # Smart/Context-aware components (ModeSwitcher, SectionHeader, SectionErrorBoundary)
     │   ├── layout/           # Structural components (Navbar, Footer)
     │   └── ui/               # "Dumb" UI primitives (Button, Input)
     ├── config/               # Env, Cache Tags, Preferences
     ├── hooks/                # Global reusable hooks
-    ├── lib/                  # Core engine (i18n, SEO, Auth)
+    ├── lib/                  # Core engine (i18n, SEO, Auth, Motion)
     ├── providers/            # Providers
     ├── stores/               # Global state management (Zustand)
-    └── types/                # Global types
+    └── types/                # Global types (BaseBlock, SectionHeading, etc.)
 ```
 
 ## 🎯 Architectural Layers

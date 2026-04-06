@@ -12,14 +12,14 @@ const commonFields = {
 const commercialSchema = z.object({
   ...commonFields,
   type: z.literal('commercial'),
-  weddingDate: z.any().optional(), // Keep as optional any to satisfy type union in RHF common fields
+  weddingDate: z.date().optional(),
   venue: z.string().optional(),
 });
 
 const weddingSchema = z.object({
   ...commonFields,
   type: z.literal('wedding'),
-  weddingDate: z.coerce
+  weddingDate: z
     .date()
     .refine((date) => !Number.isNaN(date.getTime()), 'Invalid wedding date'),
   venue: z.string().min(2, 'Venue is required'),
