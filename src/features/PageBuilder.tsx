@@ -12,6 +12,10 @@ import { CtaBannerSectionBlock } from './cta-banner-section/types';
 import { PackagesSectionBlock } from './package-section/types';
 import { TestimonialSectionBlock } from './testimonial-section/types';
 import { PhilosophySectionBlock } from './philosophy-section/types';
+import { StatsCounterSectionBlock } from './stats-counter-section/types';
+import { TeamSectionBlock } from './team-section/types';
+import { FAQSectionBlock } from './faq-section/types';
+import { VideoShowreelSectionBlock } from './video-showreel-section/types';
 import { Locale, SiteMode } from '@shared/config';
 
 const TwoColumnSection = dynamic(
@@ -42,6 +46,19 @@ const TestimonialSection = dynamic(
 const PhilosophySection = dynamic(
   () => import('@features/philosophy-section/components/PhilosophySection')
 );
+const StatsCounterSection = dynamic(
+  () => import('@features/stats-counter-section/components/StatsCounterSection')
+);
+const TeamSection = dynamic(
+  () => import('@features/team-section/components/TeamSection')
+);
+const FAQSection = dynamic(
+  () => import('@features/faq-section/components/FAQSection')
+);
+const VideoShowreelSection = dynamic(
+  () =>
+    import('@features/video-showreel-section/components/VideoShowreelSection')
+);
 
 type PageContentBlock =
   | HeroSectionBlock
@@ -53,7 +70,11 @@ type PageContentBlock =
   | CtaBannerSectionBlock
   | PackagesSectionBlock
   | TestimonialSectionBlock
-  | PhilosophySectionBlock;
+  | PhilosophySectionBlock
+  | StatsCounterSectionBlock
+  | TeamSectionBlock
+  | FAQSectionBlock
+  | VideoShowreelSectionBlock;
 
 type FullPageDocument = PageDocument<PageContentBlock>;
 
@@ -162,6 +183,14 @@ function renderBlock(
       return <TestimonialSection key={key} block={block} />;
     case 'philosophySection':
       return <PhilosophySection key={key} block={block} />;
+    case 'statsCounterSection':
+      return <StatsCounterSection key={key} block={block} />;
+    case 'teamSection':
+      return <TeamSection key={key} block={block} />;
+    case 'faqSection':
+      return <FAQSection key={key} block={block} />;
+    case 'videoShowreelSection':
+      return <VideoShowreelSection key={key} block={block} />;
     default:
       return null;
   }

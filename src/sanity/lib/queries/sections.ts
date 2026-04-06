@@ -105,6 +105,7 @@ export const MEDIA_GALLERY_SECTION = groq`
         "projectOverview": ${LOCALIZED('overview')}
       }[0...6],
       items[]{
+        _key,
         mediaType,
         media{
           ${IMAGE_PROJECTION}
@@ -202,5 +203,82 @@ export const PHILOSOPHY_SECTION = groq`
   _type == "philosophySection" => {
     "quote": ${LOCALIZED('quote')},
     background
+  }
+`;
+
+export const STATS_COUNTER_SECTION = groq`
+  _type == "statsCounterSection" => {
+    background,
+    heading {
+      "eyebrow": ${LOCALIZED('eyebrow')},
+      "heading": ${LOCALIZED('heading')},
+      "body": ${LOCALIZED('body')},
+      align
+    },
+    stats[] {
+      _key,
+      value,
+      suffix,
+      "label": ${LOCALIZED('label')}
+    }
+  }
+`;
+
+export const TEAM_SECTION = groq`
+  _type == "teamSection" => {
+    background,
+    heading {
+      "eyebrow": ${LOCALIZED('eyebrow')},
+      "heading": ${LOCALIZED('heading')},
+      "body": ${LOCALIZED('body')},
+      align
+    },
+    members[] {
+      _key,
+      name,
+      "role": ${LOCALIZED('role')},
+      "bio": ${LOCALIZED('bio')},
+      image {
+        asset,
+        crop,
+        hotspot
+      }
+    }
+  }
+`;
+
+export const FAQ_SECTION = groq`
+  _type == "faqSection" => {
+    background,
+    heading {
+      "eyebrow": ${LOCALIZED('eyebrow')},
+      "heading": ${LOCALIZED('heading')},
+      "body": ${LOCALIZED('body')},
+      align
+    },
+    items[] {
+      _key,
+      "question": ${LOCALIZED('question')},
+      "answer": ${LOCALIZED('answer')}
+    }
+  }
+`;
+
+export const VIDEO_SHOWREEL_SECTION = groq`
+  _type == "videoShowreelSection" => {
+    background,
+    heading {
+      "eyebrow": ${LOCALIZED('eyebrow')},
+      "heading": ${LOCALIZED('heading')},
+      "body": ${LOCALIZED('body')},
+      align
+    },
+    videoUrl,
+    thumbnail {
+      asset,
+      crop,
+      hotspot
+    },
+    "caption": ${LOCALIZED('caption')}
   }
 `;

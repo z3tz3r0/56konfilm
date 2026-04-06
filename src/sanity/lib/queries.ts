@@ -3,14 +3,18 @@ import { LOCALIZED, SEO_PROJECTION } from './queries/fragments';
 import {
   CARD_COLLECTION_SECTION,
   CTA_BANNER_SECTION,
+  FAQ_SECTION,
   HERO_SECTION,
   LOGO_GRID_SECTION,
   MEDIA_GALLERY_SECTION,
   PACKAGES_SECTION,
   PHILOSOPHY_SECTION,
+  STATS_COUNTER_SECTION,
+  TEAM_SECTION,
   TESTIMONIAL_SECTION,
   TIMELINE_SECTION,
   TWO_COLUMN_SECTION,
+  VIDEO_SHOWREEL_SECTION,
 } from './queries/sections';
 
 export const settingsQuery = groq`*[_type == "settings"][0] {
@@ -102,7 +106,11 @@ export const pageBySlugQuery = groq`
       ${CTA_BANNER_SECTION},
       ${PACKAGES_SECTION},
       ${TESTIMONIAL_SECTION},
-      ${PHILOSOPHY_SECTION}
+      ${PHILOSOPHY_SECTION},
+      ${STATS_COUNTER_SECTION},
+      ${TEAM_SECTION},
+      ${FAQ_SECTION},
+      ${VIDEO_SHOWREEL_SECTION}
     }
   }
 `;
@@ -133,7 +141,11 @@ export const projectBySlugQuery = groq`
       ${TIMELINE_SECTION},
       ${PACKAGES_SECTION},
       ${TESTIMONIAL_SECTION},
-      ${PHILOSOPHY_SECTION}
+      ${PHILOSOPHY_SECTION},
+      ${STATS_COUNTER_SECTION},
+      ${TEAM_SECTION},
+      ${FAQ_SECTION},
+      ${VIDEO_SHOWREEL_SECTION}
     },
     "nextProject": coalesce(
       *[
