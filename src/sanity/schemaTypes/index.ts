@@ -25,6 +25,13 @@ import { philosophySectionType } from './sections/philosophySection';
 import { testimonialSectionType } from './sections/testimonialSection';
 import { timelineSectionType } from './sections/timelineSection';
 import { twoColumnSectionType } from './sections/twoColumnSection';
+import { faqItemType } from './objects/faqItem';
+import { statItemType } from './objects/statItem';
+import { teamMemberType } from './objects/teamMember';
+import { faqSectionType } from './sections/faqSection';
+import { statsCounterSectionType } from './sections/statsCounterSection';
+import { teamSectionType } from './sections/teamSection';
+import { videoShowreelSectionType } from './sections/videoShowreelSection';
 import { settingsType } from './settings';
 
 export const schemaType = {
@@ -44,6 +51,10 @@ export const schemaType = {
     testimonialSectionType,
     logoGridSectionType,
     ctaBannerSectionType,
+    statsCounterSectionType,
+    teamSectionType,
+    faqSectionType,
+    videoShowreelSectionType,
     localizedBlockType,
     ctaType,
     mediaBlockType,
@@ -54,6 +65,9 @@ export const schemaType = {
     timelineStepType,
     galleryItemType,
     logoItemType,
+    statItemType,
+    teamMemberType,
+    faqItemType,
     socialMediaType,
     seoObjectType,
   ],
