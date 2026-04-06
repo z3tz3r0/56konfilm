@@ -56,7 +56,7 @@ export default function MediaGallerySection({
             variants={useLiteMotion ? undefined : staggerContainerVariants}
             transition={useLiteMotion ? { duration: 0.2 } : undefined}
           >
-            {block.items.map((item, index) => {
+            {block.items.filter(Boolean).map((item, index) => {
               const key = item._key ?? index;
 
               if (item.mediaType === 'video' && item.videoUrl) {
