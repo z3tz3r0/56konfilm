@@ -20,7 +20,8 @@
     "analyze": "cross-env ANALYZE=true next build",
     "prepare": "husky",
     "type-check": "tsc --noEmit",
-    "lhci": "cross-env LHCI=true lhci autorun"
+    "lhci": "cross-env LHCI=true lhci autorun",
+    "seed": "tsx scripts/seed-content.ts"
   },
   "engines": {
     "node": ">=24.14.1 <25"
