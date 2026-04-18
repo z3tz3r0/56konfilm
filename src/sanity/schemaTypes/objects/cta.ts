@@ -55,6 +55,10 @@ export const ctaType = defineType({
       description: 'URL ภายนอกที่ต้องการลิงก์ไป',
       type: 'url',
       hidden: ({ parent }) => parent?.linkType !== 'external',
+      validation: (Rule) =>
+        Rule.uri({
+          scheme: ['http', 'https', 'mailto', 'tel'],
+        }),
     }),
   ],
   validation: (Rule) =>

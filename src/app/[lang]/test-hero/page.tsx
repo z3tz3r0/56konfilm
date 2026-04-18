@@ -1,4 +1,4 @@
-import { HeroSection, HeroSectionBlock } from '@features/hero-section/';
+import { HeroSection, HeroSectionBlock } from '@features/hero-section';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -15,6 +15,7 @@ export default function TestHeroPage() {
     _key: 'test-hero',
     title: 'Test Title',
     parallaxText: 'WE SHOOT HARD',
+    shapeDivider: false,
     backgroundMedia: [
       {
         _type: 'backgroundVideo',

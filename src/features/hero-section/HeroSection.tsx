@@ -19,7 +19,6 @@ export default function HeroSection({
   mode,
   metadata,
 }: HeroSectionProps) {
-  const isWedding = mode === 'wedding';
   return (
     <SectionShell
       className="flex h-screen items-center justify-center"
@@ -28,7 +27,7 @@ export default function HeroSection({
       videoPriority={true}
       enableVideoObserver={true}
       sanityType={block._type}
-      shapeDivider={isWedding}
+      shapeDivider={block.shapeDivider}
     >
       {block.parallaxText ? (
         <div className="absolute inset-0 flex items-center justify-center overflow-hidden">

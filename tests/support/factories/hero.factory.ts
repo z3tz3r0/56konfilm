@@ -6,6 +6,7 @@ export const createHeroSection = (
   _type: 'heroSection',
   _key: 'test-hero',
   parallaxText: 'WE SHOOT HARD',
+  shapeDivider: false,
   backgroundMedia: [
     {
       _type: 'backgroundVideo',

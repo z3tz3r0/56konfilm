@@ -5,6 +5,7 @@ export interface HeroSectionBlock extends BaseBlock {
   title?: string;
   tagline?: string;
   parallaxText?: string;
+  shapeDivider: boolean;
   backgroundMedia?: BackgroundMediaItem[];
   ctas?: ContentCta[];
 }
