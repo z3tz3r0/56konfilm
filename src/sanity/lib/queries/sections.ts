@@ -11,7 +11,7 @@ export const HERO_SECTION = groq`
     "title": ${LOCALIZED('title')},
     "tagline": ${LOCALIZED('tagline')},
     "parallaxText": ${LOCALIZED('parallaxText')},
-    shapeDivider,
+    "shapeDivider": coalesce(shapeDivider, false),
     "backgroundMedia": backgroundMedia.mediaAsset[]{
       ${MEDIA_ASSET_PROJECTION}
     },

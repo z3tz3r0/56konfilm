@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Activity, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { cn } from '@shared/utils';
 import { urlFor } from '@/sanity/lib/image';
 import { BackgroundMediaItem } from '@shared/types';
@@ -103,9 +103,13 @@ export default function SectionShell({
       ) : null}
 
       {/* Shape Divider */}
-      <Activity mode={shapeDivider ? 'visible' : 'hidden'}>
-        <div className="absolute inset-x-0 bottom-0 h-[80px] overflow-hidden">
+      {shapeDivider && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[80px] overflow-hidden"
+        >
           <svg
+            focusable="false"
             viewBox="0 0 1280 80"
             preserveAspectRatio="none"
             className="h-full w-full"
@@ -113,7 +117,7 @@ export default function SectionShell({
             <path fill="var(--color-ivory-white)" d="M0,80 Q640 0,1280 80" />
           </svg>
         </div>
-      </Activity>
+      )}
     </section>
   );
 }
