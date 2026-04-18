@@ -1,8 +1,7 @@
 import dynamic from 'next/dynamic';
 import { PageDocument } from '@shared/types';
 import { SectionErrorBoundary } from '@shared/components';
-import { HeroSection } from './hero-section/components';
-import { HeroSectionBlock } from './hero-section/types';
+import { HeroSection, HeroSectionBlock } from './hero-section';
 import { TwoColumnSectionBlock } from './two-column-section/types';
 import { CardCollectionSectionBlock } from './card-collection-section/types';
 import { TimelineSectionBlock } from './timeline-section/types';

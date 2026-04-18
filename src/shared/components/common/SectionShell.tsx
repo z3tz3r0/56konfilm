@@ -23,6 +23,7 @@ interface SectionShellProps {
   children: ReactNode;
   videoPriority?: boolean; // Hero should use true, others false
   enableVideoObserver?: boolean; // Enable IntersectionObserver for non-hero sections
+  shapeDivider?: boolean;
 }
 
 export default function SectionShell({
@@ -37,6 +38,7 @@ export default function SectionShell({
   children,
   videoPriority = false,
   enableVideoObserver = false,
+  shapeDivider = false,
 }: SectionShellProps) {
   const backgroundClass =
     backgroundVariants[background ?? 'default'] ?? backgroundVariants.default;
@@ -99,6 +101,23 @@ export default function SectionShell({
           ) : null}
         </div>
       ) : null}
+
+      {/* Shape Divider */}
+      {shapeDivider && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[80px] overflow-hidden"
+        >
+          <svg
+            focusable="false"
+            viewBox="0 0 1280 80"
+            preserveAspectRatio="none"
+            className="h-full w-full"
+          >
+            <path fill="var(--color-ivory-white)" d="M0,80 Q640 0,1280 80" />
+          </svg>
+        </div>
+      )}
     </section>
   );
 }
