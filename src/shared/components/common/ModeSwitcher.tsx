@@ -2,10 +2,11 @@
 
 import { m } from 'motion/react';
 import { usePathname, useRouter } from 'next/navigation';
-import { useTransition } from 'react';
+import { useEffect, useTransition } from 'react';
 import { useMode } from '@shared/hooks';
-import { Locale, type SiteMode } from '@shared/config';
+import { Locale, MODE_TO_THEME, type SiteMode } from '@shared/config';
 import { cn } from '@shared/utils';
+import { useTheme } from 'next-themes';
 
 interface ModeSwitcherProps {
   className?: string;
@@ -22,9 +23,17 @@ export default function ModeSwitcher({
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
 
+  const { setTheme } = useTheme();
+
   // Use the global store hook instead of local state
   const { mode: storeMode, setMode: setGlobalMode } = useMode();
   const activeMode = storeMode || serverMode;
+
+  useEffect(() => {
+    setTheme(MODE_TO_THEME[serverMode]);
+    document.documentElement.setAttribute('data-mode', serverMode);
+    setGlobalMode(serverMode);
+  }, [serverMode, setTheme, setGlobalMode]);
 
   const handleModeChange = (nextMode: SiteMode) => {
     if (nextMode === activeMode || isPending) return;
@@ -42,23 +51,15 @@ export default function ModeSwitcher({
   };
 
   return (
-    <m.div
+    <div
       data-testid="mode-switcher"
       className={cn(
-        'relative grid h-11 w-64 grid-cols-2 items-center rounded-md p-1',
+        'bg-primary dark:bg-background relative grid h-11 w-64 grid-cols-2 items-center rounded-md p-1',
         className
       )}
-      animate={{
-        backgroundColor:
-          activeMode === 'production'
-            ? '#00040d' // midnight-black
-            : '#5b4339', // brown
-      }}
-      initial={false}
     >
       {/* Sliding indicator */}
       <m.span
-        layoutId="active-indicator"
         className={cn(
           'bg-ivory-white pointer-events-none absolute top-1 bottom-1 left-1 w-[calc(50%-0.5rem)] rounded-sm'
         )}
@@ -111,6 +112,6 @@ export default function ModeSwitcher({
       >
         {lang === 'en' ? 'Wedding' : 'งานแต่ง'}
       </m.button>
-    </m.div>
+    </div>
   );
 }
