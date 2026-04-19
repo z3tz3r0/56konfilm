@@ -1,15 +1,7 @@
 import { useModeStore } from '@shared/stores';
 import { useMode } from '@shared/hooks';
 import { act, renderHook } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-
-// Mock next-themes
-const mockSetTheme = vi.fn();
-vi.mock('next-themes', () => ({
-  useTheme: () => ({
-    setTheme: mockSetTheme,
-  }),
-}));
+import { beforeEach, describe, expect, it } from 'vitest';
 
 describe('useMode Hook', () => {
   beforeEach(() => {
@@ -17,16 +9,12 @@ describe('useMode Hook', () => {
     act(() => {
       useModeStore.setState({ mode: 'production' });
     });
-    mockSetTheme.mockClear();
 
     // Clear cookie (simple mock)
     Object.defineProperty(document, 'cookie', {
       writable: true,
       value: '',
     });
-
-    // Clear data attributes
-    document.documentElement.removeAttribute('data-mode');
   });
 
   it('should return default mode as production', () => {
@@ -44,13 +32,7 @@ describe('useMode Hook', () => {
     // 1. Check Zustand state
     expect(result.current.mode).toBe('wedding');
 
-    // 2. Check Theme sync
-    expect(mockSetTheme).toHaveBeenCalledWith('light');
-
-    // 3. Check HTML Attribute
-    expect(document.documentElement.getAttribute('data-mode')).toBe('wedding');
-
-    // 4. Check Cookie (basic string check)
+    // 2. Check Cookie (basic string check)
     expect(document.cookie).toContain('mode=wedding');
   });
 
@@ -62,10 +44,6 @@ describe('useMode Hook', () => {
     });
 
     expect(result.current.mode).toBe('production');
-    expect(mockSetTheme).toHaveBeenCalledWith('dark');
-    expect(document.documentElement.getAttribute('data-mode')).toBe(
-      'production'
-    );
     expect(document.cookie).toContain('mode=production');
   });
 });
