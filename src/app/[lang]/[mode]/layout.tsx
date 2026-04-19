@@ -26,7 +26,7 @@ export default async function SiteLayout({
   const settings = await ContentService.getSetting({ lang });
 
   return (
-    <div data-page-mode={mode} className="min-h-screen">
+    <div className="min-h-screen">
       <Navbar mode={mode} settings={settings} lang={lang} />
       <main>{children}</main>
       <Footer settings={settings} />
