@@ -1,1 +1,1 @@
-export * from './CardCollectionBlock.types';
+export * from './cardCollectionBlock.types';

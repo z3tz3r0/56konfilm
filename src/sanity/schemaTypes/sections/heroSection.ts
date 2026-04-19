@@ -24,6 +24,15 @@ export const heroSectionType = defineType({
       description: 'ข้อความสำหรับ Effect Parallax ("WE SHOOT HARD")',
     }),
     defineField({
+      name: 'shapeDivider',
+      title: 'Shape Divider',
+      description: 'ตัวเลือกสำหรับการแสดง Shape Divider',
+      type: 'boolean',
+      options: { layout: 'checkbox' },
+      initialValue: false,
+      hidden: ({ document }) => document?.siteMode !== 'wedding',
+    }),
+    defineField({
       name: 'backgroundMedia',
       title: 'Background Media',
       description:

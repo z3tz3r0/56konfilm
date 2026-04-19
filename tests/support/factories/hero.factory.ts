@@ -1,4 +1,4 @@
-import { HeroSectionBlock } from '@features/hero-section/types';
+import { HeroSectionBlock } from '@features/hero-section';
 
 export const createHeroSection = (
   overrides: Partial<HeroSectionBlock> = {}
@@ -6,6 +6,7 @@ export const createHeroSection = (
   _type: 'heroSection',
   _key: 'test-hero',
   parallaxText: 'WE SHOOT HARD',
+  shapeDivider: false,
   backgroundMedia: [
     {
       _type: 'backgroundVideo',

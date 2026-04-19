@@ -1,5 +1,5 @@
 import { Locale, SiteMode } from '@shared/config';
-import { HeroSectionBlock } from '@features/hero-section/types';
+import { HeroSectionBlock } from './heroBlock.types';
 import { CtaGroup, ParallaxText, SectionShell } from '@shared/components';
 
 interface HeroSectionProps {
@@ -27,6 +27,7 @@ export default function HeroSection({
       videoPriority={true}
       enableVideoObserver={true}
       sanityType={block._type}
+      shapeDivider={block.shapeDivider}
     >
       {block.parallaxText ? (
         <div className="absolute inset-0 flex items-center justify-center overflow-hidden">

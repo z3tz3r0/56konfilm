@@ -27,6 +27,7 @@ export function getMockPage(
             mode === 'wedding'
               ? 'Romantic, gentle, and timeless.'
               : 'Bold, technical, and cinematic.',
+          shapeDivider: false,
         },
       ],
     };
