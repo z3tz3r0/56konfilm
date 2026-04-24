@@ -42,7 +42,7 @@ export default function SectionShell({
 }: SectionShellProps) {
   const backgroundClass =
     backgroundVariants[background ?? 'default'] ?? backgroundVariants.default;
-  const paddingClass = disablePadding ? '' : 'px-14 py-16 md:px-24';
+  const paddingClass = disablePadding ? '' : 'px-4 py-16 lg:px-24';
   const videoAsset = media?.find((item) => item.mimeType?.startsWith('video'));
   const imageAsset = media?.find(
     (item) => item.image || (item.url && !item.mimeType?.startsWith('video'))

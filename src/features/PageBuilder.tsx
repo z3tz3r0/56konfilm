@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import { PageDocument } from '@shared/types';
 import { SectionErrorBoundary } from '@shared/components';
-import { HeroSection, HeroSectionBlock } from './hero-section';
+import { HeroSection, type HeroSectionBlock } from './hero-section';
 import { TwoColumnSectionBlock } from './two-column-section/types';
 import { CardCollectionSectionBlock } from './card-collection-section/types';
 import { TimelineSectionBlock } from './timeline-section/types';
@@ -21,8 +21,7 @@ const TwoColumnSection = dynamic(
   () => import('@features/two-column-section/components/TwoColumnSection')
 );
 const CardCollectionSection = dynamic(
-  () =>
-    import('@features/card-collection-section/components/CardCollectionSection')
+  () => import('@features/card-collection-section/CardCollectionSection')
 );
 const TimelineSection = dynamic(
   () => import('@features/timeline-section/components/TimelineSection')
@@ -78,7 +77,7 @@ type PageContentBlock =
 type FullPageDocument = PageDocument<PageContentBlock>;
 
 interface PageBuilderProps {
-  page: FullPageDocument;
+  page: FullPageDocument | null;
   lang: Locale;
   mode: SiteMode;
   metadata?: {
@@ -96,7 +95,7 @@ function PageBuilder({
   metadata,
   enableSignature,
 }: PageBuilderProps) {
-  const blocks = page.contentBlocks ?? [];
+  const blocks = page?.contentBlocks ?? [];
   const contentSignature = enableSignature ? hashBlocks(blocks) : undefined;
 
   if (!blocks.length) {
@@ -152,14 +151,7 @@ function renderBlock(
         <TwoColumnSection key={key} block={block} lang={lang} mode={mode} />
       );
     case 'cardCollectionSection':
-      return (
-        <CardCollectionSection
-          key={key}
-          block={block}
-          lang={lang}
-          mode={mode}
-        />
-      );
+      return <CardCollectionSection key={key} block={block} mode={mode} />;
     case 'timelineSection':
       return (
         <TimelineSection key={key} block={block} lang={lang} mode={mode} />
