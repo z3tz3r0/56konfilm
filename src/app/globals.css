@@ -58,6 +58,7 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-neutral-foreground: var(--neutral-foreground);
+  --color-neutral-foreground-secondary: var(--neutral-foreground-secondary);
   --color-neutral: var(--neutral);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary: var(--secondary);
@@ -149,6 +150,7 @@
   --secondary-foreground: oklch(0.985 0 0);
   --neutral: var(--color-off-white);
   --neutral-foreground: var(--color-midnight-black);
+  --neutral-foreground-secondary: var(--color-dark-onyx);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
@@ -179,8 +181,7 @@
   h2,
   h3,
   h4 {
-    font-family:
-      var(--font-primary-internal), var(--font-primary-fallback), serif;
+    font-family: var(--font-primary), var(--font-primary-fallback), serif;
     @apply leading-tight font-black text-balance;
   }
 

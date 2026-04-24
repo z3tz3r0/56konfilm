@@ -1,2 +1,1 @@
-export { CardCollectionSection } from './components';
-export type { CardCollectionSectionBlock } from './types';
+export { default as CardCollectionSection } from './CardCollectionSection';

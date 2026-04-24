@@ -1,0 +1,60 @@
+import { cn } from '@shared/utils';
+import { CardCollectionSectionProps } from '../CardCollectionSection';
+import { SectionShell } from '@shared/components';
+import { getImageUrl } from '@/sanity/lib/image';
+import Image from 'next/image';
+
+export default function HomeHighlightVariant({
+  block,
+}: CardCollectionSectionProps) {
+  return (
+    <SectionShell background={block.background}>
+      <div
+        className={
+          'flex gap-4 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
+        }
+      >
+        <article className="bg-primary static z-1 grid w-[284px] shrink-0 gap-8 rounded-2xl p-8 md:sticky md:left-0">
+          <div className="grid gap-2">
+            {block.title && (
+              <h2 className="text-2xl font-normal">{block.title}</h2>
+            )}
+            {block.intro && (
+              <p className="font-primary text-[2rem] leading-[38px] font-bold">
+                {block.intro}
+              </p>
+            )}
+          </div>
+        </article>
+        {block.cards?.map((card, index) => {
+          const { bgImage } = card;
+          return (
+            <article
+              key={card._key ?? index}
+              className={cn(
+                'relative grid max-w-min min-w-[284px] shrink-0 place-items-center overflow-hidden rounded-2xl bg-black/50 p-8'
+              )}
+            >
+              {bgImage && (
+                <div className="rounded-inherit absolute inset-0 -z-1 overflow-hidden">
+                  <Image
+                    src={getImageUrl(bgImage, {
+                      width: 300,
+                      height: 300,
+                      fit: 'fill',
+                    })}
+                    alt={card.title ?? 'Icon'}
+                    fill
+                    sizes="284px"
+                    className="object-cover"
+                  />
+                </div>
+              )}
+              <h3 className="text-center">{card.title}</h3>
+            </article>
+          );
+        })}
+      </div>
+    </SectionShell>
+  );
+}

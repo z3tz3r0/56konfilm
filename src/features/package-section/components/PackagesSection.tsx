@@ -131,7 +131,7 @@ export default function PackagesSection({
                   <div className="mt-auto pt-2">
                     {pkg.cta ? (
                       <CtaButton
-                        cta={pkg.cta}
+                        ctaButton={pkg.cta}
                         lang={lang}
                         mode={mode}
                         className={cn(

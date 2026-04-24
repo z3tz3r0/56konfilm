@@ -1,18 +1,21 @@
-import { SanityImageSource } from '@sanity/image-url';
-import { BaseBlock, ContentCta } from '@shared/types';
+import { BaseBlock, ContentCta, ImageSource } from '@shared/types';
 
 export interface CardCollectionSectionBlock extends BaseBlock {
   _type: 'cardCollectionSection';
+  layoutVariant?: 'standard' | 'highlight-intro';
   title?: string;
   intro?: string;
+  ctaButton?: ContentCta;
   columns?: number;
   background?: string;
-  cards?: Array<{
-    _key?: string;
-    title?: string;
-    body?: string;
-    icon?: SanityImageSource;
-    variant?: string;
-    cta?: ContentCta;
-  }>;
+  hasIcon?: boolean;
+  cards?: CardItem[];
 }
+
+type CardItem = {
+  _key?: string;
+  title?: string;
+  body?: string;
+  icon?: { name: string };
+  bgImage?: ImageSource;
+};

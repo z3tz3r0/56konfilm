@@ -10,7 +10,12 @@ export const ctaType = defineType({
       name: 'label',
       title: 'Label',
       description: 'ข้อความที่แสดงบนปุ่ม CTA',
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          if (context.hidden) return true;
+          if (!value) return 'Label is required';
+          return true;
+        }),
     }),
     defineField({
       name: 'style',
@@ -21,6 +26,7 @@ export const ctaType = defineType({
         list: [
           { title: 'Primary', value: 'primary' },
           { title: 'Secondary', value: 'secondary' },
+          { title: 'Neutral', value: 'neutral' },
           { title: 'Link', value: 'link' },
         ],
         layout: 'radio',
@@ -62,8 +68,8 @@ export const ctaType = defineType({
     }),
   ],
   validation: (Rule) =>
-    Rule.custom((val) => {
-      if (!val) return true;
+    Rule.custom((val, context) => {
+      if (!val || context.hidden) return true;
       if (val.linkType === 'internal' && !val.pageRef) return 'Select a page';
       if (val.linkType === 'external' && !val.externalUrl)
         return 'Provide a URL';

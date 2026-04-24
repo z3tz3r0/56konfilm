@@ -9,6 +9,7 @@ import { visionTool } from '@sanity/vision';
 import { defineConfig, isKeySegment } from 'sanity';
 import { internationalizedArray } from 'sanity-plugin-internationalized-array';
 import { structureTool } from 'sanity/structure';
+import { iconify } from 'sanity-plugin-iconify';
 
 // Go to https://www.sanity.io/docs/api-versioning to learn how API versioning works
 import { env } from '@shared/config';
@@ -74,5 +75,6 @@ export default defineConfig({
     // https://www.sanity.io/docs/the-vision-plugin
     visionTool({ defaultApiVersion: env.NEXT_PUBLIC_SANITY_API_VERSION }),
     colorInput(),
+    iconify({ showName: true }),
   ],
 });

@@ -1,5 +1,5 @@
 'use client';
-import { UploadIcon } from '@sanity/icons';
+import { Upload } from 'lucide-react';
 import { Card, Flex, Spinner, Stack, Text, useToast } from '@sanity/ui';
 import React, { useCallback, useState } from 'react';
 import {
@@ -200,7 +200,7 @@ export function MultiUploadArrayInput(props: ArrayOfObjectsInputProps) {
         onPaste={handlePaste}
       >
         <Flex align="center" justify="center" direction="column" gap={3}>
-          {isUploading ? <Spinner /> : <UploadIcon style={{ fontSize: 24 }} />}
+          {isUploading ? <Spinner /> : <Upload style={{ fontSize: 24 }} />}
           <Text size={1} muted>
             {isUploading
               ? 'Uploading & Processing...'
