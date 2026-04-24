@@ -1,11 +1,13 @@
 import { cn } from '@shared/utils';
 import { CardCollectionSectionProps } from '../CardCollectionSection';
-import { SectionShell } from '@shared/components';
+import { CtaButton, SectionShell } from '@shared/components';
 import { getImageUrl } from '@/sanity/lib/image';
 import Image from 'next/image';
 
 export default function HomeHighlightVariant({
   block,
+  lang,
+  mode,
 }: CardCollectionSectionProps) {
   return (
     <SectionShell background={block.background}>
@@ -25,6 +27,14 @@ export default function HomeHighlightVariant({
               </p>
             )}
           </div>
+          {block.hasButton && block.ctaButton && (
+            <CtaButton
+              fullWidth
+              ctaButton={block.ctaButton}
+              mode={mode}
+              lang={lang}
+            />
+          )}
         </article>
         {block.cards?.map((card, index) => {
           const { bgImage } = card;

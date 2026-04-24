@@ -151,7 +151,14 @@ function renderBlock(
         <TwoColumnSection key={key} block={block} lang={lang} mode={mode} />
       );
     case 'cardCollectionSection':
-      return <CardCollectionSection key={key} block={block} mode={mode} />;
+      return (
+        <CardCollectionSection
+          key={key}
+          block={block}
+          lang={lang}
+          mode={mode}
+        />
+      );
     case 'timelineSection':
       return (
         <TimelineSection key={key} block={block} lang={lang} mode={mode} />

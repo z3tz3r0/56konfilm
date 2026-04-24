@@ -1,10 +1,11 @@
 import { ModeGuard } from '@shared/components';
 import { CardCollectionSectionBlock } from '@features/card-collection-section/types';
-import { SiteMode } from '@shared/config';
+import { Locale, SiteMode } from '@shared/config';
 import { Production, Wedding } from './components';
 
 interface CardCollectionSectionProps {
   block: CardCollectionSectionBlock;
+  lang: Locale;
   mode: SiteMode;
 }
 
@@ -19,8 +20,12 @@ function getColumnsClass(columns?: number) {
   return columnMap[columns || 4] || columnMap[4];
 }
 
-function CardCollectionSection({ block, mode }: CardCollectionSectionProps) {
-  const baseProps = { block, mode };
+function CardCollectionSection({
+  block,
+  lang,
+  mode,
+}: CardCollectionSectionProps) {
+  const baseProps = { block, lang, mode };
 
   return (
     <ModeGuard
