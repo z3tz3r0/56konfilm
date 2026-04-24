@@ -5,6 +5,7 @@ export interface CardCollectionSectionBlock extends BaseBlock {
   layoutVariant?: 'standard' | 'highlight-intro';
   title?: string;
   intro?: string;
+  hasButton?: boolean;
   ctaButton?: ContentCta;
   columns?: number;
   background?: string;
