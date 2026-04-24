@@ -49,7 +49,7 @@ export const CARD_COLLECTION_SECTION = groq`
     ctaButton { ${CTA_PROJECTION} },
     columns,
     background,
-    "hasIcon": coalesce(hasIcon, true),
+    "hasIcon": coalesce(hasIcon, false),
     cards[]{
       "title": ${LOCALIZED('title')},
       "body": ${LOCALIZED('body')},

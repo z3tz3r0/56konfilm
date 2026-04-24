@@ -34,7 +34,7 @@
   --color-background-secondary: var(--background-secondary);
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
-  --color-text-teritary: var(--text-teritary);
+  --color-text-tertiary: var(--text-tertiary);
   /********** ShadCN **********/
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -84,7 +84,7 @@
   --background-secondary: var(--color-linen-beige);
   --text-primary: var(--color-brown);
   --text-secondary: var(--color-light-brown);
-  --text-teritary: var(--color-light-brown);
+  --text-tertiary: var(--color-light-brown);
   /********** ShadCN **********/
   --radius: 0.625rem;
   --background: var(--color-ivory-white);
@@ -138,7 +138,7 @@
   --background-secondary: var(--color-espresso);
   --text-primary: var(--color-off-white);
   --text-secondary: var(--color-light-gray);
-  --text-teritary: var(--color-charcoal-gray);
+  --text-tertiary: var(--color-charcoal-gray);
   /********** ShadCN **********/
   --background: var(--color-midnight-black);
   --foreground: var(--color-off-white);

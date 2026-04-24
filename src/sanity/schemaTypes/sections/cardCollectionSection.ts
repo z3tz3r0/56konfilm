@@ -44,7 +44,8 @@ export const cardCollectionSectionType = defineType({
       type: 'boolean',
       description: 'เปิดใช้งานหากต้องการให้การ์ดนี้มีปุ่ม',
       initialValue: false,
-      hidden: ({ parent }) => parent?.layoutVariant !== 'highlight-intro',
+      hidden: ({ parent }) =>
+        (parent?.layoutVariant || 'standard') !== 'highlight-intro',
     }),
     defineField({
       name: 'ctaButton',
@@ -52,7 +53,27 @@ export const cardCollectionSectionType = defineType({
       description: 'ปุ่ม CTA',
       type: ctaType.name,
       hidden: ({ parent }) =>
-        !parent?.hasButton || parent?.layoutVariant !== 'highlight-intro',
+        !parent?.hasButton ||
+        (parent?.layoutVariant || 'standard') !== 'highlight-intro',
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          if (context.hidden) return true;
+
+          const parent = context.parent as
+            | { hasButton?: boolean; layoutVariant?: string }
+            | undefined;
+          const currentButtonState = parent?.hasButton ?? false;
+          const currentVariant = parent?.layoutVariant || 'standard';
+
+          if (
+            currentButtonState &&
+            currentVariant === 'highlight-intro' &&
+            !value
+          ) {
+            return 'CTA Button is required when "Show Button?" is enabled';
+          }
+          return true;
+        }),
     }),
     defineField({
       name: 'columns',
@@ -61,7 +82,8 @@ export const cardCollectionSectionType = defineType({
       type: 'number',
       options: { list: [1, 2, 3, 4] },
       initialValue: 4,
-      hidden: ({ parent }) => parent?.layoutVariant !== 'standard',
+      hidden: ({ parent }) =>
+        (parent?.layoutVariant || 'standard') !== 'standard',
     }),
     defineField({
       name: 'hasIcon',
