@@ -44,7 +44,7 @@ export const cardCollectionSectionType = defineType({
       type: 'boolean',
       description: 'เปิดใช้งานหากต้องการให้การ์ดนี้มีปุ่ม',
       initialValue: false,
-      hidden: ({ parent }) => parent.layoutVariant !== 'highlight-intro',
+      hidden: ({ parent }) => parent?.layoutVariant !== 'highlight-intro',
     }),
     defineField({
       name: 'ctaButton',
@@ -52,15 +52,16 @@ export const cardCollectionSectionType = defineType({
       description: 'ปุ่ม CTA',
       type: ctaType.name,
       hidden: ({ parent }) =>
-        !parent.hasButton || parent.layoutVariant !== 'highlight-intro',
+        !parent?.hasButton || parent?.layoutVariant !== 'highlight-intro',
     }),
     defineField({
       name: 'columns',
       title: 'Columns (lg)',
       description: 'จำนวนคอลัมน์ในหน้าจอขนาดใหญ่',
       type: 'number',
+      options: { list: [1, 2, 3, 4] },
       initialValue: 4,
-      hidden: ({ parent }) => parent.layoutVariant !== 'standard',
+      hidden: ({ parent }) => parent?.layoutVariant !== 'standard',
     }),
     defineField({
       name: 'hasIcon',

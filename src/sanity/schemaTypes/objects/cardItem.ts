@@ -25,12 +25,12 @@ export const cardItemType = defineType({
         '🎨 ไอคอน (จะแสดงผลก็ต่อเมื่อเปิดใช้งาน "Show Icons" ที่ระดับ Section)',
       hidden: ({ document, parent }) => {
         // ป้องกัน Error กรณีที่ Sanity กำลังโหลด หรือการ์ดยังไม่มี _key (เพิ่งกด Add)
-        const { _key } = parent;
-        if (!document || !parent || !_key) return false;
+        const key = parent?._key;
+        if (!document || !parent || !key) return false;
 
         const cardCollectionSection = findParentCardCollectionSection(
           document,
-          _key
+          key
         );
         const isIconEnabled = cardCollectionSection?.hasIcon === true;
 
@@ -52,12 +52,12 @@ export const cardItemType = defineType({
       options: { hotspot: true },
       hidden: ({ document, parent }) => {
         // ป้องกัน Error กรณีที่ Sanity กำลังโหลด หรือการ์ดยังไม่มี _key (เพิ่งกด Add)
-        const { _key } = parent;
-        if (!document || !parent || !_key) return false;
+        const key = parent?._key;
+        if (!document || !parent || !key) return false;
 
         const cardCollectionSection = findParentCardCollectionSection(
           document,
-          _key
+          key
         );
         const currentVariant =
           cardCollectionSection?.layoutVariant || 'standard';

@@ -84,6 +84,7 @@
   --background-secondary: var(--color-linen-beige);
   --text-primary: var(--color-brown);
   --text-secondary: var(--color-light-brown);
+  --text-teritary: var(--color-light-brown);
   /********** ShadCN **********/
   --radius: 0.625rem;
   --background: var(--color-ivory-white);
@@ -96,6 +97,7 @@
   --secondary-foreground: var(--color-brown);
   --neutral: var(--color-white);
   --neutral-foreground: var(--color-brown);
+  --neutral-foreground-secondary: var(--color-brown);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);

@@ -1,7 +1,10 @@
 import { AppIcon, SectionShell } from '@shared/components';
 import { cn } from '@shared/utils';
 import HomeHighlightVariant from './HomeHighlightVariant';
-import { CardCollectionSectionProps } from '../CardCollectionSection';
+import {
+  CardCollectionSectionProps,
+  getColumnsClass,
+} from '../CardCollectionSection';
 
 export default function Production(props: CardCollectionSectionProps) {
   const { block } = props;
@@ -10,6 +13,7 @@ export default function Production(props: CardCollectionSectionProps) {
   if (isHighlightIntro) return <HomeHighlightVariant {...props} />;
 
   const hasIcon = block.hasIcon;
+  const columnClass = getColumnsClass(block.columns);
 
   return (
     <SectionShell background={block.background}>
@@ -24,11 +28,9 @@ export default function Production(props: CardCollectionSectionProps) {
             <p className="text-muted-foreground text-base">{block.intro}</p>
           )}
         </header>
-        {block.cards?.length && (
-          <div
-            className={`grid grid-cols-1 gap-8 lg:grid-cols-${block.columns}`}
-          >
-            {block.cards.map((card, index) => {
+        {(block.cards?.length ?? 0) > 0 && (
+          <div className={cn('grid grid-cols-1 gap-8', columnClass)}>
+            {block.cards?.map((card, index) => {
               const { icon } = card;
               return (
                 <article
@@ -41,7 +43,7 @@ export default function Production(props: CardCollectionSectionProps) {
                   {hasIcon && icon && (
                     <AppIcon
                       iconName={icon.name}
-                      className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
+                      className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2"
                     />
                   )}
                   {card.title && (

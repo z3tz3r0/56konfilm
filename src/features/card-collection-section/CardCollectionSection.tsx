@@ -8,6 +8,17 @@ interface CardCollectionSectionProps {
   mode: SiteMode;
 }
 
+function getColumnsClass(columns?: number) {
+  const columnMap: Record<number, string> = {
+    1: 'lg:grid-cols-1',
+    2: 'lg:grid-cols-2',
+    3: 'lg:grid-cols-3',
+    4: 'sm:grid-cols-2 lg:grid-cols-4',
+  };
+
+  return columnMap[columns || 4] || columnMap[4];
+}
+
 function CardCollectionSection({ block, mode }: CardCollectionSectionProps) {
   const baseProps = { block, mode };
 
@@ -22,4 +33,5 @@ function CardCollectionSection({ block, mode }: CardCollectionSectionProps) {
 }
 
 export default CardCollectionSection;
+export { getColumnsClass };
 export type { CardCollectionSectionProps };
