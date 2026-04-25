@@ -77,7 +77,7 @@ type PageContentBlock =
 type FullPageDocument = PageDocument<PageContentBlock>;
 
 interface PageBuilderProps {
-  page: FullPageDocument | null;
+  page: FullPageDocument;
   lang: Locale;
   mode: SiteMode;
   metadata?: {
@@ -95,7 +95,7 @@ function PageBuilder({
   metadata,
   enableSignature,
 }: PageBuilderProps) {
-  const blocks = page?.contentBlocks ?? [];
+  const blocks = page.contentBlocks ?? [];
   const contentSignature = enableSignature ? hashBlocks(blocks) : undefined;
 
   if (!blocks.length) {
