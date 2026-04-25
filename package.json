@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "@iconify/react": "^6.0.2",
     "@next/bundle-analyzer": "16.2.1",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-slot": "^1.2.4",
@@ -55,6 +56,7 @@
     "react-dom": "19.2.4",
     "react-hook-form": "^7.72.0",
     "sanity": "^5.18.0",
+    "sanity-plugin-iconify": "^3.0.0",
     "sanity-plugin-internationalized-array": "^5.0.5",
     "sonner": "^2.0.7",
     "styled-components": "^6.3.12",

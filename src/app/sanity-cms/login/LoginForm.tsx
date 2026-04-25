@@ -115,7 +115,7 @@ export default function LoginForm() {
                         <FormLabel>Username</FormLabel>
                         <FormControl>
                           <div className="relative">
-                            <User className="text-text-teritary absolute top-3 left-3 size-4" />
+                            <User className="text-text-tertiary absolute top-3 left-3 size-4" />
                             <Input
                               {...field}
                               placeholder="admin"
@@ -137,7 +137,7 @@ export default function LoginForm() {
                         <FormLabel>Password</FormLabel>
                         <FormControl>
                           <div className="relative">
-                            <Lock className="text-text-teritary absolute top-3 left-3 size-4" />
+                            <Lock className="text-text-tertiary absolute top-3 left-3 size-4" />
                             <Input
                               {...field}
                               type="password"
@@ -207,7 +207,7 @@ export default function LoginForm() {
               </Form>
 
               <div className="mt-8 text-center">
-                <p className="text-text-teritary text-[10px] tracking-[2px] whitespace-nowrap uppercase">
+                <p className="text-text-tertiary text-[10px] tracking-[2px] whitespace-nowrap uppercase">
                   © {new Date().getFullYear()} 56KonFilm Production House
                 </p>
               </div>

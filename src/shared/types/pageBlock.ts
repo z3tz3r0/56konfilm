@@ -6,7 +6,7 @@ interface BaseBlock {
 
 // Content Cta
 type LinkType = 'internal' | 'external' | null;
-type CtaStyle = 'primary' | 'secondary' | 'link' | null;
+type CtaStyle = 'primary' | 'secondary' | 'neutral' | 'link' | null;
 interface ContentCta {
   label?: string;
   style: CtaStyle;

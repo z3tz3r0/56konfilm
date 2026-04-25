@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import { PageDocument } from '@shared/types';
 import { SectionErrorBoundary } from '@shared/components';
-import { HeroSection, HeroSectionBlock } from './hero-section';
+import { HeroSection, type HeroSectionBlock } from './hero-section';
 import { TwoColumnSectionBlock } from './two-column-section/types';
 import { CardCollectionSectionBlock } from './card-collection-section/types';
 import { TimelineSectionBlock } from './timeline-section/types';
@@ -17,8 +17,7 @@ const TwoColumnSection = dynamic(
   () => import('@features/two-column-section/components/TwoColumnSection')
 );
 const CardCollectionSection = dynamic(
-  () =>
-    import('@features/card-collection-section/components/CardCollectionSection')
+  () => import('@features/card-collection-section/CardCollectionSection')
 );
 const TimelineSection = dynamic(
   () => import('@features/timeline-section/components/TimelineSection')

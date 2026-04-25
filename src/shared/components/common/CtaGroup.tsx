@@ -39,7 +39,7 @@ export default function CtaGroup({
       {ctas.map((cta) => (
         <CtaButton
           key={cta.externalUrl ?? cta.pageRef?.slug ?? cta.label}
-          cta={cta}
+          ctaButton={cta}
           lang={lang}
           mode={mode}
           className={className}

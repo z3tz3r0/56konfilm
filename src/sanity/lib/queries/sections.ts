@@ -42,18 +42,19 @@ export const TWO_COLUMN_SECTION = groq`
 
 export const CARD_COLLECTION_SECTION = groq`
   _type == "cardCollectionSection" => {
+    "layoutVariant": coalesce(layoutVariant, 'standard'),
     "title": ${LOCALIZED('title')},
     "intro": ${LOCALIZED('intro')},
+    "hasButton": coalesce(hasButton, false),
+    ctaButton { ${CTA_PROJECTION} },
     columns,
     background,
+    "hasIcon": coalesce(hasIcon, false),
     cards[]{
       "title": ${LOCALIZED('title')},
       "body": ${LOCALIZED('body')},
-      icon{ asset, crop, hotspot },
-      variant,
-      cta{
-        ${CTA_PROJECTION}
-      }
+      icon,
+      bgImage { asset, crop, hotspot },
     }
   }
 `;

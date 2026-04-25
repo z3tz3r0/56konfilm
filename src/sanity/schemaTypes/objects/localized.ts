@@ -1,20 +1,28 @@
-import { defineField, defineType, Rule } from 'sanity';
+import {
+  defineField,
+  defineType,
+  SchemaValidationValue,
+  StringDefinition,
+  TextDefinition,
+} from 'sanity';
 
-type BaseFieldConfig = {
-  name: string;
-  title: string;
-  description?: string;
+type LocalizedStringFieldConfig = Omit<
+  StringDefinition,
+  'type' | 'validation'
+> & {
   group?: string | string[];
-  options?: Record<string, unknown>;
-  hidden?: boolean | ((arg: unknown) => boolean);
-  validation?: (rule: Rule) => Rule;
+  validation?: SchemaValidationValue;
+};
+type LocalizedTextFieldConfig = Omit<TextDefinition, 'type' | 'validation'> & {
+  group?: string | string[];
+  validation?: SchemaValidationValue;
 };
 
-export const localizedStringField = (config: BaseFieldConfig) => {
+export const localizedStringField = (config: LocalizedStringFieldConfig) => {
   return defineField({ ...config, type: 'internationalizedArrayString' });
 };
 
-export const localizedTextField = (config: BaseFieldConfig) => {
+export const localizedTextField = (config: LocalizedTextFieldConfig) => {
   return defineField({ ...config, type: 'internationalizedArrayText' });
 };
 
