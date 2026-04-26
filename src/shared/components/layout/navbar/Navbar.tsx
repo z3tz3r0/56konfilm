@@ -4,6 +4,7 @@ import {
   LanguageSwitcher,
   ModeSwitcher,
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetHeader,
@@ -106,14 +107,15 @@ export default async function Navbar({ settings, lang, mode }: NavbarProps) {
                   });
 
                   return (
-                    <ActiveLink
-                      key={fullHref}
-                      href={fullHref}
-                      className="text-text-secondary hover:underline"
-                      activeClassName="text-primary underline"
-                    >
-                      {item.label}
-                    </ActiveLink>
+                    <SheetClose asChild key={fullHref}>
+                      <ActiveLink
+                        href={fullHref}
+                        className="text-text-secondary hover:underline"
+                        activeClassName="text-primary underline"
+                      >
+                        {item.label}
+                      </ActiveLink>
+                    </SheetClose>
                   );
                 })}
               </nav>
