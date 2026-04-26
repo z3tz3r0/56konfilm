@@ -13,10 +13,10 @@ export default function HomeHighlightVariant({
     <SectionShell background={block.background}>
       <div
         className={
-          'flex gap-4 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
+          'flex snap-x snap-mandatory gap-4 overflow-x-auto [scrollbar-width:none] md:snap-none [&::-webkit-scrollbar]:hidden'
         }
       >
-        <article className="bg-primary static z-1 grid w-[284px] shrink-0 gap-8 rounded-2xl p-8 md:sticky md:left-0">
+        <article className="bg-primary static z-1 grid w-[284px] shrink-0 snap-start gap-8 rounded-2xl p-8 md:sticky md:left-0 lg:snap-align-none">
           <div className="grid gap-2">
             {block.title && (
               <h2 className="text-2xl font-normal">{block.title}</h2>
@@ -42,7 +42,7 @@ export default function HomeHighlightVariant({
             <article
               key={card._key ?? index}
               className={cn(
-                'relative grid max-w-min min-w-[284px] shrink-0 place-items-center overflow-hidden rounded-2xl p-8',
+                'group relative grid max-w-min min-w-[284px] shrink-0 snap-start place-items-center overflow-hidden rounded-2xl p-8 lg:snap-align-none',
                 bgImage
                   ? 'text-text-primary bg-black/50'
                   : 'bg-off-white --text-tertiary'
@@ -59,7 +59,7 @@ export default function HomeHighlightVariant({
                     alt=""
                     fill
                     sizes="284px"
-                    className="object-cover"
+                    className="ease-out-expo object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
               )}
