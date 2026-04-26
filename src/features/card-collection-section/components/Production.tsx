@@ -17,7 +17,7 @@ export default function Production(props: CardCollectionSectionProps) {
 
   return (
     <SectionShell background={block.background}>
-      <div className="container mx-auto max-w-7xl space-y-10">
+      <div className="space-y-16">
         <header className="mx-auto flex max-w-2xl flex-col items-center gap-3 text-center">
           {block.title && (
             <h2 className="text-primary text-3xl font-semibold md:text-4xl">
@@ -29,7 +29,9 @@ export default function Production(props: CardCollectionSectionProps) {
           )}
         </header>
         {(block.cards?.length ?? 0) > 0 && (
-          <div className={cn('grid grid-cols-1 gap-8', columnClass)}>
+          <section
+            className={cn('grid grid-cols-1 gap-x-4 gap-y-14', columnClass)}
+          >
             {block.cards?.map((card, index) => {
               const { icon } = card;
               return (
@@ -37,6 +39,7 @@ export default function Production(props: CardCollectionSectionProps) {
                   key={card._key ?? index}
                   className={cn(
                     'bg-neutral relative row-span-2 grid grid-rows-subgrid gap-4 rounded-2xl shadow-sm transition hover:-translate-y-1 hover:shadow-lg',
+
                     hasIcon ? 'px-8 py-16' : 'p-8'
                   )}
                 >
@@ -59,7 +62,7 @@ export default function Production(props: CardCollectionSectionProps) {
                 </article>
               );
             })}
-          </div>
+          </section>
         )}
       </div>
     </SectionShell>
