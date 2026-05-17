@@ -1,3 +1,4 @@
+export { default as ScrollableCarousel } from './ScrollableCarousel';
 export { default as AppIcon } from './AppIcon';
 export { default as CtaButton } from './CtaButton';
 export { default as CtaGroup } from './CtaGroup';

@@ -131,13 +131,21 @@ function Carousel({
   );
 }
 
-function CarouselContent({ className, ...props }: React.ComponentProps<'div'>) {
+interface CarouselContentProps extends React.ComponentProps<'div'> {
+  wrapperClass?: string; // ใช้ ?: เพื่อให้เป็น Optional (ไม่บังคับใส่)
+}
+
+function CarouselContent({
+  wrapperClass,
+  className,
+  ...props
+}: CarouselContentProps) {
   const { carouselRef, orientation } = useCarousel();
 
   return (
     <div
       ref={carouselRef}
-      className="overflow-hidden"
+      className={cn('overflow-hidden', wrapperClass)}
       data-slot="carousel-content"
     >
       <div
