@@ -1,7 +1,7 @@
 import { cn } from '@shared/utils';
 import { CardCollectionSectionProps } from '../CardCollectionSection';
 import {
-  Carousel,
+  ScrollableCarousel,
   CarouselContent,
   CarouselItem,
   CtaButton,
@@ -18,7 +18,7 @@ export default function HomeHighlightVariant(
     <SectionShell background={block.background}>
       <div className="flex w-full md:gap-4">
         <IntroCard className="hidden shrink-0 md:grid" {...props} />
-        <Carousel
+        <ScrollableCarousel
           opts={{
             align: 'start',
             breakpoints: {
@@ -66,7 +66,7 @@ export default function HomeHighlightVariant(
               );
             })}
           </CarouselContent>
-        </Carousel>
+        </ScrollableCarousel>
       </div>
     </SectionShell>
   );

@@ -7,7 +7,6 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import * as React from 'react';
 import { Button } from '@shared/components';
 import { cn } from '@shared/utils';
-import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
@@ -56,7 +55,7 @@ function Carousel({
       ...opts,
       axis: orientation === 'horizontal' ? 'x' : 'y',
     },
-    [WheelGesturesPlugin(), ...(plugins || [])]
+    plugins
   );
   const [canScrollPrev, setCanScrollPrev] = React.useState(false);
   const [canScrollNext, setCanScrollNext] = React.useState(false);
@@ -103,31 +102,6 @@ function Carousel({
       api?.off('select', onSelect);
     };
   }, [api, onSelect]);
-
-  React.useEffect(() => {
-    if (!api) return;
-
-    const handleNativeWheel = (event: WheelEvent) => {
-      if (!event.shiftKey) return;
-      event.preventDefault();
-
-      const isScrollingRight = event.deltaY > 0 || event.deltaX > 0;
-      if (isScrollingRight) {
-        api.scrollNext();
-      } else {
-        api.scrollPrev();
-      }
-    };
-
-    const carouselNode = api.rootNode();
-    carouselNode.addEventListener('wheel', handleNativeWheel, {
-      passive: false,
-    });
-
-    return () => {
-      carouselNode.removeEventListener('wheel', handleNativeWheel);
-    };
-  }, [api]);
 
   return (
     <CarouselContext.Provider
