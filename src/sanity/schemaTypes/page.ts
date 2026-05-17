@@ -67,6 +67,10 @@ export const pageType = defineType({
         { type: 'packagesSection' },
         { type: 'testimonialSection' },
         { type: 'philosophySection' },
+        { type: 'statsCounterSection' },
+        { type: 'teamSection' },
+        { type: 'faqSection' },
+        { type: 'videoShowreelSection' },
       ],
       hidden: ({ document }) => document?.siteMode !== 'production',
       validation: (Rule) =>
@@ -99,6 +103,10 @@ export const pageType = defineType({
         { type: 'packagesSection' },
         { type: 'testimonialSection' },
         { type: 'philosophySection' },
+        { type: 'statsCounterSection' },
+        { type: 'teamSection' },
+        { type: 'faqSection' },
+        { type: 'videoShowreelSection' },
       ],
       hidden: ({ document }) => document?.siteMode !== 'wedding',
       validation: (Rule) =>

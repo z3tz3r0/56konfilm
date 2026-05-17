@@ -5,6 +5,11 @@
       "source": "vercel-labs/next-browser",
       "sourceType": "github",
       "computedHash": "d4eebf70bcdb57cbb1171e79aa3d7d7aeb49c2ab7af45d70b289dec34f6811c3"
+    },
+    "shadcn": {
+      "source": "shadcn/ui",
+      "sourceType": "github",
+      "computedHash": "507f011a70e8b3ae242bdc0bb5b39fd91a1d4049a0f3c281991ccf84973d591c"
     }
   }
 }

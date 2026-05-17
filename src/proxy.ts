@@ -13,7 +13,10 @@ export function proxy(request: NextRequest) {
     pathname.includes('/api/') ||
     pathname.startsWith('/sanity-cms') ||
     pathname.startsWith('/assets') ||
-    ['/favicon.ico', '/robots.txt', '/sitemap.xml'].includes(pathname)
+    ['/favicon.ico', '/icon', '/robots.txt', '/sitemap.xml'].includes(
+      pathname
+    ) ||
+    pathname.startsWith('/icon')
   ) {
     return NextResponse.next();
   }
@@ -78,6 +81,6 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|sanity-cms|robots.txt|sitemap.xml).*)',
+    '/((?!api|_next/static|_next/image|assets|favicon.ico|icon|sw.js|sanity-cms|robots.txt|sitemap.xml).*)',
   ],
 };
