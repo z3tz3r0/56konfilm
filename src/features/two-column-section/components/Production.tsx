@@ -1,27 +1,17 @@
-import Image from 'next/image';
-import { CtaGroup, SectionShell } from '@shared/components';
-import { getAlignmentClass } from '@shared/utils';
-import { cn } from '@shared/utils';
 import { urlFor } from '@/sanity/lib/image';
-import { TwoColumnSectionBlock } from '../types';
-import { Locale, SiteMode } from '@shared/config';
+import { TwoColumnByMode } from '../types';
+import { CtaGroup, SectionShell } from '@shared/components';
+import { cn } from '@shared/utils';
+import Image from 'next/image';
 
-interface TwoColumnSectionProps {
-  block: TwoColumnSectionBlock;
-  lang: Locale;
-  mode: SiteMode;
-}
-
-export default function TwoColumnSection({
+export default function Production({
   block,
   lang,
   mode,
-}: TwoColumnSectionProps) {
-  const isTextLeft = block.layout !== 'textRight';
-  const textColumnOrder = isTextLeft ? 'md:order-1' : 'md:order-2';
-  const mediaColumnOrder = isTextLeft ? 'md:order-2' : 'md:order-1';
-  const alignClass = getAlignmentClass(block.content?.align);
-
+  textColumnOrder,
+  mediaColumnOrder,
+  alignClass,
+}: TwoColumnByMode) {
   return (
     <SectionShell background={block.background} sanityType={block._type}>
       <div className="container mx-auto grid max-w-7xl gap-12 md:grid-cols-2">
@@ -32,21 +22,21 @@ export default function TwoColumnSection({
             alignClass
           )}
         >
-          {block.content?.eyebrow ? (
+          {block.content?.eyebrow && (
             <span className="text-primary text-xl font-black tracking-[0.2em] wrap-break-word uppercase md:text-2xl">
               {block.content.eyebrow}
             </span>
-          ) : null}
-          {block.content?.heading ? (
+          )}
+          {block.content?.heading && (
             <h2 className="text-3xl tracking-tight text-balance md:text-4xl">
               {block.content.heading}
             </h2>
-          ) : null}
-          {block.content?.body ? (
+          )}
+          {block.content?.body && (
             <p className="text-muted-foreground text-base leading-relaxed text-pretty wrap-break-word">
               {block.content.body}
             </p>
-          ) : null}
+          )}
           <CtaGroup
             ctas={block.ctas}
             lang={lang}
@@ -56,7 +46,7 @@ export default function TwoColumnSection({
             fullWidth
           />
         </div>
-        {block.media?.image ? (
+        {block.media?.image && (
           <div className={cn('order-2 min-w-0', mediaColumnOrder)}>
             <div className="bg-muted relative aspect-square min-h-[272px] overflow-hidden rounded-2xl md:aspect-auto md:h-full">
               <Image
@@ -68,7 +58,7 @@ export default function TwoColumnSection({
               />
             </div>
           </div>
-        ) : null}
+        )}
       </div>
     </SectionShell>
   );

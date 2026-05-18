@@ -18,44 +18,41 @@ import { VideoShowreelSectionBlock } from './video-showreel-section/types';
 import { Locale, SiteMode } from '@shared/config';
 
 const TwoColumnSection = dynamic(
-  () => import('@features/two-column-section/components/TwoColumnSection')
+  () => import('./two-column-section/TwoColumnSection')
 );
 const CardCollectionSection = dynamic(
-  () => import('@features/card-collection-section/CardCollectionSection')
+  () => import('./card-collection-section/CardCollectionSection')
 );
 const TimelineSection = dynamic(
-  () => import('@features/timeline-section/components/TimelineSection')
+  () => import('./timeline-section/components/TimelineSection')
 );
 const LogoGridSection = dynamic(
-  () => import('@features/logo-grid-section/components/LogoGridSection')
+  () => import('./logo-grid-section/components/LogoGridSection')
 );
 const CtaBannerSection = dynamic(
-  () => import('@features/cta-banner-section/components/CtaBannerSection')
+  () => import('./cta-banner-section/components/CtaBannerSection')
 );
 const MediaGallerySection = dynamic(
-  () => import('@features/media-gallery-section/components/MediaGallerySection')
+  () => import('./media-gallery-section/components/MediaGallerySection')
 );
 const PackagesSection = dynamic(
-  () => import('@features/package-section/components/PackagesSection')
+  () => import('./package-section/components/PackagesSection')
 );
 const TestimonialSection = dynamic(
-  () => import('@features/testimonial-section/components/TestimonialSection')
+  () => import('./testimonial-section/components/TestimonialSection')
 );
 const PhilosophySection = dynamic(
-  () => import('@features/philosophy-section/components/PhilosophySection')
+  () => import('./philosophy-section/components/PhilosophySection')
 );
 const StatsCounterSection = dynamic(
-  () => import('@features/stats-counter-section/components/StatsCounterSection')
+  () => import('./stats-counter-section/components/StatsCounterSection')
 );
 const TeamSection = dynamic(
-  () => import('@features/team-section/components/TeamSection')
+  () => import('./team-section/components/TeamSection')
 );
-const FAQSection = dynamic(
-  () => import('@features/faq-section/components/FAQSection')
-);
+const FAQSection = dynamic(() => import('./faq-section/components/FAQSection'));
 const VideoShowreelSection = dynamic(
-  () =>
-    import('@features/video-showreel-section/components/VideoShowreelSection')
+  () => import('./video-showreel-section/components/VideoShowreelSection')
 );
 
 type PageContentBlock =

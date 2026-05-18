@@ -1,15 +1,9 @@
 import Image from 'next/image';
 import { ReactNode } from 'react';
-import { cn } from '@shared/utils';
+import { cn, getBGVariants } from '@shared/utils';
 import { urlFor } from '@/sanity/lib/image';
 import { BackgroundMediaItem } from '@shared/types';
 import { VideoLoop } from '@shared/components';
-
-const backgroundVariants: Record<string, string> = {
-  default: '',
-  muted: 'bg-secondary',
-  contrast: 'bg-primary text-primary-foreground',
-};
 
 interface SectionShellProps {
   background?: string;
@@ -40,8 +34,7 @@ export default function SectionShell({
   enableVideoObserver = false,
   shapeDivider = false,
 }: SectionShellProps) {
-  const backgroundClass =
-    backgroundVariants[background ?? 'default'] ?? backgroundVariants.default;
+  const backgroundClass = getBGVariants(background);
   const paddingClass = disablePadding ? '' : 'px-4 py-16 lg:px-24';
   const videoAsset = media?.find((item) => item.mimeType?.startsWith('video'));
   const imageAsset = media?.find(

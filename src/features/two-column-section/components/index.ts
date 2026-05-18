@@ -1,1 +1,2 @@
-export { default as TwoColumnSection } from './TwoColumnSection';
+export { default as Production } from './Production';
+export { default as Wedding } from './Wedding';
