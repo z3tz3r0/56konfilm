@@ -15,7 +15,7 @@ export default function ImageWithFrame({
   return (
     <section
       className={cn(
-        'relative aspect-600/433 max-w-[600px] bg-white shadow-md',
+        'relative aspect-600/433 max-h-[433px] max-w-[600px] bg-white shadow-md',
         className
       )}
       {...props}

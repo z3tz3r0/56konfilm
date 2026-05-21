@@ -4,6 +4,7 @@ import { BaseBlock, ContentCta, MediaItem } from '@shared/types';
 interface TwoColumnSectionBlock extends BaseBlock {
   _type: 'twoColumnSection';
   layout?: string;
+  sectionVariant: 'standard' | 'emphasized';
   background?: string;
   content: {
     eyebrow?: string;

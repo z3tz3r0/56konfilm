@@ -63,7 +63,9 @@ export default function SectionShell({
       data-sanity-type={sanityType}
       data-testid={dataTestId}
     >
-      <div className="relative z-10 container mx-auto">{children}</div>
+      <div className="relative z-10 container mx-auto max-w-7xl">
+        {children}
+      </div>
 
       {shouldRenderMedia ? (
         <div className="absolute inset-0 -z-10">
