@@ -16,19 +16,19 @@ export default function Footer({ settings }: FooterProps) {
   } = settings;
 
   return (
-    <footer className="bg-foreground text-background p-4 py-16">
-      <section className="container mx-auto grid max-w-[1280px] grid-cols-3 gap-y-16">
-        <div id="company-details" className="col-span-3">
+    <footer className='bg-foreground text-background p-4 py-16'>
+      <section className='container mx-auto grid max-w-[1280px] grid-cols-3 gap-y-16'>
+        <div id='company-details' className='col-span-3'>
           <h4>{companyTitle}</h4>
           <address>{address}</address>
         </div>
 
-        <div id="contacts" className="col-span-2">
+        <div id='contacts' className='col-span-2'>
           <h4>{contactTitle}</h4>
-          <p className="whitespace-pre-wrap">{contacts}</p>
+          <p className='whitespace-pre-wrap'>{contacts}</p>
         </div>
 
-        <div id="social-media-links" className="text-right">
+        <div id='social-media-links' className='text-right'>
           <h4>{socialMediaTitle}</h4>
           <p>
             {socialLinks?.map((link) => (
@@ -39,7 +39,7 @@ export default function Footer({ settings }: FooterProps) {
           </p>
         </div>
       </section>
-      <p className="col-span-3 pt-16 text-center">
+      <p className='col-span-3 pt-16 text-center'>
         {companyTitle} || All right reserved ©
       </p>
     </footer>

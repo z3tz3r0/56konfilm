@@ -10,10 +10,10 @@ export default function Wedding({ block }: CardCollectionSectionProps) {
   const columnClass = getColumnsClass(block.columns);
   return (
     <SectionShell background={block.background}>
-      <div className="space-y-8">
-        <div className="grid place-items-center gap-2">
+      <div className='space-y-8'>
+        <div className='grid place-items-center gap-2'>
           {block.title && (
-            <h2 className="text-3xl font-semibold md:text-4xl">
+            <h2 className='text-3xl font-semibold md:text-4xl'>
               {block.title}
             </h2>
           )}
@@ -42,7 +42,7 @@ export default function Wedding({ block }: CardCollectionSectionProps) {
                       {title}
                     </h3>
                   )}
-                  {body && <p className="text-sm">{body}</p>}
+                  {body && <p className='text-sm'>{body}</p>}
                 </article>
               );
             })}

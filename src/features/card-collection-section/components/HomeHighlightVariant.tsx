@@ -16,8 +16,8 @@ export default function HomeHighlightVariant(
   const { block } = props;
   return (
     <SectionShell background={block.background}>
-      <div className="flex w-full md:gap-4">
-        <IntroCard className="hidden shrink-0 md:grid" {...props} />
+      <div className='flex w-full md:gap-4'>
+        <IntroCard className='hidden shrink-0 md:grid' {...props} />
         <ScrollableCarousel
           opts={{
             align: 'start',
@@ -25,13 +25,13 @@ export default function HomeHighlightVariant(
               '(min-width: 768px)': { dragFree: true, containScroll: false },
             },
           }}
-          className="w-full"
+          className='w-full'
         >
           <CarouselContent
-            wrapperClass="h-full"
-            className="ml-0 h-full cursor-grab space-x-4 select-none active:cursor-grabbing"
+            wrapperClass='h-full'
+            className='ml-0 h-full cursor-grab space-x-4 select-none active:cursor-grabbing'
           >
-            <CarouselItem className="basis-auto md:hidden">
+            <CarouselItem className='basis-auto md:hidden'>
               <IntroCard {...props} />
             </CarouselItem>
             {block.cards?.map((card, index) => {
@@ -47,21 +47,21 @@ export default function HomeHighlightVariant(
                   )}
                 >
                   {bgImage && (
-                    <div className="rounded-inherit absolute inset-0 -z-1 overflow-hidden">
+                    <div className='rounded-inherit absolute inset-0 -z-1 overflow-hidden'>
                       <Image
                         src={getImageUrl(bgImage, {
                           width: 300,
                           height: 300,
                           fit: 'fill',
                         })}
-                        alt=""
+                        alt=''
                         fill
-                        sizes="284px"
-                        className="ease-out-expo object-cover transition-transform duration-500 group-hover:scale-105"
+                        sizes='284px'
+                        className='ease-out-expo object-cover transition-transform duration-500 group-hover:scale-105'
                       />
                     </div>
                   )}
-                  {title && <h3 className="text-center">{title}</h3>}
+                  {title && <h3 className='text-center'>{title}</h3>}
                 </CarouselItem>
               );
             })}
@@ -84,10 +84,10 @@ function IntroCard({ block, lang, mode, className }: IntroCardProps) {
         className
       )}
     >
-      <div className="grid gap-2">
-        {block.title && <h2 className="text-2xl font-normal">{block.title}</h2>}
+      <div className='grid gap-2'>
+        {block.title && <h2 className='text-2xl font-normal'>{block.title}</h2>}
         {block.intro && (
-          <p className="font-primary text-[2rem] leading-[38px] font-bold">
+          <p className='font-primary text-[2rem] leading-[38px] font-bold'>
             {block.intro}
           </p>
         )}

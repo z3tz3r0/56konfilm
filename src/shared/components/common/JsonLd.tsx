@@ -5,7 +5,7 @@ type JsonLdProps = {
 export default function JsonLd({ data }: JsonLdProps) {
   return (
     <script
-      type="application/ld+json"
+      type='application/ld+json'
       dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
     />
   );

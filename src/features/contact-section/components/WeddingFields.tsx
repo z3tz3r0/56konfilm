@@ -36,24 +36,24 @@ export function WeddingFields({ form, lang = 'en' }: WeddingFieldsProps) {
 
   return (
     <m.div
-      key="wedding-fields"
+      key='wedding-fields'
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: 'auto' }}
       exit={{ opacity: 0, height: 0 }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
-      className="space-y-6 overflow-hidden"
+      className='space-y-6 overflow-hidden'
     >
       <FormField
         control={form.control}
-        name="weddingDate"
+        name='weddingDate'
         render={({ field }) => (
-          <FormItem className="flex flex-col">
+          <FormItem className='flex flex-col'>
             <FormLabel>Wedding Date</FormLabel>
             <Popover>
               <PopoverTrigger asChild>
                 <FormControl>
                   <Button
-                    variant="secondary"
+                    variant='secondary'
                     className={cn(
                       'w-full pl-3 text-left font-normal',
                       !field.value && 'text-muted-foreground'
@@ -64,13 +64,13 @@ export function WeddingFields({ form, lang = 'en' }: WeddingFieldsProps) {
                     ) : (
                       <span>Pick a date</span>
                     )}
-                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
                   </Button>
                 </FormControl>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent className='w-auto p-0' align='start'>
                 <Calendar
-                  mode="single"
+                  mode='single'
                   selected={field.value as Date | undefined}
                   onSelect={field.onChange}
                   disabled={(date) =>
@@ -87,14 +87,14 @@ export function WeddingFields({ form, lang = 'en' }: WeddingFieldsProps) {
 
       <FormField
         control={form.control}
-        name="venue"
+        name='venue'
         render={({ field }) => (
           <FormItem>
             <FormLabel>Venue</FormLabel>
             <FormControl>
               <Input
-                placeholder="City, Country or Venue Name"
-                autoComplete="organization"
+                placeholder='City, Country or Venue Name'
+                autoComplete='organization'
                 {...field}
               />
             </FormControl>

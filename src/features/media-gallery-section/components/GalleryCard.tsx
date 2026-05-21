@@ -22,11 +22,11 @@ export default function GalleryCard({
 }: GalleryCardProps) {
   return (
     <m.figure
-      className="group bg-muted relative overflow-hidden rounded-2xl"
+      className='group bg-muted relative overflow-hidden rounded-2xl'
       variants={variants}
       data-testid={testId}
     >
-      <div className="relative aspect-4/3 overflow-hidden">
+      <div className='relative aspect-4/3 overflow-hidden'>
         {children}
         <div
           className={

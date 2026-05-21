@@ -46,23 +46,23 @@ export default function PackagesSection({
     <SectionShell
       background={block.background}
       sanityType={block._type}
-      dataTestId="packages-section"
+      dataTestId='packages-section'
       className={cn(defaultBackground && 'bg-background')}
     >
-      <div className="container mx-auto max-w-6xl space-y-12">
-        <header className="mx-auto flex max-w-3xl flex-col items-center gap-3 text-center">
+      <div className='container mx-auto max-w-6xl space-y-12'>
+        <header className='mx-auto flex max-w-3xl flex-col items-center gap-3 text-center'>
           {block.heading?.eyebrow ? (
-            <span className="text-primary text-sm font-semibold tracking-[0.3em] uppercase">
+            <span className='text-primary text-sm font-semibold tracking-[0.3em] uppercase'>
               {block.heading.eyebrow}
             </span>
           ) : null}
           {block.heading?.heading ? (
-            <h2 className="text-3xl font-semibold md:text-5xl">
+            <h2 className='text-3xl font-semibold md:text-5xl'>
               {block.heading.heading}
             </h2>
           ) : null}
           {block.heading?.body ? (
-            <p className="text-muted-foreground max-w-2xl text-base leading-relaxed">
+            <p className='text-muted-foreground max-w-2xl text-base leading-relaxed'>
               {block.heading.body}
             </p>
           ) : null}
@@ -70,9 +70,9 @@ export default function PackagesSection({
 
         {block.packages?.length ? (
           <m.div
-            className="grid gap-6 md:grid-cols-3"
-            initial="hidden"
-            whileInView="visible"
+            className='grid gap-6 md:grid-cols-3'
+            initial='hidden'
+            whileInView='visible'
             viewport={{ once: true, margin: '-100px' }}
             variants={containerVariants}
           >
@@ -90,17 +90,17 @@ export default function PackagesSection({
                       ? { backgroundColor: 'var(--color-brown)' }
                       : undefined
                   }
-                  data-testid="package-card"
+                  data-testid='package-card'
                   data-featured={isFeatured ? 'true' : 'false'}
                   variants={itemVariants}
                 >
                   {pkg.title ? (
-                    <h3 className="text-2xl font-semibold md:text-3xl">
+                    <h3 className='text-2xl font-semibold md:text-3xl'>
                       {pkg.title}
                     </h3>
                   ) : null}
-                  <div className="space-y-1">
-                    <p className="text-4xl font-semibold md:text-5xl">
+                  <div className='space-y-1'>
+                    <p className='text-4xl font-semibold md:text-5xl'>
                       {pkg.price ?? ''}
                     </p>
                     <p
@@ -128,7 +128,7 @@ export default function PackagesSection({
                       ))}
                     </ul>
                   ) : null}
-                  <div className="mt-auto pt-2">
+                  <div className='mt-auto pt-2'>
                     {pkg.cta ? (
                       <CtaButton
                         ctaButton={pkg.cta}

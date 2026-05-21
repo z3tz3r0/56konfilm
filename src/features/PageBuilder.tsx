@@ -97,8 +97,8 @@ function PageBuilder({
 
   if (!blocks.length) {
     return (
-      <section className="py-16 md:py-24">
-        <div className="border-border/60 bg-muted/20 text-muted-foreground rounded-2xl border p-12 text-center">
+      <section className='py-16 md:py-24'>
+        <div className='border-border/60 bg-muted/20 text-muted-foreground rounded-2xl border p-12 text-center'>
           เนื้อหาอยู่ระหว่างการจัดเตรียม กรุณากลับมาอีกครั้ง
         </div>
       </section>
@@ -107,8 +107,8 @@ function PageBuilder({
 
   return (
     <div
-      className="contents"
-      data-testid="page-content"
+      className='contents'
+      data-testid='page-content'
       data-content-signature={contentSignature}
     >
       {blocks.map((block, index) => (

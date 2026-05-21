@@ -15,12 +15,12 @@ export default function Wedding({
   return (
     <SectionShell disablePadding sanityType={block._type}>
       {block.sectionVariant === 'emphasized' && headingText && (
-        <div className="grid gap-4 px-4 py-16 md:px-14">
-          <h2 className="text-3xl font-semibold md:text-4xl">{headingText}</h2>
-          <div className="bg-light-brown h-px w-full" />
+        <div className='grid gap-4 px-4 py-16 md:px-14'>
+          <h2 className='text-3xl font-semibold md:text-4xl'>{headingText}</h2>
+          <div className='bg-light-brown h-px w-full' />
         </div>
       )}
-      <div className="relative">
+      <div className='relative'>
         {/* 🎨 Background Layer */}
         <div
           className={cn(
@@ -44,20 +44,20 @@ export default function Wedding({
               alignClass
             )}
           >
-            <div className="flex flex-col gap-4">
+            <div className='flex flex-col gap-4'>
               {block.sectionVariant !== 'emphasized' &&
                 block.content?.eyebrow && (
-                  <span className="text-primary font-primary text-xl font-bold wrap-break-word uppercase md:text-2xl">
+                  <span className='text-primary font-primary text-xl font-bold wrap-break-word uppercase md:text-2xl'>
                     {block.content.eyebrow}
                   </span>
                 )}
               {block.sectionVariant !== 'emphasized' && headingText && (
-                <h2 className="text-text-primary text-3xl text-balance md:text-4xl">
+                <h2 className='text-text-primary text-3xl text-balance md:text-4xl'>
                   {headingText}
                 </h2>
               )}
               {block.content?.body && (
-                <p className="text-base leading-relaxed text-pretty wrap-break-word">
+                <p className='text-base leading-relaxed text-pretty wrap-break-word'>
                   {block.content.body}
                 </p>
               )}
@@ -67,7 +67,7 @@ export default function Wedding({
               lang={lang}
               mode={mode}
               alignment={block.content?.align}
-              className="pt-4 md:max-w-xs"
+              className='pt-4 md:max-w-xs'
               fullWidth
             />
           </section>
@@ -77,7 +77,7 @@ export default function Wedding({
             <ImageWithFrame
               src={urlFor(block.media.image).quality(80).fit('clip').url()}
               alt={block.media.alt ?? ''}
-              className="flex-1"
+              className='flex-1'
             />
           )}
         </div>

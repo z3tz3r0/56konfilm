@@ -20,13 +20,13 @@ export default function ImageWithFrame({
       )}
       {...props}
     >
-      <div className="absolute inset-4">
+      <div className='absolute inset-4'>
         <Image
           src={src}
           alt={alt}
           fill
-          className="object-cover"
-          sizes="(min-width: 768px) 50vw, 100vw"
+          className='object-cover'
+          sizes='(min-width: 768px) 50vw, 100vw'
         />
       </div>
     </section>

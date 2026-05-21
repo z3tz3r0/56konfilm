@@ -67,17 +67,17 @@ export default function VideoLoop({
         {posterUrl ? (
           <Image
             src={posterUrl}
-            alt="Video poster"
+            alt='Video poster'
             fill
             priority={priority}
-            sizes="100vw"
-            className="object-cover"
-            data-testid="video-poster-fallback"
+            sizes='100vw'
+            className='object-cover'
+            data-testid='video-poster-fallback'
           />
         ) : (
           <div
-            className="absolute inset-0 bg-neutral-900"
-            data-testid="video-placeholder-fallback"
+            className='absolute inset-0 bg-neutral-900'
+            data-testid='video-placeholder-fallback'
           />
         )}
       </div>
@@ -89,10 +89,10 @@ export default function VideoLoop({
       {posterUrl ? (
         <Image
           src={posterUrl}
-          alt="Video poster"
+          alt='Video poster'
           fill
           priority={priority}
-          sizes="100vw"
+          sizes='100vw'
           className={cn(
             'object-cover transition-opacity duration-700',
             isLoaded ? 'opacity-0' : 'opacity-100'
@@ -111,7 +111,7 @@ export default function VideoLoop({
         playsInline
         preload={priority ? 'auto' : 'metadata'}
         onCanPlay={() => setIsLoaded(true)}
-        data-testid="video-loop"
+        data-testid='video-loop'
       >
         <source src={url} type={mimeType ?? 'video/mp4'} />
       </video>

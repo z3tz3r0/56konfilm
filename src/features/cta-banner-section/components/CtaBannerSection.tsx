@@ -44,11 +44,11 @@ export default function CtaBannerSection({
       overlayClassName={overlay.overlayClassName}
       overlayStyle={overlay.overlayStyle}
     >
-      <div className="relative z-10 container mx-auto">
+      <div className='relative z-10 container mx-auto'>
         <div className={cn('mx-auto flex flex-col gap-6', alignClass)}>
           {block.content?.eyebrow ? (
             <span
-              className="text-primary text-sm font-semibold tracking-[0.2em] uppercase"
+              className='text-primary text-sm font-semibold tracking-[0.2em] uppercase'
               style={{ color: block.customColors?.eyebrow?.hex }}
             >
               {block.content.eyebrow}
@@ -56,7 +56,7 @@ export default function CtaBannerSection({
           ) : null}
           {block.content?.heading ? (
             <h2
-              className="text-4xl font-semibold md:text-5xl md:leading-tight"
+              className='text-4xl font-semibold md:text-5xl md:leading-tight'
               style={{ color: block.customColors?.heading?.hex }}
             >
               {block.content.heading}
@@ -64,7 +64,7 @@ export default function CtaBannerSection({
           ) : null}
           {block.content?.body ? (
             <p
-              className="text-muted-foreground max-w-2xl text-lg"
+              className='text-muted-foreground max-w-2xl text-lg'
               style={{ color: block.customColors?.body?.hex }}
             >
               {block.content.body}
