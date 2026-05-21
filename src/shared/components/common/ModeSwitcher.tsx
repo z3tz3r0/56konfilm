@@ -52,7 +52,7 @@ export default function ModeSwitcher({
 
   return (
     <div
-      data-testid="mode-switcher"
+      data-testid='mode-switcher'
       className={cn(
         'bg-primary dark:bg-background relative grid h-11 w-64 grid-cols-2 items-center rounded-md p-1',
         className

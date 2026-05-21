@@ -38,8 +38,8 @@ export default function TestHeroPage() {
   };
 
   return (
-    <div data-testid="test-hero-page">
-      <HeroSection lang="th" mode={'production'} block={mockHeroBlock} />
+    <div data-testid='test-hero-page'>
+      <HeroSection lang='th' mode={'production'} block={mockHeroBlock} />
     </div>
   );
 }

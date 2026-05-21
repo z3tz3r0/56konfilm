@@ -32,20 +32,20 @@ export default async function Navbar({ settings, lang, mode }: NavbarProps) {
 
   return (
     <NavbarScrollController>
-      <nav className="text-text-secondary flex justify-between px-12 py-4 md:grid md:grid-cols-3 lg:px-14">
-        <div className="flex flex-1 items-center gap-x-4">
+      <nav className='text-text-secondary flex justify-between px-12 py-4 md:grid md:grid-cols-3 lg:px-14'>
+        <div className='flex flex-1 items-center gap-x-4'>
           <Link
             href={`/${lang}/${mode}`}
             className={'text-text-primary text-xl font-bold'}
           >
             {settings?.siteTitle || '56KonFilm'}
           </Link>
-          <div className="invisible hidden md:visible md:block">
+          <div className='invisible hidden md:visible md:block'>
             <LanguageSwitcher lang={lang} mode={mode} />
           </div>
         </div>
 
-        <div className="invisible hidden md:visible md:mx-auto md:block">
+        <div className='invisible hidden md:visible md:mx-auto md:block'>
           <ModeSwitcher lang={lang} mode={mode} />
         </div>
 
@@ -62,7 +62,7 @@ export default async function Navbar({ settings, lang, mode }: NavbarProps) {
                 key={fullHref}
                 href={fullHref}
                 className={'hover:underline'}
-                activeClassName="text-text-primary font-semibold"
+                activeClassName='text-text-primary font-semibold'
               >
                 {item.label}
               </ActiveLink>
@@ -80,15 +80,15 @@ export default async function Navbar({ settings, lang, mode }: NavbarProps) {
             )}
           >
             <Button
-              variant="ghost"
-              size="icon"
-              data-testid="mobile-menu-button"
+              variant='ghost'
+              size='icon'
+              data-testid='mobile-menu-button'
               className={'text-text-secondary text-xl'}
             >
               ☰
             </Button>
           </SheetTrigger>
-          <SheetContent className="w-full">
+          <SheetContent className='w-full'>
             <VisuallyHidden.Root asChild>
               <SheetHeader>
                 <SheetTitle>Navigation menu</SheetTitle>
@@ -97,8 +97,8 @@ export default async function Navbar({ settings, lang, mode }: NavbarProps) {
                 </SheetDescription>
               </SheetHeader>
             </VisuallyHidden.Root>
-            <div className="flex h-screen flex-col items-center justify-center gap-16 text-4xl font-bold">
-              <nav className="flex flex-col items-center gap-8">
+            <div className='flex h-screen flex-col items-center justify-center gap-16 text-4xl font-bold'>
+              <nav className='flex flex-col items-center gap-8'>
                 {navItems?.map((item) => {
                   const fullHref = withContextPrefix({
                     href: item.url,
@@ -110,8 +110,8 @@ export default async function Navbar({ settings, lang, mode }: NavbarProps) {
                     <SheetClose asChild key={fullHref}>
                       <ActiveLink
                         href={fullHref}
-                        className="text-text-secondary hover:underline"
-                        activeClassName="text-primary underline"
+                        className='text-text-secondary hover:underline'
+                        activeClassName='text-primary underline'
                       >
                         {item.label}
                       </ActiveLink>
@@ -119,7 +119,7 @@ export default async function Navbar({ settings, lang, mode }: NavbarProps) {
                   );
                 })}
               </nav>
-              <div className="flex flex-col items-center gap-8 md:invisible md:hidden">
+              <div className='flex flex-col items-center gap-8 md:invisible md:hidden'>
                 <LanguageSwitcher lang={lang} mode={mode} />
                 <ModeSwitcher lang={lang} mode={mode} />
               </div>

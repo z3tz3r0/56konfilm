@@ -53,7 +53,7 @@ function HeavyParallaxText({ children, className }: ParallaxTextProps) {
   return (
     <div className={cn('relative z-20 overflow-visible py-8', className)}>
       <m.p
-        className="text-6xl font-black tracking-tighter text-white uppercase md:text-8xl lg:text-9xl"
+        className='text-6xl font-black tracking-tighter text-white uppercase md:text-8xl lg:text-9xl'
         style={{
           skewX: skew,
           y: y,
@@ -72,7 +72,7 @@ function HeavyParallaxText({ children, className }: ParallaxTextProps) {
 function StaticParallaxText({ children, className }: ParallaxTextProps) {
   return (
     <div className={cn('relative z-20 overflow-visible py-8', className)}>
-      <p className="text-6xl font-black tracking-tighter text-white uppercase md:text-8xl lg:text-9xl">
+      <p className='text-6xl font-black tracking-tighter text-white uppercase md:text-8xl lg:text-9xl'>
         {children}
       </p>
     </div>

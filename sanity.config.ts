@@ -10,6 +10,8 @@ import { defineConfig, isKeySegment } from 'sanity';
 import { internationalizedArray } from 'sanity-plugin-internationalized-array';
 import { structureTool } from 'sanity/structure';
 import { iconify } from 'sanity-plugin-iconify';
+// @ts-expect-error: the package does not have built-in TypeScript definitions
+import { visualOptions } from 'sanity-plugin-visual-options';
 
 // Go to https://www.sanity.io/docs/api-versioning to learn how API versioning works
 import { env } from '@shared/config';
@@ -76,5 +78,6 @@ export default defineConfig({
     visionTool({ defaultApiVersion: env.NEXT_PUBLIC_SANITY_API_VERSION }),
     colorInput(),
     iconify({ showName: true }),
+    visualOptions(),
   ],
 });

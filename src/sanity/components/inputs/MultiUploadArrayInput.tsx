@@ -186,9 +186,9 @@ export function MultiUploadArrayInput(props: ArrayOfObjectsInputProps) {
       <DefaultArrayInput {...props} />
 
       <Card
-        data-testid="multi-upload-dropzone"
+        data-testid='multi-upload-dropzone'
         padding={4}
-        tone="primary"
+        tone='primary'
         border
         radius={2}
         style={{
@@ -199,7 +199,7 @@ export function MultiUploadArrayInput(props: ArrayOfObjectsInputProps) {
         onDragOver={onDragOver}
         onPaste={handlePaste}
       >
-        <Flex align="center" justify="center" direction="column" gap={3}>
+        <Flex align='center' justify='center' direction='column' gap={3}>
           {isUploading ? <Spinner /> : <Upload style={{ fontSize: 24 }} />}
           <Text size={1} muted>
             {isUploading

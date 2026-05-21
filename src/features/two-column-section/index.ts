@@ -1,2 +1,1 @@
-export { TwoColumnSection } from './components';
-export type { TwoColumnSectionBlock } from './types';
+export { default as TwoColumnSection } from './TwoColumnSection';

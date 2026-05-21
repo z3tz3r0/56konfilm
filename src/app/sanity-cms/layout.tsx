@@ -74,7 +74,7 @@ export default async function RootLayout({
     >
       <body>
         <ThemeProvider
-          attribute="class"
+          attribute='class'
           defaultTheme={initialTheme}
           enableSystem={false}
           disableTransitionOnChange
@@ -83,7 +83,7 @@ export default async function RootLayout({
             <MotionProvider>{children}</MotionProvider>
           </ModeProvider>
         </ThemeProvider>
-        <Toaster richColors position="top-right" />
+        <Toaster richColors position='top-right' />
       </body>
     </html>
   );

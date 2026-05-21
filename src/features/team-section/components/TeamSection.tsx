@@ -29,31 +29,31 @@ export default function TeamSection({ block }: TeamSectionProps) {
   const useLiteMotion = isInitialized && !allowHeavyMotion;
 
   return (
-    <SectionShell background={block.background} dataTestId="team-section">
-      <div className="container mx-auto">
+    <SectionShell background={block.background} dataTestId='team-section'>
+      <div className='container mx-auto'>
         {block.heading && (
           <SectionHeader
             heading={block.heading}
-            className="mx-auto mb-14 max-w-3xl text-center"
+            className='mx-auto mb-14 max-w-3xl text-center'
           />
         )}
         {block.members?.length ? (
           <m.div
-            className="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-4 md:gap-10"
-            initial="hidden"
-            whileInView="visible"
+            className='grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-4 md:gap-10'
+            initial='hidden'
+            whileInView='visible'
             viewport={{ once: true, margin: '-80px' }}
             variants={useLiteMotion ? undefined : containerVariants}
           >
             {block.members.map((member, index) => (
               <m.article
                 key={member._key ?? index}
-                className="flex flex-col items-center text-center"
+                className='flex flex-col items-center text-center'
                 variants={useLiteMotion ? undefined : itemVariants}
-                data-testid="team-member"
+                data-testid='team-member'
               >
                 {member.image && (
-                  <div className="bg-muted relative mb-4 size-28 overflow-hidden rounded-full md:size-32">
+                  <div className='bg-muted relative mb-4 size-28 overflow-hidden rounded-full md:size-32'>
                     <Image
                       src={urlFor(member.image)
                         .width(256)
@@ -62,21 +62,21 @@ export default function TeamSection({ block }: TeamSectionProps) {
                         .url()}
                       alt={member.name ?? 'Team member'}
                       fill
-                      className="object-cover"
-                      sizes="(min-width: 768px) 128px, 112px"
+                      className='object-cover'
+                      sizes='(min-width: 768px) 128px, 112px'
                     />
                   </div>
                 )}
-                <h3 className="text-foreground text-base font-semibold">
+                <h3 className='text-foreground text-base font-semibold'>
                   {member.name}
                 </h3>
                 {member.role && (
-                  <p className="text-muted-foreground mt-1 text-sm">
+                  <p className='text-muted-foreground mt-1 text-sm'>
                     {member.role}
                   </p>
                 )}
                 {member.bio && (
-                  <p className="text-muted-foreground mt-2 text-xs leading-relaxed">
+                  <p className='text-muted-foreground mt-2 text-xs leading-relaxed'>
                     {member.bio}
                   </p>
                 )}

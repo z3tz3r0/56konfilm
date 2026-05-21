@@ -102,41 +102,41 @@ export default function ChangePasswordForm() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#1a1a1a] p-4">
-      <div className="w-full max-w-md">
-        <div className="rounded-lg bg-[#252525] p-8 shadow-xl">
-          <h1 className="mb-6 text-center text-2xl font-bold text-white">
+    <div className='flex min-h-screen items-center justify-center bg-[#1a1a1a] p-4'>
+      <div className='w-full max-w-md'>
+        <div className='rounded-lg bg-[#252525] p-8 shadow-xl'>
+          <h1 className='mb-6 text-center text-2xl font-bold text-white'>
             Change Password
           </h1>
 
           {state.success && (
-            <div className="mb-4 rounded-md border border-green-700 bg-green-900/30 p-3">
-              <p className="text-sm text-green-400">
+            <div className='mb-4 rounded-md border border-green-700 bg-green-900/30 p-3'>
+              <p className='text-sm text-green-400'>
                 Password changed successfully! Redirecting to login...
               </p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
             <div>
               <label
-                htmlFor="currentPassword"
-                className="mb-2 block text-sm font-medium text-gray-300"
+                htmlFor='currentPassword'
+                className='mb-2 block text-sm font-medium text-gray-300'
               >
                 Current Password
               </label>
               <input
-                id="currentPassword"
-                type="password"
+                id='currentPassword'
+                type='password'
                 {...register('currentPassword', {
                   required: 'Current password is required',
                 })}
-                className="w-full rounded-md border border-gray-600 bg-[#1a1a1a] px-4 py-2 text-white placeholder-gray-500 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                placeholder="Enter your current password"
+                className='w-full rounded-md border border-gray-600 bg-[#1a1a1a] px-4 py-2 text-white placeholder-gray-500 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none'
+                placeholder='Enter your current password'
                 disabled={state.isLoading}
               />
               {formErrors.currentPassword && (
-                <p className="mt-1 text-sm text-red-400">
+                <p className='mt-1 text-sm text-red-400'>
                   {formErrors.currentPassword.message}
                 </p>
               )}
@@ -144,23 +144,23 @@ export default function ChangePasswordForm() {
 
             <div>
               <label
-                htmlFor="newPassword"
-                className="mb-2 block text-sm font-medium text-gray-300"
+                htmlFor='newPassword'
+                className='mb-2 block text-sm font-medium text-gray-300'
               >
                 New Password
               </label>
               <input
-                id="newPassword"
-                type="password"
+                id='newPassword'
+                type='password'
                 {...register('newPassword', {
                   required: 'New password is required',
                 })}
-                className="w-full rounded-md border border-gray-600 bg-[#1a1a1a] px-4 py-2 text-white placeholder-gray-500 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                placeholder="Enter your new password"
+                className='w-full rounded-md border border-gray-600 bg-[#1a1a1a] px-4 py-2 text-white placeholder-gray-500 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none'
+                placeholder='Enter your new password'
                 disabled={state.isLoading}
               />
               {formErrors.newPassword && (
-                <p className="mt-1 text-sm text-red-400">
+                <p className='mt-1 text-sm text-red-400'>
                   {formErrors.newPassword.message}
                 </p>
               )}
@@ -168,43 +168,43 @@ export default function ChangePasswordForm() {
 
             <div>
               <label
-                htmlFor="confirmPassword"
-                className="mb-2 block text-sm font-medium text-gray-300"
+                htmlFor='confirmPassword'
+                className='mb-2 block text-sm font-medium text-gray-300'
               >
                 Confirm New Password
               </label>
               <input
-                id="confirmPassword"
-                type="password"
+                id='confirmPassword'
+                type='password'
                 {...register('confirmPassword', {
                   required: 'Please confirm your new password',
                   validate: (value) =>
                     value === getValues('newPassword') ||
                     'Passwords do not match',
                 })}
-                className="w-full rounded-md border border-gray-600 bg-[#1a1a1a] px-4 py-2 text-white placeholder-gray-500 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                placeholder="Confirm your new password"
+                className='w-full rounded-md border border-gray-600 bg-[#1a1a1a] px-4 py-2 text-white placeholder-gray-500 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none'
+                placeholder='Confirm your new password'
                 disabled={state.isLoading}
               />
               {formErrors.confirmPassword && (
-                <p className="mt-1 text-sm text-red-400">
+                <p className='mt-1 text-sm text-red-400'>
                   {formErrors.confirmPassword.message}
                 </p>
               )}
             </div>
 
             {state.error && (
-              <div className="rounded-md border border-red-700 bg-red-900/30 p-3">
-                <p className="text-sm text-red-400">{state.error}</p>
+              <div className='rounded-md border border-red-700 bg-red-900/30 p-3'>
+                <p className='text-sm text-red-400'>{state.error}</p>
               </div>
             )}
 
             {state.errors.length > 0 && (
-              <div className="rounded-md border border-red-700 bg-red-900/30 p-3">
-                <p className="mb-2 text-sm font-medium text-red-400">
+              <div className='rounded-md border border-red-700 bg-red-900/30 p-3'>
+                <p className='mb-2 text-sm font-medium text-red-400'>
                   Password requirements:
                 </p>
-                <ul className="list-inside list-disc space-y-1 text-sm text-red-400">
+                <ul className='list-inside list-disc space-y-1 text-sm text-red-400'>
                   {state.errors.map((err) => (
                     <li key={err}>{err}</li>
                   ))}
@@ -213,17 +213,17 @@ export default function ChangePasswordForm() {
             )}
 
             <button
-              type="submit"
+              type='submit'
               disabled={state.isLoading}
-              className="w-full rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className='w-full rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50'
             >
               {state.isLoading ? 'Changing password...' : 'Change Password'}
             </button>
 
-            <div className="text-center">
+            <div className='text-center'>
               <Link
-                href="/sanity-cms"
-                className="text-sm text-blue-400 hover:text-blue-300"
+                href='/sanity-cms'
+                className='text-sm text-blue-400 hover:text-blue-300'
               >
                 ← Back to Studio
               </Link>

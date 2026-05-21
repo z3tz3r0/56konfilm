@@ -2,6 +2,8 @@ export { default as ScrollableCarousel } from './ScrollableCarousel';
 export { default as AppIcon } from './AppIcon';
 export { default as CtaButton } from './CtaButton';
 export { default as CtaGroup } from './CtaGroup';
+export { default as HighlightedText } from './HighlightedText';
+export { default as ImageWithFrame } from './ImageWithFrame';
 export { default as JsonLd } from './JsonLd';
 export { default as LanguageSwitcher } from './LanguageSwitcher';
 export { default as ModeGuard } from './ModeGuard';
