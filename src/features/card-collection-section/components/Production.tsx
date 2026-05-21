@@ -17,15 +17,15 @@ export default function Production(props: CardCollectionSectionProps) {
 
   return (
     <SectionShell background={block.background}>
-      <div className="space-y-16">
-        <header className="mx-auto flex max-w-2xl flex-col items-center gap-3 text-center">
+      <div className='space-y-16'>
+        <header className='mx-auto flex max-w-2xl flex-col items-center gap-3 text-center'>
           {block.title && (
-            <h2 className="text-primary text-3xl font-semibold md:text-4xl">
+            <h2 className='text-primary text-3xl font-semibold md:text-4xl'>
               {block.title}
             </h2>
           )}
           {block.intro && (
-            <p className="text-muted-foreground text-base">{block.intro}</p>
+            <p className='text-muted-foreground text-base'>{block.intro}</p>
           )}
         </header>
         {(block.cards?.length ?? 0) > 0 && (
@@ -46,16 +46,16 @@ export default function Production(props: CardCollectionSectionProps) {
                   {hasIcon && icon && (
                     <AppIcon
                       iconName={icon.name}
-                      className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                      className='absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2'
                     />
                   )}
                   {card.title && (
-                    <h3 className="text-neutral-foreground text-center text-xl font-semibold sm:text-2xl">
+                    <h3 className='text-neutral-foreground text-center text-xl font-semibold sm:text-2xl'>
                       {card.title}
                     </h3>
                   )}
                   {card.body && (
-                    <p className="text-neutral-foreground-secondary text-sm">
+                    <p className='text-neutral-foreground-secondary text-sm'>
                       {card.body}
                     </p>
                   )}

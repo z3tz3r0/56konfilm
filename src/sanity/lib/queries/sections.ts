@@ -24,6 +24,7 @@ export const HERO_SECTION = groq`
 export const TWO_COLUMN_SECTION = groq`
   _type == "twoColumnSection" => {
     layout,
+    "sectionVariant": coalesce(sectionVariant, 'standard'),
     background,
     content{
       "eyebrow": ${LOCALIZED('eyebrow')},

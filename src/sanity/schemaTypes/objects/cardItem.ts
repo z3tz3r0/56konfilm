@@ -1,5 +1,6 @@
-import { defineField, defineType, SanityDocument } from 'sanity';
+import { defineField, defineType } from 'sanity';
 import { localizedStringField, localizedTextField } from './localized';
+import { getParentSectionFromPath } from '@/sanity/lib/schemaHelpers';
 
 export const cardItemType = defineType({
   name: 'cardItem',
@@ -23,18 +24,12 @@ export const cardItemType = defineType({
       type: 'icon',
       description:
         '🎨 ไอคอน (จะแสดงผลก็ต่อเมื่อเปิดใช้งาน "Show Icons" ที่ระดับ Section)',
-      hidden: ({ document, parent }) => {
-        // ป้องกัน Error กรณีที่ Sanity กำลังโหลด หรือการ์ดยังไม่มี _key (เพิ่งกด Add)
-        const key = parent?._key;
-        if (!document || !parent || !key) return false;
-
-        const cardCollectionSection = findParentCardCollectionSection(
-          document,
-          key
-        );
-        const isIconEnabled = cardCollectionSection?.hasIcon === true;
-
-        return !isIconEnabled;
+      hidden: ({ document, path }) => {
+        const currentSection = getParentSectionFromPath(document, path);
+        const cardCollectionSection =
+          currentSection?._type === 'cardCollectionSection';
+        const isIconEnabled = currentSection?.hasIcon === true;
+        return cardCollectionSection && !isIconEnabled;
       },
       validation: (Rule) =>
         Rule.custom((value, context) => {
@@ -50,19 +45,13 @@ export const cardItemType = defineType({
       description:
         '🖼️ ภาพพื้นหลัง (จะถูกใช้งานเฉพาะเมื่อ Section เลือกรูปแบบเป็น "Highlight Intro" เท่านั้น)',
       options: { hotspot: true },
-      hidden: ({ document, parent }) => {
-        // ป้องกัน Error กรณีที่ Sanity กำลังโหลด หรือการ์ดยังไม่มี _key (เพิ่งกด Add)
-        const key = parent?._key;
-        if (!document || !parent || !key) return false;
-
-        const cardCollectionSection = findParentCardCollectionSection(
-          document,
-          key
-        );
-        const currentVariant =
-          cardCollectionSection?.layoutVariant || 'standard';
-
-        return currentVariant === 'standard';
+      hidden: ({ document, path }) => {
+        const currentSection = getParentSectionFromPath(document, path);
+        const cardCollectionSection =
+          currentSection?._type === 'cardCollectionSection';
+        const isStandardVariant =
+          (currentSection?.layoutVariant || 'standard') === 'standard';
+        return cardCollectionSection && isStandardVariant;
       },
       validation: (Rule) =>
         Rule.custom((value, context) => {
@@ -95,27 +84,3 @@ export const cardItemType = defineType({
     },
   },
 });
-
-function findParentCardCollectionSection(
-  document: SanityDocument | undefined,
-  cardKey: string | undefined
-) {
-  if (!document || !cardKey) return undefined;
-
-  const allSections = [
-    ...(Array.isArray(document?.commercialSections)
-      ? document.commercialSections
-      : []),
-    ...(Array.isArray(document?.weddingSections)
-      ? document.weddingSections
-      : []),
-  ];
-
-  return allSections.find((section) => {
-    if (section._type !== 'cardCollectionSection') return false;
-    if (!Array.isArray(section.cards)) return false;
-    return section.cards.some(
-      (card: { _key: string }) => card._key === cardKey
-    );
-  });
-}

@@ -1,3 +1,4 @@
+import { getParentSectionFromPath } from '@/sanity/lib/schemaHelpers';
 import {
   defineField,
   defineType,
@@ -39,11 +40,21 @@ export const localizedBlockType = defineType({
       name: 'eyebrow',
       title: 'Eyebrow',
       description: 'ข้อความเล็กๆ เหนือหัวข้อ',
+      group: 'content',
+      hidden: ({ document, path }) => {
+        const currentSection = getParentSectionFromPath(document, path);
+        const twoColumnSection = currentSection?._type === 'twoColumnSection';
+        const isEmphasizedVariant =
+          (currentSection?.sectionVariant || 'standard') === 'emphasized';
+        return twoColumnSection && isEmphasizedVariant;
+      },
     }),
     localizedStringField({
       name: 'heading',
       title: 'Heading',
-      description: 'หัวข้อหลัก',
+      description:
+        'หัวข้อหลัก (💡 ทริค: สามารถใช้เครื่องหมาย [ ] ครอบข้อความเพื่อแต้มสีได้ เช่น BEFORE [WE BECAME] WHO WE ARE — หมายเหตุ: ฟีเจอร์แต้มสีนี้จะแสดงผลเฉพาะในโหมด Production เท่านั้น)',
+      group: 'content',
       validation: (Rule) => Rule.required(),
     }),
     localizedTextField({

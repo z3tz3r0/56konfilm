@@ -49,18 +49,18 @@ export default function TestimonialSection({ block }: TestimonialSectionProps) {
     <SectionShell
       background={block.background}
       sanityType={block._type}
-      dataTestId="testimonial-section"
+      dataTestId='testimonial-section'
       className={cn(defaultBackground && 'bg-background')}
     >
-      <div className="container mx-auto max-w-5xl space-y-10">
+      <div className='container mx-auto max-w-5xl space-y-10'>
         <SectionHeader
           heading={block.heading}
-          className="mx-auto max-w-3xl items-center text-center"
-          headingClassName="md:text-5xl"
+          className='mx-auto max-w-3xl items-center text-center'
+          headingClassName='md:text-5xl'
         />
 
         {block.testimonials?.length ? (
-          <div className="relative">
+          <div className='relative'>
             <Carousel opts={{ align: 'start', loop: true }} setApi={setApi}>
               <CarouselContent>
                 {block.testimonials.map((testimonial, index) => (
@@ -72,20 +72,20 @@ export default function TestimonialSection({ block }: TestimonialSectionProps) {
                           ? 'opacity-100'
                           : 'pointer-events-none opacity-0'
                       )}
-                      initial="hidden"
-                      whileInView="visible"
+                      initial='hidden'
+                      whileInView='visible'
                       viewport={{ once: true, margin: '-100px' }}
                       variants={fadeUpItemVariants}
                       data-testid={
                         index === current ? 'testimonial-item' : undefined
                       }
                     >
-                      <div className="text-primary flex items-center justify-center text-5xl">
+                      <div className='text-primary flex items-center justify-center text-5xl'>
                         “
                       </div>
                       {testimonial.quote ? (
                         <p
-                          className="text-foreground text-lg leading-relaxed"
+                          className='text-foreground text-lg leading-relaxed'
                           style={{
                             fontFamily:
                               'var(--font-primary), "Cormorant Garamond", var(--font-noto-sans-thai), serif',
@@ -94,9 +94,9 @@ export default function TestimonialSection({ block }: TestimonialSectionProps) {
                           {testimonial.quote}
                         </p>
                       ) : null}
-                      <div className="flex flex-col items-center gap-2">
+                      <div className='flex flex-col items-center gap-2'>
                         {testimonial.authorImage ? (
-                          <div className="border-border/60 relative size-12 overflow-hidden rounded-full border">
+                          <div className='border-border/60 relative size-12 overflow-hidden rounded-full border'>
                             <Image
                               src={getImageUrl(
                                 testimonial.authorImage,
@@ -104,18 +104,18 @@ export default function TestimonialSection({ block }: TestimonialSectionProps) {
                               )}
                               alt={testimonial.authorName ?? 'Author'}
                               fill
-                              className="object-cover"
-                              sizes="48px"
+                              className='object-cover'
+                              sizes='48px'
                             />
                           </div>
                         ) : null}
                         {testimonial.authorName ? (
-                          <p className="text-base font-semibold">
+                          <p className='text-base font-semibold'>
                             {testimonial.authorName}
                           </p>
                         ) : null}
                         {testimonial.authorTitle ? (
-                          <p className="text-muted-foreground text-sm">
+                          <p className='text-muted-foreground text-sm'>
                             {testimonial.authorTitle}
                           </p>
                         ) : null}
@@ -126,21 +126,21 @@ export default function TestimonialSection({ block }: TestimonialSectionProps) {
               </CarouselContent>
 
               <CarouselPrevious
-                data-testid="carousel-prev"
-                className="bg-[var(--color-brown)] text-[var(--color-ivory-white)] hover:bg-[var(--color-mocha-brown)]"
+                data-testid='carousel-prev'
+                className='bg-[var(--color-brown)] text-[var(--color-ivory-white)] hover:bg-[var(--color-mocha-brown)]'
               />
               <CarouselNext
-                data-testid="carousel-next"
-                className="bg-[var(--color-brown)] text-[var(--color-ivory-white)] hover:bg-[var(--color-mocha-brown)]"
+                data-testid='carousel-next'
+                className='bg-[var(--color-brown)] text-[var(--color-ivory-white)] hover:bg-[var(--color-mocha-brown)]'
               />
             </Carousel>
 
             {count > 1 ? (
-              <div className="mt-6 flex items-center justify-center gap-2">
+              <div className='mt-6 flex items-center justify-center gap-2'>
                 {Array.from({ length: count }).map((_, index) => (
                   <button
                     key={`dot-${index}`}
-                    type="button"
+                    type='button'
                     aria-label={`Go to testimonial ${index + 1}`}
                     className={cn(
                       'h-2.5 w-2.5 rounded-full transition',

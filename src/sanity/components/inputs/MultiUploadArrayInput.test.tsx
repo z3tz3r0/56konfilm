@@ -16,7 +16,7 @@ vi.mock('sanity', async (importOriginal) => {
   return {
     ...actual,
     useClient: () => mockClient,
-    MemberField: () => <div data-testid="member-field" />,
+    MemberField: () => <div data-testid='member-field' />,
   };
 });
 
@@ -27,7 +27,7 @@ vi.mock('@sanity/ui', () => ({
   Stack: ({ children }: any) => <div>{children}</div>,
   Flex: ({ children }: any) => <div>{children}</div>,
   Card: ({ children, ...rest }: any) => <div {...rest}>{children}</div>,
-  Spinner: () => <div data-testid="spinner" />,
+  Spinner: () => <div data-testid='spinner' />,
   Text: ({ children }: any) => <div>{children}</div>,
 }));
 

@@ -43,7 +43,7 @@ export default function LanguageSwitcher({
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className='flex items-center gap-2'>
       <Select
         defaultValue={safeLang}
         onValueChange={(value) => {
@@ -53,12 +53,12 @@ export default function LanguageSwitcher({
         <SelectTrigger>
           <SelectValue />
         </SelectTrigger>
-        <SelectContent position="popper" align="start">
+        <SelectContent position='popper' align='start'>
           <SelectGroup>
-            <SelectItem value="en" data-testid="language-switcher-en">
+            <SelectItem value='en' data-testid='language-switcher-en'>
               EN
             </SelectItem>
-            <SelectItem value="th" data-testid="language-switcher-th">
+            <SelectItem value='th' data-testid='language-switcher-th'>
               TH
             </SelectItem>
           </SelectGroup>

@@ -39,19 +39,19 @@ export default function MediaGallerySection({
 
   return (
     <SectionShell background={block.background} sanityType={block._type}>
-      <div className="container mx-auto space-y-12">
+      <div className='container mx-auto space-y-12'>
         <SectionHeader
           heading={block.heading}
           className={cn('gap-4 text-balance', isCentered && 'mx-auto')}
-          headingClassName="lg:text-5xl"
-          bodyClassName="text-lg font-light wrap-break-word"
+          headingClassName='lg:text-5xl'
+          bodyClassName='text-lg font-light wrap-break-word'
         />
 
         {block.items?.length ? (
           <m.div
-            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-            initial="hidden"
-            whileInView="visible"
+            className='grid gap-6 sm:grid-cols-2 lg:grid-cols-3'
+            initial='hidden'
+            whileInView='visible'
             viewport={{ once: true, margin: '-100px' }}
             variants={useLiteMotion ? undefined : staggerContainerVariants}
             transition={useLiteMotion ? { duration: 0.2 } : undefined}
@@ -66,7 +66,7 @@ export default function MediaGallerySection({
                     variants={variants}
                     useLiteMotion={useLiteMotion}
                     label={item.label}
-                    testId="gallery-item-video"
+                    testId='gallery-item-video'
                   >
                     <VideoItem
                       src={item.videoUrl}
@@ -97,7 +97,7 @@ export default function MediaGallerySection({
                   }
                   extra={
                     item.projectOverview ? (
-                      <p className="text-muted-foreground/90 px-1 pb-1 text-sm">
+                      <p className='text-muted-foreground/90 px-1 pb-1 text-sm'>
                         {item.projectOverview}
                       </p>
                     ) : undefined
@@ -108,7 +108,7 @@ export default function MediaGallerySection({
                     alt={item.media?.alt ?? item.label ?? 'Gallery item'}
                     fill
                     className={mediaClassName}
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    sizes='(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'
                   />
                 </GalleryCard>
               );
@@ -118,7 +118,7 @@ export default function MediaGallerySection({
                   <Link
                     key={key}
                     href={`/${lang}/work/${item.projectSlug}`}
-                    className="block"
+                    className='block'
                     aria-label={item.label ?? item.projectSlug}
                   >
                     {card}

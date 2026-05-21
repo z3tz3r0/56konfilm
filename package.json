@@ -60,6 +60,7 @@
     "sanity": "^5.18.0",
     "sanity-plugin-iconify": "^3.0.0",
     "sanity-plugin-internationalized-array": "^5.0.5",
+    "sanity-plugin-visual-options": "^2.0.2",
     "sonner": "^2.0.7",
     "styled-components": "^6.3.12",
     "tailwind-merge": "^3.5.0",

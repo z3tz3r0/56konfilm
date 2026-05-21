@@ -1,15 +1,9 @@
 import Image from 'next/image';
 import { ReactNode } from 'react';
-import { cn } from '@shared/utils';
+import { cn, getBGVariants } from '@shared/utils';
 import { urlFor } from '@/sanity/lib/image';
 import { BackgroundMediaItem } from '@shared/types';
 import { VideoLoop } from '@shared/components';
-
-const backgroundVariants: Record<string, string> = {
-  default: '',
-  muted: 'bg-secondary',
-  contrast: 'bg-primary text-primary-foreground',
-};
 
 interface SectionShellProps {
   background?: string;
@@ -40,8 +34,7 @@ export default function SectionShell({
   enableVideoObserver = false,
   shapeDivider = false,
 }: SectionShellProps) {
-  const backgroundClass =
-    backgroundVariants[background ?? 'default'] ?? backgroundVariants.default;
+  const backgroundClass = getBGVariants(background);
   const paddingClass = disablePadding ? '' : 'px-4 py-16 lg:px-24';
   const videoAsset = media?.find((item) => item.mimeType?.startsWith('video'));
   const imageAsset = media?.find(
@@ -70,27 +63,29 @@ export default function SectionShell({
       data-sanity-type={sanityType}
       data-testid={dataTestId}
     >
-      <div className="relative z-10 container mx-auto">{children}</div>
+      <div className='relative z-10 container mx-auto max-w-7xl'>
+        {children}
+      </div>
 
       {shouldRenderMedia ? (
-        <div className="absolute inset-0 -z-10">
+        <div className='absolute inset-0 -z-10'>
           {videoAsset?.url ? (
             <VideoLoop
               url={videoAsset.url}
               mimeType={videoAsset.mimeType}
               posterUrl={posterUrl}
-              className="absolute inset-0"
+              className='absolute inset-0'
               priority={videoPriority}
               enableObserver={enableVideoObserver}
             />
           ) : posterUrl ? (
             <Image
               src={posterUrl}
-              alt="Section background"
+              alt='Section background'
               fill
               priority={videoPriority}
-              className="object-cover"
-              sizes="100vw"
+              className='object-cover'
+              sizes='100vw'
             />
           ) : null}
           {overlayClassName || overlayStyle ? (
@@ -105,16 +100,16 @@ export default function SectionShell({
       {/* Shape Divider */}
       {shapeDivider && (
         <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-[80px] overflow-hidden"
+          aria-hidden='true'
+          className='pointer-events-none absolute inset-x-0 bottom-0 h-[80px] overflow-hidden'
         >
           <svg
-            focusable="false"
-            viewBox="0 0 1280 80"
-            preserveAspectRatio="none"
-            className="h-full w-full"
+            focusable='false'
+            viewBox='0 0 1280 80'
+            preserveAspectRatio='none'
+            className='h-full w-full'
           >
-            <path fill="var(--color-ivory-white)" d="M0,80 Q640 0,1280 80" />
+            <path fill='var(--color-ivory-white)' d='M0,80 Q640 0,1280 80' />
           </svg>
         </div>
       )}

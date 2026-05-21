@@ -42,18 +42,18 @@ export default function VideoItem({
     return (
       <div
         className={cn('relative h-full w-full', className)}
-        data-testid="video-item-fallback"
+        data-testid='video-item-fallback'
       >
         {posterUrl ? (
           <Image
             src={posterUrl}
-            alt="Video thumbnail"
+            alt='Video thumbnail'
             fill
-            sizes="100vw"
-            className="object-cover"
+            sizes='100vw'
+            className='object-cover'
           />
         ) : (
-          <div className="h-full w-full bg-neutral-800" />
+          <div className='h-full w-full bg-neutral-800' />
         )}
       </div>
     );
@@ -69,8 +69,8 @@ export default function VideoItem({
       muted
       loop
       playsInline
-      preload="metadata"
-      data-testid="video-item"
+      preload='metadata'
+      data-testid='video-item'
     />
   );
 }

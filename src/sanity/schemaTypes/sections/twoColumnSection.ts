@@ -2,6 +2,10 @@ import { defineField, defineType } from 'sanity';
 import { ctaType } from '../objects/cta';
 import { localizedBlockType } from '../objects/localized';
 import { mediaBlockType } from '../objects/mediaBlock';
+import {
+  EmphasizedThumbnail,
+  StandardThumbnail,
+} from '../../components/inputs';
 
 export const twoColumnSectionType = defineType({
   name: 'twoColumnSection',
@@ -21,6 +25,28 @@ export const twoColumnSectionType = defineType({
         layout: 'radio',
       },
       initialValue: 'textLeft',
+    }),
+    defineField({
+      name: 'sectionVariant',
+      title: 'Section Variant',
+      type: 'visualOptions',
+      options: {
+        showTooltip: true,
+        optionSize: 'large',
+        shape: 'box',
+        list: {
+          standard: {
+            name: 'With Eyebrow',
+            icon: StandardThumbnail,
+            default: true,
+          },
+          emphasized: {
+            name: 'No Eyebrow, Only Heading',
+            icon: EmphasizedThumbnail,
+          },
+        },
+      },
+      initialValue: 'standard',
     }),
     defineField({
       name: 'content',

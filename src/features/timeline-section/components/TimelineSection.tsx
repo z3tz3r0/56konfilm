@@ -32,20 +32,20 @@ export default function TimelineSection({
 
   return (
     <SectionShell background={block.background}>
-      <div className="container mx-auto space-y-12">
+      <div className='container mx-auto space-y-12'>
         <SectionHeader heading={block.heading} />
 
         {steps.length ? (
-          <div className="relative isolate mx-auto mt-8 md:mt-16">
+          <div className='relative isolate mx-auto mt-8 md:mt-16'>
             {/* --- Desktop Layout (Zig-Zag) --- */}
-            <div className="hidden md:block">
+            <div className='hidden md:block'>
               {/* Central Line */}
               <div
-                aria-hidden="true"
-                className="bg-primary absolute top-4 -bottom-6 left-1/2 w-px -translate-x-1/2"
+                aria-hidden='true'
+                className='bg-primary absolute top-4 -bottom-6 left-1/2 w-px -translate-x-1/2'
               />
 
-              <ol className="space-y-24">
+              <ol className='space-y-24'>
                 {steps.map((step, index) => {
                   const isEven = index % 2 === 0;
 
@@ -76,10 +76,10 @@ export default function TimelineSection({
                       </div>
 
                       {/* Marker (Center) - Empty Orange Dot */}
-                      <div className="bg-primary ring-background absolute left-1/2 z-10 flex size-4 shrink-0 -translate-x-1/2 rounded-full shadow-sm ring-4" />
+                      <div className='bg-primary ring-background absolute left-1/2 z-10 flex size-4 shrink-0 -translate-x-1/2 rounded-full shadow-sm ring-4' />
 
                       {/* Spacer Side */}
-                      <div className="w-1/2" />
+                      <div className='w-1/2' />
                     </li>
                   );
                 })}
@@ -87,21 +87,21 @@ export default function TimelineSection({
             </div>
 
             {/* --- Mobile Layout (Carousel) --- */}
-            <div className="block md:hidden">
+            <div className='block md:hidden'>
               <Carousel
                 opts={{ align: 'start', loop: false }}
-                className="w-full"
+                className='w-full'
               >
-                <CarouselContent className="">
+                <CarouselContent className=''>
                   {steps.map((step, index) => (
                     <CarouselItem
                       key={step._key ?? index}
-                      className="basis-[85%] pl-4"
+                      className='basis-[85%] pl-4'
                     >
                       <TimelineCard
                         step={step}
                         index={index}
-                        className="h-full min-h-[280px]"
+                        className='h-full min-h-[280px]'
                       />
                     </CarouselItem>
                   ))}
@@ -110,7 +110,7 @@ export default function TimelineSection({
             </div>
           </div>
         ) : null}
-        <div className="mx-auto w-full">
+        <div className='mx-auto w-full'>
           <CtaGroup
             ctas={block.cta ? [block.cta] : undefined}
             lang={lang}
@@ -140,33 +140,33 @@ function TimelineCard({
         className
       )}
     >
-      <CardContent className="flex flex-1 flex-col justify-start">
+      <CardContent className='flex flex-1 flex-col justify-start'>
         {/* Big Faded Number (Background) */}
-        <span className="text-charcoal-gray absolute right-4 bottom-[50%] translate-y-[50%] text-[10rem] leading-none font-bold select-none">
+        <span className='text-charcoal-gray absolute right-4 bottom-[50%] translate-y-[50%] text-[10rem] leading-none font-bold select-none'>
           {step.order ?? index + 1}
         </span>
 
         {/* Header with Icon */}
-        <div className="relative z-10 flex flex-col gap-4">
+        <div className='relative z-10 flex flex-col gap-4'>
           {step.icon ? (
-            <div className="relative size-12 shrink-0">
+            <div className='relative size-12 shrink-0'>
               <Image
                 src={getImageUrl(step.icon, THUMBNAIL_IMAGE)}
-                alt=""
+                alt=''
                 fill
-                className="object-contain"
-                sizes="48px"
+                className='object-contain'
+                sizes='48px'
               />
             </div>
           ) : null}
 
           {step.title ? (
-            <h3 className="text-2xl font-bold md:text-3xl">{step.title}</h3>
+            <h3 className='text-2xl font-bold md:text-3xl'>{step.title}</h3>
           ) : null}
         </div>
 
         {step.description ? (
-          <p className="text-muted-foreground relative z-10 mt-4 text-base leading-relaxed">
+          <p className='text-muted-foreground relative z-10 mt-4 text-base leading-relaxed'>
             {step.description}
           </p>
         ) : null}

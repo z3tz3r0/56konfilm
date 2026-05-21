@@ -22,7 +22,7 @@ export default function SectionHeader({
   return (
     <header className={cn('flex flex-col gap-3', alignClass, className)}>
       {heading?.eyebrow ? (
-        <span className="text-primary text-sm font-semibold tracking-[0.2em] uppercase">
+        <span className='text-primary text-sm font-semibold tracking-[0.2em] uppercase'>
           {heading.eyebrow}
         </span>
       ) : null}

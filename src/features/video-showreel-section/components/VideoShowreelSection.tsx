@@ -47,32 +47,32 @@ export default function VideoShowreelSection({
   return (
     <SectionShell
       background={block.background}
-      dataTestId="video-showreel-section"
+      dataTestId='video-showreel-section'
     >
-      <div className="container mx-auto max-w-5xl">
+      <div className='container mx-auto max-w-5xl'>
         {block.heading && (
           <SectionHeader
             heading={block.heading}
-            className="mx-auto mb-10 max-w-3xl text-center"
+            className='mx-auto mb-10 max-w-3xl text-center'
           />
         )}
-        <div className="overflow-hidden rounded-lg">
+        <div className='overflow-hidden rounded-lg'>
           <AspectRatio ratio={16 / 9}>
             {isPlaying && embedUrl ? (
               <iframe
                 src={embedUrl}
                 title={block.caption ?? 'Video showreel'}
-                allow="autoplay; fullscreen; picture-in-picture"
+                allow='autoplay; fullscreen; picture-in-picture'
                 allowFullScreen
-                className="absolute inset-0 size-full"
+                className='absolute inset-0 size-full'
               />
             ) : (
               <button
-                type="button"
+                type='button'
                 onClick={() => setIsPlaying(true)}
-                className="group relative size-full cursor-pointer"
-                aria-label="Play video"
-                data-testid="showreel-play"
+                className='group relative size-full cursor-pointer'
+                aria-label='Play video'
+                data-testid='showreel-play'
               >
                 {block.thumbnail && (
                   <Image
@@ -83,19 +83,19 @@ export default function VideoShowreelSection({
                       .url()}
                     alt={block.caption ?? 'Video thumbnail'}
                     fill
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    sizes="(min-width: 1024px) 1024px, 100vw"
+                    className='object-cover transition-transform duration-700 ease-out group-hover:scale-105'
+                    sizes='(min-width: 1024px) 1024px, 100vw'
                   />
                 )}
                 {/* Play button overlay */}
-                <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-colors duration-300 group-hover:bg-black/20">
-                  <div className="flex size-16 items-center justify-center rounded-full border-2 border-white/80 bg-white/10 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110 md:size-20">
+                <div className='absolute inset-0 flex items-center justify-center bg-black/30 transition-colors duration-300 group-hover:bg-black/20'>
+                  <div className='flex size-16 items-center justify-center rounded-full border-2 border-white/80 bg-white/10 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110 md:size-20'>
                     <svg
-                      viewBox="0 0 24 24"
-                      fill="white"
-                      className="ml-1 size-6 md:size-8"
+                      viewBox='0 0 24 24'
+                      fill='white'
+                      className='ml-1 size-6 md:size-8'
                     >
-                      <path d="M8 5v14l11-7z" />
+                      <path d='M8 5v14l11-7z' />
                     </svg>
                   </div>
                 </div>
@@ -104,7 +104,7 @@ export default function VideoShowreelSection({
           </AspectRatio>
         </div>
         {block.caption && (
-          <p className="text-muted-foreground mt-4 text-center text-sm">
+          <p className='text-muted-foreground mt-4 text-center text-sm'>
             {block.caption}
           </p>
         )}

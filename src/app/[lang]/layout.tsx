@@ -85,15 +85,15 @@ export default async function RootLayout({
       <head>
         {env.NODE_ENV === 'development' && (
           <Script
-            src="//unpkg.com/react-grab/dist/index.global.js"
-            crossOrigin="anonymous"
-            strategy="afterInteractive"
+            src='//unpkg.com/react-grab/dist/index.global.js'
+            crossOrigin='anonymous'
+            strategy='afterInteractive'
           />
         )}
       </head>
       <body>
         <ThemeProvider
-          attribute="class"
+          attribute='class'
           defaultTheme={initialTheme}
           enableSystem={false}
           disableTransitionOnChange
@@ -102,7 +102,7 @@ export default async function RootLayout({
             <MotionProvider>{children}</MotionProvider>
           </ModeProvider>
         </ThemeProvider>
-        <Toaster richColors position="top-right" />
+        <Toaster richColors position='top-right' />
       </body>
     </html>
   );

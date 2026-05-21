@@ -29,16 +29,16 @@ export function ContactForm({ lang = 'en' }: ContactFormProps) {
   const { form, onSubmit, isPending, isWedding } = useContactForm();
 
   return (
-    <div className="mx-auto w-full max-w-lg p-4 md:p-8">
+    <div className='mx-auto w-full max-w-lg p-4 md:p-8'>
       <ContactHeader isWedding={isWedding} />
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <input type="hidden" {...form.register('type')} />
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+          <input type='hidden' {...form.register('type')} />
 
           <FormField
             control={form.control}
-            name="name"
+            name='name'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Name</FormLabel>
@@ -47,7 +47,7 @@ export function ContactForm({ lang = 'en' }: ContactFormProps) {
                     placeholder={
                       isWedding ? 'Your names' : 'Agency / Company Name'
                     }
-                    autoComplete="name"
+                    autoComplete='name'
                     {...field}
                   />
                 </FormControl>
@@ -58,15 +58,15 @@ export function ContactForm({ lang = 'en' }: ContactFormProps) {
 
           <FormField
             control={form.control}
-            name="email"
+            name='email'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
-                    type="email"
-                    placeholder="contact@example.com"
-                    autoComplete="email"
+                    type='email'
+                    placeholder='contact@example.com'
+                    autoComplete='email'
                     spellCheck={false}
                     {...field}
                   />
@@ -76,13 +76,13 @@ export function ContactForm({ lang = 'en' }: ContactFormProps) {
             )}
           />
 
-          <AnimatePresence mode="popLayout">
+          <AnimatePresence mode='popLayout'>
             {isWedding && <WeddingFields form={form} lang={lang} />}
           </AnimatePresence>
 
           <FormField
             control={form.control}
-            name="message"
+            name='message'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Message</FormLabel>
@@ -93,8 +93,8 @@ export function ContactForm({ lang = 'en' }: ContactFormProps) {
                         ? 'Tell us about your day…'
                         : 'Tell us about your project…'
                     }
-                    className="resize-none"
-                    autoComplete="off"
+                    className='resize-none'
+                    autoComplete='off'
                     {...field}
                   />
                 </FormControl>
@@ -103,8 +103,8 @@ export function ContactForm({ lang = 'en' }: ContactFormProps) {
             )}
           />
 
-          <Button type="submit" disabled={isPending} className="w-full">
-            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <Button type='submit' disabled={isPending} className='w-full'>
+            {isPending && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
             {isPending ? 'Sending...' : 'Send Message'}
           </Button>
         </form>

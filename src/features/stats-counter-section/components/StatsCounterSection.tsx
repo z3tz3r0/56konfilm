@@ -31,37 +31,37 @@ export default function StatsCounterSection({
   return (
     <SectionShell
       background={block.background}
-      dataTestId="stats-counter-section"
+      dataTestId='stats-counter-section'
     >
-      <div className="container mx-auto">
+      <div className='container mx-auto'>
         {block.heading && (
           <SectionHeader
             heading={block.heading}
-            className="mx-auto mb-12 max-w-3xl text-center"
+            className='mx-auto mb-12 max-w-3xl text-center'
           />
         )}
         {block.stats?.length ? (
           <m.div
-            className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-12"
-            initial="hidden"
-            whileInView="visible"
+            className='grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-12'
+            initial='hidden'
+            whileInView='visible'
             viewport={{ once: true, margin: '-80px' }}
             variants={useLiteMotion ? undefined : containerVariants}
           >
             {block.stats.map((stat, index) => (
               <m.div
                 key={stat._key ?? index}
-                className="flex flex-col items-center text-center"
+                className='flex flex-col items-center text-center'
                 variants={useLiteMotion ? undefined : itemVariants}
-                data-testid="stat-item"
+                data-testid='stat-item'
               >
-                <span className="text-primary text-4xl font-black md:text-5xl lg:text-6xl">
+                <span className='text-primary text-4xl font-black md:text-5xl lg:text-6xl'>
                   {stat.value}
                   {stat.suffix && (
-                    <span className="text-primary/70">{stat.suffix}</span>
+                    <span className='text-primary/70'>{stat.suffix}</span>
                   )}
                 </span>
-                <span className="text-muted-foreground mt-2 text-sm font-medium tracking-wider uppercase">
+                <span className='text-muted-foreground mt-2 text-sm font-medium tracking-wider uppercase'>
                   {stat.label}
                 </span>
               </m.div>
