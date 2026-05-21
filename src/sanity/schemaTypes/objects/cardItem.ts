@@ -26,7 +26,8 @@ export const cardItemType = defineType({
         '🎨 ไอคอน (จะแสดงผลก็ต่อเมื่อเปิดใช้งาน "Show Icons" ที่ระดับ Section)',
       hidden: ({ document, path }) => {
         const currentSection = getParentSectionFromPath(document, path);
-        const cardCollectionSection = currentSection?._type;
+        const cardCollectionSection =
+          currentSection?._type === 'cardCollectionSection';
         const isIconEnabled = currentSection?.hasIcon === true;
         return cardCollectionSection && !isIconEnabled;
       },
@@ -46,7 +47,8 @@ export const cardItemType = defineType({
       options: { hotspot: true },
       hidden: ({ document, path }) => {
         const currentSection = getParentSectionFromPath(document, path);
-        const cardCollectionSection = currentSection?._type;
+        const cardCollectionSection =
+          currentSection?._type === 'cardCollectionSection';
         const isStandardVariant =
           (currentSection?.layoutVariant || 'standard') === 'standard';
         return cardCollectionSection && isStandardVariant;

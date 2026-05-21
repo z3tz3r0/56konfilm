@@ -17,11 +17,22 @@ const backgroundVariants: Record<bgVariantsKeys, string> = {
   contrast: 'bg-primary text-primary-foreground',
 };
 
+const isAlignmentKey = (value: string): value is AlignmentKey =>
+  value === 'start' || value === 'center' || value === 'end';
+const isBgVariantKey = (value: string): value is bgVariantsKeys =>
+  value === 'default' || value === 'muted' || value === 'contrast';
+
 const getAlignmentClass = (align?: string) =>
-  ALIGNMENT_CLASS_MAP[align as AlignmentKey] ?? ALIGNMENT_CLASS_MAP.start;
+  align && isAlignmentKey(align)
+    ? ALIGNMENT_CLASS_MAP[align]
+    : ALIGNMENT_CLASS_MAP.start;
 const getJustifyClass = (align?: string) =>
-  JUSTIFY_CLASS_MAP[align as AlignmentKey] ?? JUSTIFY_CLASS_MAP.start;
+  align && isAlignmentKey(align)
+    ? JUSTIFY_CLASS_MAP[align]
+    : JUSTIFY_CLASS_MAP.start;
 const getBGVariants = (key?: string) =>
-  backgroundVariants[key as bgVariantsKeys] ?? backgroundVariants.default;
+  key && isBgVariantKey(key)
+    ? backgroundVariants[key]
+    : backgroundVariants.default;
 
 export { getAlignmentClass, getJustifyClass, getBGVariants };
