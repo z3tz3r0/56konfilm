@@ -10,14 +10,13 @@ export default function Wedding({
   isTextLeft,
   alignClass,
 }: TwoColumnByMode) {
+  const headingText = block.content?.heading;
   const bgClass = getBGVariants(block.background);
   return (
     <SectionShell disablePadding sanityType={block._type}>
-      {block.sectionVariant === 'emphasized' && block.content?.heading && (
+      {block.sectionVariant === 'emphasized' && headingText && (
         <div className="grid gap-4 px-4 py-16 md:px-14">
-          <h2 className="text-3xl font-semibold md:text-4xl">
-            {block.content.heading}
-          </h2>
+          <h2 className="text-3xl font-semibold md:text-4xl">{headingText}</h2>
           <div className="bg-light-brown h-px w-full" />
         </div>
       )}
@@ -41,7 +40,7 @@ export default function Wedding({
           {/* 📝 ฝั่งข้อความ */}
           <section
             className={cn(
-              'flex w-full flex-col gap-8 md:w-[48.6%]',
+              'text-text-secondary flex w-full flex-col gap-8 md:w-[48.6%]',
               alignClass
             )}
           >
@@ -52,14 +51,13 @@ export default function Wedding({
                     {block.content.eyebrow}
                   </span>
                 )}
-              {block.sectionVariant !== 'emphasized' &&
-                block.content?.heading && (
-                  <h2 className="text-3xl text-balance md:text-4xl">
-                    {block.content.heading}
-                  </h2>
-                )}
+              {block.sectionVariant !== 'emphasized' && headingText && (
+                <h2 className="text-text-primary text-3xl text-balance md:text-4xl">
+                  {headingText}
+                </h2>
+              )}
               {block.content?.body && (
-                <p className="text-muted-foreground text-base leading-relaxed text-pretty wrap-break-word">
+                <p className="text-base leading-relaxed text-pretty wrap-break-word">
                   {block.content.body}
                 </p>
               )}

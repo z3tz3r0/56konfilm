@@ -52,7 +52,8 @@ export const localizedBlockType = defineType({
     localizedStringField({
       name: 'heading',
       title: 'Heading',
-      description: 'หัวข้อหลัก',
+      description:
+        'หัวข้อหลัก (💡 ทริค: สามารถใช้เครื่องหมาย [ ] ครอบข้อความเพื่อแต้มสีได้ เช่น BEFORE [WE BECAME] WHO WE ARE — หมายเหตุ: ฟีเจอร์แต้มสีนี้จะแสดงผลเฉพาะในโหมด Production เท่านั้น)',
       group: 'content',
       validation: (Rule) => Rule.required(),
     }),
