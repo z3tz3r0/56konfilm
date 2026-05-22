@@ -34,6 +34,7 @@ import { teamSectionType } from './sections/teamSection';
 import { videoShowreelSectionType } from './sections/videoShowreelSection';
 import { settingsType } from './settings';
 import { featuredProjectsSectionType } from './sections/featuredProjectsSection';
+import { projectTagType } from './projectTag';
 
 export const schemaType = {
   types: [
@@ -41,6 +42,7 @@ export const schemaType = {
     settingsType,
     cmsCredentialsType, // Hidden from Studio UI but registered for API access
     projectType,
+    projectTagType,
     pageType,
     heroSectionType,
     twoColumnSectionType,

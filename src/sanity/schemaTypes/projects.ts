@@ -81,6 +81,22 @@ export const projectType = defineType({
       group: 'metadata',
       of: [{ type: 'string' }],
     }),
+    defineField({
+      name: 'tags',
+      title: 'Tags',
+      description:
+        'เลือกหมวดหมู่ของผลงานนี้ (ใช้สำหรับจัดกลุ่มและทำ Filter ในหน้า Portfolio)',
+      type: 'array',
+      group: 'metadata',
+      of: [
+        {
+          type: 'reference',
+          to: [{ type: 'projectTag' }],
+        },
+      ],
+      validation: (Rule) =>
+        Rule.unique().error('Duplicate tags cannot be selected.'),
+    }),
     localizedTextField({
       name: 'overview',
       title: 'Overview',
