@@ -47,8 +47,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       SUPPORTED_LOCALES.map((lang) => {
         const portfolioSlug =
           project.siteMode === 'production'
-            ? settings.productionPortfolioPage
-            : settings.weddingPortfolioPage;
+            ? settings.productionPortfolioSlug
+            : settings.weddingPortfolioSlug;
         return {
           url: `${SITE_BASE_URL}/${lang}/${project.siteMode}/${portfolioSlug}/${project.slug}`,
           lastModified: project._updatedAt
