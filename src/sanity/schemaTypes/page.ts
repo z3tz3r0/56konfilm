@@ -71,6 +71,7 @@ export const pageType = defineType({
         { type: 'teamSection' },
         { type: 'faqSection' },
         { type: 'videoShowreelSection' },
+        { type: 'featuredProjectsSection' },
       ],
       hidden: ({ document }) => document?.siteMode !== 'production',
       validation: (Rule) =>
@@ -107,6 +108,7 @@ export const pageType = defineType({
         { type: 'teamSection' },
         { type: 'faqSection' },
         { type: 'videoShowreelSection' },
+        { type: 'featuredProjectsSection' },
       ],
       hidden: ({ document }) => document?.siteMode !== 'wedding',
       validation: (Rule) =>

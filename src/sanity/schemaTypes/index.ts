@@ -33,6 +33,7 @@ import { statsCounterSectionType } from './sections/statsCounterSection';
 import { teamSectionType } from './sections/teamSection';
 import { videoShowreelSectionType } from './sections/videoShowreelSection';
 import { settingsType } from './settings';
+import { featuredProjectsSectionType } from './sections/featuredProjectsSection';
 
 export const schemaType = {
   types: [
@@ -55,6 +56,7 @@ export const schemaType = {
     teamSectionType,
     faqSectionType,
     videoShowreelSectionType,
+    featuredProjectsSectionType,
     localizedBlockType,
     ctaType,
     mediaBlockType,
