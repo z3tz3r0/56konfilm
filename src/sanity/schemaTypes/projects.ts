@@ -5,6 +5,7 @@ import {
   validateImageAssetSizeWarning,
 } from './objects/backgroundMedia';
 import { localizedStringField, localizedTextField } from './objects/localized';
+import { sanitizeUrlSlug } from '../lib/slug';
 
 export const projectType = defineType({
   name: 'project',
@@ -36,6 +37,7 @@ export const projectType = defineType({
       options: {
         source: 'title.0.value',
         maxLength: 96,
+        slugify: sanitizeUrlSlug,
       },
       validation: (Rule) =>
         Rule.required().error(
