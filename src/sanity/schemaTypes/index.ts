@@ -35,6 +35,7 @@ import { videoShowreelSectionType } from './sections/videoShowreelSection';
 import { settingsType } from './settings';
 import { featuredProjectsSectionType } from './sections/featuredProjectsSection';
 import { projectTagType } from './projectTag';
+import { blockContentType } from './blockContent';
 
 export const schemaType = {
   types: [
@@ -74,6 +75,7 @@ export const schemaType = {
     faqItemType,
     socialMediaType,
     seoObjectType,
+    blockContentType,
   ],
   // บังคับค่า siteMode โดยตัดสินใจจาก document ที่ user กดสร้าง
   // จาก document 'Production Pages' หรือ 'Wedding Pages'?

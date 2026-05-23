@@ -12,11 +12,11 @@ export const projectType = defineType({
   type: 'document',
   groups: [
     { name: 'main', title: 'Main', default: true },
-    { name: 'content', title: 'Page Builder' },
-    { name: 'metadata', title: 'Project Metadata' },
+    { name: 'details', title: 'Project Details' },
     { name: 'seo', title: 'SEO' },
   ],
   fields: [
+    // --- 📌 MAIN GROUP (ข้อมูลหลักและเนื้อหา) ---
     localizedStringField({
       name: 'title',
       title: 'Title',
@@ -43,72 +43,10 @@ export const projectType = defineType({
         ),
     }),
     defineField({
-      name: 'siteMode',
-      title: 'Site Mode',
-      description:
-        'เลือกโหมดที่ต้องการให้โปรเจกต์นี้แสดงผล (สามารถเลือกได้ทั้งคู่หากเป็นงานที่เข้าข่ายทั้ง Production และ Wedding)',
-      type: 'string',
-      group: 'main',
-      options: {
-        list: [
-          { title: 'Production', value: 'production' },
-          { title: 'Wedding', value: 'wedding' },
-        ],
-        layout: 'radio',
-      },
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'client',
-      title: 'Client',
-      description: 'ชื่อลูกค้าหรือแบรนด์เจ้าของงาน (เช่น Toyota, PTT, SCG)',
-      type: 'string',
-      group: 'metadata',
-    }),
-    defineField({
-      name: 'year',
-      title: 'Year',
-      description: 'ปีที่ผลิตหรือปีที่จัดงาน (เช่น "2024", "2025")',
-      type: 'string',
-      group: 'metadata',
-    }),
-    defineField({
-      name: 'services',
-      title: 'Services',
-      description:
-        'ระบุบริการที่เกี่ยวข้อง (เช่น Video Production, Cinematic Editing, Color Grading) ช่วยให้คนเข้าใจขอบเขตงานได้ง่ายขึ้น',
-      type: 'array',
-      group: 'metadata',
-      of: [{ type: 'string' }],
-    }),
-    defineField({
-      name: 'tags',
-      title: 'Tags',
-      description:
-        'เลือกหมวดหมู่ของผลงานนี้ (ใช้สำหรับจัดกลุ่มและทำ Filter ในหน้า Portfolio)',
-      type: 'array',
-      group: 'metadata',
-      of: [
-        {
-          type: 'reference',
-          to: [{ type: 'projectTag' }],
-        },
-      ],
-      validation: (Rule) =>
-        Rule.unique().error('Duplicate tags cannot be selected.'),
-    }),
-    localizedTextField({
-      name: 'overview',
-      title: 'Overview',
-      description:
-        'รายละเอียดหรือบทสรุปสั้นๆ ของโปรเจกต์ (แนะนำให้เขียนให้น่าสนใจและมีคีย์เวิร์ดที่เกี่ยวข้อง เพื่อช่วยให้ Search Engine ตรวจเจอได้ดีขึ้น)',
-      group: 'main',
-    }),
-    defineField({
       name: 'coverImage',
       title: 'Cover Image',
       description:
-        'รูปภาพหน้าปกที่จะใช้แสดงในหน้า Gallery และเป็นภาพแรกที่คนจะเห็น ควรใช้รูปภาพคุณภาพสูงที่สื่อถึงงานได้ดีที่สุด',
+        'รูปภาพหน้าปกที่จะใช้แสดงในหน้า Portfolio Grid และเป็นภาพแรกที่คนจะเห็น ควรใช้รูปภาพคุณภาพสูงที่สื่อถึงงานได้ดีที่สุด',
       type: 'image',
       group: 'main',
       options: { hotspot: true },
@@ -121,27 +59,85 @@ export const projectType = defineType({
         ).warning(),
     }),
     defineField({
-      name: 'contentBlocks',
-      title: 'Content Blocks',
+      name: 'siteMode',
+      title: 'Site Mode',
       description:
-        'ส่วนสำหรับจัดการเนื้อหาภายในหน้าโปรเจกต์ สามารถเพิ่มรูปภาพหรือวิดีโอเพิ่มเติมในรูปแบบ Magazine Layout ได้',
-      group: 'content',
+        'เลือกโหมดที่ต้องการให้โปรเจกต์นี้แสดงผล (สามารถเลือกได้ทั้งคู่หากเป็นงานที่เข้าข่ายทั้ง Production และ Wedding)',
       type: 'array',
-      of: [
-        { type: 'heroSection' },
-        { type: 'mediaGallerySection' },
-        { type: 'twoColumnSection' },
-      ],
-      validation: (Rule) => Rule.min(1),
+      group: 'main',
+      of: [{ type: 'string' }],
+      options: {
+        list: [
+          { title: 'Production', value: 'production' },
+          { title: 'Wedding', value: 'wedding' },
+        ],
+      },
+      validation: (Rule) =>
+        Rule.required().min(1).error('Please select at least one mode.'),
+    }),
+    localizedTextField({
+      name: 'overview',
+      title: 'Overview',
+      description:
+        'รายละเอียดหรือบทสรุปสั้นๆ ของโปรเจกต์ (แนะนำให้เขียนให้น่าสนใจและมีคีย์เวิร์ดที่เกี่ยวข้อง เพื่อช่วยให้ Search Engine ตรวจเจอได้ดีขึ้น)',
+      group: 'main',
     }),
     defineField({
-      name: 'publishedAt',
-      title: 'Published at',
-      description: 'วันที่เผยแพร่ (ใช้สำหรับจัดลำดับการแสดงผลของโปรเจกต์)',
-      type: 'datetime',
-      group: 'metadata',
-      initialValue: () => new Date().toISOString(),
+      name: 'body',
+      title: 'Project Content',
+      description:
+        'เขียนรายละเอียดของผลงานชิ้นนี้ (รองรับการจัดรูปแบบข้อความและแทรกรูปภาพประกอบเหมือนการเขียนบล็อก)',
+      group: 'main',
+      type: 'blockContent',
     }),
+    // --- 📝 PROJECT DETAILS GROUP (ข้อมูลประกอบผลงาน) ---
+    defineField({
+      name: 'client',
+      title: 'Client',
+      description: 'ชื่อลูกค้าหรือแบรนด์เจ้าของงาน (เช่น Toyota, PTT, SCG)',
+      type: 'string',
+      group: 'details',
+    }),
+    defineField({
+      name: 'projectDate',
+      title: 'Project Date',
+      description:
+        'วันที่จัดงานหรือผลิตผลงานชิ้นนี้ (ระบบจะใช้ข้อมูลนี้สำหรับจัดเรียงผลงานจากใหม่ไปเก่าให้อัตโนมัติ)',
+      type: 'date',
+      group: 'details',
+      options: {
+        dateFormat: 'YYYY-MM-DD',
+      },
+      initialValue: () => new Date().toISOString().split('T')[0],
+      validation: (Rule) =>
+        Rule.required().error('Please specify the date of the project.'),
+    }),
+    defineField({
+      name: 'services',
+      title: 'Services',
+      description:
+        'ระบุบริการที่เกี่ยวข้อง (เช่น Video Production, Cinematic Editing, Color Grading) ช่วยให้คนเข้าใจขอบเขตงานได้ง่ายขึ้น',
+      type: 'array',
+      group: 'details',
+      of: [{ type: 'string' }],
+    }),
+    defineField({
+      name: 'tags',
+      title: 'Tags',
+      description:
+        'เลือกหมวดหมู่ของผลงานนี้ (ใช้สำหรับจัดกลุ่มและทำ Filter ในหน้า Portfolio)',
+      type: 'array',
+      group: 'details',
+      of: [
+        {
+          type: 'reference',
+          to: [{ type: 'projectTag' }],
+        },
+      ],
+      validation: (Rule) =>
+        Rule.unique().error('Duplicate tags cannot be selected.'),
+    }),
+    // --- 🔍 SEO GROUP ---
     defineField({
       name: 'seo',
       title: 'SEO',
