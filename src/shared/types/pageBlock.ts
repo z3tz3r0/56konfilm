@@ -29,11 +29,12 @@ interface BackgroundMediaItem {
   image?: ImageSource;
 }
 
+type AlignmentKey = 'start' | 'center' | 'end';
 interface SectionHeading {
   eyebrow?: string;
-  heading?: string;
+  heading: string;
   body?: string;
-  align?: string;
+  align?: AlignmentKey;
 }
 
 export type {
@@ -41,5 +42,6 @@ export type {
   ContentCta,
   MediaItem,
   BackgroundMediaItem,
+  AlignmentKey,
   SectionHeading,
 };

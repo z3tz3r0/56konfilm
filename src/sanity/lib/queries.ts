@@ -1,9 +1,14 @@
 import { groq } from 'next-sanity';
-import { LOCALIZED, SEO_PROJECTION } from './queries/fragments';
+import {
+  LOCALIZED,
+  PROJECT_PROJECTION,
+  SEO_PROJECTION,
+} from './queries/fragments';
 import {
   CARD_COLLECTION_SECTION,
   CTA_BANNER_SECTION,
   FAQ_SECTION,
+  FEATURED_PROJECT_SECTION,
   HERO_SECTION,
   LOGO_GRID_SECTION,
   MEDIA_GALLERY_SECTION,
@@ -110,58 +115,40 @@ export const pageBySlugQuery = groq`
       ${STATS_COUNTER_SECTION},
       ${TEAM_SECTION},
       ${FAQ_SECTION},
-      ${VIDEO_SHOWREEL_SECTION}
+      ${VIDEO_SHOWREEL_SECTION},
+      _type == 'featuredProjectsSection' => { ${FEATURED_PROJECT_SECTION} }
     }
   }
 `;
 
 export const projectBySlugQuery = groq`
-  *[_type == "project" && slug.current == $slug && siteMode == $mode][0] {
+  *[_type == "project" && slug.current == $slug && $mode in siteMode][0] {
     _id,
     _type,
-    "title": ${LOCALIZED('title')},
-    "overview": ${LOCALIZED('overview')},
-    "slug": slug.current,
-    publishedAt,
-    ${SEO_PROJECTION},
-    siteMode,
-    client,
-    year,
-    services,
-    coverImage{ asset, crop, hotspot },
-    contentBlocks[]{
-      _key,
-      _type,
-      ${HERO_SECTION},
-      ${TWO_COLUMN_SECTION},
-      ${MEDIA_GALLERY_SECTION},
-      ${LOGO_GRID_SECTION},
-      ${CTA_BANNER_SECTION},
-      ${CARD_COLLECTION_SECTION},
-      ${TIMELINE_SECTION},
-      ${PACKAGES_SECTION},
-      ${TESTIMONIAL_SECTION},
-      ${PHILOSOPHY_SECTION},
-      ${STATS_COUNTER_SECTION},
-      ${TEAM_SECTION},
-      ${FAQ_SECTION},
-      ${VIDEO_SHOWREEL_SECTION}
-    },
+    ${PROJECT_PROJECTION},
     "nextProject": coalesce(
       *[
         _type == "project"
-        && siteMode == $mode
-        && coalesce(publishedAt, _createdAt) < coalesce(^.publishedAt, ^._createdAt)
-      ] | order(coalesce(publishedAt, _createdAt) desc)[0] {
-        "title": ${LOCALIZED('title')},
+        && $mode in siteMode
+        && projectDate < ^.projectDate
+      ] | order(coalesce(projectDate, _createdAt) desc)[0] {
+        "title": title,
         "slug": slug.current,
         coverImage{ asset, crop, hotspot }
       },
-      *[_type == "project" && siteMode == $mode] | order(coalesce(publishedAt, _createdAt) desc)[0] {
-        "title": ${LOCALIZED('title')},
+      *[_type == "project" && $mode in siteMode] | order(coalesce(projectDate, _createdAt) desc)[0] {
+        "title": title,
         "slug": slug.current,
         coverImage{ asset, crop, hotspot }
       }
     )
+  }
+`;
+
+export const latestProjectsQuery = groq`
+  *[_type == "project" && $mode in siteMode] | order(coalesce(projectDate, _createdAt) desc)[0...6] {
+    _id,
+    _type,
+    ${PROJECT_PROJECTION}
   }
 `;

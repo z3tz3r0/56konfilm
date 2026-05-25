@@ -4,12 +4,13 @@ import { SanityBaseService } from '@/sanity/lib/client';
 import {
   allPageSlugsQuery,
   allProjectSlugsQuery,
+  latestProjectsQuery,
   pageBySlugQuery,
   projectBySlugQuery,
   settingsQuery,
 } from '@/sanity/lib/queries';
 import { PageSlugs, Project, SiteSettings } from '@shared/types';
-import { FullPageDocument, PageContentBlock } from '@features/PageBuilder';
+import { FullPageDocument } from '@features/PageBuilder';
 
 interface BaseParams {
   lang: Locale;
@@ -46,7 +47,7 @@ export class ContentService extends SanityBaseService {
 
   // --- Project ---
   static async getProject({ lang, mode, slug }: BaseParams) {
-    return this.fetch<Project<PageContentBlock> | null>({
+    return this.fetch<Project | null>({
       query: projectBySlugQuery,
       params: { lang, mode, slug },
       tags: [
@@ -54,6 +55,13 @@ export class ContentService extends SanityBaseService {
         CACHE_TAGS.PROJECTS_BY_MODE(mode),
         CACHE_TAGS.SPECIFIC_PROJECT(mode, slug),
       ],
+    });
+  }
+  static async getLatestProjects({ lang, mode }: Omit<BaseParams, 'slug'>) {
+    return this.fetch<Project[]>({
+      query: latestProjectsQuery,
+      params: { lang, mode },
+      tags: [CACHE_TAGS.ALL_PROJECTS, CACHE_TAGS.PROJECTS_BY_MODE(mode)],
     });
   }
 

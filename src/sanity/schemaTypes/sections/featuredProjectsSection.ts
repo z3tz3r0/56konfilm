@@ -61,7 +61,7 @@ export const featuredProjectsSectionType = defineType({
         }),
     }),
     defineField({
-      name: 'cta',
+      name: 'ctaButton',
       title: 'CTA',
       description: 'ปุ่ม CTA (เช่น ไปยังหน้า Portfolio ทั้งหมด)',
       type: ctaType.name,

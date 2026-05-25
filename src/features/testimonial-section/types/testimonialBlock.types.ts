@@ -1,15 +1,10 @@
 import { SanityImageSource } from '@sanity/image-url';
-import { BaseBlock } from '@shared/types';
+import { BaseBlock, SectionHeading } from '@shared/types';
 
 export interface TestimonialSectionBlock extends BaseBlock {
   _type: 'testimonialSection';
   background?: string;
-  heading?: {
-    eyebrow?: string;
-    heading?: string;
-    body?: string;
-    align?: string;
-  };
+  heading?: SectionHeading;
   testimonials?: Array<{
     _key?: string;
     quote?: string;

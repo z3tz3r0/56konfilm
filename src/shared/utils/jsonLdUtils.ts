@@ -20,7 +20,7 @@ export function buildProjectJsonLd({ project, videoData }: Params) {
     name: videoData.name,
     description: project.overview || project.title,
     thumbnailUrl: thumbnailUrl ? [thumbnailUrl] : undefined,
-    uploadDate: project.publishedAt || new Date().toISOString(),
+    uploadDate: project.projectDate || new Date().toISOString(),
     contentUrl: videoData.url,
   };
 }

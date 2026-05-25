@@ -4,7 +4,7 @@ import { groq } from 'next-sanity';
  * Reusable localization fragment
  * Usage: "title": ${LOCALIZED('title')}
  */
-export const LOCALIZED = (field: string) =>
+const LOCALIZED = (field: string) =>
   groq`coalesce(
     ${field}[language == $lang][0].value,
     ${field}[_key == $lang][0].value,
@@ -16,7 +16,7 @@ export const LOCALIZED = (field: string) =>
 /**
  * Common Image projection
  */
-export const IMAGE_PROJECTION = groq`
+const IMAGE_PROJECTION = groq`
   image {
     asset,
     crop,
@@ -28,7 +28,7 @@ export const IMAGE_PROJECTION = groq`
 /**
  * Common CTA projection
  */
-export const CTA_PROJECTION = groq`
+const CTA_PROJECTION = groq`
   "label": ${LOCALIZED('label')},
   style,
   linkType,
@@ -41,7 +41,7 @@ export const CTA_PROJECTION = groq`
 /**
  * Media Asset projection (used in Hero)
  */
-export const MEDIA_ASSET_PROJECTION = groq`
+const MEDIA_ASSET_PROJECTION = groq`
   _type,
   "url": asset->url,
   "mimeType": asset->mimeType,
@@ -55,7 +55,7 @@ export const MEDIA_ASSET_PROJECTION = groq`
   )
 `;
 
-export const SEO_PROJECTION = groq`
+const SEO_PROJECTION = groq`
   seo {
     "title": ${LOCALIZED('title')},
     "description": ${LOCALIZED('description')},
@@ -67,3 +67,30 @@ export const SEO_PROJECTION = groq`
     }
   }
 `;
+
+const PROJECT_PROJECTION = groq`
+  "title": ${LOCALIZED('title')},
+  "slug": slug.current,
+  coverImage {
+    asset,
+    crop,
+    hotspot
+  },
+  siteMode,
+  "overview": ${LOCALIZED('overview')},
+  body,
+  client,
+  projectDate,
+  services,
+  "tags": tags[]->{ 'title': ${LOCALIZED('title')} }.title,
+  ${SEO_PROJECTION},
+`;
+
+export {
+  LOCALIZED,
+  IMAGE_PROJECTION,
+  CTA_PROJECTION,
+  MEDIA_ASSET_PROJECTION,
+  SEO_PROJECTION,
+  PROJECT_PROJECTION,
+};

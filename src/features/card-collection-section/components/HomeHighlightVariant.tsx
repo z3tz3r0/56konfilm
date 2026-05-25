@@ -43,7 +43,7 @@ export default function HomeHighlightVariant(
                     'group relative grid h-full max-w-min min-w-[284px] place-items-center overflow-hidden rounded-2xl p-8',
                     bgImage
                       ? 'text-text-primary bg-black/50'
-                      : 'bg-off-white --text-tertiary'
+                      : 'bg-off-white text-text-tertiary'
                   )}
                 >
                   {bgImage && (

@@ -1,4 +1,5 @@
-type AlignmentKey = 'start' | 'center' | 'end';
+import { AlignmentKey } from '@shared/types';
+
 type bgVariantsKeys = 'default' | 'muted' | 'contrast';
 
 const ALIGNMENT_CLASS_MAP = {

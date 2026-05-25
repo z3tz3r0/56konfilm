@@ -1,6 +1,7 @@
 import { cn } from '@shared/utils';
 import { getAlignmentClass } from '@shared/utils';
 import type { SectionHeading } from '@shared/types';
+import HighlightedText from './HighlightedText';
 
 interface SectionHeaderProps {
   heading?: SectionHeading;
@@ -26,13 +27,12 @@ export default function SectionHeader({
           {heading.eyebrow}
         </span>
       ) : null}
-      {heading?.heading ? (
-        <h2
+      {heading?.heading && (
+        <HighlightedText
+          text={heading.heading}
           className={cn('text-3xl font-semibold md:text-4xl', headingClassName)}
-        >
-          {heading.heading}
-        </h2>
-      ) : null}
+        />
+      )}
       {heading?.body ? (
         <p
           className={cn(

@@ -4,9 +4,10 @@ import {
   IMAGE_PROJECTION,
   LOCALIZED,
   MEDIA_ASSET_PROJECTION,
+  PROJECT_PROJECTION,
 } from './fragments';
 
-export const HERO_SECTION = groq`
+const HERO_SECTION = groq`
   _type == "heroSection" => {
     "title": ${LOCALIZED('title')},
     "tagline": ${LOCALIZED('tagline')},
@@ -21,7 +22,7 @@ export const HERO_SECTION = groq`
   }
 `;
 
-export const TWO_COLUMN_SECTION = groq`
+const TWO_COLUMN_SECTION = groq`
   _type == "twoColumnSection" => {
     layout,
     "sectionVariant": coalesce(sectionVariant, 'standard'),
@@ -41,7 +42,7 @@ export const TWO_COLUMN_SECTION = groq`
   }
 `;
 
-export const CARD_COLLECTION_SECTION = groq`
+const CARD_COLLECTION_SECTION = groq`
   _type == "cardCollectionSection" => {
     "layoutVariant": coalesce(layoutVariant, 'standard'),
     "title": ${LOCALIZED('title')},
@@ -60,7 +61,7 @@ export const CARD_COLLECTION_SECTION = groq`
   }
 `;
 
-export const TIMELINE_SECTION = groq`
+const TIMELINE_SECTION = groq`
   _type == "timelineSection" => {
     background,
     heading{
@@ -81,7 +82,7 @@ export const TIMELINE_SECTION = groq`
   }
 `;
 
-export const MEDIA_GALLERY_SECTION = groq`
+const MEDIA_GALLERY_SECTION = groq`
   _type == "mediaGallerySection" => {
     background,
     sourceType,
@@ -123,7 +124,7 @@ export const MEDIA_GALLERY_SECTION = groq`
   }
 `;
 
-export const LOGO_GRID_SECTION = groq`
+const LOGO_GRID_SECTION = groq`
   _type == "logoGridSection" => {
     background,
     "title": ${LOCALIZED('title')},
@@ -133,7 +134,7 @@ export const LOGO_GRID_SECTION = groq`
   }
 `;
 
-export const CTA_BANNER_SECTION = groq`
+const CTA_BANNER_SECTION = groq`
   _type == "ctaBannerSection" => {
     background,
     layout,
@@ -162,7 +163,7 @@ export const CTA_BANNER_SECTION = groq`
   }
 `;
 
-export const PACKAGES_SECTION = groq`
+const PACKAGES_SECTION = groq`
   _type == "packagesSection" => {
     heading{
       "eyebrow": ${LOCALIZED('eyebrow')},
@@ -184,7 +185,7 @@ export const PACKAGES_SECTION = groq`
   }
 `;
 
-export const TESTIMONIAL_SECTION = groq`
+const TESTIMONIAL_SECTION = groq`
   _type == "testimonialSection" => {
     heading{
       "eyebrow": ${LOCALIZED('eyebrow')},
@@ -202,14 +203,14 @@ export const TESTIMONIAL_SECTION = groq`
   }
 `;
 
-export const PHILOSOPHY_SECTION = groq`
+const PHILOSOPHY_SECTION = groq`
   _type == "philosophySection" => {
     "quote": ${LOCALIZED('quote')},
     background
   }
 `;
 
-export const STATS_COUNTER_SECTION = groq`
+const STATS_COUNTER_SECTION = groq`
   _type == "statsCounterSection" => {
     background,
     heading {
@@ -227,7 +228,7 @@ export const STATS_COUNTER_SECTION = groq`
   }
 `;
 
-export const TEAM_SECTION = groq`
+const TEAM_SECTION = groq`
   _type == "teamSection" => {
     background,
     heading {
@@ -250,7 +251,7 @@ export const TEAM_SECTION = groq`
   }
 `;
 
-export const FAQ_SECTION = groq`
+const FAQ_SECTION = groq`
   _type == "faqSection" => {
     background,
     heading {
@@ -267,7 +268,7 @@ export const FAQ_SECTION = groq`
   }
 `;
 
-export const VIDEO_SHOWREEL_SECTION = groq`
+const VIDEO_SHOWREEL_SECTION = groq`
   _type == "videoShowreelSection" => {
     background,
     heading {
@@ -285,3 +286,34 @@ export const VIDEO_SHOWREEL_SECTION = groq`
     "caption": ${LOCALIZED('caption')}
   }
 `;
+
+const FEATURED_PROJECT_SECTION = groq`
+  heading {
+    "eyebrow": ${LOCALIZED('eyebrow')},
+    "heading": ${LOCALIZED('heading')},
+    "body": ${LOCALIZED('body')},
+    align
+  },
+  sourceType,
+  selectedProjects[] { ${PROJECT_PROJECTION} },
+  cta { ${CTA_PROJECTION} },
+  background
+`;
+
+export {
+  HERO_SECTION,
+  TWO_COLUMN_SECTION,
+  CARD_COLLECTION_SECTION,
+  TIMELINE_SECTION,
+  MEDIA_GALLERY_SECTION,
+  LOGO_GRID_SECTION,
+  CTA_BANNER_SECTION,
+  PACKAGES_SECTION,
+  TESTIMONIAL_SECTION,
+  PHILOSOPHY_SECTION,
+  STATS_COUNTER_SECTION,
+  TEAM_SECTION,
+  FAQ_SECTION,
+  VIDEO_SHOWREEL_SECTION,
+  FEATURED_PROJECT_SECTION,
+};

@@ -1,15 +1,10 @@
 import { SanityImageSource } from '@sanity/image-url';
-import { BaseBlock, ContentCta } from '@shared/types';
+import { BaseBlock, ContentCta, SectionHeading } from '@shared/types';
 
 export interface TimelineSectionBlock extends BaseBlock {
   _type: 'timelineSection';
   background?: string;
-  heading: {
-    eyebrow?: string;
-    heading?: string;
-    body?: string;
-    align?: string;
-  };
+  heading: SectionHeading;
   steps?: Array<{
     _key?: string;
     order?: number;
