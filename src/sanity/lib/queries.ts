@@ -121,6 +121,17 @@ export const pageBySlugQuery = groq`
   }
 `;
 
+export const allProjectsQuery = groq`
+  *[
+    _type == 'project'
+    && $mode in siteMode
+  ] | order(coalesce(projectDate, _createdAt) desc) {
+    _id,
+    _type,
+    ${PROJECT_PROJECTION}
+  }
+`;
+
 export const projectBySlugQuery = groq`
   *[_type == "project" && slug.current == $slug && $mode in siteMode][0] {
     _id,

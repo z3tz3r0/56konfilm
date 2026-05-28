@@ -4,6 +4,7 @@ import { SanityBaseService } from '@/sanity/lib/client';
 import {
   allPageSlugsQuery,
   allProjectSlugsQuery,
+  allProjectsQuery,
   latestProjectsQuery,
   pageBySlugQuery,
   projectBySlugQuery,
@@ -55,6 +56,13 @@ export class ContentService extends SanityBaseService {
         CACHE_TAGS.PROJECTS_BY_MODE(mode),
         CACHE_TAGS.SPECIFIC_PROJECT(mode, slug),
       ],
+    });
+  }
+  static async getAllProjects({ lang, mode }: Omit<BaseParams, 'slug'>) {
+    return this.fetch<Project[]>({
+      query: allProjectsQuery,
+      params: { lang, mode },
+      tags: [CACHE_TAGS.ALL_PROJECTS, CACHE_TAGS.PROJECTS_BY_MODE(mode)],
     });
   }
   static async getLatestProjects({ lang, mode }: Omit<BaseParams, 'slug'>) {

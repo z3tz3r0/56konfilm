@@ -5,6 +5,7 @@ import { Metadata } from 'next';
 import { ContentService } from '@/services';
 import { getMockPage } from './page.mock';
 import { notFound } from 'next/navigation';
+import PortfolioPage from '@/app/[lang]/[mode]/[firstSegment]/_components/PortfolioPage';
 
 interface PageProps {
   params: Promise<{
@@ -44,13 +45,16 @@ export default async function Page({ params, searchParams }: PageProps) {
   const mockParams = await searchParams;
   const isMockMode = process.env.E2E_TEST === '1' || mockParams?.e2e === '1';
 
-  const [page, settings] = await Promise.all([
+  const [page, settings, projects] = await Promise.all([
     isMockMode
       ? getMockPage(mode, firstSegment)
       : ContentService.getPage({ lang, mode, slug: firstSegment }),
     ContentService.getSetting({ lang }),
+    ContentService.getAllProjects({ lang, mode }),
   ]);
   if (!page) notFound();
+
+  const commonProps = { page, lang, mode };
 
   const isPortfolioPage =
     mode === 'production'
@@ -59,18 +63,13 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   if (isPortfolioPage) {
     return (
-      <div className='flex min-h-screen items-center justify-center text-2xl font-bold'>
-        🚧 Portfolio Page (Coming in Phase 3) 🚧
-      </div>
+      <PortfolioPage
+        projects={projects}
+        isMockMode={isMockMode}
+        {...commonProps}
+      />
     );
   }
 
-  return (
-    <PageBuilder
-      page={page}
-      lang={lang}
-      mode={mode}
-      enableSignature={isMockMode}
-    />
-  );
+  return <PageBuilder enableSignature={isMockMode} {...commonProps} />;
 }
