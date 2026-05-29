@@ -126,7 +126,7 @@ export const allProjectsQuery = groq`
     _type == 'project'
     && $mode in siteMode
     && (!defined($tag) || $tag == "" || $tag in tags[]->slug.current)
-  ] | order(coalesce(projectDate, _createdAt) desc) {
+  ] | order(coalesce(projectDate, _createdAt) desc)[$start...$end] {
     _id,
     _type,
     ${PROJECT_PROJECTION}
@@ -171,4 +171,12 @@ export const allProjectTagsQuery = groq`
     "title": ${LOCALIZED('title')},
     "slug": slug.current
   }
+`;
+
+export const projectsCountQuery = groq`
+  count(*[
+    _type == "project" 
+    && $mode in siteMode
+    && (!defined($tag) || $tag == "" || $tag in tags[]->slug.current)
+  ])
 `;

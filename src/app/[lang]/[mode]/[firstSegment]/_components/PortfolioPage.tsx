@@ -1,3 +1,4 @@
+import NumberedPagination from './NumberedPagination';
 import PortfolioFilter from './PortfolioFilter';
 import PageBuilder, { FullPageDocument } from '@features/PageBuilder';
 import { PortfolioGrid, SectionShell } from '@shared/components';
@@ -11,6 +12,8 @@ interface PortfolioPageProps {
   lang: Locale;
   mode: SiteMode;
   isMockMode?: boolean;
+  currentPage: number;
+  totalPages: number;
 }
 
 export default function PortfolioPage({
@@ -20,6 +23,8 @@ export default function PortfolioPage({
   lang,
   mode,
   isMockMode,
+  currentPage,
+  totalPages,
 }: PortfolioPageProps) {
   const commonProps = { lang, mode };
   return (
@@ -28,7 +33,7 @@ export default function PortfolioPage({
       <SectionShell contentWrapperClass='space-y-8'>
         <PortfolioFilter tags={tags} {...commonProps} />
         <PortfolioGrid projects={projects} {...commonProps} />
-        {/* TODO: พื้นที่สำหรับ Numbered Pagination จะมาแทรกตรงนี้ */}
+        <NumberedPagination currentPage={currentPage} totalPages={totalPages} />
       </SectionShell>
     </>
   );

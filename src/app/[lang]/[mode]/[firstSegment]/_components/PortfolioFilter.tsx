@@ -28,7 +28,7 @@ export default function PortfolioFilter({
   const currentTag = searchParams.get('tag') || 'all';
 
   const activeHoverClass =
-    'hover:not-disabled:bg-primary dark:hover:not-disabled:text-primary-foreground';
+    'dark:hover:not-disabled:bg-primary dark:hover:not-disabled:text-primary-foreground';
 
   const handleTagChange = (slug: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -65,7 +65,7 @@ export default function PortfolioFilter({
                   : 'secondary'
             }
             className={cn(
-              'shrink-0',
+              'h-full',
               currentTag !== 'all' ? activeHoverClass : ''
             )}
           >
@@ -87,7 +87,7 @@ export default function PortfolioFilter({
                     : 'secondary'
               }
               className={cn(
-                'shrink-0',
+                'h-full',
                 currentTag !== tag.slug ? activeHoverClass : ''
               )}
             >

@@ -16,6 +16,8 @@ interface PageProps {
   searchParams?: Promise<{
     e2e?: string;
     tag?: string;
+    page?: string;
+    limit?: string;
   }>;
 }
 
@@ -43,17 +45,26 @@ export async function generateMetadata({
 
 export default async function Page({ params, searchParams }: PageProps) {
   const { lang, mode, firstSegment } = await params;
+
   const currentSearchParams = await searchParams;
   const isMockMode =
     process.env.E2E_TEST === '1' || currentSearchParams?.e2e === '1';
   const currentTag = currentSearchParams?.tag || '';
+  const currentPage = Number(currentSearchParams?.page) || 1;
+  const currentLimit = Number(currentSearchParams?.limit) || 6;
 
-  const [page, settings, projects, tags] = await Promise.all([
+  const [page, settings, projectData, tags] = await Promise.all([
     isMockMode
       ? getMockPage(mode, firstSegment)
       : ContentService.getPage({ lang, mode, slug: firstSegment }),
     ContentService.getSetting({ lang }),
-    ContentService.getAllProjects({ lang, mode, tag: currentTag }),
+    ContentService.getAllProjects({
+      lang,
+      mode,
+      tag: currentTag,
+      page: currentPage,
+      limit: currentLimit,
+    }),
     ContentService.getAllProjectTags({ lang }),
   ]);
   if (!page) notFound();
@@ -68,8 +79,10 @@ export default async function Page({ params, searchParams }: PageProps) {
   if (isPortfolioPage) {
     return (
       <PortfolioPage
-        projects={projects}
-        tags={tags}
+        projects={projectData.projects}
+        tags={tags || []}
+        currentPage={currentPage}
+        totalPages={projectData.totalPages}
         isMockMode={isMockMode}
         {...commonProps}
       />
