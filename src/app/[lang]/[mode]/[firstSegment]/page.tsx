@@ -6,6 +6,7 @@ import { ContentService } from '@/services';
 import { getMockPage } from './page.mock';
 import { notFound } from 'next/navigation';
 import { PortfolioPage } from './_components';
+import { cookies } from 'next/headers';
 
 interface PageProps {
   params: Promise<{
@@ -45,13 +46,16 @@ export async function generateMetadata({
 
 export default async function Page({ params, searchParams }: PageProps) {
   const { lang, mode, firstSegment } = await params;
+  const cookieStore = await cookies();
+  const savedLimit = cookieStore.get('portfolio_limit')?.value;
 
   const currentSearchParams = await searchParams;
   const isMockMode =
     process.env.E2E_TEST === '1' || currentSearchParams?.e2e === '1';
   const currentTag = currentSearchParams?.tag || '';
   const currentPage = Number(currentSearchParams?.page) || 1;
-  const currentLimit = Number(currentSearchParams?.limit) || 6;
+  const currentLimit =
+    Number(currentSearchParams?.limit) || Number(savedLimit) || 6;
 
   const [page, settings, projectData, tags] = await Promise.all([
     isMockMode
@@ -82,6 +86,7 @@ export default async function Page({ params, searchParams }: PageProps) {
         projects={projectData.projects}
         tags={tags || []}
         currentPage={currentPage}
+        currentLimit={currentLimit}
         totalPages={projectData.totalPages}
         isMockMode={isMockMode}
         {...commonProps}

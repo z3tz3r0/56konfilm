@@ -1,5 +1,6 @@
 'use client';
 
+import { setPortfolioLimitCookie } from '@/app/[lang]/[mode]/[firstSegment]/_actions/portfolioCookie';
 import {
   Pagination,
   PaginationContent,
@@ -16,14 +17,17 @@ import {
   SelectValue,
 } from '@shared/components';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 interface NumberedPaginationProps {
   currentPage: number;
+  currentLimit: number;
   totalPages: number;
 }
 
 export default function NumberedPagination({
   currentPage,
+  currentLimit,
   totalPages,
 }: NumberedPaginationProps) {
   const router = useRouter();
@@ -31,7 +35,18 @@ export default function NumberedPagination({
   const searchParams = useSearchParams();
   const disabledClass = 'pointer-events-none opacity-50';
 
-  const currentLimit = searchParams.get('limit') || '6';
+  // Silent URL Sync
+  useEffect(() => {
+    // เช็กว่า: ถ้าใน URL ปัจจุบัน "ไม่มี" พารามิเตอร์ limit
+    // แปลว่า Server เพิ่งดึงค่ามาจาก Cookie (หรือค่า Default) มาให้
+    if (!searchParams.has('limit') && currentLimit) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('limit', currentLimit.toString());
+
+      // 🚨 ใช้ .replace() เพื่อเปลี่ยน URL ทันทีโดยไม่สร้าง History ซ้ำซ้อน
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    }
+  }, [searchParams, currentLimit, pathname, router]);
 
   // ฟังก์ชันสร้าง URL สำหรับหน้าต่างๆ โดยเก็บรักษา Query Params เดิมไว้ (เช่น ?tag=wedding)
   const createPageURL = (pageNumber: number | string) => {
@@ -40,12 +55,13 @@ export default function NumberedPagination({
     return `${pathname}?${params.toString()}`;
   };
 
-  const handleLimitChange = (newLimit: string) => {
+  const handleLimitChange = async (newLimit: string) => {
+    await setPortfolioLimitCookie(newLimit);
+
     const params = new URLSearchParams(searchParams.toString());
     params.set('limit', newLimit);
     params.delete('page');
-
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   // Logic สร้าง Array ของตัวเลขหน้า (แสดง ... ถ้ายาวเกินไป)
@@ -138,7 +154,7 @@ export default function NumberedPagination({
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-      <Select value={currentLimit} onValueChange={handleLimitChange}>
+      <Select value={currentLimit.toString()} onValueChange={handleLimitChange}>
         <SelectTrigger className='w-[120px]'>
           <SelectValue />
         </SelectTrigger>

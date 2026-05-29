@@ -13,6 +13,7 @@ interface PortfolioPageProps {
   mode: SiteMode;
   isMockMode?: boolean;
   currentPage: number;
+  currentLimit: number;
   totalPages: number;
 }
 
@@ -24,6 +25,7 @@ export default function PortfolioPage({
   mode,
   isMockMode,
   currentPage,
+  currentLimit,
   totalPages,
 }: PortfolioPageProps) {
   const commonProps = { lang, mode };
@@ -33,7 +35,11 @@ export default function PortfolioPage({
       <SectionShell contentWrapperClass='space-y-8'>
         <PortfolioFilter tags={tags} {...commonProps} />
         <PortfolioGrid projects={projects} {...commonProps} />
-        <NumberedPagination currentPage={currentPage} totalPages={totalPages} />
+        <NumberedPagination
+          currentPage={currentPage}
+          currentLimit={currentLimit}
+          totalPages={totalPages}
+        />
       </SectionShell>
     </>
   );
