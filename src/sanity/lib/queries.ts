@@ -125,6 +125,7 @@ export const allProjectsQuery = groq`
   *[
     _type == 'project'
     && $mode in siteMode
+    && (!defined($tag) || $tag == "" || $tag in tags[]->slug.current)
   ] | order(coalesce(projectDate, _createdAt) desc) {
     _id,
     _type,
@@ -161,5 +162,13 @@ export const latestProjectsQuery = groq`
     _id,
     _type,
     ${PROJECT_PROJECTION}
+  }
+`;
+
+export const allProjectTagsQuery = groq`
+  *[_type == "projectTag"] | order(title asc) {
+    _id,
+    "title": ${LOCALIZED('title')},
+    "slug": slug.current
   }
 `;

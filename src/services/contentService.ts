@@ -5,12 +5,13 @@ import {
   allPageSlugsQuery,
   allProjectSlugsQuery,
   allProjectsQuery,
+  allProjectTagsQuery,
   latestProjectsQuery,
   pageBySlugQuery,
   projectBySlugQuery,
   settingsQuery,
 } from '@/sanity/lib/queries';
-import { PageSlugs, Project, SiteSettings } from '@shared/types';
+import { PageSlugs, Project, ProjectTag, SiteSettings } from '@shared/types';
 import { FullPageDocument } from '@features/PageBuilder';
 
 interface BaseParams {
@@ -58,10 +59,14 @@ export class ContentService extends SanityBaseService {
       ],
     });
   }
-  static async getAllProjects({ lang, mode }: Omit<BaseParams, 'slug'>) {
+  static async getAllProjects({
+    lang,
+    mode,
+    tag = '',
+  }: Omit<BaseParams, 'slug'> & { tag: string }) {
     return this.fetch<Project[]>({
       query: allProjectsQuery,
-      params: { lang, mode },
+      params: { lang, mode, tag },
       tags: [CACHE_TAGS.ALL_PROJECTS, CACHE_TAGS.PROJECTS_BY_MODE(mode)],
     });
   }
@@ -70,6 +75,15 @@ export class ContentService extends SanityBaseService {
       query: latestProjectsQuery,
       params: { lang, mode },
       tags: [CACHE_TAGS.ALL_PROJECTS, CACHE_TAGS.PROJECTS_BY_MODE(mode)],
+    });
+  }
+
+  // --- Project Tags ---
+  static async getAllProjectTags({ lang }: Pick<BaseParams, 'lang'>) {
+    return this.fetch<ProjectTag[]>({
+      query: allProjectTagsQuery,
+      params: { lang },
+      tags: [CACHE_TAGS.ALL_PROJECT_TAGS],
     });
   }
 

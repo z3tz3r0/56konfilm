@@ -296,7 +296,7 @@ const FEATURED_PROJECT_SECTION = groq`
   },
   sourceType,
   selectedProjects[] { ${PROJECT_PROJECTION} },
-  cta { ${CTA_PROJECTION} },
+  ctaButton { ${CTA_PROJECTION} },
   background
 `;
 

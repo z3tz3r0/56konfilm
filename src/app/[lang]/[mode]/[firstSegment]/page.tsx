@@ -5,7 +5,7 @@ import { Metadata } from 'next';
 import { ContentService } from '@/services';
 import { getMockPage } from './page.mock';
 import { notFound } from 'next/navigation';
-import PortfolioPage from '@/app/[lang]/[mode]/[firstSegment]/_components/PortfolioPage';
+import { PortfolioPage } from './_components';
 
 interface PageProps {
   params: Promise<{
@@ -15,6 +15,7 @@ interface PageProps {
   }>;
   searchParams?: Promise<{
     e2e?: string;
+    tag?: string;
   }>;
 }
 
@@ -42,15 +43,18 @@ export async function generateMetadata({
 
 export default async function Page({ params, searchParams }: PageProps) {
   const { lang, mode, firstSegment } = await params;
-  const mockParams = await searchParams;
-  const isMockMode = process.env.E2E_TEST === '1' || mockParams?.e2e === '1';
+  const currentSearchParams = await searchParams;
+  const isMockMode =
+    process.env.E2E_TEST === '1' || currentSearchParams?.e2e === '1';
+  const currentTag = currentSearchParams?.tag || '';
 
-  const [page, settings, projects] = await Promise.all([
+  const [page, settings, projects, tags] = await Promise.all([
     isMockMode
       ? getMockPage(mode, firstSegment)
       : ContentService.getPage({ lang, mode, slug: firstSegment }),
     ContentService.getSetting({ lang }),
-    ContentService.getAllProjects({ lang, mode }),
+    ContentService.getAllProjects({ lang, mode, tag: currentTag }),
+    ContentService.getAllProjectTags({ lang }),
   ]);
   if (!page) notFound();
 
@@ -65,6 +69,7 @@ export default async function Page({ params, searchParams }: PageProps) {
     return (
       <PortfolioPage
         projects={projects}
+        tags={tags}
         isMockMode={isMockMode}
         {...commonProps}
       />

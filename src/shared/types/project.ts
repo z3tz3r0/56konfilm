@@ -25,6 +25,12 @@ interface NextProject {
   coverImage?: ImageSource;
 }
 
+interface ProjectTag {
+  _id: string;
+  title: string;
+  slug: string;
+}
+
 type NonEmptyUniqueTuple<
   T extends string,
   U extends string = T,
@@ -36,4 +42,4 @@ type NonEmptyUniqueTuple<
     : never;
 type UniqueSiteModesArray = NonEmptyUniqueTuple<SiteMode>;
 
-export type { Project };
+export type { Project, ProjectTag };
