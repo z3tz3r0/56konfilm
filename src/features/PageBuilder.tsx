@@ -16,6 +16,7 @@ import { TeamSectionBlock } from './team-section/types';
 import { FAQSectionBlock } from './faq-section/types';
 import { VideoShowreelSectionBlock } from './video-showreel-section/types';
 import { Locale, SiteMode } from '@shared/config';
+import { FeaturedProjectsSectionBlock } from './featured-project-section/types';
 
 const TwoColumnSection = dynamic(
   () => import('./two-column-section/TwoColumnSection')
@@ -54,6 +55,9 @@ const FAQSection = dynamic(() => import('./faq-section/components/FAQSection'));
 const VideoShowreelSection = dynamic(
   () => import('./video-showreel-section/components/VideoShowreelSection')
 );
+const FeaturedProjectSection = dynamic(
+  () => import('./featured-project-section/FeaturedProjectSection')
+);
 
 type PageContentBlock =
   | HeroSectionBlock
@@ -69,7 +73,8 @@ type PageContentBlock =
   | StatsCounterSectionBlock
   | TeamSectionBlock
   | FAQSectionBlock
-  | VideoShowreelSectionBlock;
+  | VideoShowreelSectionBlock
+  | FeaturedProjectsSectionBlock;
 
 type FullPageDocument = PageDocument<PageContentBlock>;
 
@@ -186,6 +191,15 @@ function renderBlock(
       return <FAQSection key={key} block={block} />;
     case 'videoShowreelSection':
       return <VideoShowreelSection key={key} block={block} />;
+    case 'featuredProjectsSection':
+      return (
+        <FeaturedProjectSection
+          key={key}
+          block={block}
+          lang={lang}
+          mode={mode}
+        />
+      );
     default:
       return null;
   }

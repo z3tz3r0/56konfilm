@@ -16,66 +16,17 @@ export const mediaGallerySectionType = defineType({
       type: localizedBlockType.name,
     }),
     defineField({
-      name: 'sourceType',
-      title: 'Content Source',
-      description:
-        'เลือกว่าจะใช้รายการสื่อแบบ Manual หรือดึงจากรายการ Projects',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Manual Items', value: 'manual' },
-          { title: 'Projects (เลือกได้สูงสุด 6)', value: 'projects' },
-        ],
-        layout: 'radio',
-      },
-      initialValue: 'manual',
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
       name: 'items',
       title: 'Items',
-      description: 'รายการสื่อที่จะแสดงใน Gallery',
+      description:
+        'รายการสื่อที่จะแสดงใน Gallery (ใช้สำหรับภาพถ่ายหรือวิดีโอทั่วไป)',
       type: 'array',
       components: {
         input: MultiUploadArrayInput,
       },
       of: [{ type: galleryItemType.name }],
-      hidden: ({ parent }) => parent?.sourceType === 'projects',
       validation: (Rule) =>
-        Rule.custom((value, context) => {
-          const sourceType = (
-            context.parent as { sourceType?: string } | undefined
-          )?.sourceType;
-          if (sourceType === 'projects') return true;
-          return value && value.length > 0
-            ? true
-            : 'กรุณาใส่รายการสื่ออย่างน้อย 1 รายการ หรือเปลี่ยน Source เป็น Projects';
-        }),
-    }),
-    defineField({
-      name: 'selectedProjects',
-      title: 'Selected Projects',
-      description:
-        'เลือกโปรเจกต์ที่ต้องการแสดง (ลากเพื่อจัดลำดับได้ ช่องแรกคือการ์ดแรก) สูงสุด 6 รายการ',
-      type: 'array',
-      hidden: ({ parent }) => parent?.sourceType !== 'projects',
-      of: [
-        {
-          type: 'reference',
-          to: [{ type: 'project' }],
-        },
-      ],
-      validation: (Rule) =>
-        Rule.custom((value, context) => {
-          const sourceType = (
-            context.parent as { sourceType?: string } | undefined
-          )?.sourceType;
-          if (sourceType !== 'projects') return true;
-          if (!value || value.length === 0)
-            return 'กรุณาเลือกโปรเจกต์อย่างน้อย 1 รายการ';
-          if (value.length > 6) return 'เลือกได้สูงสุด 6 โปรเจกต์';
-          return true;
-        }),
+        Rule.required().min(1).error('Please add at least one media item'),
     }),
     defineField({
       name: 'cta',

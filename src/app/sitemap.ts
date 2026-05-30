@@ -43,27 +43,35 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
 
   const projectEntries: MetadataRoute.Sitemap = allProjectSlugs.flatMap(
-    (project) =>
-      SUPPORTED_LOCALES.map((lang) => {
-        const portfolioSlug =
-          project.siteMode === 'production'
-            ? settings.productionPortfolioPage
-            : settings.weddingPortfolioPage;
-        return {
-          url: `${SITE_BASE_URL}/${lang}/${project.siteMode}/${portfolioSlug}/${project.slug}`,
-          lastModified: project._updatedAt
-            ? new Date(project._updatedAt)
-            : new Date(),
-          alternates: {
-            languages: {
-              th: `${SITE_BASE_URL}/th/${project.siteMode}/${portfolioSlug}/${project.slug}`,
-              en: `${SITE_BASE_URL}/en/${project.siteMode}/${portfolioSlug}/${project.slug}`,
+    (project) => {
+      const modes = Array.isArray(project.siteMode)
+        ? project.siteMode
+        : project.siteMode
+          ? [project.siteMode] // ถ้าข้อมูลเก่าเป็น String ให้จับใส่ Array
+          : [];
+      return modes.flatMap((mode) =>
+        SUPPORTED_LOCALES.map((lang) => {
+          const portfolioSlug =
+            mode === 'production'
+              ? settings.productionPortfolioSlug
+              : settings.weddingPortfolioSlug;
+          return {
+            url: `${SITE_BASE_URL}/${lang}/${mode}/${portfolioSlug}/${project.slug}`,
+            lastModified: project._updatedAt
+              ? new Date(project._updatedAt)
+              : new Date(),
+            alternates: {
+              languages: {
+                th: `${SITE_BASE_URL}/th/${mode}/${portfolioSlug}/${project.slug}`,
+                en: `${SITE_BASE_URL}/en/${mode}/${portfolioSlug}/${project.slug}`,
+              },
             },
-          },
-          changeFrequency: 'weekly',
-          priority: 0.7,
-        };
-      })
+            changeFrequency: 'weekly',
+            priority: 0.7,
+          };
+        })
+      );
+    }
   );
 
   return [...homeEntries, ...pageEntries, ...projectEntries];
