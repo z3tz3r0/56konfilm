@@ -42,4 +42,4 @@ type NonEmptyUniqueTuple<
     : never;
 type UniqueSiteModesArray = NonEmptyUniqueTuple<SiteMode>;
 
-export type { Project, ProjectTag };
+export type { Project, ProjectTag, UniqueSiteModesArray };

@@ -7,6 +7,7 @@ import { getMockPage } from './page.mock';
 import { notFound } from 'next/navigation';
 import { PortfolioPage } from './_components';
 import { cookies } from 'next/headers';
+import { sanitizePaginationLimit } from '@shared/utils';
 
 interface PageProps {
   params: Promise<{
@@ -46,30 +47,26 @@ export async function generateMetadata({
 
 export default async function Page({ params, searchParams }: PageProps) {
   const { lang, mode, firstSegment } = await params;
-  const cookieStore = await cookies();
-  const savedLimit = cookieStore.get('portfolio_limit')?.value;
-
   const currentSearchParams = await searchParams;
+  const cookieStore = await cookies();
+
+  const parsedPage = Number(currentSearchParams?.page);
+  const currentPage =
+    Number.isInteger(parsedPage) && parsedPage > 1 ? parsedPage : 1;
+
+  const rawLimit =
+    currentSearchParams?.limit || cookieStore.get('portfolio_limit')?.value;
+  const currentLimit = Number(sanitizePaginationLimit(rawLimit));
+
   const isMockMode =
     process.env.E2E_TEST === '1' || currentSearchParams?.e2e === '1';
   const currentTag = currentSearchParams?.tag || '';
-  const currentPage = Number(currentSearchParams?.page) || 1;
-  const currentLimit =
-    Number(currentSearchParams?.limit) || Number(savedLimit) || 6;
 
-  const [page, settings, projectData, tags] = await Promise.all([
+  const [page, settings] = await Promise.all([
     isMockMode
       ? getMockPage(mode, firstSegment)
       : ContentService.getPage({ lang, mode, slug: firstSegment }),
     ContentService.getSetting({ lang }),
-    ContentService.getAllProjects({
-      lang,
-      mode,
-      tag: currentTag,
-      page: currentPage,
-      limit: currentLimit,
-    }),
-    ContentService.getAllProjectTags({ lang, mode }),
   ]);
   if (!page) notFound();
 
@@ -81,6 +78,17 @@ export default async function Page({ params, searchParams }: PageProps) {
       : firstSegment === settings?.weddingPortfolioSlug;
 
   if (isPortfolioPage) {
+    const [projectData, tags] = await Promise.all([
+      ContentService.getAllProjects({
+        lang,
+        mode,
+        tag: currentTag,
+        page: currentPage,
+        limit: currentLimit,
+      }),
+      ContentService.getAllProjectTags({ lang, mode }),
+    ]);
+
     return (
       <PortfolioPage
         projects={projectData.projects}
@@ -89,6 +97,7 @@ export default async function Page({ params, searchParams }: PageProps) {
         currentLimit={currentLimit}
         totalPages={projectData.totalPages}
         isMockMode={isMockMode}
+        portfolioSlug={firstSegment}
         {...commonProps}
       />
     );

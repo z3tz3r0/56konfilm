@@ -23,6 +23,11 @@ export default async function FeaturedProjectSection({
 }: FeaturedProjectsSectionProps) {
   const { heading, sourceType, selectedProjects } = block;
 
+  const settings = await ContentService.getSetting({ lang });
+  const portfolioSlug =
+    mode === 'production'
+      ? settings.productionPortfolioSlug
+      : settings.weddingPortfolioSlug;
   const buttonAlignClass = getJustifyClass(heading?.align);
 
   let projects: Project[] = [];
@@ -40,7 +45,12 @@ export default async function FeaturedProjectSection({
     <SectionShell background={block.background} sanityType={block._type}>
       <div className='space-y-8'>
         <SectionHeader heading={heading} />
-        <PortfolioGrid projects={projects} lang={lang} mode={mode} />
+        <PortfolioGrid
+          projects={projects}
+          portfolioSlug={portfolioSlug}
+          lang={lang}
+          mode={mode}
+        />
         {block.ctaButton && (
           <div className={cn('flex', buttonAlignClass)}>
             <CtaButton ctaButton={block.ctaButton} mode={mode} lang={lang} />

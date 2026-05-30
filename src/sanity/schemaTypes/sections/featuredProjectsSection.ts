@@ -57,6 +57,14 @@ export const featuredProjectsSectionType = defineType({
             return 'Please select at least one project.';
           if (value.length > 6)
             return 'You can select a maximum of 6 projects.';
+
+          const refs = (value as Array<{ _ref: string }>)
+            .map((item) => item._ref)
+            .filter(Boolean);
+          const uniqueRefs = new Set(refs);
+          if (uniqueRefs.size !== refs.length) {
+            return 'Duplicate projects are not allowed. Please remove duplicates.';
+          }
           return true;
         }),
     }),

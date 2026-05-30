@@ -6,12 +6,14 @@ interface PortfolioGridProps {
   projects: Project[];
   lang: Locale;
   mode: SiteMode;
+  portfolioSlug: string;
 }
 
 export default function PortfolioGrid({
   projects,
   lang,
   mode,
+  portfolioSlug = 'portfolio',
 }: PortfolioGridProps) {
   return (
     <section className='grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3'>
@@ -21,6 +23,7 @@ export default function PortfolioGrid({
           project={project}
           lang={lang}
           mode={mode}
+          portfolioSlug={portfolioSlug}
         />
       ))}
     </section>

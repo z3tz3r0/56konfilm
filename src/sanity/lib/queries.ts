@@ -125,7 +125,7 @@ export const allProjectsQuery = groq`
   *[
     _type == 'project'
     && $mode in siteMode
-    && (!defined($tag) || $tag == "" || $tag in tags[]->slug.current)
+    && (!defined($tag) || $tag == "" || $tag in tags[]->[siteMode == $mode].slug.current)
   ] | order(coalesce(projectDate, _createdAt) desc)[$start...$end] {
     _id,
     _type,
@@ -142,14 +142,14 @@ export const projectBySlugQuery = groq`
       *[
         _type == "project"
         && $mode in siteMode
-        && projectDate < ^.projectDate
+        && coalesce(projectDate, _createdAt) < coalesce(^.projectDate, ^._createdAt)
       ] | order(coalesce(projectDate, _createdAt) desc)[0] {
-        "title": title,
+        "title": ${LOCALIZED('title')},
         "slug": slug.current,
         coverImage{ asset, crop, hotspot }
       },
       *[_type == "project" && $mode in siteMode] | order(coalesce(projectDate, _createdAt) desc)[0] {
-        "title": title,
+        "title": ${LOCALIZED('title')},
         "slug": slug.current,
         coverImage{ asset, crop, hotspot }
       }
@@ -177,6 +177,6 @@ export const projectsCountQuery = groq`
   count(*[
     _type == "project" 
     && $mode in siteMode
-    && (!defined($tag) || $tag == "" || $tag in tags[]->slug.current)
+    && (!defined($tag) || $tag == "" || $tag in tags[]->[siteMode == $mode].slug.current)
   ])
 `;

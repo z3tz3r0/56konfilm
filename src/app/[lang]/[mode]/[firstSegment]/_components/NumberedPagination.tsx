@@ -16,16 +16,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@shared/components';
+import { Locale } from '@shared/config';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 
 interface NumberedPaginationProps {
+  lang: Locale;
   currentPage: number;
   currentLimit: number;
   totalPages: number;
 }
 
 export default function NumberedPagination({
+  lang,
   currentPage,
   currentLimit,
   totalPages,
@@ -34,6 +37,7 @@ export default function NumberedPagination({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const disabledClass = 'pointer-events-none opacity-50';
+  const pageLabel = localizePageLabel(lang);
 
   // Silent URL Sync
   useEffect(() => {
@@ -124,6 +128,7 @@ export default function NumberedPagination({
   return (
     <section className='flex items-center justify-between gap-4 md:justify-end'>
       <PageIndicator
+        lang={lang}
         currentPage={currentPage}
         totalPages={totalPages}
         className='hidden md:block'
@@ -136,8 +141,11 @@ export default function NumberedPagination({
               size={'md'}
               showText={false}
               href={currentPage > 1 ? createPageURL(currentPage - 1) : '#'}
-              // จัดการสถานะ Disabled ด้วย CSS และ aria-disabled
               aria-disabled={currentPage <= 1}
+              tabIndex={currentPage <= 1 ? -1 : undefined}
+              onClick={
+                currentPage <= 1 ? (event) => event.preventDefault() : undefined
+              }
               className={currentPage <= 1 ? disabledClass : ''}
             />
           </PaginationItem>
@@ -145,6 +153,7 @@ export default function NumberedPagination({
           {/* ตัวเลขหน้า */}
           {pageNumber()}
           <PageIndicator
+            lang={lang}
             currentPage={currentPage}
             totalPages={totalPages}
             className='block md:hidden'
@@ -159,6 +168,12 @@ export default function NumberedPagination({
                 currentPage < totalPages ? createPageURL(currentPage + 1) : '#'
               }
               aria-disabled={currentPage >= totalPages}
+              tabIndex={currentPage >= totalPages ? -1 : undefined}
+              onClick={
+                currentPage >= totalPages
+                  ? (event) => event.preventDefault()
+                  : undefined
+              }
               className={currentPage >= totalPages ? disabledClass : ''}
             />
           </PaginationItem>
@@ -170,9 +185,9 @@ export default function NumberedPagination({
         </SelectTrigger>
         <SelectContent align='start'>
           <SelectGroup>
-            <SelectItem value='6'>6 / Page</SelectItem>
-            <SelectItem value='15'>15 / Page</SelectItem>
-            <SelectItem value='30'>30 / Page</SelectItem>
+            <SelectItem value='6'>6 / {pageLabel}</SelectItem>
+            <SelectItem value='15'>15 / {pageLabel}</SelectItem>
+            <SelectItem value='30'>30 / {pageLabel}</SelectItem>
           </SelectGroup>
         </SelectContent>
       </Select>
@@ -181,19 +196,26 @@ export default function NumberedPagination({
 }
 
 interface PageIndicatorProps {
+  lang: Locale;
   currentPage: string | number;
   totalPages: string | number;
   className?: string;
 }
 
 function PageIndicator({
+  lang,
   currentPage,
   totalPages,
   className,
 }: PageIndicatorProps) {
+  const pageLabel = localizePageLabel(lang);
   return (
     <p className={className}>
-      Page {currentPage.toString()} of {totalPages.toString()}
+      {pageLabel} {currentPage.toString()} of {totalPages.toString()}
     </p>
   );
+}
+
+function localizePageLabel(lang: Locale) {
+  return lang === 'en' ? 'Page' : 'หน้า';
 }

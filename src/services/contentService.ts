@@ -11,7 +11,13 @@ import {
   projectsCountQuery,
   settingsQuery,
 } from '@/sanity/lib/queries';
-import { PageSlugs, Project, ProjectTag, SiteSettings } from '@shared/types';
+import {
+  PageSlug,
+  Project,
+  ProjectPageSlug,
+  ProjectTag,
+  SiteSettings,
+} from '@shared/types';
 import { FullPageDocument } from '@features/PageBuilder';
 import { AllProjectsParams, BaseParams } from './contentService.types';
 
@@ -61,8 +67,10 @@ export class ContentService extends SanityBaseService {
     page = 1,
     limit = 12,
   }: AllProjectsParams) {
-    const start = (page - 1) * limit;
-    const end = start + limit;
+    const safePage = Math.max(1, Math.trunc(page));
+    const safeLimit = Math.min(30, Math.max(1, Math.trunc(limit)));
+    const start = (safePage - 1) * safeLimit;
+    const end = start + safeLimit;
     const [projects, totalCount] = await Promise.all([
       this.fetch<Project[]>({
         query: allProjectsQuery,
@@ -78,7 +86,7 @@ export class ContentService extends SanityBaseService {
     return {
       projects: projects || [],
       totalCount: totalCount || 0,
-      totalPages: Math.ceil((totalCount || 0) / limit),
+      totalPages: Math.ceil((totalCount || 0) / safeLimit),
     };
   }
   static async getLatestProjects({ lang, mode }: Omit<BaseParams, 'slug'>) {
@@ -100,13 +108,13 @@ export class ContentService extends SanityBaseService {
 
   // --- Slug ---
   static async getAllPageSlugs() {
-    return this.fetch<PageSlugs[]>({
+    return this.fetch<PageSlug[]>({
       query: allPageSlugsQuery,
       tags: [CACHE_TAGS.ALL_PAGE_SLUGS],
     });
   }
   static async getAllProjectSlugs() {
-    return this.fetch<PageSlugs[]>({
+    return this.fetch<ProjectPageSlug[]>({
       query: allProjectSlugsQuery,
       tags: [CACHE_TAGS.ALL_PROJECT_SLUGS],
     });

@@ -15,6 +15,7 @@ interface PortfolioPageProps {
   currentPage: number;
   currentLimit: number;
   totalPages: number;
+  portfolioSlug: string;
 }
 
 export default function PortfolioPage({
@@ -27,6 +28,7 @@ export default function PortfolioPage({
   currentPage,
   currentLimit,
   totalPages,
+  portfolioSlug,
 }: PortfolioPageProps) {
   const commonProps = { lang, mode };
   return (
@@ -34,8 +36,13 @@ export default function PortfolioPage({
       <PageBuilder page={page} {...commonProps} enableSignature={isMockMode} />
       <SectionShell contentWrapperClass='space-y-8'>
         <PortfolioFilter tags={tags} {...commonProps} />
-        <PortfolioGrid projects={projects} {...commonProps} />
+        <PortfolioGrid
+          projects={projects}
+          portfolioSlug={portfolioSlug}
+          {...commonProps}
+        />
         <NumberedPagination
+          lang={lang}
           currentPage={currentPage}
           currentLimit={currentLimit}
           totalPages={totalPages}

@@ -82,7 +82,7 @@ const PROJECT_PROJECTION = groq`
   client,
   projectDate,
   services,
-  "tags": tags[]->{ 'title': ${LOCALIZED('title')} }.title,
+  "tags": tags[]->[siteMode == $mode]{ 'title': ${LOCALIZED('title')} }.title,
   ${SEO_PROJECTION},
 `;
 

@@ -6,6 +6,7 @@ import {
 } from './objects/backgroundMedia';
 import { localizedStringField, localizedTextField } from './objects/localized';
 import { sanitizeUrlSlug } from '../lib/slug';
+import { UniqueSiteModesArray } from '@shared/types';
 
 export const projectType = defineType({
   name: 'project',
@@ -110,7 +111,11 @@ export const projectType = defineType({
       options: {
         dateFormat: 'YYYY-MM-DD',
       },
-      initialValue: () => new Date().toISOString().split('T')[0],
+      initialValue: () => {
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        return now.toISOString().split('T')[0];
+      },
       validation: (Rule) =>
         Rule.required().error('Please specify the date of the project.'),
     }),
@@ -134,6 +139,26 @@ export const projectType = defineType({
         {
           type: 'reference',
           to: [{ type: 'projectTag' }],
+          options: {
+            filter: ({ document }) => {
+              // 1. ดึงค่า siteMode ที่ Editor เลือกไว้ปัจจุบันออกมา
+              const siteModes = document.siteMode as
+                | UniqueSiteModesArray
+                | []
+                | undefined;
+
+              // 2. ถ้ายังไม่ได้เลือกโหมดอะไรเลย ให้คืนค่าว่างเปล่า (บังคับให้ไปเลือกโหมดก่อน)
+              if (!siteModes || siteModes.length === 0) {
+                return { filter: '1 == 0' };
+              }
+
+              // 3. กรองเอาเฉพาะ projectTag ที่มี siteMode ตรงกับที่เลือกไว้
+              return {
+                filter: 'siteMode in $siteModes',
+                params: { siteModes },
+              };
+            },
+          },
         },
       ],
       validation: (Rule) =>

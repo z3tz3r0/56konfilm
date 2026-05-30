@@ -8,14 +8,20 @@ interface ProjectCardProps {
   project: Project;
   lang: Locale;
   mode: SiteMode;
+  portfolioSlug: string;
 }
 
-export default function ProjectCard({ project, lang, mode }: ProjectCardProps) {
+export default function ProjectCard({
+  project,
+  lang,
+  mode,
+  portfolioSlug = 'portfolio',
+}: ProjectCardProps) {
   const { title, slug, coverImage, projectDate } = project;
 
   // ดึงเฉพาะปีมาแสดงผล
   const year = projectDate ? new Date(projectDate).getFullYear() : '';
-  const projectUrl = `/${lang}/${mode}/portfolio/${slug}`;
+  const projectUrl = `/${lang}/${mode}/${portfolioSlug}/${slug}`;
   const renderProjectImage = () => (
     <section className='relative aspect-367/224 w-full overflow-hidden'>
       {coverImage ? (
