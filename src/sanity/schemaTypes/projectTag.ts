@@ -22,6 +22,19 @@ export const projectTagType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'siteMode',
+      type: 'string',
+      hidden: true, // ซ่อนไว้เพราะล็อกค่าตาม document ที่เรียกใช้แล้ว
+      options: {
+        list: [
+          { title: 'Production', value: 'production' },
+          { title: 'Wedding', value: 'wedding' },
+        ],
+        layout: 'radio',
+      },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',

@@ -82,11 +82,27 @@ export const schemaType = {
   templates: (prev: Template[]) => {
     const defaultTemplate = [
       {
+        id: 'production-project-tags',
+        title: 'Production Project Tags',
+        schemaType: 'projectTag',
+        value: {
+          siteMode: 'production',
+        },
+      },
+      {
         id: 'production-pages',
         title: 'Production Pages',
         schemaType: 'page',
         value: {
           siteMode: 'production',
+        },
+      },
+      {
+        id: 'wedding-project-tags',
+        title: 'Wedding Project Tags',
+        schemaType: 'projectTag',
+        value: {
+          siteMode: 'wedding',
         },
       },
       {

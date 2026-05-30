@@ -90,10 +90,10 @@ export class ContentService extends SanityBaseService {
   }
 
   // --- Project Tags ---
-  static async getAllProjectTags({ lang }: Pick<BaseParams, 'lang'>) {
+  static async getAllProjectTags({ lang, mode }: Omit<BaseParams, 'slug'>) {
     return this.fetch<ProjectTag[]>({
       query: allProjectTagsQuery,
-      params: { lang },
+      params: { lang, mode },
       tags: [CACHE_TAGS.ALL_PROJECT_TAGS],
     });
   }

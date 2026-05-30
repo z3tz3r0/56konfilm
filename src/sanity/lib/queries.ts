@@ -166,7 +166,7 @@ export const latestProjectsQuery = groq`
 `;
 
 export const allProjectTagsQuery = groq`
-  *[_type == "projectTag"] | order(title asc) {
+  *[_type == "projectTag" && siteMode == $mode] | order(title asc) {
     _id,
     "title": ${LOCALIZED('title')},
     "slug": slug.current

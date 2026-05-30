@@ -69,7 +69,7 @@ export default async function Page({ params, searchParams }: PageProps) {
       page: currentPage,
       limit: currentLimit,
     }),
-    ContentService.getAllProjectTags({ lang }),
+    ContentService.getAllProjectTags({ lang, mode }),
   ]);
   if (!page) notFound();
 
