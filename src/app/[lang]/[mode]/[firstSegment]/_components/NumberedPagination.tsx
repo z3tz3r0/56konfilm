@@ -108,7 +108,7 @@ export default function NumberedPagination({
 
       const isCurrentPage = page === currentPage;
       return (
-        <PaginationItem key={`page-${page}`}>
+        <PaginationItem key={`page-${page}`} className='hidden md:block'>
           <PaginationLink
             size={'md'}
             href={createPageURL(page)}
@@ -122,7 +122,12 @@ export default function NumberedPagination({
     });
 
   return (
-    <section className='flex justify-end gap-4'>
+    <section className='flex items-center justify-between gap-4 md:justify-end'>
+      <PageIndicator
+        currentPage={currentPage}
+        totalPages={totalPages}
+        className='hidden md:block'
+      />
       <Pagination className='mx-0 w-fit'>
         <PaginationContent>
           {/* ปุ่ม Previous */}
@@ -139,6 +144,11 @@ export default function NumberedPagination({
 
           {/* ตัวเลขหน้า */}
           {pageNumber()}
+          <PageIndicator
+            currentPage={currentPage}
+            totalPages={totalPages}
+            className='block md:hidden'
+          />
 
           {/* ปุ่ม Next */}
           <PaginationItem>
@@ -167,5 +177,23 @@ export default function NumberedPagination({
         </SelectContent>
       </Select>
     </section>
+  );
+}
+
+interface PageIndicatorProps {
+  currentPage: string | number;
+  totalPages: string | number;
+  className?: string;
+}
+
+function PageIndicator({
+  currentPage,
+  totalPages,
+  className,
+}: PageIndicatorProps) {
+  return (
+    <p className={className}>
+      Page {currentPage.toString()} of {totalPages.toString()}
+    </p>
   );
 }
