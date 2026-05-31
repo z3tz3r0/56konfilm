@@ -12,9 +12,9 @@ export interface SiteSettings {
   siteTitle?: string;
   seo?: SeoFields;
   productionNav?: NavItem[];
-  productionPortfolioPage: string;
+  productionPortfolioSlug: string;
   weddingNav?: NavItem[];
-  weddingPortfolioPage: string;
+  weddingPortfolioSlug: string;
   companyTitle?: string;
   address?: string;
   contactTitle?: string;

@@ -18,6 +18,7 @@ interface SectionShellProps {
   videoPriority?: boolean; // Hero should use true, others false
   enableVideoObserver?: boolean; // Enable IntersectionObserver for non-hero sections
   shapeDivider?: boolean;
+  contentWrapperClass?: string;
 }
 
 export default function SectionShell({
@@ -33,6 +34,7 @@ export default function SectionShell({
   videoPriority = false,
   enableVideoObserver = false,
   shapeDivider = false,
+  contentWrapperClass,
 }: SectionShellProps) {
   const backgroundClass = getBGVariants(background);
   const paddingClass = disablePadding ? '' : 'px-4 py-16 lg:px-24';
@@ -63,7 +65,12 @@ export default function SectionShell({
       data-sanity-type={sanityType}
       data-testid={dataTestId}
     >
-      <div className='relative z-10 container mx-auto max-w-7xl'>
+      <div
+        className={cn(
+          'relative z-10 container mx-auto max-w-7xl',
+          contentWrapperClass
+        )}
+      >
         {children}
       </div>
 

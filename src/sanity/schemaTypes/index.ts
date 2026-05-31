@@ -33,6 +33,9 @@ import { statsCounterSectionType } from './sections/statsCounterSection';
 import { teamSectionType } from './sections/teamSection';
 import { videoShowreelSectionType } from './sections/videoShowreelSection';
 import { settingsType } from './settings';
+import { featuredProjectsSectionType } from './sections/featuredProjectsSection';
+import { projectTagType } from './projectTag';
+import { blockContentType } from './blockContent';
 
 export const schemaType = {
   types: [
@@ -40,6 +43,7 @@ export const schemaType = {
     settingsType,
     cmsCredentialsType, // Hidden from Studio UI but registered for API access
     projectType,
+    projectTagType,
     pageType,
     heroSectionType,
     twoColumnSectionType,
@@ -55,6 +59,7 @@ export const schemaType = {
     teamSectionType,
     faqSectionType,
     videoShowreelSectionType,
+    featuredProjectsSectionType,
     localizedBlockType,
     ctaType,
     mediaBlockType,
@@ -70,17 +75,34 @@ export const schemaType = {
     faqItemType,
     socialMediaType,
     seoObjectType,
+    blockContentType,
   ],
   // บังคับค่า siteMode โดยตัดสินใจจาก document ที่ user กดสร้าง
   // จาก document 'Production Pages' หรือ 'Wedding Pages'?
   templates: (prev: Template[]) => {
     const defaultTemplate = [
       {
+        id: 'production-project-tags',
+        title: 'Production Project Tags',
+        schemaType: 'projectTag',
+        value: {
+          siteMode: 'production',
+        },
+      },
+      {
         id: 'production-pages',
         title: 'Production Pages',
         schemaType: 'page',
         value: {
           siteMode: 'production',
+        },
+      },
+      {
+        id: 'wedding-project-tags',
+        title: 'Wedding Project Tags',
+        schemaType: 'projectTag',
+        value: {
+          siteMode: 'wedding',
         },
       },
       {

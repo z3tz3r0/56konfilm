@@ -15,31 +15,55 @@ export const structure: StructureResolver = (S) =>
         (item) =>
           item.getId() !== 'settings' &&
           item.getId() !== 'cmsCredentials' &&
-          item.getId() !== 'page'
+          item.getId() !== 'page' &&
+          item.getId() !== 'projectTag'
       ),
       S.divider(),
 
-      // เมนู Production Pages (กรองเฉพาะ pages ที่มี siteMode เป็น production)
       S.listItem()
-        .title('Production Pages')
+        .title('Production — Project Tags')
+        .id('production-project-tags')
+        .child(
+          S.documentList()
+            .title('Production — Project Tags')
+            .filter('_type == "projectTag" && siteMode == "production"')
+            .apiVersion(env.NEXT_PUBLIC_SANITY_API_VERSION)
+            .initialValueTemplates([
+              S.initialValueTemplateItem('production-project-tags'),
+            ])
+        ),
+      S.listItem()
+        .title('Production — Pages')
         .id('production-pages')
         .child(
           S.documentList()
-            .title('Production Pages')
+            .title('Production — Pages')
             .filter('_type == "page" && siteMode == "production"')
             .apiVersion(env.NEXT_PUBLIC_SANITY_API_VERSION)
             .initialValueTemplates([
               S.initialValueTemplateItem('production-pages'),
             ])
         ),
+      S.divider(),
 
-      // เมนู Wedding Pages (กรองเฉพาะ pages ที่มี siteMode เป็น wedding)
       S.listItem()
-        .title('Wedding Pages')
+        .title('Wedding — Project Tags')
+        .id('wedding-project-tags')
+        .child(
+          S.documentList()
+            .title('Wedding — Project Tags')
+            .filter('_type == "projectTag" && siteMode == "wedding"')
+            .apiVersion(env.NEXT_PUBLIC_SANITY_API_VERSION)
+            .initialValueTemplates([
+              S.initialValueTemplateItem('wedding-project-tags'),
+            ])
+        ),
+      S.listItem()
+        .title('Wedding — Pages')
         .id('wedding-pages')
         .child(
           S.documentList()
-            .title('Wedding Pages')
+            .title('Wedding — Pages')
             .filter('_type == "page" && siteMode == "wedding"')
             .apiVersion(env.NEXT_PUBLIC_SANITY_API_VERSION)
             .initialValueTemplates([

@@ -1,6 +1,6 @@
 import { SlugValidationContext } from 'sanity';
 
-export async function validateSlugUniquenessByMode(
+async function validateSlugUniquenessByMode(
   slug: string,
   context: SlugValidationContext
 ): Promise<boolean> {
@@ -61,3 +61,20 @@ export async function validateSlugUniquenessByMode(
     return true;
   }
 }
+
+/**
+ * ฟังก์ชันแปลงข้อความเป็น URL Slug โดยการเปลี่ยนจุด (.) และช่องว่างให้เป็นขีดกลาง (-)
+ * พร้อมทั้งลบอักขระพิเศษออก เพื่อความปลอดภัยของระบบ Routing ใน Next.js
+ */
+function sanitizeUrlSlug(input: string): string {
+  return input
+    .toLowerCase()
+    .replace(/\./g, '-') // เปลี่ยนจุด (.) ทุกตัวให้กลายเป็นขีดกลาง (-)
+    .replace(/\s+/g, '-') // เปลี่ยนช่องว่าง (Space) ให้กลายเป็นขีดกลาง (-)
+    .replace(/[^a-z0-9-]/g, '') // ลบอักขระพิเศษอื่นๆ ที่ไม่ใช่ตัวเลข ตัวอักษร และขีดกลาง
+    .replace(/-+/g, '-') // ยุบเครื่องหมายขีดกลางที่ติดกันหลายตัวให้เหลือตัวเดียว (เช่น --- เป็น -)
+    .replace(/^-+|-+$/g, '') // ตัดเครื่องหมายขีดกลางที่อยู่หน้าสุดและหลังสุดออก
+    .slice(0, 96);
+}
+
+export { validateSlugUniquenessByMode, sanitizeUrlSlug };

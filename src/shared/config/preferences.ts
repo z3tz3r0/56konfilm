@@ -1,6 +1,7 @@
 // --- Supported Langs & Modes ---
 const SUPPORTED_LOCALES = ['th', 'en'] as const;
 const SUPPORTED_SITE_MODES = ['production', 'wedding'] as const;
+const ALLOWED_LIMITS = new Set(['6', '15', '30']);
 
 // --- Default Lang & Mode ---
 const DEFAULT_LOCALE: Locale = 'en';
@@ -20,6 +21,7 @@ type SiteMode = (typeof SUPPORTED_SITE_MODES)[number];
 export {
   SUPPORTED_LOCALES,
   SUPPORTED_SITE_MODES,
+  ALLOWED_LIMITS,
   DEFAULT_LOCALE,
   DEFAULT_MODE,
   MODE_TO_THEME,

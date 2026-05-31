@@ -5,7 +5,7 @@ export const createProject = (overrides: Partial<Project> = {}): Project => ({
   _id: faker.string.uuid(),
   title: faker.commerce.productName(),
   overview: faker.lorem.paragraph(),
-  siteMode: 'production',
+  siteMode: ['production'],
   slug: faker.helpers.slugify(faker.commerce.productName().toLowerCase()),
   coverImage: {
     asset: {
@@ -14,9 +14,10 @@ export const createProject = (overrides: Partial<Project> = {}): Project => ({
     },
   },
   client: faker.company.name(),
+  projectDate: faker.date.past().toISOString().split('T')[0],
   services: [faker.word.noun(), faker.word.noun()],
-  year: String(faker.date.past().getFullYear()),
-  contentBlocks: [], // default empty, can override
+  tags: [faker.word.noun(), faker.word.noun()],
+  body: [],
   ...overrides,
 });
 

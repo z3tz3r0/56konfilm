@@ -1,5 +1,6 @@
 import { Locale, SiteMode } from '@shared/config';
 import { SanityImageSource } from '@sanity/image-url';
+import { UniqueSiteModesArray } from './project';
 
 interface SanityColor {
   _type: 'color';
@@ -10,11 +11,23 @@ interface SanityColor {
   rgb: { r: number; g: number; b: number; a: number };
 }
 
-interface PageSlugs {
+interface BasePageSlug {
   slug: string;
-  siteMode: SiteMode;
   _updatedAt: string;
   languages: Array<{ _key: Locale }>;
 }
 
-export type { SanityColor, SanityImageSource as ImageSource, PageSlugs };
+interface PageSlug extends BasePageSlug {
+  siteMode: SiteMode;
+}
+
+interface ProjectPageSlug extends BasePageSlug {
+  siteMode: UniqueSiteModesArray;
+}
+
+export type {
+  SanityColor,
+  SanityImageSource as ImageSource,
+  PageSlug,
+  ProjectPageSlug,
+};
