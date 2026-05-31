@@ -125,7 +125,7 @@ export const allProjectsQuery = groq`
   *[
     _type == 'project'
     && $mode in siteMode
-    && (!defined($tag) || $tag == "" || $tag in tags[]->[siteMode == $mode].slug.current)
+    && (!defined($tag) || $tag == "" || $tag in tags[]->slug.current)
   ] | order(coalesce(projectDate, _createdAt) desc)[$start...$end] {
     _id,
     _type,
@@ -177,6 +177,6 @@ export const projectsCountQuery = groq`
   count(*[
     _type == "project" 
     && $mode in siteMode
-    && (!defined($tag) || $tag == "" || $tag in tags[]->[siteMode == $mode].slug.current)
+    && (!defined($tag) || $tag == "" || $tag in tags[]->slug.current)
   ])
 `;

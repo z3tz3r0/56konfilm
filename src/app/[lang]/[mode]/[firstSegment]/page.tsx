@@ -89,6 +89,8 @@ export default async function Page({ params, searchParams }: PageProps) {
       ContentService.getAllProjectTags({ lang, mode }),
     ]);
 
+    console.debug('projectData:', projectData);
+
     return (
       <PortfolioPage
         projects={projectData.projects}
