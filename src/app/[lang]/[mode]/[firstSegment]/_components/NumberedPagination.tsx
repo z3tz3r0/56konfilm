@@ -38,6 +38,7 @@ export default function NumberedPagination({
   const searchParams = useSearchParams();
   const disabledClass = 'pointer-events-none opacity-50';
   const pageLabel = localizePageLabel(lang);
+  const safeTotalPages = Math.max(1, totalPages);
 
   // Silent URL Sync
   useEffect(() => {
@@ -70,21 +71,21 @@ export default function NumberedPagination({
 
   // Logic สร้าง Array ของตัวเลขหน้า (แสดง ... ถ้ายาวเกินไป)
   const generatePagination = () => {
-    if (totalPages <= 7) {
-      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    if (safeTotalPages <= 7) {
+      return Array.from({ length: safeTotalPages }, (_, i) => i + 1);
     }
     if (currentPage <= 3) {
-      return [1, 2, 3, 4, '...', totalPages - 1, totalPages];
+      return [1, 2, 3, 4, '...', safeTotalPages - 1, safeTotalPages];
     }
-    if (currentPage >= totalPages - 2) {
+    if (currentPage >= safeTotalPages - 2) {
       return [
         1,
         2,
         '...',
-        totalPages - 3,
-        totalPages - 2,
-        totalPages - 1,
-        totalPages,
+        safeTotalPages - 3,
+        safeTotalPages - 2,
+        safeTotalPages - 1,
+        safeTotalPages,
       ];
     }
     return [
@@ -94,7 +95,7 @@ export default function NumberedPagination({
       currentPage,
       currentPage + 1,
       '...',
-      totalPages,
+      safeTotalPages,
     ];
   };
 
@@ -130,7 +131,7 @@ export default function NumberedPagination({
       <PageIndicator
         lang={lang}
         currentPage={currentPage}
-        totalPages={totalPages}
+        totalPages={safeTotalPages}
         className='hidden md:block'
       />
       <Pagination className='mx-0 w-fit'>
@@ -155,7 +156,7 @@ export default function NumberedPagination({
           <PageIndicator
             lang={lang}
             currentPage={currentPage}
-            totalPages={totalPages}
+            totalPages={safeTotalPages}
             className='block md:hidden'
           />
 
@@ -165,16 +166,18 @@ export default function NumberedPagination({
               size={'md'}
               showText={false}
               href={
-                currentPage < totalPages ? createPageURL(currentPage + 1) : '#'
+                currentPage < safeTotalPages
+                  ? createPageURL(currentPage + 1)
+                  : '#'
               }
-              aria-disabled={currentPage >= totalPages}
-              tabIndex={currentPage >= totalPages ? -1 : undefined}
+              aria-disabled={currentPage >= safeTotalPages}
+              tabIndex={currentPage >= safeTotalPages ? -1 : undefined}
               onClick={
-                currentPage >= totalPages
+                currentPage >= safeTotalPages
                   ? (event) => event.preventDefault()
                   : undefined
               }
-              className={currentPage >= totalPages ? disabledClass : ''}
+              className={currentPage >= safeTotalPages ? disabledClass : ''}
             />
           </PaginationItem>
         </PaginationContent>
