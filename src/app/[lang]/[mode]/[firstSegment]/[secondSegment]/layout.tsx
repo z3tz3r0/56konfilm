@@ -40,13 +40,13 @@ export default async function ProjectDetailLayout({
   if (!project) notFound();
 
   return (
-    <SectionShell>
+    <SectionShell className='overflow-visible pt-[76px] pb-16'>
       <article className='min-h-screen space-y-8'>
         <ProjectHero
           projectTitle={project.title}
           coverImage={project.coverImage}
         />
-        <section className='flex flex-col gap-8 overflow-y-auto md:flex-row'>
+        <section className='flex flex-col gap-8 md:flex-row'>
           <ProjectAside lang={lang} project={project} />
           <>{children}</>
         </section>

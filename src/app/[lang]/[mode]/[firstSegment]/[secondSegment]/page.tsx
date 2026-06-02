@@ -1,6 +1,7 @@
 import { Locale, SiteMode } from '@shared/config';
 import { ContentService } from '@services/contentService';
 import { notFound } from 'next/navigation';
+import { PortableTextRenderer } from '@shared/components';
 
 interface ProjectPageProps {
   params: Promise<{
@@ -22,8 +23,7 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
 
   return (
     <section className='flex-1'>
-      {/* TODO: พื้นที่สำหรับ Phase 3 (Portable Text Renderer) */}
-      <div className='space-y-2'>
+      <div className='border-steel-gray space-y-2 border-b pb-2'>
         <h1 className='text-3xl font-bold tracking-tight md:text-5xl'>
           {project.title}
         </h1>
@@ -33,6 +33,7 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
           </p>
         )}
       </div>
+      {project.body && <PortableTextRenderer value={project.body} />}
     </section>
   );
 }
