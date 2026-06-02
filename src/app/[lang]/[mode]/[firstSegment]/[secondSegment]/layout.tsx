@@ -1,5 +1,10 @@
 import { ContentService } from '@services/contentService';
-import { ProjectAside, ProjectHero, SectionShell } from '@shared/components';
+import {
+  ProjectAside,
+  ProjectHero,
+  ProjectNavigation,
+  SectionShell,
+} from '@shared/components';
 import { Locale, SiteMode } from '@shared/config';
 import { buildMetadata } from '@shared/lib/seo';
 import { isSupportedLocale, isSupportedMode } from '@shared/utils';
@@ -26,7 +31,7 @@ export default async function ProjectDetailLayout({
   children,
   params,
 }: ProjectDetailLayoutProps) {
-  const { lang, mode, secondSegment } = await params;
+  const { lang, mode, firstSegment, secondSegment } = await params;
 
   if (!isSupportedLocale(lang) || !isSupportedMode(mode)) {
     notFound();
@@ -50,6 +55,12 @@ export default async function ProjectDetailLayout({
           <ProjectAside lang={lang} project={project} />
           <>{children}</>
         </section>
+        <ProjectNavigation
+          lang={lang}
+          mode={mode}
+          firstSegment={firstSegment}
+          nextProject={project.nextProject}
+        />
       </article>
     </SectionShell>
   );

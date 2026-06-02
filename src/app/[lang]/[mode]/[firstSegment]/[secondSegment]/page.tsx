@@ -23,7 +23,7 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
 
   return (
     <section className='flex-1'>
-      <div className='border-steel-gray space-y-2 border-b pb-2'>
+      <div className='border-steel-gray/50 space-y-2 border-b pb-8'>
         <h1 className='text-3xl font-bold tracking-tight md:text-5xl'>
           {project.title}
         </h1>
