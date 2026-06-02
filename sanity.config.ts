@@ -32,7 +32,7 @@ export default defineConfig({
         { id: 'th', title: 'Thai' },
       ],
       defaultLanguages: ['en'],
-      fieldTypes: ['string', 'text'],
+      fieldTypes: ['string', 'text', 'richText'],
     }),
     languageFilter({
       supportedLanguages: [

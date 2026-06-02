@@ -24,7 +24,7 @@ export default function ProjectNavigation({
   const backUrl = `/${lang}/${mode}/${firstSegment}`;
 
   return (
-    <nav className='border-steel-gray/50 mt-16 flex flex-col-reverse items-center justify-between gap-8 border-t pt-10 md:mt-24 md:flex-row'>
+    <nav className='border-border/50 dark:border-steel-gray/50 mt-16 flex flex-col-reverse items-center justify-between gap-8 border-t pt-10 md:mt-24 md:flex-row'>
       {/* 1. ปุ่มย้อนกลับ (Back to Portfolio) */}
       <Link
         href={backUrl}

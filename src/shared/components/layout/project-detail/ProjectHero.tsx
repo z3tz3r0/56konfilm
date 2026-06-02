@@ -25,7 +25,7 @@ export default function ProjectHero({
         />
       ) : (
         <AppIcon
-          className='text-neutral-foreground dark:bg-transparent'
+          className='text-neutral-foreground bg-transparent dark:bg-transparent'
           iconName={'basil:image-outline'}
         />
       )}

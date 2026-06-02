@@ -30,8 +30,8 @@ export default function ProjectAside({ project, lang }: ProjectAsideProps) {
     : null;
 
   return (
-    <aside className='bg-card text-card-foreground ring-steel-gray static h-fit rounded-2xl border p-8 md:w-[300px] lg:sticky lg:top-10'>
-      <h3 className='border-steel-gray mb-6 border-b pb-4 text-xl font-semibold'>
+    <aside className='bg-neutral dark:bg-card text-card-foreground border-border/50 dark:border-steel-gray/50 static h-fit rounded-2xl border p-8 md:w-[300px] lg:sticky lg:top-10'>
+      <h3 className='border-border/50 dark:border-steel-gray/50 mb-6 border-b pb-4 text-xl font-semibold'>
         {isEngLang ? 'Project Details' : 'รายละเอียดผลงาน'}
       </h3>
 
