@@ -1,18 +1,26 @@
 import { urlFor } from '@/sanity/lib/image';
+import { cn } from '@shared/utils';
 import { PortableText, PortableTextComponents } from 'next-sanity';
 import Image from 'next/image';
 import { ComponentProps } from 'react';
 
 interface PortableTextRendererProps {
   value: ComponentProps<typeof PortableText>['value'];
+  className?: string;
 }
 
 export default function PortableTextRenderer({
   value,
+  className,
 }: PortableTextRendererProps) {
   if (!value || (Array.isArray(value) && value.length === 0)) return null;
   return (
-    <div className='prose dark:prose-invert prose-p:text-text-secondary max-w-none py-8'>
+    <div
+      className={cn(
+        'prose dark:prose-invert prose-p:text-text-secondary max-w-none py-8',
+        className
+      )}
+    >
       <PortableText value={value} components={components} />
     </div>
   );

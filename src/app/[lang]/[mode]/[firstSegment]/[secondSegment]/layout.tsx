@@ -5,26 +5,23 @@ import {
   ProjectNavigation,
   SectionShell,
 } from '@shared/components';
-import { Locale, SiteMode } from '@shared/config';
 import { buildMetadata } from '@shared/lib/seo';
 import { isSupportedLocale, isSupportedMode } from '@shared/utils';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { ReactNode } from 'react';
 
-interface CommonProps {
-  firstSegment: string;
-  secondSegment: string;
+interface BaseProps {
+  params: Promise<{
+    lang: string;
+    mode: string;
+    firstSegment: string;
+    secondSegment: string;
+  }>;
 }
 
-interface ProjectDetailLayoutProps {
+interface ProjectDetailLayoutProps extends BaseProps {
   children: ReactNode;
-  params: Promise<
-    CommonProps & {
-      lang: string;
-      mode: string;
-    }
-  >;
 }
 
 export default async function ProjectDetailLayout({
@@ -37,12 +34,19 @@ export default async function ProjectDetailLayout({
     notFound();
   }
 
-  const project = await ContentService.getProject({
-    lang,
-    mode,
-    slug: secondSegment,
-  });
-  if (!project) notFound();
+  const [project, settings] = await Promise.all([
+    ContentService.getProject({
+      lang,
+      mode,
+      slug: secondSegment,
+    }),
+    ContentService.getSetting({ lang }),
+  ]);
+  const portfolioPageSlug =
+    mode === 'production'
+      ? settings.productionPortfolioSlug
+      : settings.weddingPortfolioSlug;
+  if (!project || firstSegment !== portfolioPageSlug) notFound();
 
   return (
     <SectionShell className='overflow-visible pt-[76px] pb-16'>
@@ -66,19 +70,24 @@ export default async function ProjectDetailLayout({
   );
 }
 
-interface GenerateMetadataProps {
-  params: Promise<CommonProps & { lang: Locale; mode: SiteMode }>;
-}
-
 export async function generateMetadata({
   params,
-}: GenerateMetadataProps): Promise<Metadata> {
+}: BaseProps): Promise<Metadata> {
   const { lang, mode, firstSegment, secondSegment } = await params;
+
+  if (!isSupportedLocale(lang) || !isSupportedMode(mode)) {
+    notFound();
+  }
 
   const [project, settings] = await Promise.all([
     ContentService.getProject({ lang, mode, slug: secondSegment }),
     ContentService.getSetting({ lang }),
   ]);
+  const portfolioPageSlug =
+    mode === 'production'
+      ? settings.productionPortfolioSlug
+      : settings.weddingPortfolioSlug;
+  if (!project || firstSegment !== portfolioPageSlug) notFound();
 
   return buildMetadata({
     lang,

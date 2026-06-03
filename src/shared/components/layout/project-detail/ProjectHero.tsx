@@ -12,11 +12,14 @@ export default function ProjectHero({
   projectTitle,
   coverImage,
 }: ProjectHeroProps) {
+  const imageUrl = coverImage
+    ? urlFor(coverImage).width(1280).fit('crop').url()
+    : null;
   return (
     <section className='bg-neutral relative grid aspect-video max-h-[400px] w-full place-items-center overflow-hidden rounded-2xl'>
-      {coverImage ? (
+      {imageUrl ? (
         <Image
-          src={urlFor(coverImage).width(1280).fit('crop').url() || ''}
+          src={imageUrl}
           alt={projectTitle || 'Project Cover'}
           fill
           priority

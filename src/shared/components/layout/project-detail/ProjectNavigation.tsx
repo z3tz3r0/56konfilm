@@ -22,6 +22,9 @@ export default function ProjectNavigation({
 
   // URL สำหรับกลับไปหน้า Portfolio (อ้างอิงจาก firstSegment เช่น /th/production/portfolio)
   const backUrl = `/${lang}/${mode}/${firstSegment}`;
+  const nextProjectImageUrl = nextProject?.coverImage
+    ? urlFor(nextProject.coverImage).width(200).height(200).fit('crop').url()
+    : null;
 
   return (
     <nav className='border-border/50 dark:border-steel-gray/50 mt-16 flex flex-col-reverse items-center justify-between gap-8 border-t pt-10 md:mt-24 md:flex-row'>
@@ -67,14 +70,10 @@ export default function ProjectNavigation({
           </div>
 
           {/* รูป Cover ของโปรเจกต์ถัดไป */}
-          {nextProject.coverImage ? (
+          {nextProjectImageUrl ? (
             <div className='group-hover:ring-primary relative grid h-16 w-16 place-items-center overflow-hidden rounded-full ring-2 ring-transparent transition-all duration-300 md:h-20 md:w-20'>
               <Image
-                src={urlFor(nextProject.coverImage)
-                  .width(200)
-                  .height(200)
-                  .fit('crop')
-                  .url()}
+                src={nextProjectImageUrl}
                 alt={nextProject.title || 'Next Project'}
                 fill
                 className='object-cover'

@@ -46,7 +46,7 @@ export default function ProjectCard({
   return (
     <Link
       href={projectUrl}
-      className='group bg-card row-span-2 grid grid-rows-subgrid gap-0 overflow-hidden rounded-2xl'
+      className='group bg-card row-span-2 grid grid-rows-subgrid gap-0 overflow-hidden rounded-2xl shadow-sm'
     >
       {renderProjectImage()}
       <section className='grid gap-2 p-4'>

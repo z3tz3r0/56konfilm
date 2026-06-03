@@ -91,6 +91,8 @@
   --radius: 0.625rem;
   --background: var(--color-ivory-white);
   --foreground: var(--color-brown);
+  --card: var(--color-white);
+  --card-foreground: var(--color-brown);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --primary: var(--color-mocha-brown);

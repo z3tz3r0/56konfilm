@@ -19,18 +19,11 @@ export default function ProjectAside({ project, lang }: ProjectAsideProps) {
 
   // ฟังก์ชันช่วย Format วันที่ให้แสดงผลสวยงามตามภาษา
   const formattedDate = project.projectDate
-    ? new Date(project.projectDate).toLocaleDateString(
-        isEngLang ? 'en-US' : 'th-TH',
-        {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        }
-      )
+    ? formatProjectDate(project.projectDate, lang)
     : null;
 
   return (
-    <aside className='bg-neutral dark:bg-card text-card-foreground border-border/50 dark:border-steel-gray/50 static h-fit rounded-2xl border p-8 md:w-[300px] lg:sticky lg:top-10'>
+    <aside className='bg-neutral dark:bg-card text-card-foreground border-border/50 dark:border-steel-gray/50 static h-fit rounded-2xl border p-8 md:w-[300px] lg:sticky lg:top-[calc(80px+16px)]'>
       <h3 className='border-border/50 dark:border-steel-gray/50 mb-6 border-b pb-4 text-xl font-semibold'>
         {isEngLang ? 'Project Details' : 'รายละเอียดผลงาน'}
       </h3>
@@ -108,4 +101,20 @@ export default function ProjectAside({ project, lang }: ProjectAsideProps) {
       </dl>
     </aside>
   );
+}
+
+function formatProjectDate(value: string, lang: Locale) {
+  // 1. แยก ปี-เดือน-วัน ออกจากกันเพื่อป้องกันปัญหาการ Parse วันที่เพี้ยนในบางเบราว์เซอร์ (เช่น Safari รุ่นเก่า)
+  const [year, month, day] = value.split('-').map(Number);
+
+  // 2. สร้าง Date Object ที่เป็น UTC จริงๆ
+  const utcDate = new Date(Date.UTC(year, month - 1, day));
+
+  // 3. บังคับ Format ให้อ่านค่าจาก Timezone UTC เสมอ
+  return utcDate.toLocaleDateString(lang === 'en' ? 'en-US' : 'th-TH', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
 }
