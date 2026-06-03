@@ -4,7 +4,11 @@ import {
   SanityValidationContext,
   validateImageAssetSizeWarning,
 } from './objects/backgroundMedia';
-import { localizedStringField, localizedTextField } from './objects/localized';
+import {
+  localizedRichTextField,
+  localizedStringField,
+  localizedTextField,
+} from './objects/localized';
 import { sanitizeUrlSlug } from '../lib/slug';
 import { UniqueSiteModesArray } from '@shared/types';
 
@@ -85,13 +89,12 @@ export const projectType = defineType({
         'รายละเอียดหรือบทสรุปสั้นๆ ของโปรเจกต์ (แนะนำให้เขียนให้น่าสนใจและมีคีย์เวิร์ดที่เกี่ยวข้อง เพื่อช่วยให้ Search Engine ตรวจเจอได้ดีขึ้น)',
       group: 'main',
     }),
-    defineField({
+    localizedRichTextField({
       name: 'body',
       title: 'Project Content',
       description:
         'เขียนรายละเอียดของผลงานชิ้นนี้ (รองรับการจัดรูปแบบข้อความและแทรกรูปภาพประกอบเหมือนการเขียนบล็อก)',
       group: 'main',
-      type: 'blockContent',
     }),
     // --- 📝 PROJECT DETAILS GROUP (ข้อมูลประกอบผลงาน) ---
     defineField({
