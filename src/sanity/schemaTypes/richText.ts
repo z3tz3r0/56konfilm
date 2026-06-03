@@ -1,9 +1,9 @@
 import { ImageIcon } from '@sanity/icons';
 import { defineType, defineArrayMember } from 'sanity';
 
-export const blockContentType = defineType({
-  name: 'blockContent',
-  title: 'Block Content',
+export const richTextType = defineType({
+  name: 'richText',
+  title: 'Rich Text Content',
   type: 'array',
   of: [
     defineArrayMember({

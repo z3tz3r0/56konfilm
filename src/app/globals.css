@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@plugin '@tailwindcss/typography';
 
 @custom-variant dark (&:where(.dark, [data-mode="production"] *));
 
@@ -90,6 +91,8 @@
   --radius: 0.625rem;
   --background: var(--color-ivory-white);
   --foreground: var(--color-brown);
+  --card: var(--color-white);
+  --card-foreground: var(--color-brown);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --primary: var(--color-mocha-brown);
@@ -102,7 +105,7 @@
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
+  --border: var(--color-light-brown);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.646 0.222 41.116);

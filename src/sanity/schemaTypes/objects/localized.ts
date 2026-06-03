@@ -2,6 +2,7 @@ import { getParentSectionFromPath } from '@/sanity/lib/schemaHelpers';
 import {
   defineField,
   defineType,
+  FieldDefinitionBase,
   SchemaValidationValue,
   StringDefinition,
   TextDefinition,
@@ -18,6 +19,16 @@ type LocalizedTextFieldConfig = Omit<TextDefinition, 'type' | 'validation'> & {
   group?: string | string[];
   validation?: SchemaValidationValue;
 };
+type LocalizedRichTextFieldConfig = Omit<
+  FieldDefinitionBase,
+  'type' | 'validation'
+> & {
+  name: string;
+  title?: string;
+  description?: string;
+  group?: string | string[];
+  validation?: SchemaValidationValue;
+};
 
 export const localizedStringField = (config: LocalizedStringFieldConfig) => {
   return defineField({ ...config, type: 'internationalizedArrayString' });
@@ -25,6 +36,15 @@ export const localizedStringField = (config: LocalizedStringFieldConfig) => {
 
 export const localizedTextField = (config: LocalizedTextFieldConfig) => {
   return defineField({ ...config, type: 'internationalizedArrayText' });
+};
+
+export const localizedRichTextField = (
+  config: LocalizedRichTextFieldConfig
+) => {
+  return defineField({
+    ...config,
+    type: 'internationalizedArrayRichText',
+  });
 };
 
 export const localizedBlockType = defineType({
