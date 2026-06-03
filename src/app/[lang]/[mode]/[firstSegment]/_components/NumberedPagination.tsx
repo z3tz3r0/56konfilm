@@ -214,7 +214,8 @@ function PageIndicator({
   const pageLabel = localizePageLabel(lang);
   return (
     <p className={className}>
-      {pageLabel} {currentPage.toString()} of {totalPages.toString()}
+      {pageLabel} {currentPage.toString()} {lang === 'en' ? 'of' : 'จาก'}{' '}
+      {totalPages.toString()}
     </p>
   );
 }
