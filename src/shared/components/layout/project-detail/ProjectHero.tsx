@@ -13,7 +13,7 @@ export default function ProjectHero({
   coverImage,
 }: ProjectHeroProps) {
   const imageUrl = coverImage
-    ? urlFor(coverImage).width(1280).fit('crop').url()
+    ? urlFor(coverImage).width(1200).fit('max').url()
     : null;
   return (
     <section className='bg-neutral relative grid aspect-video max-h-[400px] w-full place-items-center overflow-hidden rounded-2xl'>

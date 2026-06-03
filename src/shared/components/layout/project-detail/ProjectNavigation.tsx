@@ -76,6 +76,7 @@ export default function ProjectNavigation({
                 src={nextProjectImageUrl}
                 alt={nextProject.title || 'Next Project'}
                 fill
+                sizes='80px'
                 className='object-cover'
               />
             </div>
