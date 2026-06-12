@@ -1,4 +1,4 @@
-import { RotatingText } from '@shared/components';
+import DynamicRotatingText from './DynamicRotatingText';
 
 interface HeroTitleTextProps {
   text: string;
@@ -23,16 +23,7 @@ export default function HeroTitleText({
         // เช็กเงื่อนไข: ถ้าเปิดใช้งานสลับคำ + มีคำใน Array มากกว่า 1 คำ
         if (enableRotatingText && rotatingWords.length > 1) {
           return (
-            // โยน Array คำเข้าไปใน Component สลับคำของคุณ
-            <RotatingText
-              key={index}
-              texts={rotatingWords}
-              rotationInterval={2500}
-              staggerDuration={0.025}
-              staggerFrom={'random'}
-              transition={{ type: 'spring', damping: 30, stiffness: 400 }}
-              mainClassName='w-fit px-2 sm:px-2 md:px-3 bg-primary text-primary-foreground dark:text-foreground overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg'
-            />
+            <DynamicRotatingText key={index} rotatingWords={rotatingWords} />
           );
         }
 
