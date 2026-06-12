@@ -20,12 +20,11 @@
         "name": "next"
       }
     ],
-    "baseUrl": ".",
     "paths": {
-      "@features/*": ["src/features/*"],
-      "@services/*": ["src/services/*"],
-      "@shared/*": ["src/shared/*"],
-      "@/*": ["src/*"]
+      "@features/*": ["./src/features/*"],
+      "@services/*": ["./src/services/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@/*": ["./src/*"]
     }
   },
   "include": [
