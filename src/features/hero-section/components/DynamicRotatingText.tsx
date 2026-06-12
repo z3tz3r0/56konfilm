@@ -38,10 +38,7 @@ export default function DynamicRotatingText({
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 0 }}
         transition={{ duration: 0.3, ease: 'linear' }} // ใช้ fade ธรรมดาแทนระบบสปริง
-        mainClassName={cn(
-          baseStyleClass,
-          'w-fit overflow-hidden justify-center'
-        )}
+        mainClassName={cn(baseStyleClass, 'overflow-hidden justify-center')}
       />
     );
   }
@@ -54,7 +51,7 @@ export default function DynamicRotatingText({
       staggerDuration={0.025}
       staggerFrom={'random'}
       transition={{ type: 'spring', damping: 30, stiffness: 400 }}
-      mainClassName={cn(baseStyleClass, 'w-fit overflow-hidden justify-center')}
+      mainClassName={cn(baseStyleClass, 'overflow-hidden justify-center')}
     />
   );
 }
