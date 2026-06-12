@@ -1,14 +1,22 @@
-export * from './button';
+export { Button, buttonVariants } from './button';
 export * from './calendar';
-export * from './card';
+export { Card, CardContent } from './card';
 export * from './carousel';
 export * from './form';
-export * from './input';
+export { Input } from './input';
 export * from './label';
-export * from './pagination';
+export {
+  Pagination,
+  PaginationContent,
+  PaginationLink,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationEllipsis,
+} from './pagination';
 export * from './popover';
 export * from './select';
 export * from './sheet';
 export * from './sonner';
 export * from './tabs';
-export * from './textarea';
+export { Textarea } from './textarea';
