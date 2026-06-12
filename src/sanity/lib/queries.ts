@@ -20,6 +20,11 @@ import {
   TIMELINE_SECTION,
   TWO_COLUMN_SECTION,
   VIDEO_SHOWREEL_SECTION,
+  PROCESS_SECTION,
+  AWARDS_SECTION,
+  CONTACT_INFO_SECTION,
+  BLOG_PREVIEW_SECTION,
+  FEATURE_SHOWCASE_SECTION,
 } from './queries/sections';
 
 export const settingsQuery = groq`*[_type == "settings"][0] {
@@ -116,7 +121,12 @@ export const pageBySlugQuery = groq`
       ${TEAM_SECTION},
       ${FAQ_SECTION},
       ${VIDEO_SHOWREEL_SECTION},
-      _type == 'featuredProjectsSection' => { ${FEATURED_PROJECT_SECTION} }
+      _type == 'featuredProjectsSection' => { ${FEATURED_PROJECT_SECTION} },
+      ${PROCESS_SECTION},
+      ${AWARDS_SECTION},
+      ${CONTACT_INFO_SECTION},
+      ${BLOG_PREVIEW_SECTION},
+      ${FEATURE_SHOWCASE_SECTION}
     }
   }
 `;

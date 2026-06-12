@@ -300,6 +300,100 @@ const FEATURED_PROJECT_SECTION = groq`
   background
 `;
 
+export const PROCESS_SECTION = groq`
+  _type == "processSection" => {
+    background,
+    layout,
+    heading {
+      "eyebrow": ${LOCALIZED('eyebrow')},
+      "heading": ${LOCALIZED('heading')},
+      "body": ${LOCALIZED('body')},
+      align
+    },
+    steps[] {
+      _key,
+      stepNumber,
+      "title": ${LOCALIZED('title')},
+      "description": ${LOCALIZED('description')},
+      icon
+    } | order(stepNumber asc)
+  }
+`;
+
+export const AWARDS_SECTION = groq`
+  _type == "awardsSection" => {
+    background,
+    heading {
+      "eyebrow": ${LOCALIZED('eyebrow')},
+      "heading": ${LOCALIZED('heading')},
+      "body": ${LOCALIZED('body')},
+      align
+    },
+    awards[] {
+      _key,
+      "name": ${LOCALIZED('name')},
+      "event": ${LOCALIZED('event')},
+      year,
+      logo { asset, crop, hotspot }
+    }
+  }
+`;
+
+export const CONTACT_INFO_SECTION = groq`
+  _type == "contactInfoSection" => {
+    background,
+    showForm,
+    heading {
+      "eyebrow": ${LOCALIZED('eyebrow')},
+      "heading": ${LOCALIZED('heading')},
+      "body": ${LOCALIZED('body')},
+      align
+    },
+    channels[] {
+      _key,
+      "label": ${LOCALIZED('label')},
+      value,
+      icon,
+      linkUrl
+    }
+  }
+`;
+
+export const BLOG_PREVIEW_SECTION = groq`
+  _type == "blogPreviewSection" => {
+    background,
+    maxPosts,
+    heading {
+      "eyebrow": ${LOCALIZED('eyebrow')},
+      "heading": ${LOCALIZED('heading')},
+      "body": ${LOCALIZED('body')},
+      align
+    },
+    cta {
+      ${CTA_PROJECTION}
+    }
+  }
+`;
+
+export const FEATURE_SHOWCASE_SECTION = groq`
+  _type == "featureShowcaseSection" => {
+    background,
+    layout,
+    heading {
+      "eyebrow": ${LOCALIZED('eyebrow')},
+      "heading": ${LOCALIZED('heading')},
+      "body": ${LOCALIZED('body')},
+      align
+    },
+    features[] {
+      _key,
+      "title": ${LOCALIZED('title')},
+      "description": ${LOCALIZED('description')},
+      icon,
+      image { asset, crop, hotspot }
+    }
+  }
+`;
 export {
   HERO_SECTION,
   TWO_COLUMN_SECTION,
