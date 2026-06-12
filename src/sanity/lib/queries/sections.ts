@@ -10,6 +10,8 @@ import {
 const HERO_SECTION = groq`
   _type == "heroSection" => {
     "title": ${LOCALIZED('title')},
+    "enableRotatingText": coalesce(enableRotatingText, false),
+    "rotatingWords": rotatingWords[]{ "word": coalesce(@[$lang], en) }.word,
     "tagline": ${LOCALIZED('tagline')},
     "parallaxText": ${LOCALIZED('parallaxText')},
     "shapeDivider": coalesce(shapeDivider, false),

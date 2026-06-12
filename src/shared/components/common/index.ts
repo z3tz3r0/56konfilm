@@ -11,6 +11,7 @@ export { default as ModeGuard } from './ModeGuard';
 export { default as ModeSwitcher } from './ModeSwitcher';
 export { default as ParallaxText } from './ParallaxText';
 export { default as PortableTextRenderer } from './PortableTextRenderer';
+export { default as RotatingText } from './RotatingText';
 export { default as SectionErrorBoundary } from './SectionErrorBoundary';
 export { default as SectionHeader } from './SectionHeader';
 export { default as SectionShell } from './SectionShell';

@@ -5,6 +5,7 @@ export const createHeroSection = (
 ): HeroSectionBlock => ({
   _type: 'heroSection',
   _key: 'test-hero',
+  enableRotatingText: false,
   parallaxText: 'WE SHOOT HARD',
   shapeDivider: false,
   backgroundMedia: [
