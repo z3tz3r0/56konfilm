@@ -53,18 +53,18 @@ export default function ContactInfoSection({ block }: ContactInfoSectionProps) {
   return (
     <SectionShell
       background={block.background}
-      dataTestId="contact-info-section"
+      dataTestId='contact-info-section'
     >
-      <div className="container mx-auto">
+      <div className='container mx-auto'>
         {block.heading && (
-          <SectionHeader heading={block.heading} className="mb-12" />
+          <SectionHeader heading={block.heading} className='mb-12' />
         )}
 
         {block.channels?.length ? (
           <m.div
             className={colClass}
-            initial="hidden"
-            whileInView="visible"
+            initial='hidden'
+            whileInView='visible'
             viewport={{ once: true, margin: '-60px' }}
             variants={useLiteMotion ? undefined : containerVariants}
           >
@@ -79,10 +79,10 @@ export default function ContactInfoSection({ block }: ContactInfoSectionProps) {
                       : ''
                   )}
                   variants={useLiteMotion ? undefined : cardVariants}
-                  data-testid="contact-channel-card"
+                  data-testid='contact-channel-card'
                 >
                   {channel.icon && (
-                    <span className="text-primary bg-primary/10 flex h-10 w-10 items-center justify-center rounded-lg">
+                    <span className='text-primary bg-primary/10 flex h-10 w-10 items-center justify-center rounded-lg'>
                       <DynamicIcon
                         name={channel.icon}
                         size={20}
@@ -90,14 +90,14 @@ export default function ContactInfoSection({ block }: ContactInfoSectionProps) {
                       />
                     </span>
                   )}
-                  <div className="flex flex-col gap-1">
+                  <div className='flex flex-col gap-1'>
                     {channel.label && (
-                      <span className="text-muted-foreground text-xs font-semibold tracking-widest uppercase">
+                      <span className='text-muted-foreground text-xs font-semibold tracking-widest uppercase'>
                         {channel.label}
                       </span>
                     )}
                     {channel.value && (
-                      <span className="text-foreground text-sm font-medium break-all">
+                      <span className='text-foreground text-sm font-medium break-all'>
                         {channel.value}
                       </span>
                     )}
@@ -117,7 +117,7 @@ export default function ContactInfoSection({ block }: ContactInfoSectionProps) {
                       ? 'noopener noreferrer'
                       : undefined
                   }
-                  className="contents"
+                  className='contents'
                 >
                   {card}
                 </a>
@@ -129,7 +129,7 @@ export default function ContactInfoSection({ block }: ContactInfoSectionProps) {
         ) : null}
 
         {block.showForm && (
-          <div className="border-border mt-16 border-t pt-16">
+          <div className='border-border mt-16 border-t pt-16'>
             <ContactForm />
           </div>
         )}

@@ -53,19 +53,19 @@ export default function FeatureShowcaseSection({
   return (
     <SectionShell
       background={block.background}
-      dataTestId="feature-showcase-section"
+      dataTestId='feature-showcase-section'
     >
-      <div className="container mx-auto">
+      <div className='container mx-auto'>
         {block.heading && (
-          <SectionHeader heading={block.heading} className="mb-14" />
+          <SectionHeader heading={block.heading} className='mb-14' />
         )}
 
         {features.length ? (
           isAccordion ? (
             /* ── Accordion + Image Layout ── */
-            <div className="grid gap-8 lg:grid-cols-2 lg:gap-16">
+            <div className='grid gap-8 lg:grid-cols-2 lg:gap-16'>
               {/* Left: Accordion list */}
-              <div className="divide-border flex flex-col divide-y">
+              <div className='divide-border flex flex-col divide-y'>
                 {features.map((feature, index) => {
                   const isActive = activeIndex === index;
                   return (
@@ -78,10 +78,10 @@ export default function FeatureShowcaseSection({
                           ? 'text-foreground'
                           : 'text-muted-foreground hover:text-foreground'
                       )}
-                      data-testid="feature-accordion-item"
+                      data-testid='feature-accordion-item'
                       aria-expanded={isActive}
                     >
-                      <div className="flex items-center gap-3">
+                      <div className='flex items-center gap-3'>
                         {feature.icon && (
                           <span
                             className={cn(
@@ -120,12 +120,12 @@ export default function FeatureShowcaseSection({
                       <AnimatePresence initial={false}>
                         {isActive && feature.description && (
                           <m.p
-                            key="body"
+                            key='body'
                             initial={{ height: 0, opacity: 0 }}
                             animate={{ height: 'auto', opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
                             transition={{ duration: 0.3, ease: 'easeInOut' }}
-                            className="text-muted-foreground overflow-hidden text-sm leading-relaxed"
+                            className='text-muted-foreground overflow-hidden text-sm leading-relaxed'
                           >
                             {feature.description}
                           </m.p>
@@ -137,8 +137,8 @@ export default function FeatureShowcaseSection({
               </div>
 
               {/* Right: Dynamic image */}
-              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl">
-                <AnimatePresence mode="wait">
+              <div className='relative aspect-[4/3] w-full overflow-hidden rounded-xl'>
+                <AnimatePresence mode='wait'>
                   {activeFeature?.image ? (
                     <m.div
                       key={activeIndex}
@@ -146,7 +146,7 @@ export default function FeatureShowcaseSection({
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.98 }}
                       transition={{ duration: 0.4, ease: 'easeInOut' }}
-                      className="absolute inset-0"
+                      className='absolute inset-0'
                     >
                       <Image
                         src={urlFor(activeFeature.image)
@@ -156,20 +156,20 @@ export default function FeatureShowcaseSection({
                           .url()}
                         alt={activeFeature.title ?? ''}
                         fill
-                        className="object-cover"
-                        sizes="(max-width: 1024px) 100vw, 50vw"
+                        className='object-cover'
+                        sizes='(max-width: 1024px) 100vw, 50vw'
                       />
                     </m.div>
                   ) : (
                     <m.div
-                      key="placeholder"
+                      key='placeholder'
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="bg-muted absolute inset-0 flex items-center justify-center"
+                      className='bg-muted absolute inset-0 flex items-center justify-center'
                     >
                       {activeFeature?.icon && (
-                        <span className="text-muted-foreground/30">
+                        <span className='text-muted-foreground/30'>
                           <DynamicIcon
                             name={activeFeature.icon}
                             size={64}
@@ -193,20 +193,20 @@ export default function FeatureShowcaseSection({
                     ? 'md:grid-cols-2 lg:grid-cols-4'
                     : 'md:grid-cols-2 lg:grid-cols-3'
               )}
-              initial="hidden"
-              whileInView="visible"
+              initial='hidden'
+              whileInView='visible'
               viewport={{ once: true, margin: '-60px' }}
               variants={useLiteMotion ? undefined : containerVariants}
             >
               {features.map((feature, index) => (
                 <m.div
                   key={feature._key ?? index}
-                  className="border-border bg-card flex flex-col gap-4 rounded-xl border p-6"
+                  className='border-border bg-card flex flex-col gap-4 rounded-xl border p-6'
                   variants={useLiteMotion ? undefined : cardVariants}
-                  data-testid="feature-grid-item"
+                  data-testid='feature-grid-item'
                 >
                   {feature.icon && (
-                    <span className="text-primary bg-primary/10 flex h-10 w-10 items-center justify-center rounded-lg">
+                    <span className='text-primary bg-primary/10 flex h-10 w-10 items-center justify-center rounded-lg'>
                       <DynamicIcon
                         name={feature.icon}
                         size={20}
@@ -215,12 +215,12 @@ export default function FeatureShowcaseSection({
                     </span>
                   )}
                   {feature.title && (
-                    <h3 className="text-foreground text-base font-semibold">
+                    <h3 className='text-foreground text-base font-semibold'>
                       {feature.title}
                     </h3>
                   )}
                   {feature.description && (
-                    <p className="text-muted-foreground text-sm leading-relaxed">
+                    <p className='text-muted-foreground text-sm leading-relaxed'>
                       {feature.description}
                     </p>
                   )}

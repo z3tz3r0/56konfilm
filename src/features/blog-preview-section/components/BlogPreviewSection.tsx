@@ -65,17 +65,17 @@ export default async function BlogPreviewSection({
   return (
     <SectionShell
       background={block.background}
-      dataTestId="blog-preview-section"
+      dataTestId='blog-preview-section'
     >
-      <div className="container mx-auto">
+      <div className='container mx-auto'>
         {block.heading && (
-          <SectionHeader heading={block.heading} className="mb-12" />
+          <SectionHeader heading={block.heading} className='mb-12' />
         )}
 
         <m.div
-          className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
-          initial="hidden"
-          whileInView="visible"
+          className='grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3'
+          initial='hidden'
+          whileInView='visible'
           viewport={{ once: true, margin: '-60px' }}
           variants={containerVariants}
         >
@@ -94,41 +94,41 @@ export default async function BlogPreviewSection({
             return (
               <m.article
                 key={post._id}
-                className="border-border bg-card group overflow-hidden rounded-xl border transition-shadow hover:shadow-lg"
+                className='border-border bg-card group overflow-hidden rounded-xl border transition-shadow hover:shadow-lg'
                 variants={cardVariants}
-                data-testid="blog-post-card"
+                data-testid='blog-post-card'
               >
                 {/* Thumbnail */}
                 {imageUrl && (
                   <a
                     href={`/blog/${post.slug}`}
-                    className="block overflow-hidden"
+                    className='block overflow-hidden'
                   >
-                    <div className="relative aspect-[16/10] w-full overflow-hidden">
+                    <div className='relative aspect-[16/10] w-full overflow-hidden'>
                       <Image
                         src={imageUrl}
                         alt={post.title ?? ''}
                         fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className='object-cover transition-transform duration-500 group-hover:scale-105'
+                        sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
                       />
                     </div>
                   </a>
                 )}
 
                 {/* Content */}
-                <div className="flex flex-col gap-3 p-6">
+                <div className='flex flex-col gap-3 p-6'>
                   {formattedDate && (
-                    <div className="text-muted-foreground flex items-center gap-1.5 text-xs">
+                    <div className='text-muted-foreground flex items-center gap-1.5 text-xs'>
                       <CalendarDays size={12} />
                       <time dateTime={post.publishedAt}>{formattedDate}</time>
                     </div>
                   )}
                   {post.title && (
-                    <h3 className="text-foreground line-clamp-2 text-lg leading-snug font-semibold">
+                    <h3 className='text-foreground line-clamp-2 text-lg leading-snug font-semibold'>
                       <a
                         href={`/blog/${post.slug}`}
-                        className="hover:text-primary transition-colors"
+                        className='hover:text-primary transition-colors'
                       >
                         {post.title}
                       </a>
@@ -141,7 +141,7 @@ export default async function BlogPreviewSection({
         </m.div>
 
         {block.cta && (
-          <div className="mt-12 flex justify-center">
+          <div className='mt-12 flex justify-center'>
             <CtaGroup
               ctas={[block.cta]}
               lang={lang as 'en' | 'th'}

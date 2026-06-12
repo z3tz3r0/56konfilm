@@ -42,12 +42,12 @@ export default function ProcessSection({ block }: ProcessSectionProps) {
   const isTimeline = block.layout === 'timeline';
 
   return (
-    <SectionShell background={block.background} dataTestId="process-section">
-      <div className="container mx-auto">
+    <SectionShell background={block.background} dataTestId='process-section'>
+      <div className='container mx-auto'>
         {block.heading && (
           <SectionHeader
             heading={block.heading}
-            className="mx-auto mb-16 max-w-3xl text-center"
+            className='mx-auto mb-16 max-w-3xl text-center'
           />
         )}
 
@@ -55,9 +55,9 @@ export default function ProcessSection({ block }: ProcessSectionProps) {
           isTimeline ? (
             /* ── Timeline Layout ── */
             <m.ol
-              className="relative mx-auto max-w-2xl space-y-0"
-              initial="hidden"
-              whileInView="visible"
+              className='relative mx-auto max-w-2xl space-y-0'
+              initial='hidden'
+              whileInView='visible'
               viewport={{ once: true, margin: '-80px' }}
               variants={useLiteMotion ? undefined : containerVariants}
             >
@@ -66,32 +66,32 @@ export default function ProcessSection({ block }: ProcessSectionProps) {
                 return (
                   <m.li
                     key={step._key ?? index}
-                    className="relative flex gap-6 pb-10"
+                    className='relative flex gap-6 pb-10'
                     variants={useLiteMotion ? undefined : itemVariants}
-                    data-testid="process-step"
+                    data-testid='process-step'
                   >
                     {/* Vertical connector line */}
                     {!isLast && (
                       <div
-                        aria-hidden="true"
-                        className="bg-border absolute top-10 left-5 h-full w-px -translate-x-1/2"
+                        aria-hidden='true'
+                        className='bg-border absolute top-10 left-5 h-full w-px -translate-x-1/2'
                       />
                     )}
 
                     {/* Step dot / number */}
-                    <div className="bg-primary text-primary-foreground relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold">
+                    <div className='bg-primary text-primary-foreground relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold'>
                       {String(step.stepNumber ?? index + 1).padStart(2, '0')}
                     </div>
 
                     {/* Content */}
-                    <div className="pt-1 pb-2">
+                    <div className='pt-1 pb-2'>
                       {step.title && (
-                        <h3 className="text-foreground mb-2 text-lg font-semibold">
+                        <h3 className='text-foreground mb-2 text-lg font-semibold'>
                           {step.title}
                         </h3>
                       )}
                       {step.description && (
-                        <p className="text-muted-foreground text-sm leading-relaxed">
+                        <p className='text-muted-foreground text-sm leading-relaxed'>
                           {step.description}
                         </p>
                       )}
@@ -111,25 +111,25 @@ export default function ProcessSection({ block }: ProcessSectionProps) {
                     ? 'md:grid-cols-4'
                     : 'md:grid-cols-3 lg:grid-cols-5'
               )}
-              initial="hidden"
-              whileInView="visible"
+              initial='hidden'
+              whileInView='visible'
               viewport={{ once: true, margin: '-80px' }}
               variants={useLiteMotion ? undefined : containerVariants}
             >
               {block.steps.map((step, index) => (
                 <m.li
                   key={step._key ?? index}
-                  className="group flex flex-col gap-4"
+                  className='group flex flex-col gap-4'
                   variants={useLiteMotion ? undefined : itemVariants}
-                  data-testid="process-step"
+                  data-testid='process-step'
                 >
                   {/* Step number */}
-                  <div className="flex items-end gap-3">
-                    <span className="text-primary/20 text-7xl leading-none font-black tabular-nums">
+                  <div className='flex items-end gap-3'>
+                    <span className='text-primary/20 text-7xl leading-none font-black tabular-nums'>
                       {String(step.stepNumber ?? index + 1).padStart(2, '0')}
                     </span>
                     {step.icon && (
-                      <span className="text-primary mb-1">
+                      <span className='text-primary mb-1'>
                         <DynamicIcon
                           name={step.icon}
                           size={24}
@@ -140,16 +140,16 @@ export default function ProcessSection({ block }: ProcessSectionProps) {
                   </div>
 
                   {/* Separator */}
-                  <div className="bg-border h-px w-full" />
+                  <div className='bg-border h-px w-full' />
 
                   {/* Text */}
                   {step.title && (
-                    <h3 className="text-foreground text-base font-semibold tracking-tight">
+                    <h3 className='text-foreground text-base font-semibold tracking-tight'>
                       {step.title}
                     </h3>
                   )}
                   {step.description && (
-                    <p className="text-muted-foreground text-sm leading-relaxed">
+                    <p className='text-muted-foreground text-sm leading-relaxed'>
                       {step.description}
                     </p>
                   )}
