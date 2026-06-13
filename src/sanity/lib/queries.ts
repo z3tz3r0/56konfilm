@@ -24,7 +24,7 @@ import {
   AWARDS_SECTION,
   CONTACT_INFO_SECTION,
   BLOG_PREVIEW_SECTION,
-  FEATURE_SHOWCASE_SECTION,
+  CAPABILITIES_SECTION,
 } from './queries/sections';
 
 export const settingsQuery = groq`*[_type == "settings"][0] {
@@ -126,7 +126,7 @@ export const pageBySlugQuery = groq`
       ${AWARDS_SECTION},
       ${CONTACT_INFO_SECTION},
       ${BLOG_PREVIEW_SECTION},
-      ${FEATURE_SHOWCASE_SECTION}
+      ${CAPABILITIES_SECTION}
     }
   }
 `;

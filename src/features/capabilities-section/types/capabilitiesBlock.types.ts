@@ -1,7 +1,7 @@
 import { BaseBlock, SectionHeading, ImageSource } from '@shared/types';
 
-export interface FeatureShowcaseSectionBlock extends BaseBlock {
-  _type: 'featureShowcaseSection';
+export interface CapabilitiesSectionBlock extends BaseBlock {
+  _type: 'capabilitiesSection';
   background?: string;
   layout?: 'accordion' | 'grid';
   heading?: SectionHeading;

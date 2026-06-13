@@ -36,7 +36,7 @@ import { processSectionType } from './sections/processSection';
 import { awardsSectionType } from './sections/awardsSection';
 import { contactInfoSectionType } from './sections/contactInfoSection';
 import { blogPreviewSectionType } from './sections/blogPreviewSection';
-import { featureShowcaseSectionType } from './sections/featureShowcaseSection';
+import { capabilitiesSectionType } from './sections/capabilitiesSection';
 import { processItemType } from './objects/processItem';
 import { awardItemType } from './objects/awardItem';
 import { contactInfoItemType } from './objects/contactInfoItem';
@@ -73,7 +73,7 @@ export const schemaType = {
     awardsSectionType,
     contactInfoSectionType,
     blogPreviewSectionType,
-    featureShowcaseSectionType,
+    capabilitiesSectionType,
     localizedBlockType,
     ctaType,
     mediaBlockType,
