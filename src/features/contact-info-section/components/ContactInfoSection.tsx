@@ -1,9 +1,8 @@
 'use client';
 
 import { m, type Variants } from 'motion/react';
-import * as LucideIcons from 'lucide-react';
-import { type LucideProps } from 'lucide-react';
 import { SectionShell, SectionHeader } from '@shared/components';
+import { DynamicLucideIcon } from '@shared/components/common/DynamicLucideIcon';
 import { cn } from '@shared/utils';
 import { useDeviceTier } from '@shared/hooks';
 import { ContactForm } from '@features/contact-section/components';
@@ -25,13 +24,6 @@ const cardVariants: Variants = {
     transition: { duration: 0.5, ease: 'easeOut' },
   },
 };
-
-function DynamicIcon({ name, ...props }: { name: string } & LucideProps) {
-  const Icon = (
-    LucideIcons as unknown as Record<string, React.ComponentType<LucideProps>>
-  )[name];
-  return Icon ? <Icon {...props} /> : null;
-}
 
 interface ContactInfoSectionProps {
   block: ContactInfoSectionBlock;
@@ -83,7 +75,7 @@ export default function ContactInfoSection({ block }: ContactInfoSectionProps) {
                 >
                   {channel.icon && (
                     <span className='text-primary bg-primary/10 flex h-10 w-10 items-center justify-center rounded-lg'>
-                      <DynamicIcon
+                      <DynamicLucideIcon
                         name={channel.icon}
                         size={20}
                         strokeWidth={1.5}

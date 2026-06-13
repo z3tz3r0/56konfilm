@@ -16,7 +16,12 @@ export default function ParallaxText({
 }: ParallaxTextProps) {
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
 
-  if (isInitialized && !allowHeavyMotion) {
+  // Render the static (immediately visible) text on the server and during the
+  // initial client render. The heavy parallax variant only mounts once the
+  // device tier is resolved AND heavy motion is allowed. This keeps the large
+  // hero headline (the LCP element) painted at first paint instead of leaving
+  // it invisible behind a motion entrance until hydration completes.
+  if (!isInitialized || !allowHeavyMotion) {
     return (
       <StaticParallaxText className={className}>{children}</StaticParallaxText>
     );
@@ -59,9 +64,11 @@ function HeavyParallaxText({ children, className }: ParallaxTextProps) {
           y: y,
           textShadow: '0 4px 20px rgba(0,0,0,0.5)',
         }}
-        initial={{ opacity: 0, scale: 0.9 }}
+        // initial={false}: this variant only mounts after hydration, by which
+        // point the static text is already visible. Skip the opacity/scale
+        // entrance so the swap is seamless (no flash) and never delays LCP.
+        initial={false}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
       >
         {children}
       </m.p>
