@@ -1,6 +1,7 @@
 import { Locale, SiteMode } from '@shared/config';
 import { HeroSectionBlock } from './heroBlock.types';
 import { CtaGroup, ParallaxText, SectionShell } from '@shared/components';
+import { HeroTitleText } from './components';
 
 interface HeroSectionProps {
   block: HeroSectionBlock;
@@ -50,9 +51,12 @@ export default function HeroSection({
         )}
 
         {block.title ? (
-          <h1 className='text-3xl tracking-tight text-balance md:text-5xl'>
-            {block.title}
-          </h1>
+          <HeroTitleText
+            text={block.title}
+            enableRotatingText={block.enableRotatingText}
+            rotatingWords={block.rotatingWords}
+            className='text-3xl tracking-tight text-balance md:text-5xl'
+          />
         ) : null}
 
         {/* Services */}

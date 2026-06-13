@@ -14,6 +14,7 @@ export default function TestHeroPage() {
     _type: 'heroSection',
     _key: 'test-hero',
     title: 'Test Title',
+    enableRotatingText: false,
     parallaxText: 'WE SHOOT HARD',
     shapeDivider: false,
     backgroundMedia: [

@@ -23,6 +23,7 @@ export function getMockPage(
             mode === 'wedding'
               ? 'Wedding Studio Philosophy'
               : 'Production House Story',
+          enableRotatingText: false,
           tagline:
             mode === 'wedding'
               ? 'Romantic, gentle, and timeless.'

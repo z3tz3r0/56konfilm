@@ -1,7 +1,17 @@
-import { defineField, defineType } from 'sanity';
+import { defineArrayMember, defineField, defineType } from 'sanity';
 import { backgroundMediaType } from '../objects/backgroundMedia';
 import { ctaType } from '../objects/cta';
 import { localizedStringField } from '../objects/localized';
+
+/**
+ * ตรวจสอบว่าข้อความต้องไม่เป็นช่องว่าง (Whitespace) เพียงอย่างเดียว
+ */
+function validateNonEmptyString(value: string | undefined) {
+  if (typeof value === 'string' && value.trim().length === 0) {
+    return 'Text cannot be empty or contain only whitespace.';
+  }
+  return true;
+}
 
 export const heroSectionType = defineType({
   name: 'heroSection',
@@ -12,6 +22,66 @@ export const heroSectionType = defineType({
       name: 'title',
       title: 'Title',
       description: 'หัวข้อของ Hero Section',
+    }),
+    defineField({
+      name: 'enableRotatingText',
+      title: 'Enable Rotating Text Effect?',
+      description:
+        'เปิดใช้งานเอฟเฟกต์สลับคำ (ข้อความจะสลับเปลี่ยนไปมาอัตโนมัติ)',
+      type: 'boolean',
+      options: { layout: 'checkbox' },
+      initialValue: false,
+    }),
+    defineField({
+      name: 'rotatingWords',
+      title: 'Words for Rotating Effect',
+      description:
+        'เพิ่มชุดคำหรือข้อความที่ต้องการให้แสดงสลับกัน (พิมพ์ข้อความแล้วกด Enter เพื่อเพิ่มคำ แนะนำให้ใช้ข้อความสั้นๆ)',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'localizedWord',
+          title: 'Localized Word',
+          fields: [
+            {
+              name: 'en',
+              title: 'English (EN)',
+              type: 'string',
+              validation: (Rule) =>
+                Rule.required().min(1).custom(validateNonEmptyString),
+            },
+            {
+              name: 'th',
+              title: 'ภาษาไทย (TH)',
+              type: 'string',
+              validation: (Rule) =>
+                Rule.required().min(1).custom(validateNonEmptyString),
+            },
+          ],
+          preview: {
+            select: {
+              title: 'en',
+              subtitle: 'th',
+            },
+            prepare({ title, subtitle }) {
+              return {
+                title: title || 'Missing English Language',
+                subtitle: subtitle || 'Missing Thai Language',
+              };
+            },
+          },
+        }),
+      ],
+      hidden: ({ parent }) => !parent?.enableRotatingText,
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          if (context.hidden) return true;
+          if (!value || value.length < 2) {
+            return 'Please enter at least two words.';
+          }
+          return true;
+        }),
     }),
     localizedStringField({
       name: 'tagline',
