@@ -1,9 +1,8 @@
 'use client';
 
 import { m, type Variants } from 'motion/react';
-import * as LucideIcons from 'lucide-react';
-import { type LucideProps } from 'lucide-react';
 import { SectionShell, SectionHeader } from '@shared/components';
+import { DynamicLucideIcon } from '@shared/components/common/DynamicLucideIcon';
 import { cn } from '@shared/utils';
 import { useDeviceTier } from '@shared/hooks';
 import { ProcessSectionBlock } from '../types';
@@ -27,13 +26,6 @@ const itemVariants: Variants = {
 
 interface ProcessSectionProps {
   block: ProcessSectionBlock;
-}
-
-function DynamicIcon({ name, ...props }: { name: string } & LucideProps) {
-  const Icon = (
-    LucideIcons as unknown as Record<string, React.ComponentType<LucideProps>>
-  )[name];
-  return Icon ? <Icon {...props} /> : null;
 }
 
 export default function ProcessSection({ block }: ProcessSectionProps) {
@@ -130,7 +122,7 @@ export default function ProcessSection({ block }: ProcessSectionProps) {
                     </span>
                     {step.icon && (
                       <span className='text-primary mb-1'>
-                        <DynamicIcon
+                        <DynamicLucideIcon
                           name={step.icon}
                           size={24}
                           strokeWidth={1.5}

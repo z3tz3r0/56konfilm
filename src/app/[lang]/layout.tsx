@@ -16,7 +16,7 @@ import Script from 'next/script';
 import { env } from '@shared/config';
 import { ReactNode } from 'react';
 
-// --- Production Fonts ---
+// --- Production Fonts (preloaded: above-the-fold brand type on /[lang]/production) ---
 const sora = Sora({
   variable: '--font-sora',
   subsets: ['latin', 'latin-ext'],
@@ -28,20 +28,23 @@ const notoSansThai = Noto_Sans_Thai({
   display: 'swap',
 });
 
-// --- Wedding Fonts
+// --- Wedding Fonts (preload:false: never rendered in production mode, so keep them
+// off the LCP critical path; they still load via swap if the user enters wedding mode) ---
 const cormorantGaramond = Cormorant_Garamond({
   variable: '--font-cormorant-garamond',
   subsets: ['latin', 'latin-ext'],
   display: 'swap',
+  preload: false,
 });
 const ibmPlexSansThai = IBM_Plex_Sans_Thai({
   variable: '--font-ibm-plex-sans-thai',
   weight: ['400', '500', '600', '700'],
   subsets: ['thai'],
   display: 'swap',
+  preload: false,
 });
 
-// --- Body Fonts ---
+// --- Body Fonts (preloaded) ---
 const manrope = Manrope({
   variable: '--font-manrope',
   subsets: ['latin', 'latin-ext'],

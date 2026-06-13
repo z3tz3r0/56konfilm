@@ -3,9 +3,8 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { m, AnimatePresence, type Variants } from 'motion/react';
-import * as LucideIcons from 'lucide-react';
-import { type LucideProps } from 'lucide-react';
 import { SectionShell, SectionHeader } from '@shared/components';
+import { DynamicLucideIcon } from '@shared/components/common/DynamicLucideIcon';
 import { cn } from '@shared/utils';
 import { urlFor } from '@/sanity/lib/image';
 import { useDeviceTier } from '@shared/hooks';
@@ -27,13 +26,6 @@ const cardVariants: Variants = {
     transition: { duration: 0.5, ease: 'easeOut' },
   },
 };
-
-function DynamicIcon({ name, ...props }: { name: string } & LucideProps) {
-  const Icon = (
-    LucideIcons as unknown as Record<string, React.ComponentType<LucideProps>>
-  )[name];
-  return Icon ? <Icon {...props} /> : null;
-}
 
 interface CapabilitiesSectionProps {
   block: CapabilitiesSectionBlock;
@@ -91,7 +83,7 @@ export default function CapabilitiesSection({
                                 : 'text-muted-foreground'
                             )}
                           >
-                            <DynamicIcon
+                            <DynamicLucideIcon
                               name={feature.icon}
                               size={18}
                               strokeWidth={1.5}
@@ -170,7 +162,7 @@ export default function CapabilitiesSection({
                     >
                       {activeFeature?.icon && (
                         <span className='text-muted-foreground/30'>
-                          <DynamicIcon
+                          <DynamicLucideIcon
                             name={activeFeature.icon}
                             size={64}
                             strokeWidth={1}
@@ -207,7 +199,7 @@ export default function CapabilitiesSection({
                 >
                   {feature.icon && (
                     <span className='text-primary bg-primary/10 flex h-10 w-10 items-center justify-center rounded-lg'>
-                      <DynamicIcon
+                      <DynamicLucideIcon
                         name={feature.icon}
                         size={20}
                         strokeWidth={1.5}
