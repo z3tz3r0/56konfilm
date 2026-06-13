@@ -72,6 +72,11 @@ export const pageType = defineType({
         { type: 'faqSection' },
         { type: 'videoShowreelSection' },
         { type: 'featuredProjectsSection' },
+        { type: 'processSection' },
+        { type: 'awardsSection' },
+        { type: 'contactInfoSection' },
+        { type: 'blogPreviewSection' },
+        { type: 'featureShowcaseSection' },
       ],
       hidden: ({ document }) => document?.siteMode !== 'production',
       validation: (Rule) =>
@@ -109,6 +114,11 @@ export const pageType = defineType({
         { type: 'faqSection' },
         { type: 'videoShowreelSection' },
         { type: 'featuredProjectsSection' },
+        { type: 'processSection' },
+        { type: 'awardsSection' },
+        { type: 'contactInfoSection' },
+        { type: 'blogPreviewSection' },
+        { type: 'featureShowcaseSection' },
       ],
       hidden: ({ document }) => document?.siteMode !== 'wedding',
       validation: (Rule) =>

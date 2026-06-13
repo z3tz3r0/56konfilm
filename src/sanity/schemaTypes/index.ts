@@ -32,6 +32,15 @@ import { faqSectionType } from './sections/faqSection';
 import { statsCounterSectionType } from './sections/statsCounterSection';
 import { teamSectionType } from './sections/teamSection';
 import { videoShowreelSectionType } from './sections/videoShowreelSection';
+import { processSectionType } from './sections/processSection';
+import { awardsSectionType } from './sections/awardsSection';
+import { contactInfoSectionType } from './sections/contactInfoSection';
+import { blogPreviewSectionType } from './sections/blogPreviewSection';
+import { featureShowcaseSectionType } from './sections/featureShowcaseSection';
+import { processItemType } from './objects/processItem';
+import { awardItemType } from './objects/awardItem';
+import { contactInfoItemType } from './objects/contactInfoItem';
+import { featureItemType } from './objects/featureItem';
 import { settingsType } from './settings';
 import { featuredProjectsSectionType } from './sections/featuredProjectsSection';
 import { projectTagType } from './projectTag';
@@ -60,6 +69,11 @@ export const schemaType = {
     faqSectionType,
     videoShowreelSectionType,
     featuredProjectsSectionType,
+    processSectionType,
+    awardsSectionType,
+    contactInfoSectionType,
+    blogPreviewSectionType,
+    featureShowcaseSectionType,
     localizedBlockType,
     ctaType,
     mediaBlockType,
@@ -73,6 +87,10 @@ export const schemaType = {
     statItemType,
     teamMemberType,
     faqItemType,
+    processItemType,
+    awardItemType,
+    contactInfoItemType,
+    featureItemType,
     socialMediaType,
     seoObjectType,
     richTextType,

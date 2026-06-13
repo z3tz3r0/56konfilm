@@ -15,6 +15,11 @@ import { StatsCounterSectionBlock } from './stats-counter-section/types';
 import { TeamSectionBlock } from './team-section/types';
 import { FAQSectionBlock } from './faq-section/types';
 import { VideoShowreelSectionBlock } from './video-showreel-section/types';
+import { ProcessSectionBlock } from './process-section/types';
+import { AwardsSectionBlock } from './awards-section/types';
+import { ContactInfoSectionBlock } from './contact-info-section/types';
+import { BlogPreviewSectionBlock } from './blog-preview-section/types';
+import { FeatureShowcaseSectionBlock } from './feature-showcase-section/types';
 import { Locale, SiteMode } from '@shared/config';
 import { FeaturedProjectsSectionBlock } from './featured-project-section/types';
 
@@ -58,6 +63,22 @@ const VideoShowreelSection = dynamic(
 const FeaturedProjectSection = dynamic(
   () => import('./featured-project-section/FeaturedProjectSection')
 );
+const ProcessSection = dynamic(
+  () => import('@features/process-section/components/ProcessSection')
+);
+const AwardsSection = dynamic(
+  () => import('@features/awards-section/components/AwardsSection')
+);
+const ContactInfoSection = dynamic(
+  () => import('@features/contact-info-section/components/ContactInfoSection')
+);
+const BlogPreviewSection = dynamic(
+  () => import('@features/blog-preview-section/components/BlogPreviewSection')
+);
+const FeatureShowcaseSection = dynamic(
+  () =>
+    import('@features/feature-showcase-section/components/FeatureShowcaseSection')
+);
 
 type PageContentBlock =
   | HeroSectionBlock
@@ -74,7 +95,12 @@ type PageContentBlock =
   | TeamSectionBlock
   | FAQSectionBlock
   | VideoShowreelSectionBlock
-  | FeaturedProjectsSectionBlock;
+  | FeaturedProjectsSectionBlock
+  | ProcessSectionBlock
+  | AwardsSectionBlock
+  | ContactInfoSectionBlock
+  | BlogPreviewSectionBlock
+  | FeatureShowcaseSectionBlock;
 
 type FullPageDocument = PageDocument<PageContentBlock>;
 
@@ -200,6 +226,18 @@ function renderBlock(
           mode={mode}
         />
       );
+    case 'processSection':
+      return <ProcessSection key={key} block={block} />;
+    case 'awardsSection':
+      return <AwardsSection key={key} block={block} />;
+    case 'contactInfoSection':
+      return <ContactInfoSection key={key} block={block} />;
+    case 'blogPreviewSection':
+      return (
+        <BlogPreviewSection key={key} block={block} lang={lang} mode={mode} />
+      );
+    case 'featureShowcaseSection':
+      return <FeatureShowcaseSection key={key} block={block} />;
     default:
       return null;
   }
