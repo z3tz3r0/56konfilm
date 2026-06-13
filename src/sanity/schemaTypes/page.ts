@@ -76,7 +76,7 @@ export const pageType = defineType({
         { type: 'awardsSection' },
         { type: 'contactInfoSection' },
         { type: 'blogPreviewSection' },
-        { type: 'featureShowcaseSection' },
+        { type: 'capabilitiesSection' },
       ],
       hidden: ({ document }) => document?.siteMode !== 'production',
       validation: (Rule) =>
@@ -118,7 +118,7 @@ export const pageType = defineType({
         { type: 'awardsSection' },
         { type: 'contactInfoSection' },
         { type: 'blogPreviewSection' },
-        { type: 'featureShowcaseSection' },
+        { type: 'capabilitiesSection' },
       ],
       hidden: ({ document }) => document?.siteMode !== 'wedding',
       validation: (Rule) =>

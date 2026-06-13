@@ -375,8 +375,8 @@ export const BLOG_PREVIEW_SECTION = groq`
   }
 `;
 
-export const FEATURE_SHOWCASE_SECTION = groq`
-  _type == "featureShowcaseSection" => {
+export const CAPABILITIES_SECTION = groq`
+  _type == "capabilitiesSection" => {
     background,
     layout,
     heading {

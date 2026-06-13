@@ -9,7 +9,7 @@ import { SectionShell, SectionHeader } from '@shared/components';
 import { cn } from '@shared/utils';
 import { urlFor } from '@/sanity/lib/image';
 import { useDeviceTier } from '@shared/hooks';
-import { FeatureShowcaseSectionBlock } from '../types';
+import { CapabilitiesSectionBlock } from '../types';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -35,13 +35,13 @@ function DynamicIcon({ name, ...props }: { name: string } & LucideProps) {
   return Icon ? <Icon {...props} /> : null;
 }
 
-interface FeatureShowcaseSectionProps {
-  block: FeatureShowcaseSectionBlock;
+interface CapabilitiesSectionProps {
+  block: CapabilitiesSectionBlock;
 }
 
-export default function FeatureShowcaseSection({
+export default function CapabilitiesSection({
   block,
-}: FeatureShowcaseSectionProps) {
+}: CapabilitiesSectionProps) {
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
   const useLiteMotion = isInitialized && !allowHeavyMotion;
   const features = block.features ?? [];
@@ -53,7 +53,7 @@ export default function FeatureShowcaseSection({
   return (
     <SectionShell
       background={block.background}
-      dataTestId='feature-showcase-section'
+      dataTestId='capabilities-section'
     >
       <div className='container mx-auto'>
         {block.heading && (

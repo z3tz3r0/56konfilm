@@ -3,16 +3,16 @@ import { ComponentIcon } from '@sanity/icons';
 import { localizedBlockType } from '../objects/localized';
 import { featureItemType } from '../objects/featureItem';
 
-export const featureShowcaseSectionType = defineType({
-  name: 'featureShowcaseSection',
-  title: 'Feature Showcase Section',
+export const capabilitiesSectionType = defineType({
+  name: 'capabilitiesSection',
+  title: 'Capabilities Section',
   type: 'object',
   icon: ComponentIcon,
   fields: [
     defineField({
       name: 'heading',
       title: 'Heading',
-      description: 'หัวข้อส่วน Feature Showcase',
+      description: 'หัวข้อส่วน Capabilities',
       type: localizedBlockType.name,
     }),
     defineField({
@@ -61,7 +61,7 @@ export const featureShowcaseSectionType = defineType({
     prepare({ title, features, layout }) {
       const count = Array.isArray(features) ? features.length : 0;
       return {
-        title: title || 'Feature Showcase Section',
+        title: title || 'Capabilities Section',
         subtitle: `${count} feature${count === 1 ? '' : 's'} · ${layout ?? 'accordion'}`,
       };
     },

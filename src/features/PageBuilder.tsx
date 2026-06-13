@@ -19,7 +19,7 @@ import { ProcessSectionBlock } from './process-section/types';
 import { AwardsSectionBlock } from './awards-section/types';
 import { ContactInfoSectionBlock } from './contact-info-section/types';
 import { BlogPreviewSectionBlock } from './blog-preview-section/types';
-import { FeatureShowcaseSectionBlock } from './feature-showcase-section/types';
+import { CapabilitiesSectionBlock } from './capabilities-section/types';
 import { Locale, SiteMode } from '@shared/config';
 import { FeaturedProjectsSectionBlock } from './featured-project-section/types';
 
@@ -75,9 +75,8 @@ const ContactInfoSection = dynamic(
 const BlogPreviewSection = dynamic(
   () => import('@features/blog-preview-section/components/BlogPreviewSection')
 );
-const FeatureShowcaseSection = dynamic(
-  () =>
-    import('@features/feature-showcase-section/components/FeatureShowcaseSection')
+const CapabilitiesSection = dynamic(
+  () => import('@features/capabilities-section/components/CapabilitiesSection')
 );
 
 type PageContentBlock =
@@ -100,7 +99,7 @@ type PageContentBlock =
   | AwardsSectionBlock
   | ContactInfoSectionBlock
   | BlogPreviewSectionBlock
-  | FeatureShowcaseSectionBlock;
+  | CapabilitiesSectionBlock;
 
 type FullPageDocument = PageDocument<PageContentBlock>;
 
@@ -236,8 +235,8 @@ function renderBlock(
       return (
         <BlogPreviewSection key={key} block={block} lang={lang} mode={mode} />
       );
-    case 'featureShowcaseSection':
-      return <FeatureShowcaseSection key={key} block={block} />;
+    case 'capabilitiesSection':
+      return <CapabilitiesSection key={key} block={block} />;
     default:
       return null;
   }
