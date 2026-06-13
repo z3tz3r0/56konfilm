@@ -3,6 +3,16 @@ import { backgroundMediaType } from '../objects/backgroundMedia';
 import { ctaType } from '../objects/cta';
 import { localizedStringField } from '../objects/localized';
 
+/**
+ * ตรวจสอบว่าข้อความต้องไม่เป็นช่องว่าง (Whitespace) เพียงอย่างเดียว
+ */
+function validateNonEmptyString(value: string | undefined) {
+  if (typeof value === 'string' && value.trim().length === 0) {
+    return 'Text cannot be empty or contain only whitespace.';
+  }
+  return true;
+}
+
 export const heroSectionType = defineType({
   name: 'heroSection',
   title: 'Hero Section',
@@ -34,8 +44,20 @@ export const heroSectionType = defineType({
           name: 'localizedWord',
           title: 'Localized Word',
           fields: [
-            { name: 'en', title: 'English (EN)', type: 'string' },
-            { name: 'th', title: 'ภาษาไทย (TH)', type: 'string' },
+            {
+              name: 'en',
+              title: 'English (EN)',
+              type: 'string',
+              validation: (Rule) =>
+                Rule.required().min(1).custom(validateNonEmptyString),
+            },
+            {
+              name: 'th',
+              title: 'ภาษาไทย (TH)',
+              type: 'string',
+              validation: (Rule) =>
+                Rule.required().min(1).custom(validateNonEmptyString),
+            },
           ],
           preview: {
             select: {

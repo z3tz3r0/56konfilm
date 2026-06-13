@@ -16,14 +16,21 @@ export default function HeroTitleText({
   if (!text) return null;
 
   const parts = text.split(/\[(.*?)\]/g);
+  const validRotatingWords = rotatingWords?.filter(
+    (word) => typeof word === 'string' && word.trim() !== ''
+  );
+
   const titleWithRotatingEffect = () =>
     parts.map((part, index) => {
       // Index เลขคี่ คือตำแหน่งของข้อความที่อยู่ในวงเล็บ [ ]
       if (index % 2 === 1) {
         // เช็กเงื่อนไข: ถ้าเปิดใช้งานสลับคำ + มีคำใน Array มากกว่า 1 คำ
-        if (enableRotatingText && rotatingWords.length > 1) {
+        if (enableRotatingText && validRotatingWords.length > 1) {
           return (
-            <DynamicRotatingText key={index} rotatingWords={rotatingWords} />
+            <DynamicRotatingText
+              key={index}
+              rotatingWords={validRotatingWords}
+            />
           );
         }
 
