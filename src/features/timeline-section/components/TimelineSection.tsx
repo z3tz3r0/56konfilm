@@ -92,7 +92,7 @@ export default function TimelineSection({
                 opts={{ align: 'start', loop: false }}
                 className='w-full'
               >
-                <CarouselContent className=''>
+                <CarouselContent>
                   {steps.map((step, index) => (
                     <CarouselItem
                       key={step._key ?? index}
@@ -142,7 +142,7 @@ function TimelineCard({
     >
       <CardContent className='flex flex-1 flex-col justify-start'>
         {/* Big Faded Number (Background) */}
-        <span className='text-charcoal-gray absolute right-4 bottom-[50%] translate-y-[50%] text-[10rem] leading-none font-bold select-none'>
+        <span className='text-charcoal-gray absolute right-[50%] bottom-[50%] translate-x-[50%] translate-y-[50%] text-[10rem] leading-none font-bold select-none lg:right-4 lg:translate-x-0'>
           {step.order ?? index + 1}
         </span>
 
@@ -161,7 +161,9 @@ function TimelineCard({
           ) : null}
 
           {step.title ? (
-            <h3 className='text-2xl font-bold md:text-3xl'>{step.title}</h3>
+            <h3 className='text-center text-4xl font-bold wrap-break-word lg:text-start'>
+              {step.title}
+            </h3>
           ) : null}
         </div>
 
