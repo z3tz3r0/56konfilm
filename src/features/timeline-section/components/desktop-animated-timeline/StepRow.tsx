@@ -3,8 +3,7 @@
 import TimelineCard from '@features/timeline-section/components/TimelineCard';
 import { TimelineStep } from '@features/timeline-section/types';
 import { cn } from '@shared/utils';
-import { m, useScroll, useTransform } from 'motion/react';
-import { useRef } from 'react';
+import { m } from 'motion/react';
 
 interface StepRowProps {
   step: TimelineStep;
@@ -12,28 +11,10 @@ interface StepRowProps {
 }
 
 export default function StepRow({ step, index }: StepRowProps) {
-  const rowRef = useRef<HTMLLIElement>(null);
   const isEven = index % 2 === 0;
-
-  // แต่ละแถวจะแอบตรวจ scroll ของตัวเองสั้นๆ เพื่อสั่งให้ "จุดและเส้นแนวนอน" งอก
-  const { scrollYProgress: rowProgress } = useScroll({
-    target: rowRef,
-    offset: ['start 80%', 'center center'],
-  });
-
-  // อนิเมชันสำหรับจุดกลมตรงกลาง
-  const markerScale = useTransform(rowProgress, [0.5, 0.6], [0.8, 1.2]);
-
-  // อนิเมชันเส้นแนวนอนวิ่งออกข้างแบบรถออกตัว
-  const connectorWidth = useTransform(
-    rowProgress,
-    [0.3, 0.6, 1],
-    ['0%', '20%', '100%']
-  );
 
   return (
     <li
-      ref={rowRef}
       className={cn(
         'relative flex min-h-[300px] items-center md:gap-0',
         isEven ? 'flex-row' : 'flex-row-reverse'
@@ -49,7 +30,10 @@ export default function StepRow({ step, index }: StepRowProps) {
           )}
         >
           <m.div
-            style={{ width: connectorWidth }}
+            initial={{ width: '0%' }}
+            whileInView={{ width: '100%' }}
+            viewport={{ once: true, margin: '-20% 0px -40% 0px' }}
+            transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1.0] }}
             className={cn(
               'bg-primary h-full',
               isEven ? 'float-right origin-right' : 'float-left origin-left'
@@ -61,7 +45,15 @@ export default function StepRow({ step, index }: StepRowProps) {
 
       {/* หมุดกลมตรงกลาง */}
       <m.div
-        style={{ scale: markerScale }}
+        initial={{ scale: 0.6 }}
+        whileInView={{ scale: 1.2 }}
+        viewport={{ once: true, margin: '-20% 0px -40% 0px' }}
+        transition={{
+          duration: 0.3,
+          type: 'spring',
+          stiffness: 300,
+          damping: 20,
+        }}
         className='bg-primary ring-background absolute left-1/2 z-10 flex size-4 shrink-0 origin-center -translate-x-1/2 rounded-full shadow-sm ring-6'
       />
 
