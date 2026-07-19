@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { TimelineStep } from '@features/timeline-section/types';
 import { m, useScroll, useTransform } from 'motion/react';
 import StepRow from './StepRow';
+import { useDeviceTier } from '@shared/hooks';
 
 interface DesktopAnimatedTimelineProps {
   steps: TimelineStep[];
@@ -13,6 +14,8 @@ export default function DesktopAnimatedTimeline({
   steps,
 }: DesktopAnimatedTimelineProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { allowHeavyMotion, isInitialized } = useDeviceTier();
+  const useLiteMotion = isInitialized && !allowHeavyMotion;
 
   // 1. จับ Scroll บอร์ดใหญ่บอร์ดเดียว ยาวตั้งแต่หัวจรดท้าย
   const { scrollYProgress } = useScroll({
@@ -21,7 +24,6 @@ export default function DesktopAnimatedTimeline({
   });
 
   // 2. เส้นแนวตั้งหลัก (เส้นเดียวอยู่ภายนอก) ยิ่งเลื่อนยิ่งงอกลงมาเรื่อยๆ
-  // ใช้สูตรรถสปอร์ตออกตัว (Ease-In): ช่วงแรกไปช้า ช่วงท้ายพุ่งไว
   const mainVerticalFill = useTransform(
     scrollYProgress,
     [0, 0.2, 0.5, 0.8, 1],
@@ -35,10 +37,14 @@ export default function DesktopAnimatedTimeline({
         aria-hidden='true'
         className='absolute top-4 bottom-6 left-1/2 -z-10 w-[2px] -translate-x-1/2'
       >
-        <m.div
-          style={{ height: mainVerticalFill }}
-          className='bg-primary w-full origin-top'
-        />
+        {useLiteMotion ? (
+          <div className='bg-primary h-full w-full' />
+        ) : (
+          <m.div
+            style={{ height: mainVerticalFill }}
+            className='bg-primary w-full origin-top'
+          />
+        )}
       </div>
 
       <ol className='space-y-24'>
