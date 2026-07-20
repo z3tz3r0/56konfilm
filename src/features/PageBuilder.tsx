@@ -30,7 +30,7 @@ const CardCollectionSection = dynamic(
   () => import('./card-collection-section/CardCollectionSection')
 );
 const TimelineSection = dynamic(
-  () => import('./timeline-section/components/TimelineSection')
+  () => import('./timeline-section/TimelineSection')
 );
 const LogoGridSection = dynamic(
   () => import('./logo-grid-section/components/LogoGridSection')
