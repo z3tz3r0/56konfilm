@@ -83,7 +83,7 @@ export default async function RootLayout({
       suppressHydrationWarning
       data-mode={initialMode}
       style={{ colorScheme: initialTheme }}
-      className={`${sora.variable} ${cormorantGaramond.variable} ${manrope.variable} ${notoSansThai.variable} ${ibmPlexSansThai.variable} ${anuphan.variable} antialiased`}
+      className={`relative ${sora.variable} ${cormorantGaramond.variable} ${manrope.variable} ${notoSansThai.variable} ${ibmPlexSansThai.variable} ${anuphan.variable} antialiased`}
     >
       <head>
         {env.NODE_ENV === 'development' && (
