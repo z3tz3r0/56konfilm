@@ -22,7 +22,10 @@ export default function TimelineCard({
     >
       <CardContent className='flex flex-1 flex-col justify-start'>
         {/* Big Faded Number (Background) */}
-        <span className='text-charcoal-gray group-hover:text-primary/20 absolute right-[50%] bottom-[50%] translate-x-[50%] translate-y-[50%] text-[10rem] leading-none font-bold transition-colors duration-200 select-none lg:right-4 lg:translate-x-0'>
+        <span
+          aria-hidden='true'
+          className='text-charcoal-gray group-hover:text-primary/20 absolute right-[50%] bottom-[50%] translate-x-[50%] translate-y-[50%] text-[10rem] leading-none font-bold transition-colors duration-200 select-none lg:right-4 lg:translate-x-0'
+        >
           {step.order ?? index + 1}
         </span>
 

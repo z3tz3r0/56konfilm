@@ -24,6 +24,7 @@ export default function StepRow({ step, index }: StepRowProps) {
       <div className={cn('relative w-1/2', isEven ? 'pr-12' : 'pl-12')}>
         {/* เส้นเชื่อมแนวนอน */}
         <div
+          aria-hidden='true'
           className={cn(
             'absolute top-1/2 -z-10 h-[2px] w-12 -translate-y-1/2',
             isEven ? 'right-0' : 'left-0'
@@ -44,21 +45,23 @@ export default function StepRow({ step, index }: StepRowProps) {
       </div>
 
       {/* หมุดกลมตรงกลาง */}
-      <m.div
-        initial={{ scale: 0.6 }}
-        whileInView={{ scale: 1.2 }}
-        viewport={{ once: true, margin: '-20% 0px -40% 0px' }}
-        transition={{
-          duration: 0.3,
-          type: 'spring',
-          stiffness: 300,
-          damping: 20,
-        }}
-        className='bg-primary ring-background absolute left-1/2 z-10 flex size-4 shrink-0 origin-center -translate-x-1/2 rounded-full shadow-sm ring-6'
-      />
-
-      {/* ฝั่งช่องว่าง */}
-      <div className='w-1/2' />
+      <div
+        aria-hidden='true'
+        className='absolute left-1/2 z-10 -translate-x-1/2'
+      >
+        <m.div
+          initial={{ scale: 0.6 }}
+          whileInView={{ scale: 1.2 }}
+          viewport={{ once: true, margin: '-20% 0px -40% 0px' }}
+          transition={{
+            duration: 0.3,
+            type: 'spring',
+            stiffness: 300,
+            damping: 20,
+          }}
+          className='bg-primary ring-background flex size-4 shrink-0 rounded-full shadow-sm ring-6'
+        />
+      </div>
     </li>
   );
 }
