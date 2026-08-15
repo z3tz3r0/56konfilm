@@ -29,7 +29,7 @@ const TWO_COLUMN_SECTION = groq`
     layout,
     "sectionVariant": coalesce(sectionVariant, 'standard'),
     background,
-    content{
+    heading{
       "eyebrow": ${LOCALIZED('eyebrow')},
       "heading": ${LOCALIZED('heading')},
       "body": ${LOCALIZED('body')},

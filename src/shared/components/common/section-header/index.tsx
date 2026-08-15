@@ -1,13 +1,15 @@
 import { cn } from '@shared/utils';
 import { getAlignmentClass } from '@shared/utils';
 import type { SectionHeading } from '@shared/types';
-import HighlightedText from './HighlightedText';
+import HighlightedText from '../HighlightedText';
+import EmphasizedHeader from './EmphasizedHeader';
 
 interface SectionHeaderProps {
-  heading?: SectionHeading;
+  heading: SectionHeading;
   className?: string;
   headingClassName?: string;
   bodyClassName?: string;
+  isEmphasizedVariant?: boolean;
 }
 
 export default function SectionHeader({
@@ -15,11 +17,16 @@ export default function SectionHeader({
   className,
   headingClassName,
   bodyClassName,
+  isEmphasizedVariant = false,
 }: SectionHeaderProps) {
   if (!heading?.eyebrow && !heading?.heading && !heading?.body) return null;
 
   const alignClass = getAlignmentClass(heading?.align);
-
+  if (isEmphasizedVariant) {
+    return (
+      <EmphasizedHeader heading={heading.heading} alignClass={alignClass} />
+    );
+  }
   return (
     <header className={cn('flex flex-col gap-3', alignClass, className)}>
       {heading?.eyebrow ? (

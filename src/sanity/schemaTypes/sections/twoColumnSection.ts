@@ -49,9 +49,9 @@ export const twoColumnSectionType = defineType({
       initialValue: 'standard',
     }),
     defineField({
-      name: 'content',
-      title: 'Content',
-      description: 'เนื้อหาของ Two Column Section',
+      name: 'heading',
+      title: 'Heading',
+      description: 'หัวข้อของ Two Column Section',
       type: localizedBlockType.name,
     }),
     defineField({

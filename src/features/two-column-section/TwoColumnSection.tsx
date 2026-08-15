@@ -11,7 +11,7 @@ export default function TwoColumnSection({
   const isTextLeft = block.layout !== 'textRight';
   const textColumnOrder = isTextLeft ? 'md:order-1' : 'md:order-2';
   const mediaColumnOrder = isTextLeft ? 'md:order-2' : 'md:order-1';
-  const alignClass = getAlignmentClass(block.content?.align);
+  const alignClass = getAlignmentClass(block.heading?.align);
 
   const baseProps = {
     block,

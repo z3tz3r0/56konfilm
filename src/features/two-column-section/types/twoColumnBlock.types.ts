@@ -1,17 +1,17 @@
 import { Locale, SiteMode } from '@shared/config';
-import { BaseBlock, ContentCta, MediaItem } from '@shared/types';
+import {
+  BaseBlock,
+  ContentCta,
+  MediaItem,
+  SectionHeading,
+} from '@shared/types';
 
 interface TwoColumnSectionBlock extends BaseBlock {
   _type: 'twoColumnSection';
   layout?: string;
   sectionVariant: 'standard' | 'emphasized';
   background?: string;
-  content: {
-    eyebrow?: string;
-    heading?: string;
-    body?: string;
-    align?: string;
-  };
+  heading: SectionHeading;
   media?: MediaItem;
   ctas?: ContentCta[];
 }

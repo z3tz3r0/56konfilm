@@ -53,9 +53,7 @@ const PhilosophySection = dynamic(
 const StatsCounterSection = dynamic(
   () => import('./stats-counter-section/components/StatsCounterSection')
 );
-const TeamSection = dynamic(
-  () => import('./team-section/components/TeamSection')
-);
+const TeamSection = dynamic(() => import('./team-section/TeamSection'));
 const FAQSection = dynamic(() => import('./faq-section/components/FAQSection'));
 const VideoShowreelSection = dynamic(
   () => import('./video-showreel-section/components/VideoShowreelSection')
@@ -211,7 +209,7 @@ function renderBlock(
     case 'statsCounterSection':
       return <StatsCounterSection key={key} block={block} />;
     case 'teamSection':
-      return <TeamSection key={key} block={block} />;
+      return <TeamSection key={key} block={block} lang={lang} />;
     case 'faqSection':
       return <FAQSection key={key} block={block} />;
     case 'videoShowreelSection':

@@ -6,9 +6,9 @@ export interface TeamSectionBlock extends BaseBlock {
   background?: string;
   heading?: SectionHeading;
   members?: Array<{
-    _key?: string;
-    name?: string;
-    role?: string;
+    _key: string;
+    name: string;
+    role: string;
     bio?: string;
     image?: SanityImageSource;
   }>;
