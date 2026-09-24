@@ -29,7 +29,7 @@ export const teamMemberType = defineType({
     defineField({
       name: 'image',
       title: 'Photo',
-      description: 'รูปถ่ายสมาชิก (แนะนำอัตราส่วน 1:1)',
+      description: 'รูปถ่ายสมาชิก (แนะนำอัตราส่วน 4:3)',
       type: 'image',
       options: { hotspot: true },
       validation: (Rule) => Rule.required(),

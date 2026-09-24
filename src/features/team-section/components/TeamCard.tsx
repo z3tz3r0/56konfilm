@@ -20,26 +20,28 @@ export default function TeamCard({ lang, member }: TeamCardProps) {
 
   return (
     <m.article
-      className='bg-neutral mx-auto flex max-w-[370px] flex-col items-center overflow-hidden rounded-2xl text-center'
+      className='bg-neutral mx-auto flex w-full max-w-[370px] flex-col items-center overflow-hidden rounded-2xl text-center'
       variants={useLiteMotion ? undefined : fadeUpItemVariants}
       data-testid='team-member'
     >
-      {member.image ? (
-        <div className='group relative aspect-4/3 w-full overflow-hidden'>
-          <Image
-            src={urlFor(member.image).width(300).height(300).fit('fill').url()}
-            alt={member.name ?? 'Team member'}
-            fill
-            className='object-cover transition-transform duration-700 ease-out group-hover:scale-105'
-            sizes='(min-width: 768px) 250px, 370px'
-          />
-          <div className='group-hover:bg-background/10 absolute inset-0 bg-transparent transition-colors duration-700 ease-out' />
-        </div>
-      ) : (
-        <div className='bg-off-white text-text-tertiary flex h-full w-full items-center justify-center'>
-          {lang === 'en' ? 'No Image' : 'ไม่มีรูปภาพ'}
-        </div>
-      )}
+      <div className='group relative aspect-4/3 w-full overflow-hidden'>
+        {member.image ? (
+          <>
+            <Image
+              src={urlFor(member.image).width(740).height(555).url()}
+              alt={member.name ?? 'Team member'}
+              fill
+              className='object-cover transition-transform duration-700 ease-out group-hover:scale-105'
+              sizes='(min-width: 1472px) 290px, (min-width: 1024px) calc(25vw - 78px), (min-width: 768px) calc(33.333vw - 37.333px), (min-width: 640px) calc(33.333vw - 32px), (min-width: 402px) 370px, calc(100vw - 32px)'
+            />
+            <div className='group-hover:bg-background/10 absolute inset-0 bg-transparent transition-colors duration-700 ease-out' />
+          </>
+        ) : (
+          <div className='bg-off-white text-text-tertiary flex h-full w-full items-center justify-center'>
+            {lang === 'en' ? 'No Image' : 'ไม่มีรูปภาพ'}
+          </div>
+        )}
+      </div>
       <section className='text-neutral-foreground-secondary space-y-3 p-4'>
         <div className='space-y-1'>
           <h3 className='text-neutral-foreground text-base font-semibold'>

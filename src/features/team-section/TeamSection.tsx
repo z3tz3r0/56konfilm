@@ -27,7 +27,7 @@ export default function TeamSection({ lang, block }: TeamSectionProps) {
         {block.heading && (
           <SectionHeader isEmphasizedVariant heading={block.heading} />
         )}
-        {block.members?.length && (
+        {(block.members?.length ?? 0) > 0 && (
           <m.div
             className='grid gap-8 sm:grid-cols-3 md:gap-10 lg:grid-cols-4'
             initial='hidden'
