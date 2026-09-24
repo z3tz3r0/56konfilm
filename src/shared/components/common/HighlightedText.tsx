@@ -1,11 +1,15 @@
+import type { CSSProperties } from 'react';
+
 interface HighlightedTextProps {
   text: string;
   className: string;
+  style?: CSSProperties;
 }
 
 export default function HighlightedText({
   text,
   className,
+  style,
 }: HighlightedTextProps) {
   if (!text) return null;
 
@@ -26,5 +30,9 @@ export default function HighlightedText({
       return <span key={index}>{part}</span>;
     });
 
-  return <h2 className={className}>{highlightedText()}</h2>;
+  return (
+    <h2 className={className} style={style}>
+      {highlightedText()}
+    </h2>
+  );
 }
