@@ -1,6 +1,6 @@
 import { defineField, defineType } from 'sanity';
 import { UserIcon } from '@sanity/icons';
-import { localizedStringField, localizedTextField } from './localized';
+import { localizedStringField } from './localized';
 
 export const teamMemberType = defineType({
   name: 'teamMember',
@@ -21,10 +21,10 @@ export const teamMemberType = defineType({
       description: 'ตำแหน่ง เช่น "Director of Photography"',
       validation: (Rule) => Rule.required(),
     }),
-    localizedTextField({
+    localizedStringField({
       name: 'bio',
-      title: 'Bio',
-      description: 'ประวัติย่อ (ไม่จำเป็น)',
+      title: 'Tagline',
+      description: `สโลแกนประจำตัวหรือประโยคสั้นๆ ที่สะท้อนตัวตน ทัศนคติ และความมุ่งมั่นในการทำงาน (ไม่เกิน 1 ประโยค) เช่น "Even a single millimeter of camera movement won't let you miss."`,
     }),
     defineField({
       name: 'image',
