@@ -11,7 +11,8 @@ interface CtaBannerSectionProps {
 
 function getOverlayConfig(
   overlay: CtaBannerSectionBlock['overlay'],
-  mode: SiteMode
+  mode: SiteMode,
+  align?: string
 ) {
   // Explicitly disabled
   if (overlay?.enabled === false) return {};
@@ -25,12 +26,16 @@ function getOverlayConfig(
     };
   }
   // Use the Figma gradient only when Production has no CMS overlay settings.
-  return {
-    overlayClassName:
-      mode === 'production'
-        ? 'bg-linear-to-r from-midnight-black/50 from-50% to-midnight-black/0'
-        : 'bg-midnight-black/60',
-  };
+  if (mode === 'production') {
+    return {
+      overlayClassName:
+        align === 'end'
+          ? 'bg-linear-to-l from-midnight-black/50 from-50% to-midnight-black/0'
+          : 'bg-linear-to-r from-midnight-black/50 from-50% to-midnight-black/0',
+    };
+  }
+
+  return { overlayClassName: 'bg-midnight-black/60' };
 }
 
 export default function CtaBannerSection({
@@ -41,7 +46,7 @@ export default function CtaBannerSection({
   const isProduction = mode === 'production';
   const hasImage = Boolean(block.media?.image);
   const alignClass = getAlignmentClass(block.content?.align);
-  const overlay = getOverlayConfig(block.overlay, mode);
+  const overlay = getOverlayConfig(block.overlay, mode, block.content?.align);
   const ctaGroup = (
     <CtaGroup
       ctas={block.ctas}
@@ -73,10 +78,7 @@ export default function CtaBannerSection({
           )}
         >
           {block.content?.eyebrow ? (
-            <span
-              className='text-primary text-sm font-semibold tracking-[0.2em] uppercase'
-              style={{ color: block.customColors?.eyebrow?.hex }}
-            >
+            <span className='text-primary text-sm font-semibold tracking-[0.2em] uppercase'>
               {block.content.eyebrow}
             </span>
           ) : null}
@@ -88,7 +90,6 @@ export default function CtaBannerSection({
                 isProduction && 'font-bold',
                 isProduction && hasImage && 'text-foreground'
               )}
-              style={{ color: block.customColors?.heading?.hex }}
             />
           ) : null}
           {block.content?.body ? (
@@ -98,7 +99,6 @@ export default function CtaBannerSection({
                 isProduction ? 'w-full md:w-2/3 md:text-2xl' : 'max-w-2xl',
                 isProduction && hasImage && 'text-foreground'
               )}
-              style={{ color: block.customColors?.body?.hex }}
             >
               {block.content.body}
             </p>
