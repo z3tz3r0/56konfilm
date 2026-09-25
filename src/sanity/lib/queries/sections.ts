@@ -152,11 +152,6 @@ const CTA_BANNER_SECTION = groq`
     ctas[]{
       ${CTA_PROJECTION}
     },
-    customColors{
-      eyebrow,
-      heading,
-      body
-    },
     overlay{
       enabled,
       color,
