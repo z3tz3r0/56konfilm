@@ -20,17 +20,29 @@ import {
 import { ContactHeader } from './ContactHeader';
 import { useContactForm } from '@features/contact-section/hooks';
 import { WeddingFields } from '@features/contact-section/components/WeddingFields';
+import { cn } from '@shared/utils';
 
 interface ContactFormProps {
   lang?: 'en' | 'th';
+  presentation?: 'standalone' | 'embedded';
 }
 
-export function ContactForm({ lang = 'en' }: ContactFormProps) {
+export function ContactForm({
+  lang = 'en',
+  presentation = 'standalone',
+}: ContactFormProps) {
   const { form, onSubmit, isPending, isWedding } = useContactForm();
 
   return (
-    <div className='mx-auto w-full max-w-lg p-4 md:p-8'>
-      <ContactHeader isWedding={isWedding} />
+    <div
+      data-testid='contact-form'
+      data-presentation={presentation}
+      className={cn(
+        'w-full min-w-0',
+        presentation === 'standalone' && 'mx-auto max-w-lg p-4 md:p-8'
+      )}
+    >
+      {presentation === 'standalone' && <ContactHeader isWedding={isWedding} />}
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>

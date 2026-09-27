@@ -9,8 +9,9 @@ export const socialMediaType = defineType({
   fields: [
     localizedStringField({
       name: 'label',
-      title: 'Label',
-      description: 'ชื่อแพลตฟอร์มโซเชียลมีเดีย',
+      title: 'Social link name',
+      description:
+        'ใส่ชื่อช่องทาง เช่น Facebook หรือ Instagram หากไม่ได้เลือกไอคอน เว็บไซต์จะแสดงชื่อนี้แทน และใช้เป็นชื่อลิงก์ในส่วนท้ายเว็บไซต์ด้วย',
       validation: (Rule) => Rule.required(),
     }),
     defineField({

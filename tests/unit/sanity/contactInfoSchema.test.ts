@@ -83,15 +83,93 @@ describe('Contact Info CMS schema', () => {
     ).toEqual(['default', 'sm', 'md', 'lg']);
   });
 
-  it('does not require the newly added section fields on existing documents', () => {
-    for (const name of [
-      'socialHeading',
-      'socialLinks',
-      'submitButton',
-      'map',
-    ]) {
+  it('keeps the new section settings optional on existing documents', () => {
+    for (const name of ['socialHeading', 'submitButton', 'map']) {
       expect(getField(fields, name).validation).toBeUndefined();
     }
+  });
+
+  it('clarifies the social link name without renaming the stored label', () => {
+    const socialFields = socialMediaType.fields as unknown as Array<
+      SchemaField & { title?: string; description?: string }
+    >;
+    expect(getField(socialFields, 'label')).toMatchObject({
+      name: 'label',
+      title: 'Social link name',
+      type: 'internationalizedArrayString',
+      description:
+        'ใส่ชื่อช่องทาง เช่น Facebook หรือ Instagram หากไม่ได้เลือกไอคอน เว็บไซต์จะแสดงชื่อนี้แทน และใช้เป็นชื่อลิงก์ในส่วนท้ายเว็บไซต์ด้วย',
+    });
+    const rule = { required: vi.fn().mockReturnThis() };
+    getField(socialFields, 'label').validation?.(rule);
+    expect(rule.required).toHaveBeenCalledOnce();
+  });
+
+  function socialNameValidation() {
+    const rule = {
+      custom: vi.fn().mockReturnThis(),
+      error: vi.fn().mockReturnThis(),
+    };
+    getField(fields, 'socialLinks').validation?.(rule);
+    expect(rule.error).toHaveBeenCalledOnce();
+    return rule.custom.mock.calls[0][0] as (value: unknown) =>
+      | true
+      | {
+          message: string;
+          paths: Array<Array<string | number | { _key: string }>>;
+        };
+  }
+
+  it.each([undefined, []])(
+    'allows omitted or empty Social Links (%j)',
+    (value) => {
+      expect(socialNameValidation()(value)).toBe(true);
+    }
+  );
+
+  it.each([
+    undefined,
+    [],
+    [{ _key: 'en' }],
+    [{ _key: 'en', value: '' }],
+    [{ _key: 'en', value: ' \n\t ' }],
+  ])(
+    'rejects missing or blank social names (%j) with a publish-blocking error',
+    (label) => {
+      const result = socialNameValidation()([{ _key: 'facebook', label }]);
+      expect(result).toMatchObject({
+        message: expect.stringContaining('social link name'),
+        paths: expect.arrayContaining([
+          expect.arrayContaining([{ _key: 'facebook' }, 'label']),
+        ]),
+      });
+    }
+  );
+
+  it('points to each blank added translation without requiring every supported language', () => {
+    const validate = socialNameValidation();
+    expect(validate([{ label: [{ _key: 'en', value: 'Facebook' }] }])).toBe(
+      true
+    );
+    expect(
+      validate([{ label: [{ _key: 'th', value: 'เฟซบุ๊กของบริษัท' }] }])
+    ).toBe(true);
+    expect(
+      validate([
+        {
+          _key: 'facebook',
+          label: [
+            { _key: 'english-id', language: 'en', value: 'Facebook' },
+            { _key: 'thai-id', language: 'th', value: ' ' },
+          ],
+        },
+      ])
+    ).toMatchObject({
+      paths: [[{ _key: 'facebook' }, 'label', { _key: 'thai-id' }, 'value']],
+    });
+    expect(validate([{ label: [{ value: ' ' }] }])).toMatchObject({
+      paths: [[0, 'label', 0, 'value']],
+    });
   });
 
   it('validates optional map URLs using the same allowlist as the frontend', () => {

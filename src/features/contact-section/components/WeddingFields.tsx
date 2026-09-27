@@ -53,9 +53,13 @@ export function WeddingFields({ form, lang = 'en' }: WeddingFieldsProps) {
               <PopoverTrigger asChild>
                 <FormControl>
                   <Button
-                    variant='secondary'
+                    type='button'
+                    variant='input'
+                    name={field.name}
+                    ref={field.ref}
+                    onBlur={field.onBlur}
                     className={cn(
-                      'w-full pl-3 text-left font-normal',
+                      'justify-start text-left',
                       !field.value && 'text-muted-foreground'
                     )}
                   >
@@ -72,7 +76,11 @@ export function WeddingFields({ form, lang = 'en' }: WeddingFieldsProps) {
                 <Calendar
                   mode='single'
                   selected={field.value as Date | undefined}
-                  onSelect={field.onChange}
+                  onSelect={(date) => {
+                    field.onChange(date);
+                    // Opening the calendar blurs the trigger; recheck its error on selection.
+                    void form.trigger('weddingDate');
+                  }}
                   disabled={(date) =>
                     date < new Date() || date < new Date('1900-01-01')
                   }

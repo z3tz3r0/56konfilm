@@ -49,4 +49,27 @@ describe('Contact Form Validation', () => {
     if (!result.success) console.error(JSON.stringify(result.error, null, 2));
     expect(result.success).toBe(true);
   });
+
+  it.each([
+    [undefined, 'Please select your wedding date.'],
+    [null, 'Please select a valid wedding date.'],
+    ['2050-07-21', 'Please select a valid wedding date.'],
+    [new Date('invalid'), 'Please select a valid wedding date.'],
+  ])('returns a friendly wedding date error for %s', (weddingDate, message) => {
+    const result = contactFormSchema.safeParse({
+      type: 'wedding',
+      name: 'Example couple',
+      email: 'example@example.com',
+      message: 'A detailed wedding inquiry',
+      venue: 'Example venue',
+      weddingDate,
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(
+        result.error.issues.find((issue) => issue.path[0] === 'weddingDate')
+          ?.message
+      ).toBe(message);
+    }
+  });
 });

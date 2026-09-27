@@ -19,9 +19,12 @@ const commercialSchema = z.object({
 const weddingSchema = z.object({
   ...commonFields,
   type: z.literal('wedding'),
-  weddingDate: z
-    .date()
-    .refine((date) => !Number.isNaN(date.getTime()), 'Invalid wedding date'),
+  weddingDate: z.date({
+    error: (issue) =>
+      issue.input === undefined
+        ? 'Please select your wedding date.'
+        : 'Please select a valid wedding date.',
+  }),
   venue: z.string().min(2, 'Venue is required'),
 });
 

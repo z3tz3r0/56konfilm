@@ -5,6 +5,12 @@ import { contactInfoItemType } from '../objects/contactInfoItem';
 import { socialMediaType } from '../objects/socialMedia';
 import { ctaStyleField } from '../objects/cta';
 import { isGoogleMapsEmbedUrl } from '@shared/utils/googleMaps';
+import type { Path } from 'sanity';
+
+interface StoredSocialLink {
+  _key?: string;
+  label?: Array<{ _key?: string; value?: string }>;
+}
 
 export const contactInfoSectionType = defineType({
   name: 'contactInfoSection',
@@ -29,7 +35,7 @@ export const contactInfoSectionType = defineType({
     defineField({
       name: 'showForm',
       title: 'Show Contact Form',
-      description: 'แสดงฟอร์มติดต่อด้านล่างการ์ด',
+      description: 'แสดงฟอร์มคู่กับข้อมูลติดต่อบน Desktop และเรียงลงบน Mobile',
       type: 'boolean',
       initialValue: true,
     }),
@@ -44,6 +50,34 @@ export const contactInfoSectionType = defineType({
       description: 'ไอคอนและลิงก์โซเชียลมีเดียสำหรับ Contact Section นี้',
       type: 'array',
       of: [defineArrayMember({ type: socialMediaType.name })],
+      validation: (Rule) =>
+        Rule.custom<StoredSocialLink[]>((links) => {
+          const paths: Path[] = [];
+          for (const [index, link] of (links ?? []).entries()) {
+            const linkPath = link._key ? { _key: link._key } : index;
+            if (!Array.isArray(link.label) || link.label.length === 0) {
+              paths.push([linkPath, 'label']);
+              continue;
+            }
+            for (const [labelIndex, label] of link.label.entries()) {
+              if (typeof label.value !== 'string' || !label.value.trim()) {
+                paths.push([
+                  linkPath,
+                  'label',
+                  label._key ? { _key: label._key } : labelIndex,
+                  'value',
+                ]);
+              }
+            }
+          }
+          return paths.length
+            ? {
+                message:
+                  'Enter a social link name for each added language. Empty names or whitespace-only names are not allowed.',
+                paths,
+              }
+            : true;
+        }).error(),
     }),
     defineField({
       name: 'submitButton',

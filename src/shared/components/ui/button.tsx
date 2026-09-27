@@ -2,6 +2,7 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Slot } from 'radix-ui';
 import { cn } from '@shared/utils';
+import { inputControlStyles } from './input';
 
 const buttonVariants = cva(
   'cursor-pointer inline-flex items-center justify-center gap-2 font-medium transition-all disabled:cursor-not-allowed disabled:opacity-30 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:rounded-full dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
@@ -18,6 +19,7 @@ const buttonVariants = cva(
           'bg-neutral text-neutral-foreground shadow-xs hover:not-disabled:text-primary-foreground hover:not-disabled:bg-primary dark:hover:not-disabled:bg-background dark:hover:not-disabled:text-text-primary',
         ghost: 'hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
+        input: '',
       },
       size: {
         default: 'px-6 py-3 has-[>svg]:px-3',
@@ -27,6 +29,12 @@ const buttonVariants = cva(
         icon: 'size-12',
       },
     },
+    compoundVariants: [
+      {
+        variant: 'input',
+        className: cn(inputControlStyles, 'font-normal dark:rounded-md'),
+      },
+    ],
     defaultVariants: {
       variant: 'default',
       size: 'default',
