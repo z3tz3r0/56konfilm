@@ -2,6 +2,10 @@ import { z } from 'zod';
 
 const commonFields = {
   name: z.string().min(2, 'Name must be at least 2 characters'),
+  surname: z
+    .string({ error: 'Please enter your surname.' })
+    .trim()
+    .min(1, 'Please enter your surname.'),
   email: z.email('Please enter a valid email address'),
   message: z
     .string()

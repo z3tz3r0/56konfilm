@@ -21,17 +21,23 @@ import { ContactHeader } from './ContactHeader';
 import { useContactForm } from '@features/contact-section/hooks';
 import { WeddingFields } from '@features/contact-section/components/WeddingFields';
 import { cn } from '@shared/utils';
+import { mapCtaVariant } from '@shared/components/common/CtaButton';
+import type { ContactSubmitButton } from '@features/contact-info-section/types';
+import { contactFormCopy } from '../formCopy';
 
 interface ContactFormProps {
   lang?: 'en' | 'th';
   presentation?: 'standalone' | 'embedded';
+  submitButton?: ContactSubmitButton;
 }
 
 export function ContactForm({
   lang = 'en',
   presentation = 'standalone',
+  submitButton,
 }: ContactFormProps) {
   const { form, onSubmit, isPending, isWedding } = useContactForm();
+  const copy = contactFormCopy[lang];
 
   return (
     <div
@@ -45,7 +51,10 @@ export function ContactForm({
       {presentation === 'standalone' && <ContactHeader isWedding={isWedding} />}
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className='flex min-w-0 flex-col gap-6'
+        >
           <input type='hidden' {...form.register('type')} />
 
           <FormField
@@ -53,13 +62,32 @@ export function ContactForm({
             name='name'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel className='text-text-primary'>{copy.name}</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder={
-                      isWedding ? 'Your names' : 'Agency / Company Name'
-                    }
-                    autoComplete='name'
+                    placeholder={copy.namePlaceholder}
+                    autoComplete='given-name'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name='surname'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='text-text-primary'>
+                  {copy.surname}
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder={copy.surnamePlaceholder}
+                    autoComplete='family-name'
+                    aria-required='true'
                     {...field}
                   />
                 </FormControl>
@@ -73,11 +101,13 @@ export function ContactForm({
             name='email'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className='text-text-primary'>
+                  {copy.email}
+                </FormLabel>
                 <FormControl>
                   <Input
                     type='email'
-                    placeholder='contact@example.com'
+                    placeholder={copy.emailPlaceholder}
                     autoComplete='email'
                     spellCheck={false}
                     {...field}
@@ -97,13 +127,15 @@ export function ContactForm({
             name='message'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Message</FormLabel>
+                <FormLabel className='text-text-primary'>
+                  {copy.message}
+                </FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder={
                       isWedding
-                        ? 'Tell us about your day…'
-                        : 'Tell us about your project…'
+                        ? copy.weddingMessagePlaceholder
+                        : copy.commercialMessagePlaceholder
                     }
                     className='resize-none'
                     autoComplete='off'
@@ -115,9 +147,29 @@ export function ContactForm({
             )}
           />
 
-          <Button type='submit' disabled={isPending} className='w-full'>
-            {isPending && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
-            {isPending ? 'Sending...' : 'Send Message'}
+          <Button
+            type='submit'
+            variant={mapCtaVariant(submitButton?.style ?? 'primary')}
+            size={submitButton?.size ?? 'default'}
+            disabled={isPending}
+            aria-busy={isPending}
+            className={cn(
+              'max-w-full wrap-anywhere whitespace-normal',
+              presentation === 'standalone'
+                ? 'w-full'
+                : 'self-center lg:self-start'
+            )}
+          >
+            {isPending && (
+              <Loader2
+                data-icon='inline-start'
+                aria-hidden='true'
+                className='animate-spin'
+              />
+            )}
+            {isPending
+              ? copy.sending
+              : submitButton?.label?.trim() || copy.submit}
           </Button>
         </form>
       </Form>

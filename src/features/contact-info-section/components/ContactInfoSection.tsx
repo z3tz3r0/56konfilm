@@ -158,7 +158,11 @@ export default function ContactInfoSection({
             data-testid='contact-form-social'
           >
             {block.showForm && (
-              <ContactForm lang={lang} presentation='embedded' />
+              <ContactForm
+                lang={lang}
+                presentation='embedded'
+                submitButton={block.submitButton}
+              />
             )}
             {(block.socialHeading || socialLinks.length > 0) && (
               <div

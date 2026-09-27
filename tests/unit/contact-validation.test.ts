@@ -3,10 +3,49 @@ import { describe, expect, it } from 'vitest';
 import { contactFormSchema } from '@features/contact-section/validation';
 
 describe('Contact Form Validation', () => {
+  describe.each(['commercial', 'wedding'] as const)(
+    'surname in %s inquiries',
+    (type) => {
+      const validData = {
+        type,
+        name: 'Example',
+        email: 'example@example.com',
+        message: 'A detailed inquiry message',
+        weddingDate: new Date(2050, 6, 21),
+        venue: 'Example venue',
+      };
+
+      it.each([undefined, null, '', '   ', '\n\t'])(
+        'rejects a missing or blank surname: %s',
+        (surname) => {
+          const result = contactFormSchema.safeParse({ ...validData, surname });
+          expect(result.success).toBe(false);
+          if (!result.success) {
+            expect(result.error.issues).toContainEqual(
+              expect.objectContaining({
+                path: ['surname'],
+                message: 'Please enter your surname.',
+              })
+            );
+          }
+        }
+      );
+
+      it('trims a valid surname without requiring multiple characters', () => {
+        const result = contactFormSchema.safeParse({
+          ...validData,
+          surname: '  ก  ',
+        });
+        expect(result.success).toBe(true);
+        if (result.success) expect(result.data.surname).toBe('ก');
+      });
+    }
+  );
   it('should validate a valid commercial inquiry', () => {
     const validCommercial = {
       type: 'commercial',
       name: 'Agency X',
+      surname: 'Example',
       email: 'contact@agency.com',
       message: 'We need a commercial video production.',
       // Should NOT require wedding fields
@@ -23,6 +62,7 @@ describe('Contact Form Validation', () => {
     const invalidWedding = {
       type: 'wedding',
       name: 'Couple Y',
+      surname: 'Example',
       email: 'love@couple.com',
       message: 'We are looking for a wedding photographer.',
       // Missing date and venue
@@ -40,6 +80,7 @@ describe('Contact Form Validation', () => {
     const validWedding = {
       type: 'wedding',
       name: 'Couple Z',
+      surname: 'Example',
       email: 'couple@z.com',
       message: 'This is a detailed message about our big day.',
       weddingDate: new Date('2025-12-25'),
@@ -59,6 +100,7 @@ describe('Contact Form Validation', () => {
     const result = contactFormSchema.safeParse({
       type: 'wedding',
       name: 'Example couple',
+      surname: 'Example',
       email: 'example@example.com',
       message: 'A detailed wedding inquiry',
       venue: 'Example venue',

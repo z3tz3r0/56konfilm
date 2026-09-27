@@ -34,6 +34,7 @@ function WeddingForm({
     defaultValues: {
       type: 'wedding',
       name: 'Example couple',
+      surname: 'Example',
       email: 'example@example.com',
       message: 'Wedding inquiry',
       venue: 'Example venue',
@@ -101,14 +102,15 @@ describe('WeddingFields', () => {
     'keeps selected-date formatting in %s',
     (lang) => {
       render(<WeddingForm lang={lang} date={selectedDate} />);
-      expect(screen.getByLabelText('Wedding Date')).toHaveTextContent(
+      const trigger = screen.getByLabelText(
+        lang === 'th' ? 'วันแต่งงาน' : 'Wedding Date'
+      );
+      expect(trigger).toHaveTextContent(
         new Intl.DateTimeFormat(lang === 'th' ? 'th-TH' : 'en-US', {
           dateStyle: 'medium',
         }).format(selectedDate)
       );
-      expect(screen.getByLabelText('Wedding Date')).not.toHaveClass(
-        'text-muted-foreground'
-      );
+      expect(trigger).not.toHaveClass('text-muted-foreground');
     }
   );
 

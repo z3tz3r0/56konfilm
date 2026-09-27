@@ -61,14 +61,19 @@ vi.mock('@features/contact-section/components', () => ({
   ContactForm: ({
     lang,
     presentation,
+    submitButton,
   }: {
     lang: string;
     presentation?: string;
+    submitButton?: ContactInfoSectionBlock['submitButton'];
   }) => (
     <div
       data-testid='contact-form'
       data-lang={lang}
       data-presentation={presentation}
+      data-submit-label={submitButton?.label}
+      data-submit-style={submitButton?.style}
+      data-submit-size={submitButton?.size}
     />
   ),
 }));
@@ -124,6 +129,23 @@ describe('ContactInfoSection', () => {
       'data-presentation',
       'embedded'
     );
+  });
+
+  it('passes the localized CMS submit configuration to the embedded form', () => {
+    render(
+      <ContactInfoSection
+        block={{
+          ...legacyBlock,
+          showForm: true,
+          submitButton: { label: 'คุยกับเรา', style: 'neutral', size: 'md' },
+        }}
+        lang='th'
+      />
+    );
+    const form = screen.getByTestId('contact-form');
+    expect(form).toHaveAttribute('data-submit-label', 'คุยกับเรา');
+    expect(form).toHaveAttribute('data-submit-style', 'neutral');
+    expect(form).toHaveAttribute('data-submit-size', 'md');
   });
 
   it('keeps the default English locale for existing callers', () => {

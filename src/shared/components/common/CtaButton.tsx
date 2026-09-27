@@ -75,7 +75,7 @@ function resolveCta(
   return { href: null, isExternal: false };
 }
 
-function mapCtaVariant(style: ContentCta['style']) {
+export function mapCtaVariant(style: ContentCta['style']) {
   switch (style) {
     case 'secondary':
       return 'secondary' as const;

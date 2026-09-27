@@ -6,6 +6,7 @@ import { m } from 'motion/react';
 import { useMemo } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import type { ContactFormValues } from '@features/contact-section/validation';
+import { contactFormCopy } from '../formCopy';
 import {
   Button,
   Calendar,
@@ -26,6 +27,7 @@ interface WeddingFieldsProps {
 }
 
 export function WeddingFields({ form, lang = 'en' }: WeddingFieldsProps) {
+  const copy = contactFormCopy[lang];
   const dateFormatter = useMemo(
     () =>
       new Intl.DateTimeFormat(lang === 'th' ? 'th-TH' : 'en-US', {
@@ -41,14 +43,16 @@ export function WeddingFields({ form, lang = 'en' }: WeddingFieldsProps) {
       animate={{ opacity: 1, height: 'auto' }}
       exit={{ opacity: 0, height: 0 }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
-      className='space-y-6 overflow-hidden'
+      className='flex flex-col gap-6 overflow-hidden'
     >
       <FormField
         control={form.control}
         name='weddingDate'
         render={({ field }) => (
           <FormItem className='flex flex-col'>
-            <FormLabel>Wedding Date</FormLabel>
+            <FormLabel className='text-text-primary'>
+              {copy.weddingDate}
+            </FormLabel>
             <Popover>
               <PopoverTrigger asChild>
                 <FormControl>
@@ -66,9 +70,13 @@ export function WeddingFields({ form, lang = 'en' }: WeddingFieldsProps) {
                     {field.value instanceof Date ? (
                       dateFormatter.format(field.value)
                     ) : (
-                      <span>Pick a date</span>
+                      <span>{copy.weddingDatePlaceholder}</span>
                     )}
-                    <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
+                    <CalendarIcon
+                      data-icon='inline-end'
+                      aria-hidden='true'
+                      className='ml-auto opacity-50'
+                    />
                   </Button>
                 </FormControl>
               </PopoverTrigger>
@@ -98,10 +106,10 @@ export function WeddingFields({ form, lang = 'en' }: WeddingFieldsProps) {
         name='venue'
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Venue</FormLabel>
+            <FormLabel className='text-text-primary'>{copy.venue}</FormLabel>
             <FormControl>
               <Input
-                placeholder='City, Country or Venue Name'
+                placeholder={copy.venuePlaceholder}
                 autoComplete='organization'
                 {...field}
               />

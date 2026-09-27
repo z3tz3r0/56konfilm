@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 
 export interface ContactSubmission {
   name: string;
+  surname: string;
   email: string;
   phone: string;
   message: string;
@@ -17,7 +18,8 @@ export const createContactSubmission = (
     overrides.type || faker.helpers.arrayElement(['commercial', 'wedding']);
 
   const base = {
-    name: faker.person.fullName(),
+    name: faker.person.firstName(),
+    surname: faker.person.lastName(),
     email: faker.internet.email(),
     phone: faker.phone.number(),
     message: faker.lorem.paragraph(),
