@@ -95,6 +95,111 @@ const legacyBlock: ContactInfoSectionBlock = {
 describe('ContactInfoSection', () => {
   afterEach(cleanup);
 
+  it('renders the CMS map below the contact content with safe, accessible iframe attributes', () => {
+    const embedUrl = 'https://www.google.com/maps/embed?pb=!1m18!1m12';
+    render(
+      <ContactInfoSection
+        block={{ ...legacyBlock, map: { embedUrl, title: 'Studio location' } }}
+      />
+    );
+    const iframe = screen.getByTestId('contact-map');
+    expect(iframe).toHaveAttribute('src', embedUrl);
+    expect(iframe).toHaveAttribute('title', 'Studio location');
+    expect(iframe).toHaveAttribute('loading', 'lazy');
+    expect(iframe).toHaveAttribute('allowfullscreen');
+    expect(iframe).toHaveAttribute(
+      'referrerpolicy',
+      'no-referrer-when-downgrade'
+    );
+    expect(iframe).toHaveClass(
+      'aspect-square',
+      'md:aspect-video',
+      'lg:aspect-[16/5]',
+      'w-full',
+      'h-auto',
+      'border-0'
+    );
+    expect(iframe).not.toHaveAttribute('width');
+    expect(iframe).not.toHaveAttribute('height');
+    const section = screen.getByTestId('contact-info-section');
+    expect(section).not.toContainElement(iframe);
+    expect(
+      section.compareDocumentPosition(iframe) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+  });
+
+  it.each([
+    undefined,
+    '',
+    '   ',
+    'javascript:alert(1)',
+    'https://maps.app.goo.gl/example',
+    'https://example.com/maps/embed?pb=!1m18',
+    'http://www.google.com/maps/embed?pb=!1m18',
+    'https://www.google.com/maps/embed?pb=',
+    '<iframe src="https://www.google.com/maps/embed?pb=!1m18"></iframe>',
+  ])('does not render a missing or invalid map URL: %s', (embedUrl) => {
+    render(
+      <ContactInfoSection block={{ ...legacyBlock, map: { embedUrl } }} />
+    );
+    expect(screen.queryByTestId('contact-map')).not.toBeInTheDocument();
+    expect(screen.getByText('legacy@example.com')).toBeInTheDocument();
+  });
+
+  it.each([
+    ['en', 'Location map'],
+    ['th', 'แผนที่สถานที่ตั้ง'],
+  ] as const)(
+    'provides a generic accessible map title in %s when CMS title is empty',
+    (lang, title) => {
+      render(
+        <ContactInfoSection
+          block={{
+            _type: 'contactInfoSection',
+            map: {
+              embedUrl: 'https://www.google.com/maps/embed?pb=!1m18',
+              title: '   ',
+            },
+          }}
+          lang={lang}
+        />
+      );
+      expect(screen.getByTestId('contact-map')).toHaveAttribute('title', title);
+    }
+  );
+
+  it('updates the iframe from changed CMS settings without keeping the previous location', () => {
+    const block: ContactInfoSectionBlock = {
+      _type: 'contactInfoSection',
+      map: {
+        embedUrl: 'https://www.google.com/maps/embed?pb=first',
+        title: 'First location',
+      },
+    };
+    const { rerender } = render(<ContactInfoSection block={block} />);
+    rerender(
+      <ContactInfoSection
+        block={{
+          ...block,
+          map: {
+            embedUrl: 'https://www.google.com/maps/embed?pb=second',
+            title: 'Second location',
+          },
+        }}
+      />
+    );
+    expect(screen.getByTestId('contact-map')).toHaveAttribute(
+      'src',
+      'https://www.google.com/maps/embed?pb=second'
+    );
+    expect(screen.getByTestId('contact-map')).toHaveAttribute(
+      'title',
+      'Second location'
+    );
+    rerender(<ContactInfoSection block={legacyBlock} />);
+    expect(screen.queryByTestId('contact-map')).not.toBeInTheDocument();
+  });
+
   it('keeps rendering old channel content, links, and Lucide icons without new settings', () => {
     render(<ContactInfoSection block={legacyBlock} />);
     expect(
