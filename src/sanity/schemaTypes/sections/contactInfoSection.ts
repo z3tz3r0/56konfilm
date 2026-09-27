@@ -1,7 +1,10 @@
 import { defineField, defineType, defineArrayMember } from 'sanity';
 import { EnvelopeIcon } from '@sanity/icons';
-import { localizedBlockType } from '../objects/localized';
+import { localizedBlockType, localizedStringField } from '../objects/localized';
 import { contactInfoItemType } from '../objects/contactInfoItem';
+import { socialMediaType } from '../objects/socialMedia';
+import { ctaStyleField } from '../objects/cta';
+import { isGoogleMapsEmbedUrl } from '@shared/utils/googleMaps';
 
 export const contactInfoSectionType = defineType({
   name: 'contactInfoSection',
@@ -29,6 +32,76 @@ export const contactInfoSectionType = defineType({
       description: 'แสดงฟอร์มติดต่อด้านล่างการ์ด',
       type: 'boolean',
       initialValue: true,
+    }),
+    localizedStringField({
+      name: 'socialHeading',
+      title: 'Social Heading',
+      description: 'หัวข้อสำหรับช่องทางโซเชียลมีเดีย',
+    }),
+    defineField({
+      name: 'socialLinks',
+      title: 'Social Links',
+      description: 'ไอคอนและลิงก์โซเชียลมีเดียสำหรับ Contact Section นี้',
+      type: 'array',
+      of: [defineArrayMember({ type: socialMediaType.name })],
+    }),
+    defineField({
+      name: 'submitButton',
+      title: 'Submit Button',
+      description: 'ข้อความและรูปแบบปุ่มส่งฟอร์ม ไม่ใช่ปุ่มลิงก์ไปหน้าอื่น',
+      type: 'object',
+      fields: [
+        localizedStringField({
+          name: 'label',
+          title: 'Label',
+          description:
+            'ข้อความบนปุ่มส่งฟอร์ม หากไม่ระบุจะใช้ข้อความเริ่มต้นของฟอร์ม',
+        }),
+        ctaStyleField,
+        defineField({
+          name: 'size',
+          title: 'Size',
+          description: 'ขนาดปุ่มตามตัวเลือกของ Button ที่มีอยู่แล้ว',
+          type: 'string',
+          options: {
+            list: [
+              { title: 'Default', value: 'default' },
+              { title: 'Small', value: 'sm' },
+              { title: 'Medium', value: 'md' },
+              { title: 'Large', value: 'lg' },
+            ],
+          },
+          initialValue: 'default',
+        }),
+      ],
+    }),
+    defineField({
+      name: 'map',
+      title: 'Google Map',
+      description: 'สถานที่ตั้งที่แสดงใต้ Contact Section',
+      type: 'object',
+      fields: [
+        defineField({
+          name: 'embedUrl',
+          title: 'Google Maps Embed URL',
+          description:
+            'Google Maps → Share → Embed a map → Copy HTML แล้วคัดลอกเฉพาะ URL ใน src (https://www.google.com/maps/embed?pb=...) ไม่ใช่ HTML ทั้งก้อนหรือลิงก์ Share แบบสั้น',
+          type: 'url',
+          validation: (Rule) =>
+            Rule.uri({ scheme: ['https'] }).custom((value) => {
+              if (!value) return true;
+              return (
+                isGoogleMapsEmbedUrl(value) ||
+                'Use the HTTPS src URL from Google Maps → Share → Embed a map.'
+              );
+            }),
+        }),
+        localizedStringField({
+          name: 'title',
+          title: 'Map Title',
+          description: 'ชื่อแผนที่สำหรับผู้ใช้ screen reader',
+        }),
+      ],
     }),
     defineField({
       name: 'background',

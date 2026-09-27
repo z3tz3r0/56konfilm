@@ -7,6 +7,7 @@ import { cn } from '@shared/utils';
 import { useDeviceTier } from '@shared/hooks';
 import { ContactForm } from '@features/contact-section/components';
 import { ContactInfoSectionBlock } from '../types';
+import type { Locale, SiteMode } from '@shared/config';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -27,9 +28,14 @@ const cardVariants: Variants = {
 
 interface ContactInfoSectionProps {
   block: ContactInfoSectionBlock;
+  lang?: Locale;
+  mode?: SiteMode;
 }
 
-export default function ContactInfoSection({ block }: ContactInfoSectionProps) {
+export default function ContactInfoSection({
+  block,
+  lang = 'en',
+}: ContactInfoSectionProps) {
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
   const useLiteMotion = isInitialized && !allowHeavyMotion;
 
@@ -122,7 +128,7 @@ export default function ContactInfoSection({ block }: ContactInfoSectionProps) {
 
         {block.showForm && (
           <div className='border-border mt-16 border-t pt-16'>
-            <ContactForm />
+            <ContactForm lang={lang} />
           </div>
         )}
       </div>

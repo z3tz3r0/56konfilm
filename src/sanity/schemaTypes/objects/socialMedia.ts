@@ -14,6 +14,12 @@ export const socialMediaType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'icon',
+      title: 'Icon',
+      description: 'เลือกไอคอนสำหรับ Social Link (ไม่จำเป็น)',
+      type: 'icon',
+    }),
+    defineField({
       name: 'url',
       title: 'URL',
       description: 'ลิงก์ไปยังโปรไฟล์โซเชียลมีเดีย',
