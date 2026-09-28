@@ -1,6 +1,23 @@
 import { defineField, defineType } from 'sanity';
 import { localizedStringField } from './localized';
 
+export const ctaStyleField = defineField({
+  name: 'style',
+  title: 'Style',
+  description: 'รูปแบบของปุ่ม CTA',
+  type: 'string',
+  options: {
+    list: [
+      { title: 'Primary', value: 'primary' },
+      { title: 'Secondary', value: 'secondary' },
+      { title: 'Neutral', value: 'neutral' },
+      { title: 'Link', value: 'link' },
+    ],
+    layout: 'radio',
+  },
+  initialValue: 'primary',
+});
+
 export const ctaType = defineType({
   name: 'cta',
   title: 'CTA',
@@ -17,22 +34,7 @@ export const ctaType = defineType({
           return true;
         }),
     }),
-    defineField({
-      name: 'style',
-      title: 'Style',
-      description: 'รูปแบบของปุ่ม CTA',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Primary', value: 'primary' },
-          { title: 'Secondary', value: 'secondary' },
-          { title: 'Neutral', value: 'neutral' },
-          { title: 'Link', value: 'link' },
-        ],
-        layout: 'radio',
-      },
-      initialValue: 'primary',
-    }),
+    ctaStyleField,
     defineField({
       name: 'linkType',
       title: 'Link Type',

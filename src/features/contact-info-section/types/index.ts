@@ -1,1 +1,4 @@
-export type { ContactInfoSectionBlock } from './contactInfoBlock.types';
+export type {
+  ContactInfoSectionBlock,
+  ContactSubmitButton,
+} from './contactInfoBlock.types';

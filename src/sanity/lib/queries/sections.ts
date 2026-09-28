@@ -351,7 +351,24 @@ export const CONTACT_INFO_SECTION = groq`
       "label": ${LOCALIZED('label')},
       value,
       icon,
+      iconPicker { name },
       linkUrl
+    },
+    "socialHeading": ${LOCALIZED('socialHeading')},
+    socialLinks[] {
+      _key,
+      "label": ${LOCALIZED('label')},
+      url,
+      icon { name }
+    },
+    submitButton {
+      "label": ${LOCALIZED('label')},
+      style,
+      size
+    },
+    map {
+      embedUrl,
+      "title": ${LOCALIZED('title')}
     }
   }
 `;

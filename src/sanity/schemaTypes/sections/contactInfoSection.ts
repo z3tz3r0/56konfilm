@@ -1,7 +1,17 @@
 import { defineField, defineType, defineArrayMember } from 'sanity';
 import { EnvelopeIcon } from '@sanity/icons';
-import { localizedBlockType } from '../objects/localized';
+import { localizedBlockType, localizedStringField } from '../objects/localized';
 import { contactInfoItemType } from '../objects/contactInfoItem';
+import { socialMediaType } from '../objects/socialMedia';
+import { ctaStyleField } from '../objects/cta';
+import { isGoogleMapsEmbedUrl } from '@shared/utils/googleMaps';
+import { GoogleMapsEmbedUrlInput } from '../../components/inputs/GoogleMapsEmbedUrlInput';
+import type { Path } from 'sanity';
+
+interface StoredSocialLink {
+  _key?: string;
+  label?: Array<{ _key?: string; value?: string }>;
+}
 
 export const contactInfoSectionType = defineType({
   name: 'contactInfoSection',
@@ -26,9 +36,108 @@ export const contactInfoSectionType = defineType({
     defineField({
       name: 'showForm',
       title: 'Show Contact Form',
-      description: 'แสดงฟอร์มติดต่อด้านล่างการ์ด',
+      description: 'แสดงฟอร์มคู่กับข้อมูลติดต่อบน Desktop และเรียงลงบน Mobile',
       type: 'boolean',
       initialValue: true,
+    }),
+    localizedStringField({
+      name: 'socialHeading',
+      title: 'Social Heading',
+      description: 'หัวข้อสำหรับช่องทางโซเชียลมีเดีย',
+    }),
+    defineField({
+      name: 'socialLinks',
+      title: 'Social Links',
+      description: 'ไอคอนและลิงก์โซเชียลมีเดียสำหรับ Contact Section นี้',
+      type: 'array',
+      of: [defineArrayMember({ type: socialMediaType.name })],
+      validation: (Rule) =>
+        Rule.custom<StoredSocialLink[]>((links) => {
+          const paths: Path[] = [];
+          for (const [index, link] of (links ?? []).entries()) {
+            const linkPath = link._key ? { _key: link._key } : index;
+            if (!Array.isArray(link.label) || link.label.length === 0) {
+              paths.push([linkPath, 'label']);
+              continue;
+            }
+            for (const [labelIndex, label] of link.label.entries()) {
+              if (typeof label.value !== 'string' || !label.value.trim()) {
+                paths.push([
+                  linkPath,
+                  'label',
+                  label._key ? { _key: label._key } : labelIndex,
+                  'value',
+                ]);
+              }
+            }
+          }
+          return paths.length
+            ? {
+                message:
+                  'Enter a social link name for each added language. Empty names or whitespace-only names are not allowed.',
+                paths,
+              }
+            : true;
+        }).error(),
+    }),
+    defineField({
+      name: 'submitButton',
+      title: 'Submit Button',
+      description: 'ข้อความและรูปแบบปุ่มส่งฟอร์ม ไม่ใช่ปุ่มลิงก์ไปหน้าอื่น',
+      type: 'object',
+      fields: [
+        localizedStringField({
+          name: 'label',
+          title: 'Label',
+          description:
+            'ข้อความบนปุ่มส่งฟอร์ม หากไม่ระบุจะใช้ข้อความเริ่มต้นของฟอร์ม',
+        }),
+        ctaStyleField,
+        defineField({
+          name: 'size',
+          title: 'Size',
+          description: 'ขนาดปุ่มตามตัวเลือกของ Button ที่มีอยู่แล้ว',
+          type: 'string',
+          options: {
+            list: [
+              { title: 'Default', value: 'default' },
+              { title: 'Small', value: 'sm' },
+              { title: 'Medium', value: 'md' },
+              { title: 'Large', value: 'lg' },
+            ],
+          },
+          initialValue: 'default',
+        }),
+      ],
+    }),
+    defineField({
+      name: 'map',
+      title: 'Google Map',
+      description: 'สถานที่ตั้งที่แสดงใต้ Contact Section',
+      type: 'object',
+      fields: [
+        defineField({
+          name: 'embedUrl',
+          title: 'Google Maps Embed URL',
+          description:
+            'บนคอมพิวเตอร์ เปิด Google Maps และค้นหาสถานที่ → กด "แชร์" → เลือก "ฝังแผนที่" → กด "คัดลอก HTML" แล้ววางในช่องได้เลย ระบบจะเก็บเฉพาะลิงก์แผนที่ให้เอง หรือจะคัดลอกลิงก์ฝังแผนที่ที่ขึ้นต้นด้วย https://www.google.com/maps/embed? และวางเองแบบ Manual ก็ได้ (ปล. ลิงก์จาก "ส่งลิงก์" ใช้ไม่ได้ ต้องเป็นลิงก์จาก "ฝังแผนที่" เท่านั้น)',
+          type: 'url',
+          components: { input: GoogleMapsEmbedUrlInput },
+          validation: (Rule) =>
+            Rule.uri({ scheme: ['https'] }).custom((value) => {
+              if (!value) return true;
+              return (
+                isGoogleMapsEmbedUrl(value) ||
+                'ใช้ลิงก์ฝังแผนที่จาก Google Maps เท่านั้น'
+              );
+            }),
+        }),
+        localizedStringField({
+          name: 'title',
+          title: 'Map Title',
+          description: 'ชื่อแผนที่สำหรับผู้ใช้ screen reader',
+        }),
+      ],
     }),
     defineField({
       name: 'background',
