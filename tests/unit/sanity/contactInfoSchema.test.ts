@@ -15,6 +15,7 @@ interface SchemaField {
   options?: { list?: Array<{ title: string; value: string }> };
   initialValue?: unknown;
   validation?: (rule: unknown) => unknown;
+  components?: { input?: unknown };
 }
 
 const fields = contactInfoSectionType.fields as unknown as SchemaField[];
@@ -177,6 +178,8 @@ describe('Contact Info CMS schema', () => {
     expect(getField(mapFields, 'title').type).toBe(
       'internationalizedArrayString'
     );
+    expect(getField(mapFields, 'embedUrl').type).toBe('url');
+    expect(getField(mapFields, 'embedUrl').components?.input).toBeDefined();
     const rule = {
       uri: vi.fn().mockReturnThis(),
       custom: vi.fn().mockReturnThis(),

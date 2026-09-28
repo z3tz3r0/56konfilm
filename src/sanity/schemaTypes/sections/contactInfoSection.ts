@@ -5,6 +5,7 @@ import { contactInfoItemType } from '../objects/contactInfoItem';
 import { socialMediaType } from '../objects/socialMedia';
 import { ctaStyleField } from '../objects/cta';
 import { isGoogleMapsEmbedUrl } from '@shared/utils/googleMaps';
+import { GoogleMapsEmbedUrlInput } from '../../components/inputs/GoogleMapsEmbedUrlInput';
 import type { Path } from 'sanity';
 
 interface StoredSocialLink {
@@ -119,14 +120,15 @@ export const contactInfoSectionType = defineType({
           name: 'embedUrl',
           title: 'Google Maps Embed URL',
           description:
-            'Google Maps → Share → Embed a map → Copy HTML แล้วคัดลอกเฉพาะ URL ใน src (https://www.google.com/maps/embed?pb=...) ไม่ใช่ HTML ทั้งก้อนหรือลิงก์ Share แบบสั้น',
+            'บนคอมพิวเตอร์ เปิด Google Maps และค้นหาสถานที่ → กด "แชร์" → เลือก "ฝังแผนที่" → กด "คัดลอก HTML" แล้ววางในช่องได้เลย ระบบจะเก็บเฉพาะลิงก์แผนที่ให้เอง หรือจะคัดลอกลิงก์ฝังแผนที่ที่ขึ้นต้นด้วย https://www.google.com/maps/embed? และวางเองแบบ Manual ก็ได้ (ปล. ลิงก์จาก "ส่งลิงก์" ใช้ไม่ได้ ต้องเป็นลิงก์จาก "ฝังแผนที่" เท่านั้น)',
           type: 'url',
+          components: { input: GoogleMapsEmbedUrlInput },
           validation: (Rule) =>
             Rule.uri({ scheme: ['https'] }).custom((value) => {
               if (!value) return true;
               return (
                 isGoogleMapsEmbedUrl(value) ||
-                'Use the HTTPS src URL from Google Maps → Share → Embed a map.'
+                'ใช้ลิงก์ฝังแผนที่จาก Google Maps เท่านั้น'
               );
             }),
         }),

@@ -16,3 +16,59 @@ export function isGoogleMapsEmbedUrl(value: string): boolean {
     return false;
   }
 }
+
+/** Read only an iframe's src without creating a DOM from untrusted HTML. */
+export function extractGoogleMapsEmbedUrl(markup: string): string | null {
+  const input = markup.trim();
+  if (!/^<iframe(?=\s|>)/i.test(input)) return null;
+
+  let cursor = '<iframe'.length;
+  let source: string | null = null;
+
+  while (cursor < input.length) {
+    const beforeSpace = cursor;
+    while (/\s/.test(input[cursor] ?? '')) cursor++;
+
+    if (input[cursor] === '>') {
+      cursor++;
+      break;
+    }
+    if (cursor === beforeSpace) return null;
+
+    const name = /^[a-z_:][a-z\d_.:-]*/i.exec(input.slice(cursor))?.[0];
+    if (!name) return null;
+    cursor += name.length;
+    const afterName = cursor;
+    while (/\s/.test(input[cursor] ?? '')) cursor++;
+
+    let value: string | undefined;
+    if (input[cursor] === '=') {
+      cursor++;
+      while (/\s/.test(input[cursor] ?? '')) cursor++;
+
+      const quote = input[cursor];
+      if (quote === '"' || quote === "'") {
+        const end = input.indexOf(quote, cursor + 1);
+        if (end === -1) return null;
+        value = input.slice(cursor + 1, end);
+        cursor = end + 1;
+      } else {
+        value = /^[^\s"'`=<>]+/.exec(input.slice(cursor))?.[0];
+        if (!value) return null;
+        cursor += value.length;
+      }
+    } else {
+      cursor = afterName;
+    }
+
+    if (name.toLowerCase() === 'src') {
+      if (value === undefined || source !== null) return null;
+      source = value;
+    }
+  }
+
+  if (!/^\s*<\/iframe\s*>$/i.test(input.slice(cursor))) return null;
+
+  const url = source?.replace(/&(?:amp|#38|#x26);/gi, '&').trim();
+  return url && isGoogleMapsEmbedUrl(url) ? url : null;
+}
