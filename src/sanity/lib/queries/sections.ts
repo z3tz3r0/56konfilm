@@ -336,8 +336,8 @@ export const AWARDS_SECTION = groq`
   }
 `;
 
-export const CONTACT_INFO_SECTION = groq`
-  _type == "contactInfoSection" => {
+export const CONTACT_SECTION = groq`
+  _type == "contactSection" => {
     background,
     showForm,
     heading {

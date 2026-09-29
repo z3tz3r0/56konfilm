@@ -79,7 +79,7 @@ vi.mock('@features/contact-section/components', () => ({
 }));
 
 const legacyBlock: ContactSectionBlock = {
-  _type: 'contactInfoSection',
+  _type: 'contactSection',
   heading: { heading: 'Legacy heading', body: 'Legacy body' },
   channels: [
     {
@@ -153,7 +153,7 @@ describe('ContactSection', () => {
       render(
         <ContactSection
           block={{
-            _type: 'contactInfoSection',
+            _type: 'contactSection',
             map: {
               embedUrl: 'https://www.google.com/maps/embed?pb=!1m18',
               title: '   ',
@@ -168,7 +168,7 @@ describe('ContactSection', () => {
 
   it('updates the iframe from changed CMS settings without keeping the previous location', () => {
     const block: ContactSectionBlock = {
-      _type: 'contactInfoSection',
+      _type: 'contactSection',
       map: {
         embedUrl: 'https://www.google.com/maps/embed?pb=first',
         title: 'First location',
@@ -364,7 +364,7 @@ describe('ContactSection', () => {
     render(
       <ContactSection
         block={{
-          _type: 'contactInfoSection',
+          _type: 'contactSection',
           socialLinks: [
             { label: 'Studio profile', url: 'https://example.com' },
           ],
@@ -381,7 +381,7 @@ describe('ContactSection', () => {
     render(
       <ContactSection
         block={{
-          _type: 'contactInfoSection',
+          _type: 'contactSection',
           channels: [
             {
               label: 'Contact',
@@ -407,7 +407,7 @@ describe('ContactSection', () => {
   it('handles an empty section without a stray zero or hardcoded content', () => {
     render(
       <ContactSection
-        block={{ _type: 'contactInfoSection', channels: [], socialLinks: [] }}
+        block={{ _type: 'contactSection', channels: [], socialLinks: [] }}
       />
     );
     expect(screen.getByTestId('contact-info-section')).toHaveTextContent('');
@@ -421,7 +421,7 @@ describe('ContactSection', () => {
     render(
       <ContactSection
         block={{
-          _type: 'contactInfoSection',
+          _type: 'contactSection',
           channels: [{ label: 'Phone', value: '123', linkUrl: 'tel:123' }],
         }}
       />

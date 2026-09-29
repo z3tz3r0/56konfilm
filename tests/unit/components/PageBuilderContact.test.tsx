@@ -15,7 +15,7 @@ describe('PageBuilder contact context', () => {
     ['en', 'wedding'],
     ['th', 'wedding'],
   ] as const)('passes %s/%s to the contact section', (lang, mode) => {
-    const block: ContactSectionBlock = { _type: 'contactInfoSection' };
+    const block: ContactSectionBlock = { _type: 'contactSection' };
     const page: FullPageDocument = {
       title: 'Contact',
       slug: 'contact',

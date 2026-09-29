@@ -227,7 +227,7 @@ function renderBlock(
       return <ProcessSection key={key} block={block} />;
     case 'awardsSection':
       return <AwardsSection key={key} block={block} />;
-    case 'contactInfoSection':
+    case 'contactSection':
       return <ContactSection key={key} block={block} lang={lang} mode={mode} />;
     case 'blogPreviewSection':
       return (

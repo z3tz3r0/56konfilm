@@ -1,8 +1,8 @@
 import { defineField, defineType } from 'sanity';
 import { localizedStringField } from './localized';
 
-export const contactInfoItemType = defineType({
-  name: 'contactInfoItem',
+export const contactChannelType = defineType({
+  name: 'contactChannel',
   title: 'Contact Channel',
   type: 'object',
   fields: [

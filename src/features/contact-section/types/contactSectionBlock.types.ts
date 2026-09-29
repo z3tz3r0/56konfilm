@@ -7,7 +7,7 @@ export interface ContactSubmitButton {
 }
 
 export interface ContactSectionBlock extends BaseBlock {
-  _type: 'contactInfoSection';
+  _type: 'contactSection';
   background?: string;
   heading?: SectionHeading;
   showForm?: boolean;
