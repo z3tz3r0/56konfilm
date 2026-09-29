@@ -61,6 +61,11 @@ export async function generateStaticParams() {
   return [{ lang: 'en' }, { lang: 'th' }];
 }
 
+/**
+ * Renders the public document with a validated locale and cookie-based mode.
+ * Wraps children in theme, mode, and motion providers and mounts shared scroll
+ * control and toast notifications.
+ */
 export default async function RootLayout({
   children,
   params,

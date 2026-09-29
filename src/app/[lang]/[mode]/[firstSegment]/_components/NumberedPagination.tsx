@@ -27,6 +27,11 @@ interface NumberedPaginationProps {
   totalPages: number;
 }
 
+/**
+ * Renders localized portfolio pagination and a page-size selector.
+ * Preserves scroll during page and limit changes, persists the selected limit
+ * in a cookie, and syncs a missing limit query parameter without scrolling.
+ */
 export default function NumberedPagination({
   lang,
   currentPage,

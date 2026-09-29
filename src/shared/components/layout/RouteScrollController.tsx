@@ -3,6 +3,11 @@
 import { usePathname } from 'next/navigation';
 import { useEffect, useLayoutEffect, useRef } from 'react';
 
+/**
+ * Scrolls to the top after pathname changes from ordinary client navigation.
+ * Leaves initial loads, query-only changes, and Back/Forward navigation alone
+ * so browser or Next.js scroll restoration can apply. Renders no content.
+ */
 export default function RouteScrollController() {
   const pathname = usePathname();
   const previousPathname = useRef(pathname);
