@@ -15,6 +15,7 @@ import { isSupportedLocale, isSupportedMode } from '@shared/utils';
 import Script from 'next/script';
 import { env } from '@shared/config';
 import { ReactNode } from 'react';
+import RouteScrollController from '@shared/components/layout/RouteScrollController';
 
 // --- Production Fonts (preloaded: above-the-fold brand type on /[lang]/production) ---
 const sora = Sora({
@@ -105,6 +106,7 @@ export default async function RootLayout({
             <MotionProvider>{children}</MotionProvider>
           </ModeProvider>
         </ThemeProvider>
+        <RouteScrollController />
         <Toaster richColors position='top-right' />
       </body>
     </html>

@@ -66,7 +66,7 @@ export default function NumberedPagination({
     const params = new URLSearchParams(searchParams.toString());
     params.set('limit', newLimit);
     params.delete('page');
-    router.push(`${pathname}?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   // Logic สร้าง Array ของตัวเลขหน้า (แสดง ... ถ้ายาวเกินไป)
@@ -117,6 +117,7 @@ export default function NumberedPagination({
           <PaginationLink
             size={'md'}
             href={createPageURL(page)}
+            scroll={false}
             isActive={isCurrentPage}
             className='rounded'
           >
@@ -141,6 +142,7 @@ export default function NumberedPagination({
             <PaginationPrevious
               size={'md'}
               showText={false}
+              scroll={false}
               href={currentPage > 1 ? createPageURL(currentPage - 1) : '#'}
               aria-disabled={currentPage <= 1}
               tabIndex={currentPage <= 1 ? -1 : undefined}
@@ -165,6 +167,7 @@ export default function NumberedPagination({
             <PaginationNext
               size={'md'}
               showText={false}
+              scroll={false}
               href={
                 currentPage < safeTotalPages
                   ? createPageURL(currentPage + 1)
