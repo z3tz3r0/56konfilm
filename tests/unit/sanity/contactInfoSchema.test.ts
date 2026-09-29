@@ -28,6 +28,11 @@ function getField(definitions: SchemaField[] | undefined, name: string) {
 }
 
 describe('Contact Info CMS schema', () => {
+  it('updates the Studio label without changing the stored block type', () => {
+    expect(contactInfoSectionType.title).toBe('Contact Section');
+    expect(contactInfoSectionType.name).toBe('contactInfoSection');
+  });
+
   it('reuses the localized heading and body instead of adding duplicate fields', () => {
     expect(getField(fields, 'heading').type).toBe(localizedBlockType.name);
     expect(localizedBlockType.fields).toEqual(

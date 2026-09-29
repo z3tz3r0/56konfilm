@@ -15,7 +15,7 @@ interface StoredSocialLink {
 
 export const contactInfoSectionType = defineType({
   name: 'contactInfoSection',
-  title: 'Contact Info Section',
+  title: 'Contact Section',
   type: 'object',
   icon: EnvelopeIcon,
   fields: [

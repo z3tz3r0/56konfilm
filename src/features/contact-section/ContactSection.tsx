@@ -5,8 +5,8 @@ import { AppIcon, SectionShell, SectionHeader } from '@shared/components';
 import { DynamicLucideIcon } from '@shared/components/common/DynamicLucideIcon';
 import { cn } from '@shared/utils';
 import { useDeviceTier } from '@shared/hooks';
-import { ContactForm } from '@features/contact-section/components';
-import type { ContactInfoSectionBlock } from '../types';
+import { ContactForm } from './components';
+import type { ContactSectionBlock } from './types';
 import type { Locale, SiteMode } from '@shared/config';
 import { isGoogleMapsEmbedUrl } from '@shared/utils/googleMaps';
 
@@ -49,16 +49,16 @@ function getSafeLink(value?: string, social = false) {
   }
 }
 
-interface ContactInfoSectionProps {
-  block: ContactInfoSectionBlock;
+interface ContactSectionProps {
+  block: ContactSectionBlock;
   lang?: Locale;
   mode?: SiteMode;
 }
 
-export default function ContactInfoSection({
+export default function ContactSection({
   block,
   lang = 'en',
-}: ContactInfoSectionProps) {
+}: ContactSectionProps) {
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
   const useLiteMotion = isInitialized && !allowHeavyMotion;
   const socialLinks = (block.socialLinks ?? []).flatMap((social, index) => {

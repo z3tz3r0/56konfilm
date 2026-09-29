@@ -1,8 +1,8 @@
 import { cleanup, render, screen, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import ContactInfoSection from '@features/contact-info-section/components/ContactInfoSection';
-import type { ContactInfoSectionBlock } from '@features/contact-info-section/types';
+import ContactSection from '@features/contact-section/ContactSection';
+import type { ContactSectionBlock } from '@features/contact-section/types';
 
 vi.mock('@shared/components', () => ({
   SectionShell: ({
@@ -65,7 +65,7 @@ vi.mock('@features/contact-section/components', () => ({
   }: {
     lang: string;
     presentation?: string;
-    submitButton?: ContactInfoSectionBlock['submitButton'];
+    submitButton?: ContactSectionBlock['submitButton'];
   }) => (
     <div
       data-testid='contact-form'
@@ -78,7 +78,7 @@ vi.mock('@features/contact-section/components', () => ({
   ),
 }));
 
-const legacyBlock: ContactInfoSectionBlock = {
+const legacyBlock: ContactSectionBlock = {
   _type: 'contactInfoSection',
   heading: { heading: 'Legacy heading', body: 'Legacy body' },
   channels: [
@@ -92,13 +92,13 @@ const legacyBlock: ContactInfoSectionBlock = {
   ],
 };
 
-describe('ContactInfoSection', () => {
+describe('ContactSection', () => {
   afterEach(cleanup);
 
   it('renders the CMS map below the contact content with safe, accessible iframe attributes', () => {
     const embedUrl = 'https://www.google.com/maps/embed?pb=!1m18!1m12';
     render(
-      <ContactInfoSection
+      <ContactSection
         block={{ ...legacyBlock, map: { embedUrl, title: 'Studio location' } }}
       />
     );
@@ -139,9 +139,7 @@ describe('ContactInfoSection', () => {
     'https://www.google.com/maps/embed?pb=',
     '<iframe src="https://www.google.com/maps/embed?pb=!1m18"></iframe>',
   ])('does not render a missing or invalid map URL: %s', (embedUrl) => {
-    render(
-      <ContactInfoSection block={{ ...legacyBlock, map: { embedUrl } }} />
-    );
+    render(<ContactSection block={{ ...legacyBlock, map: { embedUrl } }} />);
     expect(screen.queryByTestId('contact-map')).not.toBeInTheDocument();
     expect(screen.getByText('legacy@example.com')).toBeInTheDocument();
   });
@@ -153,7 +151,7 @@ describe('ContactInfoSection', () => {
     'provides a generic accessible map title in %s when CMS title is empty',
     (lang, title) => {
       render(
-        <ContactInfoSection
+        <ContactSection
           block={{
             _type: 'contactInfoSection',
             map: {
@@ -169,16 +167,16 @@ describe('ContactInfoSection', () => {
   );
 
   it('updates the iframe from changed CMS settings without keeping the previous location', () => {
-    const block: ContactInfoSectionBlock = {
+    const block: ContactSectionBlock = {
       _type: 'contactInfoSection',
       map: {
         embedUrl: 'https://www.google.com/maps/embed?pb=first',
         title: 'First location',
       },
     };
-    const { rerender } = render(<ContactInfoSection block={block} />);
+    const { rerender } = render(<ContactSection block={block} />);
     rerender(
-      <ContactInfoSection
+      <ContactSection
         block={{
           ...block,
           map: {
@@ -196,12 +194,12 @@ describe('ContactInfoSection', () => {
       'title',
       'Second location'
     );
-    rerender(<ContactInfoSection block={legacyBlock} />);
+    rerender(<ContactSection block={legacyBlock} />);
     expect(screen.queryByTestId('contact-map')).not.toBeInTheDocument();
   });
 
   it('keeps rendering old channel content, links, and Lucide icons without new settings', () => {
-    render(<ContactInfoSection block={legacyBlock} />);
+    render(<ContactSection block={legacyBlock} />);
     expect(
       screen.getByRole('heading', { name: 'Legacy heading' })
     ).toBeInTheDocument();
@@ -220,7 +218,7 @@ describe('ContactInfoSection', () => {
 
   it('passes the requested locale to the existing form', () => {
     render(
-      <ContactInfoSection
+      <ContactSection
         block={{ ...legacyBlock, showForm: true }}
         lang='th'
         mode='wedding'
@@ -238,7 +236,7 @@ describe('ContactInfoSection', () => {
 
   it('passes the localized CMS submit configuration to the embedded form', () => {
     render(
-      <ContactInfoSection
+      <ContactSection
         block={{
           ...legacyBlock,
           showForm: true,
@@ -254,7 +252,7 @@ describe('ContactInfoSection', () => {
   });
 
   it('keeps the default English locale for existing callers', () => {
-    render(<ContactInfoSection block={{ ...legacyBlock, showForm: true }} />);
+    render(<ContactSection block={{ ...legacyBlock, showForm: true }} />);
     expect(screen.getByTestId('contact-form')).toHaveAttribute(
       'data-lang',
       'en'
@@ -263,7 +261,7 @@ describe('ContactInfoSection', () => {
 
   it('prefers the CMS-selected Iconify icon over the legacy icon', () => {
     render(
-      <ContactInfoSection
+      <ContactSection
         block={{
           ...legacyBlock,
           channels: [
@@ -284,7 +282,7 @@ describe('ContactInfoSection', () => {
 
   it('falls back to the legacy icon when the picker name is empty', () => {
     render(
-      <ContactInfoSection
+      <ContactSection
         block={{
           ...legacyBlock,
           channels: [
@@ -302,7 +300,7 @@ describe('ContactInfoSection', () => {
   it('preserves actual newlines and allows long contact values to wrap', () => {
     const value = `First line\n${'long-address'.repeat(30)}`;
     render(
-      <ContactInfoSection
+      <ContactSection
         block={{ ...legacyBlock, channels: [{ label: 'Address', value }] }}
       />
     );
@@ -318,7 +316,7 @@ describe('ContactInfoSection', () => {
     'uses the same responsive layout and mobile content order in %s mode',
     (mode) => {
       render(
-        <ContactInfoSection
+        <ContactSection
           block={{
             ...legacyBlock,
             showForm: true,
@@ -364,7 +362,7 @@ describe('ContactInfoSection', () => {
 
   it('renders an accessible text link when a social icon is not configured', () => {
     render(
-      <ContactInfoSection
+      <ContactSection
         block={{
           _type: 'contactInfoSection',
           socialLinks: [
@@ -381,7 +379,7 @@ describe('ContactInfoSection', () => {
 
   it('omits invalid or unnamed social links and does not render unsafe channel URLs', () => {
     render(
-      <ContactInfoSection
+      <ContactSection
         block={{
           _type: 'contactInfoSection',
           channels: [
@@ -408,7 +406,7 @@ describe('ContactInfoSection', () => {
 
   it('handles an empty section without a stray zero or hardcoded content', () => {
     render(
-      <ContactInfoSection
+      <ContactSection
         block={{ _type: 'contactInfoSection', channels: [], socialLinks: [] }}
       />
     );
@@ -421,7 +419,7 @@ describe('ContactInfoSection', () => {
 
   it('keeps mail and phone links in the current browsing context', () => {
     render(
-      <ContactInfoSection
+      <ContactSection
         block={{
           _type: 'contactInfoSection',
           channels: [{ label: 'Phone', value: '123', linkUrl: 'tel:123' }],
