@@ -160,6 +160,10 @@ export const contactSectionType = defineType({
       channels: 'channels',
       showForm: 'showForm',
     },
+    /**
+     * Returns the Studio preview with a "Contact Section" fallback for a falsy
+     * title, a channel count (zero for non-arrays), and a form indicator when enabled.
+     */
     prepare({ title, channels, showForm }) {
       const count = Array.isArray(channels) ? channels.length : 0;
       return {

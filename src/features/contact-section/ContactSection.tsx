@@ -55,6 +55,14 @@ interface ContactSectionProps {
   mode?: SiteMode;
 }
 
+/**
+ * Renders CMS contact details, social links, an optional form, and a map.
+ * The form appears only when `showForm` is truthy. Invalid channel URLs render
+ * as non-link content; social links without a valid HTTP(S) URL or nonblank label
+ * and maps without an allowed Google Maps embed URL are omitted.
+ * `lang` defaults to English and controls form copy and the fallback map title.
+ * `mode` is unused here; the embedded form reads the global site mode.
+ */
 export default function ContactSection({
   block,
   lang = 'en',

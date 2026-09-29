@@ -151,6 +151,11 @@ function PageBuilder({
   );
 }
 
+/**
+ * Returns the section for a CMS block, or null for an unrecognized block type.
+ * Uses the block index as part of the React key when `_key` is absent and passes
+ * page context to sections that accept it; metadata is passed only to the hero.
+ */
 function renderBlock(
   block: PageContentBlock,
   index: number,
