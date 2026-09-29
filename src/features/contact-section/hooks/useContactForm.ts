@@ -21,6 +21,7 @@ export function useContactForm() {
     defaultValues: {
       type: currentType,
       name: '',
+      surname: '',
       email: '',
       message: '',
       venue: '',

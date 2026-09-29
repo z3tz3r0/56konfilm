@@ -64,9 +64,10 @@ export const localizedBlockType = defineType({
       hidden: ({ document, path }) => {
         const currentSection = getParentSectionFromPath(document, path);
         const twoColumnSection = currentSection?._type === 'twoColumnSection';
+        const teamSection = currentSection?._type === 'teamSection';
         const isEmphasizedVariant =
           (currentSection?.sectionVariant || 'standard') === 'emphasized';
-        return twoColumnSection && isEmphasizedVariant;
+        return (twoColumnSection && isEmphasizedVariant) || teamSection;
       },
     }),
     localizedStringField({
@@ -82,6 +83,11 @@ export const localizedBlockType = defineType({
       title: 'Body',
       description: 'เนื้อหา',
       group: 'content',
+      hidden: ({ document, path }) => {
+        const currentSection = getParentSectionFromPath(document, path);
+        const teamSection = currentSection?._type === 'teamSection';
+        return teamSection;
+      },
     }),
     defineField({
       name: 'align',

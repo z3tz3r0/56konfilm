@@ -34,12 +34,12 @@ import { teamSectionType } from './sections/teamSection';
 import { videoShowreelSectionType } from './sections/videoShowreelSection';
 import { processSectionType } from './sections/processSection';
 import { awardsSectionType } from './sections/awardsSection';
-import { contactInfoSectionType } from './sections/contactInfoSection';
+import { contactSectionType } from './sections/contactSection';
 import { blogPreviewSectionType } from './sections/blogPreviewSection';
 import { capabilitiesSectionType } from './sections/capabilitiesSection';
 import { processItemType } from './objects/processItem';
 import { awardItemType } from './objects/awardItem';
-import { contactInfoItemType } from './objects/contactInfoItem';
+import { contactChannelType } from './objects/contactChannel';
 import { featureItemType } from './objects/featureItem';
 import { settingsType } from './settings';
 import { featuredProjectsSectionType } from './sections/featuredProjectsSection';
@@ -71,7 +71,7 @@ export const schemaType = {
     featuredProjectsSectionType,
     processSectionType,
     awardsSectionType,
-    contactInfoSectionType,
+    contactSectionType,
     blogPreviewSectionType,
     capabilitiesSectionType,
     localizedBlockType,
@@ -89,7 +89,7 @@ export const schemaType = {
     faqItemType,
     processItemType,
     awardItemType,
-    contactInfoItemType,
+    contactChannelType,
     featureItemType,
     socialMediaType,
     seoObjectType,

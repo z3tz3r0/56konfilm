@@ -58,21 +58,6 @@ export const ctaBannerSectionType = defineType({
       initialValue: 'contrast',
     }),
     defineField({
-      name: 'customColors',
-      title: 'Custom Text Colors',
-      description: 'ปรับแต่งสีข้อความ (หากไม่ระบุจะใช้ค่า Default ของ Theme)',
-      type: 'object',
-      fields: [
-        defineField({ name: 'eyebrow', title: 'Eyebrow Color', type: 'color' }),
-        defineField({ name: 'heading', title: 'Heading Color', type: 'color' }),
-        defineField({ name: 'body', title: 'Body Color', type: 'color' }),
-      ],
-      options: {
-        collapsible: true,
-        collapsed: true,
-      },
-    }),
-    defineField({
       name: 'overlay',
       title: 'Background Overlay',
       description: 'ปรับแต่ง Overlay ทับรูปภาพพื้นหลัง',

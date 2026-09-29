@@ -152,11 +152,6 @@ const CTA_BANNER_SECTION = groq`
     ctas[]{
       ${CTA_PROJECTION}
     },
-    customColors{
-      eyebrow,
-      heading,
-      body
-    },
     overlay{
       enabled,
       color,
@@ -341,8 +336,8 @@ export const AWARDS_SECTION = groq`
   }
 `;
 
-export const CONTACT_INFO_SECTION = groq`
-  _type == "contactInfoSection" => {
+export const CONTACT_SECTION = groq`
+  _type == "contactSection" => {
     background,
     showForm,
     heading {
@@ -356,7 +351,24 @@ export const CONTACT_INFO_SECTION = groq`
       "label": ${LOCALIZED('label')},
       value,
       icon,
+      iconPicker { name },
       linkUrl
+    },
+    "socialHeading": ${LOCALIZED('socialHeading')},
+    socialLinks[] {
+      _key,
+      "label": ${LOCALIZED('label')},
+      url,
+      icon { name }
+    },
+    submitButton {
+      "label": ${LOCALIZED('label')},
+      style,
+      size
+    },
+    map {
+      embedUrl,
+      "title": ${LOCALIZED('title')}
     }
   }
 `;

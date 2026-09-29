@@ -31,12 +31,14 @@ test.describe('Smart Contact Form Routing', () => {
   // Test Data
   const commercialData = {
     name: 'Agency X',
+    surname: 'Example',
     email: 'contact@agencyx.com',
     message: 'We want to produce a TVC.',
   };
 
   const weddingData = {
     name: 'Couple Y',
+    surname: 'Example',
     email: 'love@couple.com',
     message: 'We are getting married!',
     weddingDate: new Date(),
@@ -61,6 +63,7 @@ test.describe('Smart Contact Form Routing', () => {
 
     // Fill form
     await page.getByLabel(/^Name/i).fill(commercialData.name);
+    await page.getByLabel(/^Surname/i).fill(commercialData.surname);
     await page.getByLabel(/^Email/i).fill(commercialData.email);
     await page.getByLabel(/^Message/i).fill(commercialData.message);
 
@@ -92,6 +95,7 @@ test.describe('Smart Contact Form Routing', () => {
 
     // Fill form
     await page.getByLabel(/^Name/i).fill(weddingData.name);
+    await page.getByLabel(/^Surname/i).fill(weddingData.surname);
     await page.getByLabel(/^Email/i).fill(weddingData.email);
     await page.getByLabel(/^Venue/i).fill(weddingData.venue);
     await page.getByLabel(/^Message/i).fill(weddingData.message);

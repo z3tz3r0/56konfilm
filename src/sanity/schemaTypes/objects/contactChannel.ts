@@ -1,8 +1,8 @@
 import { defineField, defineType } from 'sanity';
 import { localizedStringField } from './localized';
 
-export const contactInfoItemType = defineType({
-  name: 'contactInfoItem',
+export const contactChannelType = defineType({
+  name: 'contactChannel',
   title: 'Contact Channel',
   type: 'object',
   fields: [
@@ -15,15 +15,24 @@ export const contactInfoItemType = defineType({
     defineField({
       name: 'value',
       title: 'Value',
-      description: 'ค่าของช่องทางติดต่อ (เช่น hello@56kon.com)',
-      type: 'string',
+      description:
+        'ค่าของช่องทางติดต่อ (เช่น อีเมล เบอร์โทร หรือที่อยู่) กด Enter เพื่อขึ้นบรรทัดใหม่',
+      type: 'text',
+      rows: 4,
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'icon',
+      name: 'iconPicker',
       title: 'Icon',
       description:
-        'ชื่อ Lucide icon (Mail, Phone, MapPin, MessageCircle, Instagram, etc.)',
+        'เลือกไอคอนแบบเดียวกับ Card Collection หากยังไม่เลือกจะใช้ Legacy Icon เดิม',
+      type: 'icon',
+    }),
+    defineField({
+      name: 'icon',
+      title: 'Legacy Icon',
+      description:
+        'ชื่อ Lucide icon เดิม (Mail, Phone, MapPin ฯลฯ) ใช้เมื่อยังไม่ได้เลือก Icon ด้านบน',
       type: 'string',
       initialValue: 'Mail',
     }),
@@ -43,12 +52,13 @@ export const contactInfoItemType = defineType({
     select: {
       title: 'label.0.value',
       icon: 'icon',
+      iconName: 'iconPicker.name',
       value: 'value',
     },
-    prepare({ title, icon, value }) {
+    prepare({ title, icon, iconName, value }) {
       return {
         title: title || 'Contact Channel',
-        subtitle: `${icon ?? ''}  ${value ?? ''}`.trim(),
+        subtitle: `${iconName || icon || ''}  ${value ?? ''}`.trim(),
       };
     },
   },

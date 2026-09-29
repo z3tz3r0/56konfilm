@@ -15,6 +15,7 @@ import { isSupportedLocale, isSupportedMode } from '@shared/utils';
 import Script from 'next/script';
 import { env } from '@shared/config';
 import { ReactNode } from 'react';
+import RouteScrollController from '@shared/components/layout/RouteScrollController';
 
 // --- Production Fonts (preloaded: above-the-fold brand type on /[lang]/production) ---
 const sora = Sora({
@@ -60,6 +61,11 @@ export async function generateStaticParams() {
   return [{ lang: 'en' }, { lang: 'th' }];
 }
 
+/**
+ * Renders the public document with a validated locale and cookie-based mode.
+ * Wraps children in theme, mode, and motion providers and mounts shared scroll
+ * control and toast notifications.
+ */
 export default async function RootLayout({
   children,
   params,
@@ -105,6 +111,7 @@ export default async function RootLayout({
             <MotionProvider>{children}</MotionProvider>
           </ModeProvider>
         </ThemeProvider>
+        <RouteScrollController />
         <Toaster richColors position='top-right' />
       </body>
     </html>

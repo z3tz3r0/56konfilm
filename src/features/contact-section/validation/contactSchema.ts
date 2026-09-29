@@ -2,6 +2,10 @@ import { z } from 'zod';
 
 const commonFields = {
   name: z.string().min(2, 'Name must be at least 2 characters'),
+  surname: z
+    .string({ error: 'Please enter your surname.' })
+    .trim()
+    .min(1, 'Please enter your surname.'),
   email: z.email('Please enter a valid email address'),
   message: z
     .string()
@@ -19,9 +23,12 @@ const commercialSchema = z.object({
 const weddingSchema = z.object({
   ...commonFields,
   type: z.literal('wedding'),
-  weddingDate: z
-    .date()
-    .refine((date) => !Number.isNaN(date.getTime()), 'Invalid wedding date'),
+  weddingDate: z.date({
+    error: (issue) =>
+      issue.input === undefined
+        ? 'Please select your wedding date.'
+        : 'Please select a valid wedding date.',
+  }),
   venue: z.string().min(2, 'Venue is required'),
 });
 

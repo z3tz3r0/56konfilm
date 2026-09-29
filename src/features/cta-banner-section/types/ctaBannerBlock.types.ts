@@ -12,11 +12,6 @@ export interface CtaBannerSectionBlock extends BaseBlock {
   };
   media?: MediaItem;
   ctas?: ContentCta[];
-  customColors?: {
-    eyebrow?: SanityColor;
-    heading?: SanityColor;
-    body?: SanityColor;
-  };
   overlay?: {
     enabled: boolean;
     color?: SanityColor;

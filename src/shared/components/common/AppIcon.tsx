@@ -1,21 +1,45 @@
 'use client';
 import { Icon, IconifyIconProps } from '@iconify/react';
+import type { ReactNode } from 'react';
 import { cn } from '@shared/utils';
 
 interface AppIconProps {
-  iconName: IconifyIconProps['icon'];
+  iconName?: IconifyIconProps['icon'];
   className?: string;
+  iconClassName?: string;
+  variant?: 'circle' | 'plain';
+  children?: ReactNode;
 }
 
-export default function AppIcon({ iconName, className }: AppIconProps) {
+export default function AppIcon({
+  iconName,
+  className,
+  iconClassName,
+  variant = 'circle',
+  children,
+}: AppIconProps) {
   return (
     <div
+      data-slot='app-icon'
+      data-variant={variant}
       className={cn(
-        'bg-text-primary dark:bg-primary text-neutral mx-auto grid h-[80px] w-[80px] place-items-center rounded-full',
+        variant === 'circle'
+          ? 'bg-text-primary dark:bg-primary text-neutral mx-auto grid size-20 place-items-center rounded-full'
+          : 'grid size-12 place-items-center',
         className
       )}
     >
-      <Icon icon={iconName} style={{ width: 40, height: 40 }} />
+      {iconName ? (
+        <Icon
+          icon={iconName}
+          className={cn(
+            variant === 'circle' ? 'size-10' : 'size-full',
+            iconClassName
+          )}
+        />
+      ) : (
+        children
+      )}
     </div>
   );
 }

@@ -22,7 +22,7 @@ import {
   VIDEO_SHOWREEL_SECTION,
   PROCESS_SECTION,
   AWARDS_SECTION,
-  CONTACT_INFO_SECTION,
+  CONTACT_SECTION,
   BLOG_PREVIEW_SECTION,
   CAPABILITIES_SECTION,
 } from './queries/sections';
@@ -124,7 +124,7 @@ export const pageBySlugQuery = groq`
       _type == 'featuredProjectsSection' => { ${FEATURED_PROJECT_SECTION} },
       ${PROCESS_SECTION},
       ${AWARDS_SECTION},
-      ${CONTACT_INFO_SECTION},
+      ${CONTACT_SECTION},
       ${BLOG_PREVIEW_SECTION},
       ${CAPABILITIES_SECTION}
     }
