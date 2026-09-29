@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import PageBuilder, { type FullPageDocument } from '@features/PageBuilder';
-import type { ContactInfoSectionBlock } from '@features/contact-info-section/types';
+import type { ContactSectionBlock } from '@features/contact-section/types';
 import type { Locale, SiteMode } from '@shared/config';
 
 vi.mock('next/dynamic', () => ({ default: () => () => null }));
@@ -15,7 +15,7 @@ describe('PageBuilder contact context', () => {
     ['en', 'wedding'],
     ['th', 'wedding'],
   ] as const)('passes %s/%s to the contact section', (lang, mode) => {
-    const block: ContactInfoSectionBlock = { _type: 'contactInfoSection' };
+    const block: ContactSectionBlock = { _type: 'contactSection' };
     const page: FullPageDocument = {
       title: 'Contact',
       slug: 'contact',
@@ -26,7 +26,7 @@ describe('PageBuilder contact context', () => {
     const [boundary] = tree.props.children as Array<
       ReactElement<{
         children: ReactElement<{
-          block: ContactInfoSectionBlock;
+          block: ContactSectionBlock;
           lang: Locale;
           mode: SiteMode;
         }>;

@@ -5,8 +5,8 @@ import { AppIcon, SectionShell, SectionHeader } from '@shared/components';
 import { DynamicLucideIcon } from '@shared/components/common/DynamicLucideIcon';
 import { cn } from '@shared/utils';
 import { useDeviceTier } from '@shared/hooks';
-import { ContactForm } from '@features/contact-section/components';
-import type { ContactInfoSectionBlock } from '../types';
+import { ContactForm } from './components';
+import type { ContactSectionBlock } from './types';
 import type { Locale, SiteMode } from '@shared/config';
 import { isGoogleMapsEmbedUrl } from '@shared/utils/googleMaps';
 
@@ -49,16 +49,24 @@ function getSafeLink(value?: string, social = false) {
   }
 }
 
-interface ContactInfoSectionProps {
-  block: ContactInfoSectionBlock;
+interface ContactSectionProps {
+  block: ContactSectionBlock;
   lang?: Locale;
   mode?: SiteMode;
 }
 
-export default function ContactInfoSection({
+/**
+ * Renders CMS contact details, social links, an optional form, and a map.
+ * The form appears only when `showForm` is truthy. Invalid channel URLs render
+ * as non-link content; social links without a valid HTTP(S) URL or nonblank label
+ * and maps without an allowed Google Maps embed URL are omitted.
+ * `lang` defaults to English and controls form copy and the fallback map title.
+ * `mode` is unused here; the embedded form reads the global site mode.
+ */
+export default function ContactSection({
   block,
   lang = 'en',
-}: ContactInfoSectionProps) {
+}: ContactSectionProps) {
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
   const useLiteMotion = isInitialized && !allowHeavyMotion;
   const socialLinks = (block.socialLinks ?? []).flatMap((social, index) => {

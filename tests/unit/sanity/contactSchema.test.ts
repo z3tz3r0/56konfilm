@@ -1,10 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
-import { contactInfoSectionType } from '@/sanity/schemaTypes/sections/contactInfoSection';
-import { contactInfoItemType } from '@/sanity/schemaTypes/objects/contactInfoItem';
+import { contactSectionType } from '@/sanity/schemaTypes/sections/contactSection';
+import { contactChannelType } from '@/sanity/schemaTypes/objects/contactChannel';
+import { pageType } from '@/sanity/schemaTypes/page';
+import { schemaType } from '@/sanity/schemaTypes';
 import { ctaStyleField, ctaType } from '@/sanity/schemaTypes/objects/cta';
 import { localizedBlockType } from '@/sanity/schemaTypes/objects/localized';
 import { socialMediaType } from '@/sanity/schemaTypes/objects/socialMedia';
-import { CONTACT_INFO_SECTION } from '@/sanity/lib/queries/sections';
+import { CONTACT_SECTION } from '@/sanity/lib/queries/sections';
 import { LOCALIZED } from '@/sanity/lib/queries/fragments';
 
 interface SchemaField {
@@ -18,8 +20,8 @@ interface SchemaField {
   components?: { input?: unknown };
 }
 
-const fields = contactInfoSectionType.fields as unknown as SchemaField[];
-const channelFields = contactInfoItemType.fields as unknown as SchemaField[];
+const fields = contactSectionType.fields as unknown as SchemaField[];
+const channelFields = contactChannelType.fields as unknown as SchemaField[];
 
 function getField(definitions: SchemaField[] | undefined, name: string) {
   const field = definitions?.find((item) => item.name === name);
@@ -27,7 +29,31 @@ function getField(definitions: SchemaField[] | undefined, name: string) {
   return field;
 }
 
-describe('Contact Info CMS schema', () => {
+describe('Contact CMS schema', () => {
+  it('registers the renamed section and channel types', () => {
+    expect(contactSectionType.title).toBe('Contact Section');
+    expect(contactSectionType.name).toBe('contactSection');
+    expect(contactChannelType.name).toBe('contactChannel');
+    expect(getField(fields, 'channels').of).toEqual([
+      { type: 'contactChannel' },
+    ]);
+    expect(schemaType.types).toContain(contactSectionType);
+    expect(schemaType.types).toContain(contactChannelType);
+    const pageFields = pageType.fields as unknown as SchemaField[];
+    for (const name of ['commercialSections', 'weddingSections']) {
+      const sectionTypes = getField(pageFields, name).of?.map(
+        ({ type }) => type
+      );
+      expect(sectionTypes).toContain('contactSection');
+      expect(sectionTypes).not.toContain('contactInfoSection');
+    }
+  });
+
+  it('projects only the renamed contact block type', () => {
+    expect(CONTACT_SECTION).toContain('_type == "contactSection"');
+    expect(CONTACT_SECTION).not.toContain('contactInfoSection');
+  });
+
   it('reuses the localized heading and body instead of adding duplicate fields', () => {
     expect(getField(fields, 'heading').type).toBe(localizedBlockType.name);
     expect(localizedBlockType.fields).toEqual(
@@ -211,7 +237,7 @@ describe('Contact Info CMS schema', () => {
       'map {',
       'embedUrl,',
     ]) {
-      expect(CONTACT_INFO_SECTION).toContain(field);
+      expect(CONTACT_SECTION).toContain(field);
     }
     for (const field of [
       'heading',
@@ -220,7 +246,7 @@ describe('Contact Info CMS schema', () => {
       'socialHeading',
       'title',
     ]) {
-      expect(CONTACT_INFO_SECTION).toContain(LOCALIZED(field));
+      expect(CONTACT_SECTION).toContain(LOCALIZED(field));
     }
   });
 });

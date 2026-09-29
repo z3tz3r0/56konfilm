@@ -17,7 +17,7 @@ import { FAQSectionBlock } from './faq-section/types';
 import { VideoShowreelSectionBlock } from './video-showreel-section/types';
 import { ProcessSectionBlock } from './process-section/types';
 import { AwardsSectionBlock } from './awards-section/types';
-import { ContactInfoSectionBlock } from './contact-info-section/types';
+import { ContactSectionBlock } from './contact-section/types';
 import { BlogPreviewSectionBlock } from './blog-preview-section/types';
 import { CapabilitiesSectionBlock } from './capabilities-section/types';
 import { Locale, SiteMode } from '@shared/config';
@@ -67,8 +67,8 @@ const ProcessSection = dynamic(
 const AwardsSection = dynamic(
   () => import('@features/awards-section/components/AwardsSection')
 );
-const ContactInfoSection = dynamic(
-  () => import('@features/contact-info-section/components/ContactInfoSection')
+const ContactSection = dynamic(
+  () => import('@features/contact-section/ContactSection')
 );
 const BlogPreviewSection = dynamic(
   () => import('@features/blog-preview-section/components/BlogPreviewSection')
@@ -95,7 +95,7 @@ type PageContentBlock =
   | FeaturedProjectsSectionBlock
   | ProcessSectionBlock
   | AwardsSectionBlock
-  | ContactInfoSectionBlock
+  | ContactSectionBlock
   | BlogPreviewSectionBlock
   | CapabilitiesSectionBlock;
 
@@ -151,6 +151,11 @@ function PageBuilder({
   );
 }
 
+/**
+ * Returns the section for a CMS block, or null for an unrecognized block type.
+ * Uses the block index as part of the React key when `_key` is absent and passes
+ * page context to sections that accept it; metadata is passed only to the hero.
+ */
 function renderBlock(
   block: PageContentBlock,
   index: number,
@@ -227,10 +232,8 @@ function renderBlock(
       return <ProcessSection key={key} block={block} />;
     case 'awardsSection':
       return <AwardsSection key={key} block={block} />;
-    case 'contactInfoSection':
-      return (
-        <ContactInfoSection key={key} block={block} lang={lang} mode={mode} />
-      );
+    case 'contactSection':
+      return <ContactSection key={key} block={block} lang={lang} mode={mode} />;
     case 'blogPreviewSection':
       return (
         <BlogPreviewSection key={key} block={block} lang={lang} mode={mode} />

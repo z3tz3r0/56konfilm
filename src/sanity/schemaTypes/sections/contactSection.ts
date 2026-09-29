@@ -1,7 +1,7 @@
 import { defineField, defineType, defineArrayMember } from 'sanity';
 import { EnvelopeIcon } from '@sanity/icons';
 import { localizedBlockType, localizedStringField } from '../objects/localized';
-import { contactInfoItemType } from '../objects/contactInfoItem';
+import { contactChannelType } from '../objects/contactChannel';
 import { socialMediaType } from '../objects/socialMedia';
 import { ctaStyleField } from '../objects/cta';
 import { isGoogleMapsEmbedUrl } from '@shared/utils/googleMaps';
@@ -13,9 +13,9 @@ interface StoredSocialLink {
   label?: Array<{ _key?: string; value?: string }>;
 }
 
-export const contactInfoSectionType = defineType({
-  name: 'contactInfoSection',
-  title: 'Contact Info Section',
+export const contactSectionType = defineType({
+  name: 'contactSection',
+  title: 'Contact Section',
   type: 'object',
   icon: EnvelopeIcon,
   fields: [
@@ -30,7 +30,7 @@ export const contactInfoSectionType = defineType({
       title: 'Contact Channels',
       description: 'ช่องทางการติดต่อ (แนะนำ 2-4 ช่องทาง)',
       type: 'array',
-      of: [defineArrayMember({ type: contactInfoItemType.name })],
+      of: [defineArrayMember({ type: contactChannelType.name })],
       validation: (Rule) => Rule.min(1).max(6),
     }),
     defineField({
@@ -160,10 +160,14 @@ export const contactInfoSectionType = defineType({
       channels: 'channels',
       showForm: 'showForm',
     },
+    /**
+     * Returns the Studio preview with a "Contact Section" fallback for a falsy
+     * title, a channel count (zero for non-arrays), and a form indicator when enabled.
+     */
     prepare({ title, channels, showForm }) {
       const count = Array.isArray(channels) ? channels.length : 0;
       return {
-        title: title || 'Contact Info Section',
+        title: title || 'Contact Section',
         subtitle: `${count} channel${count === 1 ? '' : 's'}${showForm ? ' · with form' : ''}`,
       };
     },

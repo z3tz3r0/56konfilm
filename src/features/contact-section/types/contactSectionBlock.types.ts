@@ -6,8 +6,8 @@ export interface ContactSubmitButton {
   size?: 'default' | 'sm' | 'md' | 'lg';
 }
 
-export interface ContactInfoSectionBlock extends BaseBlock {
-  _type: 'contactInfoSection';
+export interface ContactSectionBlock extends BaseBlock {
+  _type: 'contactSection';
   background?: string;
   heading?: SectionHeading;
   showForm?: boolean;
