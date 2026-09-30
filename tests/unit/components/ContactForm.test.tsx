@@ -54,6 +54,10 @@ describe('ContactForm Component', () => {
     );
     expect(screen.queryByLabelText(/Wedding Date/i)).not.toBeInTheDocument();
     expect(screen.queryByLabelText(/Venue/i)).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Send Message' })).toBeDisabled();
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Message sending is not available yet.'
+    );
   });
 
   it('renders wedding fields in wedding mode', () => {
@@ -66,6 +70,18 @@ describe('ContactForm Component', () => {
     // Fields check
     expect(screen.getByLabelText(/Wedding Date/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Venue/i)).toBeInTheDocument();
+  });
+
+  it('explains the disabled state in Thai without submitting', () => {
+    vi.mocked(useMode).mockReturnValue({ mode: 'production' } as ReturnType<
+      typeof useMode
+    >);
+    render(<ContactForm lang='th' />);
+    expect(screen.getByRole('button', { name: 'ส่งข้อความ' })).toBeDisabled();
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'ขณะนี้ยังส่งข้อความผ่านฟอร์มไม่ได้'
+    );
+    expect(submitContactForm).not.toHaveBeenCalled();
   });
 
   it.each(['production', 'wedding'])(
@@ -127,7 +143,7 @@ describe('ContactForm Component', () => {
       success: true,
       message: 'Received',
     });
-    render(<ContactForm presentation='embedded' />);
+    render(<ContactForm presentation='embedded' isEmailEnabled />);
 
     const trigger = screen.getByLabelText(/^Wedding Date/i);
     trigger.focus();
@@ -173,7 +189,7 @@ describe('ContactForm Component', () => {
     expect(vi.mocked(submitContactForm).mock.calls[0][0]).toMatchObject({
       type: 'wedding',
       surname: 'Example',
-      weddingDate: date,
+      weddingDate: '2050-07-21',
       venue: 'Example venue',
     });
     await waitFor(() => expect(trigger).toHaveTextContent('Pick a date'));
@@ -188,7 +204,7 @@ describe('ContactForm Component', () => {
       vi.mocked(useMode).mockReturnValue({ mode } as ReturnType<
         typeof useMode
       >);
-      render(<ContactForm presentation='embedded' />);
+      render(<ContactForm presentation='embedded' isEmailEnabled />);
       fireEvent.change(screen.getByLabelText('Name'), {
         target: { value: 'Example' },
       });
@@ -321,6 +337,7 @@ describe('ContactForm Component', () => {
       render(
         <ContactForm
           lang={lang}
+          isEmailEnabled
           submitButton={{ label: 'CMS submit', style: 'secondary', size: 'lg' }}
         />
       );
@@ -360,7 +377,7 @@ describe('ContactForm Component', () => {
     }
   );
 
-  it('retains entered data when the simulated action fails', async () => {
+  it('retains entered data when the email action fails', async () => {
     vi.mocked(useMode).mockReturnValue({ mode: 'production' } as ReturnType<
       typeof useMode
     >);
@@ -368,7 +385,7 @@ describe('ContactForm Component', () => {
       success: false,
       message: 'Try again',
     });
-    render(<ContactForm />);
+    render(<ContactForm isEmailEnabled />);
     for (const [label, value] of [
       ['Name', 'Example'],
       ['Surname', 'Family'],
@@ -393,7 +410,9 @@ describe('ContactForm Component', () => {
       success: true,
       message: 'Received',
     });
-    const { rerender } = render(<ContactForm presentation='embedded' />);
+    const { rerender } = render(
+      <ContactForm presentation='embedded' isEmailEnabled />
+    );
     for (const [label, value] of [
       ['Name', 'Example'],
       ['Surname', 'Family'],
@@ -410,7 +429,7 @@ describe('ContactForm Component', () => {
     vi.mocked(useMode).mockReturnValue({ mode: 'production' } as ReturnType<
       typeof useMode
     >);
-    rerender(<ContactForm presentation='embedded' />);
+    rerender(<ContactForm presentation='embedded' isEmailEnabled />);
     await waitFor(() =>
       expect(
         screen.queryByText('Please select your wedding date.')

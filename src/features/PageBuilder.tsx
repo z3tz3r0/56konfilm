@@ -21,6 +21,7 @@ import { ContactSectionBlock } from './contact-section/types';
 import { BlogPreviewSectionBlock } from './blog-preview-section/types';
 import { CapabilitiesSectionBlock } from './capabilities-section/types';
 import { Locale, SiteMode } from '@shared/config';
+import { env } from '@shared/config/env';
 import { FeaturedProjectsSectionBlock } from './featured-project-section/types';
 
 const TwoColumnSection = dynamic(
@@ -233,7 +234,15 @@ function renderBlock(
     case 'awardsSection':
       return <AwardsSection key={key} block={block} />;
     case 'contactSection':
-      return <ContactSection key={key} block={block} lang={lang} mode={mode} />;
+      return (
+        <ContactSection
+          key={key}
+          block={block}
+          lang={lang}
+          mode={mode}
+          isEmailEnabled={env.CONTACT_EMAIL_ENABLED}
+        />
+      );
     case 'blogPreviewSection':
       return (
         <BlogPreviewSection key={key} block={block} lang={lang} mode={mode} />

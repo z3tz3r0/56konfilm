@@ -38,3 +38,12 @@ export const contactFormSchema = z.discriminatedUnion('type', [
 ]);
 
 export type ContactFormValues = z.infer<typeof contactFormSchema>;
+
+// A calendar day has no timezone. Send it as YYYY-MM-DD so the server cannot
+// shift the visitor's selected wedding date when running in another timezone.
+export const contactSubmissionSchema = z.discriminatedUnion('type', [
+  commercialSchema,
+  weddingSchema.extend({ weddingDate: z.iso.date() }),
+]);
+
+export type ContactSubmission = z.infer<typeof contactSubmissionSchema>;

@@ -23,6 +23,15 @@ const envSchema = z.object({
   SANITY_CMS_SESSION_MAX_AGE: z.coerce.number().default(604800),
   SANITY_CMS_REMEMBER_MAX_AGE: z.coerce.number().default(2592000),
 
+  // --- Contact email (private values must never be passed to client components) ---
+  CONTACT_EMAIL_ENABLED: z
+    .enum(['true', 'false'])
+    .default('false')
+    .transform((value) => value === 'true'),
+  RESEND_API_KEY: z.string().optional(),
+  CONTACT_EMAIL_FROM: z.string().optional(),
+  CONTACT_EMAIL_TO: z.string().optional(),
+
   // --- System Defaults ---
   DEFAULT_SITE_MODE: z.enum(['production', 'wedding']).default('production'),
 
@@ -44,6 +53,10 @@ const rawEnv = {
   SANITY_CMS_SESSION_SECRET: process.env.SANITY_CMS_SESSION_SECRET,
   SANITY_CMS_SESSION_MAX_AGE: process.env.SANITY_CMS_SESSION_MAX_AGE,
   SANITY_CMS_REMEMBER_MAX_AGE: process.env.SANITY_CMS_REMEMBER_MAX_AGE,
+  CONTACT_EMAIL_ENABLED: process.env.CONTACT_EMAIL_ENABLED,
+  RESEND_API_KEY: process.env.RESEND_API_KEY,
+  CONTACT_EMAIL_FROM: process.env.CONTACT_EMAIL_FROM,
+  CONTACT_EMAIL_TO: process.env.CONTACT_EMAIL_TO,
   DEFAULT_SITE_MODE: process.env.DEFAULT_SITE_MODE,
   BASE_URL: process.env.BASE_URL,
   TEST_USER_EMAIL: process.env.TEST_USER_EMAIL,
@@ -58,6 +71,7 @@ function validateEnv() {
   // --- กรณีที่ 1: Validation ผ่านฉลุย ---
   if (parsed.success) {
     const data = parsed.data;
+    assertContactEmailConfig(data, isServer);
     const isLiveEnvironment = data.NODE_ENV !== 'test';
     const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
 
@@ -80,7 +94,7 @@ function validateEnv() {
 
   // --- กรณีที่ 2: เป็นโหมด Test (Mock Data) ---
   if (process.env.NODE_ENV === 'test' || isLighthouse) {
-    return envSchema.parse({
+    const data = envSchema.parse({
       ...rawEnv,
       NEXT_PUBLIC_SANITY_PROJECT_ID:
         rawEnv.NEXT_PUBLIC_SANITY_PROJECT_ID ?? 'test-project',
@@ -92,6 +106,8 @@ function validateEnv() {
         rawEnv.SANITY_REVALIDATE_SECRET ??
         'mock_secret_32_characters_long_for_test',
     });
+    assertContactEmailConfig(data, isServer);
+    return data;
   }
 
   // --- กรณีที่ 3: พัง (Fail Fast สำหรับ Dev/Prod) ---
@@ -102,6 +118,28 @@ function validateEnv() {
     );
   }
   throw new Error('❌ Environment validation failed');
+}
+
+function assertContactEmailConfig(
+  data: z.infer<typeof envSchema>,
+  isServer: boolean
+) {
+  if (!isServer || !data.CONTACT_EMAIL_ENABLED) return;
+
+  const contactConfig = z.object({
+    RESEND_API_KEY: z.string().trim().min(4).startsWith('re_'),
+    CONTACT_EMAIL_FROM: z.email(),
+    CONTACT_EMAIL_TO: z.email(),
+  });
+  const result = contactConfig.safeParse(data);
+  if (!result.success) {
+    const fields = [
+      ...new Set(result.error.issues.map((issue) => issue.path[0])),
+    ];
+    throw new Error(
+      `❌ [FATAL] Missing or invalid contact email configuration: ${fields.join(', ')}`
+    );
+  }
 }
 
 export const env = validateEnv();

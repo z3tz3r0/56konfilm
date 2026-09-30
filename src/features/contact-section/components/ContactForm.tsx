@@ -29,12 +29,14 @@ interface ContactFormProps {
   lang?: 'en' | 'th';
   presentation?: 'standalone' | 'embedded';
   submitButton?: ContactSubmitButton;
+  isEmailEnabled?: boolean;
 }
 
 export function ContactForm({
   lang = 'en',
   presentation = 'standalone',
   submitButton,
+  isEmailEnabled = false,
 }: ContactFormProps) {
   const { form, onSubmit, isPending, isWedding } = useContactForm();
   const copy = contactFormCopy[lang];
@@ -151,7 +153,7 @@ export function ContactForm({
             type='submit'
             variant={mapCtaVariant(submitButton?.style ?? 'primary')}
             size={submitButton?.size ?? 'default'}
-            disabled={isPending}
+            disabled={isPending || !isEmailEnabled}
             aria-busy={isPending}
             className={cn(
               'max-w-full wrap-anywhere whitespace-normal',
@@ -171,6 +173,11 @@ export function ContactForm({
               ? copy.sending
               : submitButton?.label?.trim() || copy.submit}
           </Button>
+          {!isEmailEnabled && (
+            <p role='status' className='text-text-secondary text-sm'>
+              {copy.unavailable}
+            </p>
+          )}
         </form>
       </Form>
     </div>

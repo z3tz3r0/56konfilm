@@ -1,8 +1,10 @@
 'use server';
 
+import { env } from '@shared/config/env';
+import { EmailService } from '@services/emailService';
 import {
-  contactFormSchema,
-  ContactFormValues,
+  contactSubmissionSchema,
+  type ContactSubmission,
 } from '@features/contact-section/validation';
 
 type ActionState = {
@@ -11,12 +13,18 @@ type ActionState = {
   errors?: Record<string, string[]>;
 };
 
-const CONTACT_RECEIVER_EMAIL = '56konfilm@gmail.com';
-
 export async function submitContactForm(
-  data: ContactFormValues | unknown
+  data: ContactSubmission | unknown
 ): Promise<ActionState> {
-  const parsed = contactFormSchema.safeParse(data);
+  if (!env.CONTACT_EMAIL_ENABLED) {
+    return {
+      success: false,
+      message:
+        'Email inquiries are not available yet. Please use the contact details on this page.',
+    };
+  }
+
+  const parsed = contactSubmissionSchema.safeParse(data);
 
   if (!parsed.success) {
     return {
@@ -26,37 +34,29 @@ export async function submitContactForm(
     };
   }
 
-  const validData = parsed.data;
+  const inquiry = parsed.data;
+  const delivery = await EmailService.sendContactInquiry(inquiry);
 
-  // Simulate routing logic
-  try {
-    if (validData.type === 'commercial') {
-      console.log(
-        `[ROUTING] Commercial Inquiry -> ${CONTACT_RECEIVER_EMAIL}: ${validData.name}`
-      );
-      // In real implementation: await sendEmail(validData);
-      return {
-        success: true,
-        message: 'Commercial Inquiry received. We will contact you shortly.',
-      };
-    } else if (validData.type === 'wedding') {
-      console.log(
-        `[ROUTING] Wedding Inquiry -> ${CONTACT_RECEIVER_EMAIL}: ${validData.name} - ${validData.weddingDate.toLocaleDateString()}`
-      );
-      // In real implementation: await sendEmail(validData);
-      return {
-        success: true,
-        message: 'Love story received! We will be in touch soon.',
-      };
-    }
-
-    // Fallback for exhaustive check
-    return { success: false, message: 'Invalid form type' };
-  } catch (error) {
-    console.error('Submission error:', error);
+  if (delivery.status === 'sent') {
     return {
-      success: false,
-      message: 'Something went wrong. Please try again.',
+      success: true,
+      message:
+        inquiry.type === 'wedding'
+          ? 'Love story received! We will be in touch soon.'
+          : 'Commercial Inquiry received. We will contact you shortly.',
     };
   }
+
+  if (delivery.status === 'unconfirmed') {
+    return {
+      success: false,
+      message:
+        'We could not confirm your message was sent. Please contact us directly.',
+    };
+  }
+
+  return {
+    success: false,
+    message: 'We could not send your message. Please try again later.',
+  };
 }

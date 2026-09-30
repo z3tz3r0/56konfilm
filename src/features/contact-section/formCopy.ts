@@ -15,6 +15,8 @@ export const contactFormCopy = {
     venuePlaceholder: 'City, Country or Venue Name',
     submit: 'Send Message',
     sending: 'Sending...',
+    unavailable:
+      'Message sending is not available yet. Please use the contact details on this page.',
   },
   th: {
     name: 'ชื่อ',
@@ -32,5 +34,7 @@ export const contactFormCopy = {
     venuePlaceholder: 'เมือง ประเทศ หรือชื่อสถานที่จัดงาน',
     submit: 'ส่งข้อความ',
     sending: 'กำลังส่ง...',
+    unavailable:
+      'ขณะนี้ยังส่งข้อความผ่านฟอร์มไม่ได้ กรุณาติดต่อผ่านช่องทางที่แสดงในหน้านี้',
   },
 } as const;

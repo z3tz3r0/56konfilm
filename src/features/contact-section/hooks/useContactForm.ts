@@ -5,6 +5,7 @@ import { useMode } from '@shared/hooks';
 import {
   contactFormSchema,
   type ContactFormValues,
+  type ContactSubmission,
 } from '@features/contact-section/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useTransition } from 'react';
@@ -39,7 +40,18 @@ export function useContactForm() {
 
   const onSubmit = async (data: ContactFormValues) => {
     startTransition(async () => {
-      const result = await submitContactForm(data);
+      const submission: ContactSubmission =
+        data.type === 'wedding'
+          ? {
+              ...data,
+              weddingDate: [
+                data.weddingDate.getFullYear(),
+                String(data.weddingDate.getMonth() + 1).padStart(2, '0'),
+                String(data.weddingDate.getDate()).padStart(2, '0'),
+              ].join('-'),
+            }
+          : data;
+      const result = await submitContactForm(submission);
 
       if (result.success) {
         toast.success(result.message);

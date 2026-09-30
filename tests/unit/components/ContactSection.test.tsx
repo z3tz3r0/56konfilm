@@ -62,10 +62,12 @@ vi.mock('@features/contact-section/components', () => ({
     lang,
     presentation,
     submitButton,
+    isEmailEnabled,
   }: {
     lang: string;
     presentation?: string;
     submitButton?: ContactSectionBlock['submitButton'];
+    isEmailEnabled?: boolean;
   }) => (
     <div
       data-testid='contact-form'
@@ -74,6 +76,7 @@ vi.mock('@features/contact-section/components', () => ({
       data-submit-label={submitButton?.label}
       data-submit-style={submitButton?.style}
       data-submit-size={submitButton?.size}
+      data-email-enabled={String(isEmailEnabled)}
     />
   ),
 }));
@@ -231,6 +234,23 @@ describe('ContactSection', () => {
     expect(screen.getByTestId('contact-form')).toHaveAttribute(
       'data-presentation',
       'embedded'
+    );
+    expect(screen.getByTestId('contact-form')).toHaveAttribute(
+      'data-email-enabled',
+      'false'
+    );
+  });
+
+  it('passes only the delivery readiness flag to the embedded form', () => {
+    render(
+      <ContactSection
+        block={{ ...legacyBlock, showForm: true }}
+        isEmailEnabled
+      />
+    );
+    expect(screen.getByTestId('contact-form')).toHaveAttribute(
+      'data-email-enabled',
+      'true'
     );
   });
 

@@ -1,7 +1,8 @@
 import '@testing-library/jest-dom/vitest';
 import { config } from 'dotenv';
 
-config({ path: '.env.local' });
+// Tests that must not read local environment files can opt out explicitly.
+if (process.env.SKIP_TEST_DOTENV !== 'true') config({ path: '.env.local' });
 
 // Ensure required variables for tests if not in .env.local
 process.env.NEXT_PUBLIC_SANITY_PROJECT_ID =
