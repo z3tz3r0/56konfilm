@@ -2,15 +2,23 @@ import type { ContactSubmission } from '@features/contact-section/validation';
 import { env } from '@shared/config/env';
 import { HttpBaseService } from '@shared/lib/http/httpBaseService';
 import { sendResendEmail } from '@shared/lib/integrations/resend';
+import { verifyTurnstileToken } from '@shared/lib/integrations/turnstile';
+import { checkContactRateLimit } from '@shared/utils/contactRateLimit';
 
-export type EmailDeliveryResult =
-  | { status: 'sent' }
-  | { status: 'unconfirmed' }
-  | { status: 'failed' };
+export enum EmailDeliveryStatus {
+  Sent = 'sent',
+  Unconfirmed = 'unconfirmed',
+  Failed = 'failed',
+  RateLimited = 'rate-limited',
+  VerificationFailed = 'verification-failed',
+}
+
+export type EmailDeliveryResult = { status: EmailDeliveryStatus };
 
 export class EmailService extends HttpBaseService {
   static async sendContactInquiry(
-    inquiry: ContactSubmission
+    inquiry: ContactSubmission,
+    verification?: { token?: string | null; ip?: string }
   ): Promise<EmailDeliveryResult> {
     const subject =
       inquiry.type === 'wedding'
@@ -34,9 +42,32 @@ export class EmailService extends HttpBaseService {
       !env.CONTACT_EMAIL_ENABLED ||
       !env.RESEND_API_KEY ||
       !env.CONTACT_EMAIL_FROM ||
-      !env.CONTACT_EMAIL_TO
+      !env.CONTACT_EMAIL_TO ||
+      !env.TURNSTILE_SECRET_KEY
     ) {
-      return { status: 'failed' };
+      return { status: EmailDeliveryStatus.Failed };
+    }
+
+    if (!checkContactRateLimit(verification?.ip)) {
+      return { status: EmailDeliveryStatus.RateLimited };
+    }
+
+    const token = verification?.token?.trim();
+    if (!token || token.length > 2048) {
+      return { status: EmailDeliveryStatus.VerificationFailed };
+    }
+
+    try {
+      const verified = await verifyTurnstileToken(
+        this.post,
+        env.TURNSTILE_SECRET_KEY,
+        token,
+        verification?.ip
+      );
+      if (!verified) return { status: EmailDeliveryStatus.VerificationFailed };
+    } catch {
+      console.error('[EmailService Error]: Turnstile verification failed.');
+      return { status: EmailDeliveryStatus.VerificationFailed };
     }
 
     try {
@@ -50,14 +81,14 @@ export class EmailService extends HttpBaseService {
 
       if (!emailId) {
         console.error('[EmailService Error]: Resend returned no email ID.');
-        return { status: 'unconfirmed' };
+        return { status: EmailDeliveryStatus.Unconfirmed };
       }
 
-      return { status: 'sent' };
+      return { status: EmailDeliveryStatus.Sent };
     } catch {
       // Do not log the request, which includes private keys and visitor data.
       console.error('[EmailService Error]: Contact email delivery failed.');
-      return { status: 'failed' };
+      return { status: EmailDeliveryStatus.Failed };
     }
   }
 }

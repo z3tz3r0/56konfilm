@@ -1,16 +1,21 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { contactConfig, sendContactInquiry } = vi.hoisted(() => ({
+const { contactConfig, sendContactInquiry, headersMock } = vi.hoisted(() => ({
   contactConfig: { CONTACT_EMAIL_ENABLED: false },
   sendContactInquiry: vi.fn(),
+  headersMock: vi.fn(),
 }));
 
 vi.mock('@shared/config/env', () => ({ env: contactConfig }));
-vi.mock('@services/emailService', () => ({
-  EmailService: { sendContactInquiry },
-}));
+vi.mock('@services/emailService', async (importOriginal) => {
+  const { EmailDeliveryStatus } =
+    await importOriginal<typeof import('@services/emailService')>();
+  return { EmailDeliveryStatus, EmailService: { sendContactInquiry } };
+});
+vi.mock('next/headers', () => ({ headers: headersMock }));
 
 import { submitContactForm } from '@features/contact-section/actions';
+import { EmailDeliveryStatus } from '@services/emailService';
 
 const commercial = {
   type: 'commercial' as const,
@@ -31,9 +36,14 @@ describe('submitContactForm Server Action', () => {
   beforeEach(() => {
     contactConfig.CONTACT_EMAIL_ENABLED = false;
     sendContactInquiry.mockReset();
+    headersMock.mockReset();
+    vi.stubEnv('VERCEL', '');
   });
 
-  afterEach(() => vi.restoreAllMocks());
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllEnvs();
+  });
 
   it('never invokes delivery while disabled', async () => {
     const result = await submitContactForm(commercial);
@@ -68,15 +78,52 @@ describe('submitContactForm Server Action', () => {
     'passes validated $type data to the service and reports accepted delivery',
     async (inquiry) => {
       contactConfig.CONTACT_EMAIL_ENABLED = true;
-      sendContactInquiry.mockResolvedValue({ status: 'sent' });
+      sendContactInquiry.mockResolvedValue({
+        status: EmailDeliveryStatus.Sent,
+      });
 
       const result = await submitContactForm(inquiry);
       expect(result.success).toBe(true);
-      expect(sendContactInquiry).toHaveBeenCalledExactlyOnceWith(inquiry);
+      expect(sendContactInquiry).toHaveBeenCalledExactlyOnceWith(inquiry, {
+        token: undefined,
+        ip: undefined,
+      });
     }
   );
 
-  it.each(['unconfirmed', 'failed'] as const)(
+  it('derives a valid IP only from the Vercel header and passes the token', async () => {
+    contactConfig.CONTACT_EMAIL_ENABLED = true;
+    vi.stubEnv('VERCEL', '1');
+    headersMock.mockResolvedValue(
+      new Headers({
+        'x-vercel-forwarded-for': '203.0.113.1, 198.51.100.2',
+      })
+    );
+    sendContactInquiry.mockResolvedValue({
+      status: EmailDeliveryStatus.VerificationFailed,
+    });
+    const result = await submitContactForm(commercial, 'visitor-token');
+    expect(result.reason).toBe('verification');
+    expect(sendContactInquiry).toHaveBeenCalledExactlyOnceWith(commercial, {
+      token: 'visitor-token',
+      ip: '203.0.113.1',
+    });
+  });
+
+  it.each([
+    EmailDeliveryStatus.RateLimited,
+    EmailDeliveryStatus.VerificationFailed,
+  ])('maps %s to a form-safe reason', async (status) => {
+    contactConfig.CONTACT_EMAIL_ENABLED = true;
+    sendContactInquiry.mockResolvedValue({ status });
+    const result = await submitContactForm(commercial, 'token');
+    expect(result.success).toBe(false);
+    expect(result.reason).toBe(
+      status === EmailDeliveryStatus.RateLimited ? 'rate-limit' : 'verification'
+    );
+  });
+
+  it.each([EmailDeliveryStatus.Unconfirmed, EmailDeliveryStatus.Failed])(
     'never reports success on %s delivery',
     async (status) => {
       contactConfig.CONTACT_EMAIL_ENABLED = true;

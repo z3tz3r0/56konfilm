@@ -16,6 +16,7 @@ import {
 import { Form } from '@shared/components/ui/form';
 import { Input, inputControlStyles } from '@shared/components/ui/input';
 import { Button } from '@shared/components/ui/button';
+import type { Locale } from '@shared/config/preferences';
 
 const selectedDate = new Date(2050, 6, 20);
 
@@ -24,7 +25,7 @@ function WeddingForm({
   date,
   onSubmit = vi.fn(),
 }: {
-  lang?: 'en' | 'th';
+  lang?: Locale;
   date?: Date;
   onSubmit?: (values: ContactFormValues) => void;
 }) {

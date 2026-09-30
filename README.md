@@ -57,6 +57,7 @@ For detailed guidelines on how to contribute or understand the codebase, please 
 - 📂 [Folder Structure](https://github.com/z3tz3r0/56konfilm/blob/main/docs/FOLDER_STRUCTURE.md) - How we organize our files.
 - 🔗 [Import Policies](https://github.com/z3tz3r0/56konfilm/blob/main/docs/IMPORT_POLICIES.md) - Rules for dependencies and barrel exports.
 - 🛡️ [Sanity Query Safeguards](https://github.com/z3tz3r0/56konfilm/blob/main/docs/SANITY_MCP_GUIDELINES.md) - Rules for AI agents interacting with Sanity content.
+- ✉️ [Contact Email Activation](docs/CONTACT_EMAIL_ACTIVATION.md) - Resend, Turnstile, and future launch checklist.
 
 ## 👨‍💻 Highlights for Recruiters & Partners
 

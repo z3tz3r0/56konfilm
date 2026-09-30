@@ -28,9 +28,13 @@ const envSchema = z.object({
     .enum(['true', 'false'])
     .default('false')
     .transform((value) => value === 'true'),
+  // Optional while delivery can be disabled; assertContactEmailConfig requires
+  // all five values when enabled. Revisit only if the disabled state is removed.
   RESEND_API_KEY: z.string().optional(),
   CONTACT_EMAIL_FROM: z.string().optional(),
   CONTACT_EMAIL_TO: z.string().optional(),
+  NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().optional(),
+  TURNSTILE_SECRET_KEY: z.string().optional(),
 
   // --- System Defaults ---
   DEFAULT_SITE_MODE: z.enum(['production', 'wedding']).default('production'),
@@ -57,6 +61,8 @@ const rawEnv = {
   RESEND_API_KEY: process.env.RESEND_API_KEY,
   CONTACT_EMAIL_FROM: process.env.CONTACT_EMAIL_FROM,
   CONTACT_EMAIL_TO: process.env.CONTACT_EMAIL_TO,
+  NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+  TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
   DEFAULT_SITE_MODE: process.env.DEFAULT_SITE_MODE,
   BASE_URL: process.env.BASE_URL,
   TEST_USER_EMAIL: process.env.TEST_USER_EMAIL,
@@ -130,6 +136,8 @@ function assertContactEmailConfig(
     RESEND_API_KEY: z.string().trim().min(4).startsWith('re_'),
     CONTACT_EMAIL_FROM: z.email(),
     CONTACT_EMAIL_TO: z.email(),
+    NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().trim().min(1),
+    TURNSTILE_SECRET_KEY: z.string().trim().min(1),
   });
   const result = contactConfig.safeParse(data);
   if (!result.success) {
@@ -139,6 +147,30 @@ function assertContactEmailConfig(
     throw new Error(
       `❌ [FATAL] Missing or invalid contact email configuration: ${fields.join(', ')}`
     );
+  }
+
+  // Cloudflare's test keys must never allow a production deployment to send.
+  if (data.NODE_ENV === 'production') {
+    const testSiteKeys = new Set([
+      '1x00000000000000000000AA',
+      '2x00000000000000000000AB',
+      '1x00000000000000000000BB',
+      '2x00000000000000000000BB',
+      '3x00000000000000000000FF',
+    ]);
+    const testSecretKeys = new Set([
+      '1x0000000000000000000000000000000AA',
+      '2x0000000000000000000000000000000AA',
+      '3x0000000000000000000000000000000AA',
+    ]);
+    if (
+      testSiteKeys.has(result.data.NEXT_PUBLIC_TURNSTILE_SITE_KEY) ||
+      testSecretKeys.has(result.data.TURNSTILE_SECRET_KEY)
+    ) {
+      throw new Error(
+        '❌ [FATAL] Cloudflare Turnstile test keys cannot be used when production contact email is enabled'
+      );
+    }
   }
 }
 

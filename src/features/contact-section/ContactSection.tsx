@@ -54,6 +54,7 @@ interface ContactSectionProps {
   lang?: Locale;
   mode?: SiteMode;
   isEmailEnabled?: boolean;
+  turnstileSiteKey?: string;
 }
 
 /**
@@ -68,6 +69,7 @@ export default function ContactSection({
   block,
   lang = 'en',
   isEmailEnabled = false,
+  turnstileSiteKey,
 }: ContactSectionProps) {
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
   const useLiteMotion = isInitialized && !allowHeavyMotion;
@@ -180,6 +182,7 @@ export default function ContactSection({
                   presentation='embedded'
                   submitButton={block.submitButton}
                   isEmailEnabled={isEmailEnabled}
+                  turnstileSiteKey={turnstileSiteKey}
                 />
               )}
               {(block.socialHeading || socialLinks.length > 0) && (

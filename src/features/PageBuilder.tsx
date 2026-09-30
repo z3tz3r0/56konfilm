@@ -241,6 +241,11 @@ function renderBlock(
           lang={lang}
           mode={mode}
           isEmailEnabled={env.CONTACT_EMAIL_ENABLED}
+          turnstileSiteKey={
+            env.CONTACT_EMAIL_ENABLED
+              ? env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
+              : undefined
+          }
         />
       );
     case 'blogPreviewSection':

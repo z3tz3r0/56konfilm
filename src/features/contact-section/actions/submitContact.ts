@@ -1,7 +1,9 @@
 'use server';
 
 import { env } from '@shared/config/env';
-import { EmailService } from '@services/emailService';
+import { EmailDeliveryStatus, EmailService } from '@services/emailService';
+import { headers } from 'next/headers';
+import { isIP } from 'node:net';
 import {
   contactSubmissionSchema,
   type ContactSubmission,
@@ -11,10 +13,19 @@ type ActionState = {
   success: boolean;
   message?: string;
   errors?: Record<string, string[]>;
+  reason?: 'rate-limit' | 'verification';
 };
 
+async function getVerifiedContactIp(): Promise<string | undefined> {
+  if (process.env.VERCEL !== '1') return undefined;
+  const value = (await headers()).get('x-vercel-forwarded-for');
+  const ip = value?.split(',')[0]?.trim();
+  return ip && isIP(ip) ? ip : undefined;
+}
+
 export async function submitContactForm(
-  data: ContactSubmission | unknown
+  data: ContactSubmission | unknown,
+  turnstileToken?: string | null
 ): Promise<ActionState> {
   if (!env.CONTACT_EMAIL_ENABLED) {
     return {
@@ -35,9 +46,29 @@ export async function submitContactForm(
   }
 
   const inquiry = parsed.data;
-  const delivery = await EmailService.sendContactInquiry(inquiry);
+  const ip = await getVerifiedContactIp();
+  const delivery = await EmailService.sendContactInquiry(inquiry, {
+    token: turnstileToken,
+    ip,
+  });
 
-  if (delivery.status === 'sent') {
+  if (delivery.status === EmailDeliveryStatus.RateLimited) {
+    return {
+      success: false,
+      reason: 'rate-limit',
+      message: 'Too many attempts. Please wait two minutes and try again.',
+    };
+  }
+
+  if (delivery.status === EmailDeliveryStatus.VerificationFailed) {
+    return {
+      success: false,
+      reason: 'verification',
+      message: 'Verification failed. Please try again.',
+    };
+  }
+
+  if (delivery.status === EmailDeliveryStatus.Sent) {
     return {
       success: true,
       message:
@@ -47,7 +78,7 @@ export async function submitContactForm(
     };
   }
 
-  if (delivery.status === 'unconfirmed') {
+  if (delivery.status === EmailDeliveryStatus.Unconfirmed) {
     return {
       success: false,
       message:

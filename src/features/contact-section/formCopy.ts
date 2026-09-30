@@ -17,6 +17,12 @@ export const contactFormCopy = {
     sending: 'Sending...',
     unavailable:
       'Message sending is not available yet. Please use the contact details on this page.',
+    verificationPrompt: 'Complete the verification before sending.',
+    verificationFailed: 'Verification failed. Please try again.',
+    verificationUnavailable:
+      'Verification is unavailable. Please try again later.',
+    rateLimited: 'Too many attempts. Please wait two minutes and try again.',
+    submissionFailed: 'We could not send your message. Please try again later.',
   },
   th: {
     name: 'ชื่อ',
@@ -36,5 +42,10 @@ export const contactFormCopy = {
     sending: 'กำลังส่ง...',
     unavailable:
       'ขณะนี้ยังส่งข้อความผ่านฟอร์มไม่ได้ กรุณาติดต่อผ่านช่องทางที่แสดงในหน้านี้',
+    verificationPrompt: 'กรุณายืนยันตัวตนก่อนส่งข้อความ',
+    verificationFailed: 'การยืนยันตัวตนไม่สำเร็จ กรุณาลองอีกครั้ง',
+    verificationUnavailable: 'ขณะนี้ยืนยันตัวตนไม่ได้ กรุณาลองใหม่ภายหลัง',
+    rateLimited: 'ส่งข้อความบ่อยเกินไป กรุณารอ 2 นาทีแล้วลองอีกครั้ง',
+    submissionFailed: 'ส่งข้อความไม่สำเร็จ กรุณาลองใหม่ภายหลัง',
   },
 } as const;

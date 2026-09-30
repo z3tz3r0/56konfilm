@@ -1,6 +1,7 @@
 'use client';
 
 import { submitContactForm } from '@features/contact-section/actions';
+import type { Locale } from '@shared/config/preferences';
 import { useMode } from '@shared/hooks';
 import {
   contactFormSchema,
@@ -8,13 +9,19 @@ import {
   type ContactSubmission,
 } from '@features/contact-section/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useTransition } from 'react';
+import { useCallback, useEffect, useState, useTransition } from 'react';
 import { useForm, type DefaultValues } from 'react-hook-form';
 import { toast } from 'sonner';
+import { contactFormCopy } from '../formCopy';
 
-export function useContactForm() {
+export function useContactForm(lang: Locale = 'en') {
   const { mode } = useMode();
   const [isPending, startTransition] = useTransition();
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileResetKey, setTurnstileResetKey] = useState(0);
+  const onTurnstileTokenChange = useCallback((token: string | null) => {
+    setTurnstileToken(token);
+  }, []);
   const currentType = mode === 'wedding' ? 'wedding' : 'commercial';
 
   const form = useForm<ContactFormValues, unknown, ContactFormValues>({
@@ -51,18 +58,27 @@ export function useContactForm() {
               ].join('-'),
             }
           : data;
-      const result = await submitContactForm(submission);
+      try {
+        const result = await submitContactForm(submission, turnstileToken);
 
-      if (result.success) {
-        toast.success(result.message);
-        form.reset();
-        form.setValue('type', currentType);
-      } else {
-        if (result.errors) {
+        if (result.success) {
+          toast.success(result.message);
+          form.reset();
+          form.setValue('type', currentType);
+        } else if (result.reason === 'verification') {
+          toast.error(contactFormCopy[lang].verificationFailed);
+        } else if (result.reason === 'rate-limit') {
+          toast.error(contactFormCopy[lang].rateLimited);
+        } else if (result.errors) {
           toast.error('Please fix the errors in the form.');
         } else {
           toast.error(result.message || 'Something went wrong.');
         }
+      } catch {
+        toast.error(contactFormCopy[lang].submissionFailed);
+      } finally {
+        setTurnstileToken(null);
+        setTurnstileResetKey((current) => current + 1);
       }
     });
   };
@@ -72,5 +88,8 @@ export function useContactForm() {
     onSubmit,
     isPending,
     isWedding: mode === 'wedding',
+    turnstileToken,
+    turnstileResetKey,
+    onTurnstileTokenChange,
   };
 }
