@@ -10,7 +10,7 @@ import {
   staggerContainerVariants,
   fadeUpItemVariants,
 } from '@shared/lib/motion';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { urlFor } from '@/sanity/lib/image';
 import { MediaGallerySectionBlock } from '../types';
 import { GalleryCard, VideoItem } from '.';

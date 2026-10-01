@@ -1,4 +1,4 @@
-import { getAlignmentClass } from '@shared/utils';
+import { getAlignmentClass } from '@shared/utils/styling/styleVariants';
 import { Production, Wedding } from './components';
 import { TwoColumnSectionProps } from './types';
 import { ModeGuard } from '@shared/components';

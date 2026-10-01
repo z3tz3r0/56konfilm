@@ -5,8 +5,11 @@ import {
   ProjectNavigation,
   SectionShell,
 } from '@shared/components';
-import { buildMetadata } from '@shared/lib/seo';
-import { isSupportedLocale, isSupportedMode } from '@shared/utils';
+import { buildMetadata } from '@shared/utils/seo/metadata';
+import {
+  isSupportedLocale,
+  isSupportedMode,
+} from '@shared/utils/preferences/preferenceGuards';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { ReactNode } from 'react';

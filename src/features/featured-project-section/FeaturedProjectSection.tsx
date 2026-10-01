@@ -8,7 +8,8 @@ import {
 } from '@shared/components';
 import { Project } from '@shared/types';
 import { ContentService } from '@services/contentService';
-import { cn, getJustifyClass } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
+import { getJustifyClass } from '@shared/utils/styling/styleVariants';
 
 interface FeaturedProjectsSectionProps {
   block: FeaturedProjectsSectionBlock;

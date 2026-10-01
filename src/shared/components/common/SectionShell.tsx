@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { ReactNode } from 'react';
-import { cn, getBGVariants } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
+import { getBGVariants } from '@shared/utils/styling/styleVariants';
 import { urlFor } from '@/sanity/lib/image';
 import { BackgroundMediaItem } from '@shared/types';
 import { VideoLoop } from '@shared/components';

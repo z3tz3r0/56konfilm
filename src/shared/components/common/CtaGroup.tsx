@@ -1,4 +1,5 @@
-import { cn, getJustifyClass } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
+import { getJustifyClass } from '@shared/utils/styling/styleVariants';
 import { ContentCta } from '@shared/types';
 import { CtaButton } from '@shared/components';
 import { Locale, SiteMode } from '@shared/config';

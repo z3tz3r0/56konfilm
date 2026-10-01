@@ -3,7 +3,7 @@
 import { useToast } from '@sanity/ui';
 import { set, type UrlInputProps } from 'sanity';
 import type { ClipboardEvent } from 'react';
-import { extractGoogleMapsEmbedUrl } from '@shared/utils/googleMaps';
+import { extractGoogleMapsEmbedUrl } from '@shared/utils/url/googleMaps';
 
 export function GoogleMapsEmbedUrlInput(props: UrlInputProps) {
   const toast = useToast();

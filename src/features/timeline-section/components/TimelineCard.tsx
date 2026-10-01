@@ -1,7 +1,7 @@
 import { getImageUrl, THUMBNAIL_IMAGE } from '@/sanity/lib/image';
 import { TimelineStep } from '@features/timeline-section/types';
 import { Card, CardContent } from '@shared/components';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import Image from 'next/image';
 
 export default function TimelineCard({

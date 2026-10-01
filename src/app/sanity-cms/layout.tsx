@@ -9,7 +9,10 @@ import {
 import { cookies } from 'next/headers';
 import { ModeProvider, MotionProvider, ThemeProvider } from '@shared/providers';
 import { MODE_TO_THEME } from '@shared/config';
-import { isSupportedLocale, isSupportedMode } from '@shared/utils';
+import {
+  isSupportedLocale,
+  isSupportedMode,
+} from '@shared/utils/preferences/preferenceGuards';
 import { Toaster } from 'sonner';
 import '../globals.css';
 

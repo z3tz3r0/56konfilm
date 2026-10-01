@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { ReactNode, useEffect, useEffectEvent, useRef, useState } from 'react';
 
 interface Props {

@@ -3,7 +3,7 @@ import { env } from '@shared/config/env';
 import { HttpBaseService } from '@shared/lib/http/httpBaseService';
 import { sendResendEmail } from '@shared/lib/integrations/resend';
 import { verifyTurnstileToken } from '@shared/lib/integrations/turnstile';
-import { checkContactRateLimit } from '@shared/utils/contactRateLimit';
+import { checkContactRateLimit } from '@shared/utils/rate-limit/contactRateLimit';
 
 export enum EmailDeliveryStatus {
   Sent = 'sent',

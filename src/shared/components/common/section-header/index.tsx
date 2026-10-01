@@ -1,5 +1,5 @@
-import { cn } from '@shared/utils';
-import { getAlignmentClass } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
+import { getAlignmentClass } from '@shared/utils/styling/styleVariants';
 import type { SectionHeading } from '@shared/types';
 import HighlightedText from '../HighlightedText';
 import EmphasizedHeader from './EmphasizedHeader';

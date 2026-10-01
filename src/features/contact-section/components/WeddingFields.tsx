@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { CalendarIcon } from 'lucide-react';
 import { m } from 'motion/react';
 import { useMemo } from 'react';

@@ -3,12 +3,12 @@
 import { m, type Variants } from 'motion/react';
 import { AppIcon, SectionShell, SectionHeader } from '@shared/components';
 import { DynamicLucideIcon } from '@shared/components/common/DynamicLucideIcon';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { useDeviceTier } from '@shared/hooks';
 import { ContactForm } from './components';
 import type { ContactSectionBlock } from './types';
 import type { Locale, SiteMode } from '@shared/config';
-import { isGoogleMapsEmbedUrl } from '@shared/utils/googleMaps';
+import { isGoogleMapsEmbedUrl } from '@shared/utils/url/googleMaps';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },

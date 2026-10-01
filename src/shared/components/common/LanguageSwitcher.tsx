@@ -8,7 +8,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@shared/components';
-import { isSupportedLocale, isSupportedMode } from '@shared/utils';
+import {
+  isSupportedLocale,
+  isSupportedMode,
+} from '@shared/utils/preferences/preferenceGuards';
 import { Locale, SiteMode } from '@shared/config';
 import { usePathname, useRouter } from 'next/navigation';
 

@@ -1,5 +1,5 @@
 import PageBuilder from '@features/PageBuilder';
-import { buildMetadata } from '@shared/lib/seo';
+import { buildMetadata } from '@shared/utils/seo/metadata';
 import { Locale, SiteMode } from '@shared/config';
 import { Metadata } from 'next';
 import { ContentService } from '@/services';
@@ -7,7 +7,7 @@ import { getMockPage } from './page.mock';
 import { notFound } from 'next/navigation';
 import { PortfolioPage } from './_components';
 import { cookies } from 'next/headers';
-import { sanitizePaginationLimit } from '@shared/utils';
+import { sanitizePaginationLimit } from '@shared/utils/paginationUtils';
 
 interface PageProps {
   params: Promise<{

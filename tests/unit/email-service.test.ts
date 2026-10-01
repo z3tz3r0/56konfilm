@@ -21,7 +21,7 @@ const {
 vi.mock('@shared/config/env', () => ({ env: emailConfig }));
 vi.mock('@shared/lib/integrations/resend', () => ({ sendResendEmail }));
 vi.mock('@shared/lib/integrations/turnstile', () => ({ verifyTurnstileToken }));
-vi.mock('@shared/utils/contactRateLimit', () => ({
+vi.mock('@shared/utils/rate-limit/contactRateLimit', () => ({
   checkContactRateLimit,
 }));
 

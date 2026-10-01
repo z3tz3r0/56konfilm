@@ -1,7 +1,7 @@
 'use client';
 import { Icon, IconifyIconProps } from '@iconify/react';
 import type { ReactNode } from 'react';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 
 interface AppIconProps {
   iconName?: IconifyIconProps['icon'];

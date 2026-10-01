@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 
 interface ImageWithFrameProps extends React.ComponentPropsWithoutRef<'section'> {
   src: string;

@@ -2,7 +2,7 @@
 
 import { m } from 'motion/react';
 import { SectionShell } from '@shared/components';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { PhilosophySectionBlock } from '../types';
 
 interface PhilosophySectionProps {
