@@ -13,6 +13,10 @@ interface AnimatedPortfolioGridProps {
   className: string;
 }
 
+/**
+ * Reveals child cards with a staggered animation once the grid enters the viewport.
+ * Renders a static grid once device initialization disallows heavy motion.
+ */
 export default function AnimatedPortfolioGrid({
   children,
   className,

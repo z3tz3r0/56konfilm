@@ -10,6 +10,10 @@ interface PortfolioGridProps {
   portfolioSlug: string;
 }
 
+/**
+ * Renders project cards with localized links inside the animated grid.
+ * Resets the reveal when the ordered project IDs or route context change.
+ */
 export default function PortfolioGrid({
   projects,
   lang,

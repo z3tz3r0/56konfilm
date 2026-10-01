@@ -18,6 +18,10 @@ interface PortfolioPageProps {
   portfolioSlug: string;
 }
 
+/**
+ * Renders the portfolio introduction, filters, project grid, and pagination
+ * within a single page-level scroll target for Next.js navigation.
+ */
 export default function PortfolioPage({
   page,
   projects,
