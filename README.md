@@ -36,6 +36,8 @@ To ensure long-term maintainability, the codebase follows strict standards:
 
 - **Feature-Based & Colocated Structure:** Our Page Builder sections (e.g., Hero, Contact) are organized within `src/features/`. Each feature is self-contained, encapsulating its own `components/`, `validation/`, `actions/`, `types/`, etc. This minimizes cross-feature pollution and makes the architecture highly predictable.
 - **Unidirectional Dependencies:** Shared layers never import from Feature layers.
+- **Context-Based Utilities:** Application helpers live in `src/shared/utils/`, grouped by concern and imported directly from implementation files. No utility root or subfolder uses `index.ts`; other areas retain their existing barrels.
+- **Focused Auth Integrations:** Password hashing, JWT sessions, and Sanity credentials live in separate `shared/lib/auth/` modules. Password validation and context-specific rate limits belong in `shared/utils/`.
 - **Naming Conventions:** Kebab-case for folders, PascalCase for Components, and camelCase for files.
 - **Validated Env:** Strict environment variable checking via Zod.
 - **Strategic Colocation:** We keep logic, types, and styles close to the components they serve. This reduces complexity and improves developer velocity. Detailed rules can be found in our [Folder Structure Docs](https://github.com/z3tz3r0/56konfilm/blob/main/docs/FOLDER_STRUCTURE.md).
@@ -55,7 +57,8 @@ To ensure long-term maintainability, the codebase follows strict standards:
 For detailed guidelines on how to contribute or understand the codebase, please refer to:
 
 - 📂 [Folder Structure](https://github.com/z3tz3r0/56konfilm/blob/main/docs/FOLDER_STRUCTURE.md) - How we organize our files.
-- 🔗 [Import Policies](https://github.com/z3tz3r0/56konfilm/blob/main/docs/IMPORT_POLICIES.md) - Rules for dependencies and barrel exports.
+- 🔗 [Import Policies](https://github.com/z3tz3r0/56konfilm/blob/main/docs/IMPORT_POLICIES.md) - Dependency boundaries, barrel exports, and direct imports for shared utilities.
+- 🧪 [Test Suite](tests/README.md) - Vitest regression tests, mocked dependencies, environment isolation, and Playwright checks.
 - 🛡️ [Sanity Query Safeguards](https://github.com/z3tz3r0/56konfilm/blob/main/docs/SANITY_MCP_GUIDELINES.md) - Rules for AI agents interacting with Sanity content.
 - ✉️ [Contact Email Activation](docs/CONTACT_EMAIL_ACTIVATION.md) - Resend, Turnstile, and future launch checklist.
 
