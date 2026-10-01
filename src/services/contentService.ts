@@ -1,4 +1,4 @@
-import { CACHE_TAGS } from '@shared/config';
+import { CACHE_TAGS, FEATURED_PROJECT_LIMITS } from '@shared/config';
 import { SanityBaseService } from '@/sanity/lib/client';
 import {
   allPageSlugsQuery,
@@ -30,6 +30,7 @@ export class ContentService extends SanityBaseService {
         lang,
         mode,
         slug,
+        featuredProjectLimit: FEATURED_PROJECT_LIMITS[mode],
       },
       tags: [
         CACHE_TAGS.ALL_PAGES,
@@ -92,7 +93,11 @@ export class ContentService extends SanityBaseService {
   static async getLatestProjects({ lang, mode }: Omit<BaseParams, 'slug'>) {
     return this.fetch<Project[]>({
       query: latestProjectsQuery,
-      params: { lang, mode },
+      params: {
+        lang,
+        mode,
+        featuredProjectLimit: FEATURED_PROJECT_LIMITS[mode],
+      },
       tags: [CACHE_TAGS.ALL_PROJECTS, CACHE_TAGS.PROJECTS_BY_MODE(mode)],
     });
   }
