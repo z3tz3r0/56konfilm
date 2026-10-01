@@ -10,7 +10,7 @@
  * - high: high-end devices with full capability
  */
 
-import {
+import type {
   DeviceCapabilities,
   DeviceTier,
   NavigatorWithConnection,

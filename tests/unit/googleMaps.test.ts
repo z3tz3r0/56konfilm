@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   extractGoogleMapsEmbedUrl,
   isGoogleMapsEmbedUrl,
-} from '@shared/utils/googleMaps';
+} from '@shared/utils/url/googleMaps';
 
 describe('Google Maps embed URL validation', () => {
   it.each([

@@ -1,5 +1,6 @@
 import { CtaGroup, HighlightedText, SectionShell } from '@shared/components';
-import { cn, getAlignmentClass } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
+import { getAlignmentClass } from '@shared/utils/styling/styleVariants';
 import { CtaBannerSectionBlock } from '../types';
 import { Locale, SiteMode } from '@shared/config';
 

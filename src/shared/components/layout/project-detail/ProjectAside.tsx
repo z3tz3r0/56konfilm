@@ -1,7 +1,7 @@
 import { Button } from '../../ui';
 import { Locale } from '@shared/config';
 import { Project } from '@shared/types';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 
 interface ProjectAsideProps {
   project: Project;

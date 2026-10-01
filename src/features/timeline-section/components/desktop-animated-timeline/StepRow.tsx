@@ -2,7 +2,7 @@
 
 import TimelineCard from '@features/timeline-section/components/TimelineCard';
 import { TimelineStep } from '@features/timeline-section/types';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { m } from 'motion/react';
 
 interface StepRowProps {

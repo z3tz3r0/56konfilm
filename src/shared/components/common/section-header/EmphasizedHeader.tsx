@@ -1,5 +1,5 @@
 import HighlightedText from '@shared/components/common/HighlightedText';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 
 interface EmphasizedHeaderProps {
   heading: string;

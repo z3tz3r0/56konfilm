@@ -8,7 +8,7 @@ import {
 } from '@shared/components';
 import { Locale, SiteMode } from '@shared/config';
 import { ProjectTag } from '@shared/types';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 interface PortfolioFilterProps {

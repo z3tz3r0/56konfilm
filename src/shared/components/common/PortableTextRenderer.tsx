@@ -1,5 +1,5 @@
 import { urlFor } from '@/sanity/lib/image';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { PortableText, PortableTextComponents } from 'next-sanity';
 import Image from 'next/image';
 import { ComponentProps } from 'react';

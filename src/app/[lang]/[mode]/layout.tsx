@@ -2,9 +2,12 @@ import { Footer, Navbar } from '@shared/components';
 import { Locale, SiteMode } from '@shared/config';
 import { ReactNode } from 'react';
 import { ContentService } from '@/services';
-import { buildMetadata } from '@shared/lib/seo';
+import { buildMetadata } from '@shared/utils/seo/metadata';
 import { Metadata } from 'next';
-import { isSupportedLocale, isSupportedMode } from '@shared/utils';
+import {
+  isSupportedLocale,
+  isSupportedMode,
+} from '@shared/utils/preferences/preferenceGuards';
 import { notFound } from 'next/navigation';
 
 interface SiteLayoutProps {

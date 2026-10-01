@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { urlFor } from '@/sanity/lib/image';
 import { Locale, SiteMode } from '@shared/config';
 import { SeoFields } from '@shared/types';
-import { getBaseURL } from '@shared/utils';
+import { getBaseURL } from '../url/siteUrl';
 
 const DEFAULT_SITE_TITLE = '56KonFilm';
 const DEFAULT_DESCRIPTION = 'Film Production House';

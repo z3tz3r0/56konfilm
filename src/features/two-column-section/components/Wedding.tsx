@@ -1,6 +1,7 @@
 import { CtaGroup, ImageWithFrame, SectionShell } from '@shared/components';
 import { TwoColumnByMode } from '../types';
-import { cn, getBGVariants } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
+import { getBGVariants } from '@shared/utils/styling/styleVariants';
 import { urlFor } from '@/sanity/lib/image';
 
 export default function Wedding({

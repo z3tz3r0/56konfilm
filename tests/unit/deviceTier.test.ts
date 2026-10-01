@@ -6,10 +6,10 @@
 
 import {
   classifyDeviceTier,
-  DeviceCapabilities,
   getDeviceCapabilities,
   getTierFeatureFlags,
-} from '@shared/lib/performance';
+} from '@shared/utils/performance/deviceTier';
+import type { DeviceCapabilities } from '@shared/utils/performance/deviceTier.types';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('deviceTier', () => {

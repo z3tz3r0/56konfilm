@@ -1,4 +1,4 @@
-import { isSupportedLocale, isSupportedMode } from '@shared/utils';
+import { isSupportedLocale, isSupportedMode } from './preferenceGuards';
 import { DEFAULT_LOCALE, DEFAULT_MODE, Locale, SiteMode } from '@shared/config';
 
 interface DerivePreferencesParams {

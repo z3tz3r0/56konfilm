@@ -3,7 +3,7 @@ import {
   getColumnsClass,
 } from '../CardCollectionSection';
 import { AppIcon, SectionShell } from '@shared/components';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 
 export default function Wedding({ block }: CardCollectionSectionProps) {
   const hasIcon = block.hasIcon;

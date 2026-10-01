@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { Button } from '@shared/components';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { ContentCta } from '@shared/types';
 import { Locale, SiteMode } from '@shared/config';
-import { withContextPrefix } from '@shared/lib/url';
+import { withContextPrefix } from '@shared/utils/url/contextUrl';
 
 interface CtaButtonProps {
   ctaButton: ContentCta;

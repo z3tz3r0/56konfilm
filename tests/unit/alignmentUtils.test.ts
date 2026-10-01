@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { getAlignmentClass, getJustifyClass } from '@shared/utils';
+import {
+  getAlignmentClass,
+  getJustifyClass,
+} from '@shared/utils/styling/styleVariants';
 
 describe('getAlignmentClass', () => {
   it('returns start alignment by default', () => {

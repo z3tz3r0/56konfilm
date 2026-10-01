@@ -20,7 +20,7 @@ import {
 import { ContactHeader } from './ContactHeader';
 import { useContactForm } from '@features/contact-section/hooks';
 import { WeddingFields } from '@features/contact-section/components/WeddingFields';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { mapCtaVariant } from '@shared/components/common/CtaButton';
 import type { ContactSubmitButton } from '../types';
 import { contactFormCopy } from '../formCopy';

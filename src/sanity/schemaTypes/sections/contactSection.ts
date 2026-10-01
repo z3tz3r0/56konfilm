@@ -4,7 +4,7 @@ import { localizedBlockType, localizedStringField } from '../objects/localized';
 import { contactChannelType } from '../objects/contactChannel';
 import { socialMediaType } from '../objects/socialMedia';
 import { ctaStyleField } from '../objects/cta';
-import { isGoogleMapsEmbedUrl } from '@shared/utils/googleMaps';
+import { isGoogleMapsEmbedUrl } from '@shared/utils/url/googleMaps';
 import { GoogleMapsEmbedUrlInput } from '../../components/inputs/GoogleMapsEmbedUrlInput';
 import type { Path } from 'sanity';
 

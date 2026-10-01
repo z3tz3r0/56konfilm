@@ -1,65 +1,105 @@
 # 56konfilm Test Suite
 
-This directory contains the production-ready test framework architecture based on **Playwright**.
+The test suite uses **Vitest** for unit, component and in-process route regression tests, and **Playwright** for browser/API checks against a running application.
 
 ## Directory Structure
 
-```
+```plaintext
 tests/
-├── e2e/                      # End-to-End test files
-│   └── mode-switcher.spec.ts  # Test for dual-identity logic
-├── support/                  # Test infrastructure
-│   ├── fixtures/             # Custom Playwright fixtures
-│   │   └── index.ts          # Mode management fixtures
-│   ├── helpers/              # Utility functions (video, etc.)
-│   └── page-objects/         # (Optional) Page Object Models
-└── README.md                 # This file
+├── unit/                     # Vitest tests, including mocked Auth route regressions
+├── api/                      # Playwright API checks; excluded from Vitest
+├── e2e/                      # Playwright browser tests
+├── support/
+│   ├── factories/            # Deterministic test data
+│   └── fixtures/             # Playwright mode/device fixtures
+├── setup.ts                  # Vitest DOM matchers and test environment defaults
+└── README.md
 ```
 
-## Setup Instructions
+## Setup and Commands
 
-1.  **Install Dependencies**:
+Use the repository's existing dependencies and scripts; no separate test dependency installation is needed after `pnpm install`.
 
-    ```bash
-    npm install -D @playwright/test
-    npx playwright install
-    ```
+```bash
+pnpm test
+pnpm test:watch
+pnpm type-check
+pnpm lint
+```
 
-2.  **Environment Configuration**:
-    Copy `.env.example` to `.env` and adjust the `BASE_URL`:
+`pnpm test` runs Vitest with `vitest.config.ts` (jsdom, global test APIs, shared setup and application aliases). It excludes `tests/api/` and `tests/e2e/`. Auth route regression tests live in `tests/unit/` and call handlers in-process rather than starting a web server.
 
-    ```bash
-    cp .env.example .env
-    ```
+### Unit Tests Without Reading Local Environment Files
 
-3.  **Running Tests**:
-    - **All tests**: `npm run test:e2e`
-    - **UI Mode**: `npx playwright test --ui`
-    - **Debug Mode**: `npx playwright test --debug`
-    - **Headed Mode**: `npx playwright test --headed`
+The ordinary Vitest setup loads local environment configuration. For isolated mocked regression checks, disable both loading paths:
 
-## Core Patterns
+- `SKIP_TEST_DOTENV=true` prevents `tests/setup.ts` from loading `.env.local`.
+- Vite's `envFile: false` also prevents automatic environment-file loading. The skip flag alone does not disable this second path.
 
-### Fixtures (`tests/support/fixtures/index.ts`)
+Run the following command from the repository root (also works in PowerShell):
 
-We use custom fixtures to manage the site's unique "Dual-Identity" state.
+```bash
+node --input-type=module -e "process.env.SKIP_TEST_DOTENV='true'; const { startVitest } = await import('vitest/node'); const ctx = await startVitest('test', [], { run: true, maxWorkers: 4 }, { envFile: false }); if (ctx) await ctx.close();"
+```
 
-- `setMode('production' | 'wedding')`: Programmatically switches the site theme/content by setting the `mode` cookie.
-- `siteMode`: Re-usable fixture that provides the current active mode.
+For focused checks, replace `[]` with filters such as `['tests/unit/auth-password.spec.ts', 'tests/unit/auth-session.spec.ts']`.
 
-### Selector Strategy
+This does not clear inherited process environment variables or automatically block networking. Use explicit test values and mock the relevant environment modules, Sanity clients, provider adapters or HTTP transport so tests do not depend on secrets or call real services. Do not log credentials or inspect real environment files to debug a mocked test.
 
-Always prefer **`data-testid`** attributes for reliable testing.
-Example: `page.locator('[data-testid="mode-switcher"]')`.
+## Shared Utility and Auth Regression Patterns
 
-## CI/CD Integration
+- Import utilities directly from implementation files, including type-only imports. There are no utility `index.ts` files, and mock paths must follow the same direct-import convention.
+- Verify URL/Maps parsing, preference precedence, SEO output, device-tier detection and styling helpers without changing their existing behavior.
+- Keep Auth and Contact limiter tests separate: check attempt counts, reset boundaries, cleanup and independent counters using controlled time.
+- Importing client-safe utilities or the Contact limiter must not start the Auth cleanup timer. Tests that import the Auth limiter must clean up timers.
+- Mock bcrypt and JWT to verify password/session integration contracts; test password-strength validation using the real application rules.
+- Mock Sanity credential operations and verify existing query, patch and failure behavior.
+- For Auth routes, mock credentials, session helpers, environment configuration, rate limits and cookies. Assert status codes, response bodies, cookie behavior and validation on success and failure without real network requests.
 
-Tests are configured to:
+Examples of direct utility imports:
 
-- Run in parallel.
-- Capture **screenshots, videos, and traces** only on failure to optimize storage.
-- Auto-start the local dev server if not already running.
+```typescript
+import { validatePasswordStrength } from '@shared/utils/password/passwordValidation';
+import { checkContactRateLimit } from '@shared/utils/rate-limit/contactRateLimit';
+import { cn } from '@shared/utils/styling/tailwindUtils';
+```
 
----
+## Playwright Browser and API Checks
 
-_Powered by BMAD-CORE™_
+Install the browsers when setting up a machine:
+
+```bash
+pnpm exec playwright install
+```
+
+Run checks against an environment where application access and any external data reads are permitted:
+
+```bash
+pnpm test:e2e
+pnpm exec playwright test tests/e2e --ui
+pnpm exec playwright test tests/e2e --debug
+pnpm exec playwright test tests/e2e --headed
+pnpm exec playwright test tests/api
+```
+
+The current Playwright configuration loads local environment configuration and can start `pnpm run dev`; the application may fetch real Sanity content. These commands are **not** the isolated mocked checks above. Do not run them when accessing real environment files or services is prohibited. Similarly, `pnpm build` may require real CMS data; mocked unit tests do not establish that a production build or browser checks passed.
+
+### Fixtures and Selectors
+
+`tests/support/fixtures/index.ts` provides:
+
+- `setMode('production' | 'wedding')`: sets the mode cookie for the local test site.
+- `siteMode`: derives the active theme from the page.
+
+Use `data-testid` selectors for stable browser checks, for example `page.locator('[data-testid="mode-switcher"]')`.
+
+### Current Playwright Configuration
+
+- Tests can run in parallel; CI uses one worker and retries failures twice.
+- Screenshots, videos and traces are retained on failure.
+- The configured development server starts automatically and can reuse a running local server outside CI.
+- Browser projects cover desktop Chromium, Firefox and Mobile Chrome.
+
+## Reporting Verification
+
+Record type-check, lint, relevant unit tests and formatting results separately from build/E2E evidence. If external-service restrictions prevent build or Playwright checks, state that explicitly rather than marking them as passed.

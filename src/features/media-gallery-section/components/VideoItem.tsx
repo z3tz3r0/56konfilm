@@ -1,7 +1,7 @@
 'use client';
 
 import { useDeviceTier } from '@shared/hooks';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { useInView } from 'motion/react';
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';

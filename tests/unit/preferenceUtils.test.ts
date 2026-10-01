@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { isSupportedLocale, isSupportedMode } from '@shared/utils';
+import {
+  isSupportedLocale,
+  isSupportedMode,
+} from '@shared/utils/preferences/preferenceGuards';
 
 describe('isSupportedLocale', () => {
   it('accepts "th"', () => {

@@ -71,14 +71,28 @@ _Note: This policy is enforced via ESLint `no-restricted-imports` rule._
 
 To keep our import statements clean and concise, we use the **Barrel Export** pattern throughout the project.
 
-- **Standard:** Every directory under `features/` or `shared/` should have an `index.ts` file that exports its public API.
-- **Requirement:** Always import from the folder level, not the specific file.
+- **Standard:** Directories under `features/` or `shared/` use `index.ts` to export their public API, except `src/shared/utils/` and all of its subdirectories.
+- **Requirement:** Import from the folder level where a barrel is provided. Shared utilities must be imported directly from their implementation files.
 - ✅ `import { Button, ModeSwitcher } from '@shared/components'`
 - ❌ `import { Button } from '@shared/components/ui/Button/Button'`
 - **🚫 Prohibited:** DO NOT use `index.ts` inside the `src/app/` directory.
 - **Reasons:**:
   1. **Architectural Role:** `src/app/` is the **"Assembler"** (the end-of-the-line for our dependency tree). No other layer should ever import from it, making barrel exports unnecessary.
   2. **Next.js Constraints:** App Router uses file-based routing. `index.ts` can cause routing conflicts and unintended "Client/Server Component" boundary leaks, potentially damaging performance.
+
+#### **Exception: Shared Utilities**
+
+- Do not create `index.ts` at the root of `src/shared/utils/` or in any utility subdirectory.
+- Group utilities by concern and use direct file imports, including type-only imports.
+- Do not re-export utilities through another shared barrel as a shortcut.
+- Keep Auth and Contact rate-limit modules separate; importing a client-safe utility or the Contact limiter must not start the Auth cleanup timer.
+- The shadcn `aliases.utils` configuration points directly to `@shared/utils/styling/tailwindUtils` so generated components import `cn` from its implementation.
+
+```typescript
+import { cn } from '@shared/utils/styling/tailwindUtils';
+import { checkContactRateLimit } from '@shared/utils/rate-limit/contactRateLimit';
+import type { DeviceTier } from '@shared/utils/performance/deviceTier.types';
+```
 
 #### **Special Case: Shared Components**
 
