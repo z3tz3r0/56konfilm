@@ -11,7 +11,6 @@ import type { Project } from '@shared/types';
 const tier = vi.hoisted(() => ({
   allowHeavyMotion: true,
   isInitialized: true,
-  prefersReducedMotion: false,
 }));
 
 vi.mock('@shared/hooks', () => ({ useDeviceTier: () => tier }));
@@ -46,7 +45,6 @@ vi.mock('motion/react', () => {
     };
   return {
     m: { section: component('section'), div: component('div') },
-    useReducedMotion: () => tier.prefersReducedMotion,
   };
 });
 vi.mock('next/link', () => ({
@@ -90,7 +88,6 @@ describe('PortfolioGrid reveal', () => {
   beforeEach(() => {
     tier.allowHeavyMotion = true;
     tier.isInitialized = true;
-    tier.prefersReducedMotion = false;
   });
   afterEach(cleanup);
 
@@ -217,13 +214,6 @@ describe('PortfolioGrid reveal', () => {
     expect(grid.querySelector('[data-motion]')).toBeNull();
     expect(grid.children).toHaveLength(2);
     expect(grid.firstElementChild?.tagName).toBe('A');
-  });
-
-  it('honors reduced motion even when device tier allows heavy motion', () => {
-    tier.prefersReducedMotion = true;
-    const { container } = render(<PortfolioGrid {...props} />);
-    expect(container.querySelector('[data-motion]')).toBeNull();
-    expect(screen.getAllByRole('link')).toHaveLength(2);
   });
 
   it('removes hidden animation wrappers after low-tier initialization without changing order', () => {

@@ -1,7 +1,7 @@
 'use client';
 
 import { Children, type ReactNode } from 'react';
-import { m, useReducedMotion } from 'motion/react';
+import { m } from 'motion/react';
 import { useDeviceTier } from '@shared/hooks';
 import {
   staggerContainerVariants,
@@ -18,9 +18,8 @@ export default function AnimatedPortfolioGrid({
   className,
 }: AnimatedPortfolioGridProps) {
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
-  const prefersReducedMotion = useReducedMotion();
 
-  if (isInitialized && (!allowHeavyMotion || prefersReducedMotion)) {
+  if (isInitialized && !allowHeavyMotion) {
     return <section className={className}>{children}</section>;
   }
 
