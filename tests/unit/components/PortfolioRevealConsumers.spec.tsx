@@ -1,0 +1,188 @@
+import { cleanup, render, screen, within } from '@testing-library/react';
+import type { ReactNode } from 'react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import FeaturedProjectSection from '@features/featured-project-section/FeaturedProjectSection';
+import PortfolioPage from '@/app/[lang]/[mode]/[firstSegment]/_components/PortfolioPage';
+import type { FullPageDocument } from '@features/PageBuilder';
+import type { FeaturedProjectsSectionBlock } from '@features/featured-project-section/types';
+import type { Project } from '@shared/types';
+
+const service = vi.hoisted(() => ({
+  getSetting: vi.fn(),
+  getLatestProjects: vi.fn(),
+}));
+vi.mock('@services/contentService', () => ({ ContentService: service }));
+vi.mock('@shared/components', async () => ({
+  PortfolioGrid: (
+    await import('@shared/components/common/portfolio-grid/PortfolioGrid')
+  ).default,
+  SectionShell: ({ children }: { children: ReactNode }) => (
+    <section>{children}</section>
+  ),
+  SectionHeader: ({ heading }: { heading: { heading: string } }) => (
+    <h2>{heading.heading}</h2>
+  ),
+  CtaButton: ({ ctaButton }: { ctaButton: { label: string } }) => (
+    <button>{ctaButton.label}</button>
+  ),
+}));
+vi.mock(
+  '@shared/components/common/portfolio-grid/AnimatedPortfolioGrid',
+  () => ({
+    default: ({
+      children,
+      className,
+    }: {
+      children: ReactNode;
+      className: string;
+    }) => (
+      <section data-testid='animated-portfolio-grid' className={className}>
+        {children}
+      </section>
+    ),
+  })
+);
+vi.mock('@shared/components/common/portfolio-grid/ProjectCard', () => ({
+  default: ({
+    project,
+    lang,
+    mode,
+    portfolioSlug,
+  }: {
+    project: Project;
+    lang: string;
+    mode: string;
+    portfolioSlug: string;
+  }) => (
+    <a href={`/${lang}/${mode}/${portfolioSlug}/${project.slug}`}>
+      {project.title}
+    </a>
+  ),
+}));
+vi.mock('@features/PageBuilder', () => ({
+  default: () => <header>Page introduction</header>,
+}));
+vi.mock(
+  '@/app/[lang]/[mode]/[firstSegment]/_components/PortfolioFilter',
+  () => ({
+    default: () => <nav aria-label='Project filters' />,
+  })
+);
+vi.mock(
+  '@/app/[lang]/[mode]/[firstSegment]/_components/NumberedPagination',
+  () => ({
+    default: () => <nav aria-label='Project pagination' />,
+  })
+);
+
+const projects: Project[] = ['first', 'second'].map((id) => ({
+  _id: id,
+  title: `Project ${id}`,
+  slug: id,
+  siteMode: ['production', 'wedding'],
+  projectDate: '2026-01-01',
+}));
+
+describe('Portfolio reveal consumers', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    service.getSetting.mockResolvedValue({
+      productionPortfolioSlug: 'work',
+      weddingPortfolioSlug: 'films',
+    });
+    service.getLatestProjects.mockResolvedValue(projects);
+  });
+  afterEach(cleanup);
+
+  for (const mode of ['production', 'wedding'] as const) {
+    const slug = mode === 'production' ? 'work' : 'films';
+
+    it.each(['latest', 'curated'] as const)(
+      `uses the shared reveal for ${mode} Featured Projects with %s`,
+      async (sourceType) => {
+        const block: FeaturedProjectsSectionBlock = {
+          _type: 'featuredProjectsSection',
+          heading: { heading: 'Featured work' },
+          ctaButton: {
+            label: 'View all',
+            style: 'primary',
+            linkType: 'internal',
+          },
+          ...(sourceType === 'latest'
+            ? { sourceType }
+            : { sourceType, selectedProjects: projects }),
+        };
+        render(await FeaturedProjectSection({ block, lang: 'en', mode }));
+        const grid = screen.getByTestId('animated-portfolio-grid');
+        expect(
+          within(grid)
+            .getAllByRole('link')
+            .map((link) => link.getAttribute('href'))
+        ).toEqual([`/en/${mode}/${slug}/first`, `/en/${mode}/${slug}/second`]);
+        expect(grid).not.toContainElement(
+          screen.getByRole('heading', { name: 'Featured work' })
+        );
+        expect(grid).not.toContainElement(
+          screen.getByRole('button', { name: 'View all' })
+        );
+        expect(service.getSetting).toHaveBeenCalledWith({ lang: 'en' });
+        if (sourceType === 'latest') {
+          expect(service.getLatestProjects).toHaveBeenCalledWith({
+            lang: 'en',
+            mode,
+          });
+        } else {
+          expect(service.getLatestProjects).not.toHaveBeenCalled();
+        }
+      }
+    );
+
+    it(`uses the shared reveal for the ${mode} Portfolio page without wrapping navigation`, () => {
+      render(
+        <PortfolioPage
+          page={{} as FullPageDocument}
+          projects={projects}
+          tags={[]}
+          lang='th'
+          mode={mode}
+          currentPage={1}
+          currentLimit={6}
+          totalPages={2}
+          portfolioSlug={slug}
+        />
+      );
+      const grid = screen.getByTestId('animated-portfolio-grid');
+      expect(within(grid).getAllByRole('link')).toHaveLength(2);
+      expect(within(grid).getAllByRole('link')[0]).toHaveAttribute(
+        'href',
+        `/th/${mode}/${slug}/first`
+      );
+      expect(grid).not.toContainElement(
+        screen.getByRole('navigation', { name: 'Project filters' })
+      );
+      expect(grid).not.toContainElement(
+        screen.getByRole('navigation', { name: 'Project pagination' })
+      );
+      expect(service.getSetting).not.toHaveBeenCalled();
+      expect(service.getLatestProjects).not.toHaveBeenCalled();
+    });
+  }
+
+  it('preserves the empty latest-project fallback', async () => {
+    service.getLatestProjects.mockResolvedValue(null);
+    render(
+      await FeaturedProjectSection({
+        block: {
+          _type: 'featuredProjectsSection',
+          sourceType: 'latest',
+          heading: { heading: 'Empty' },
+        },
+        lang: 'en',
+        mode: 'production',
+      })
+    );
+    expect(screen.getByTestId('animated-portfolio-grid').children).toHaveLength(
+      0
+    );
+  });
+});

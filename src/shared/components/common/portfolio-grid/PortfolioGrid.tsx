@@ -1,6 +1,7 @@
 import ProjectCard from './ProjectCard';
-import { Locale, SiteMode } from '@shared/config';
-import { Project } from '@shared/types';
+import AnimatedPortfolioGrid from './AnimatedPortfolioGrid';
+import type { Locale, SiteMode } from '@shared/config';
+import type { Project } from '@shared/types';
 
 interface PortfolioGridProps {
   projects: Project[];
@@ -15,8 +16,20 @@ export default function PortfolioGrid({
   mode,
   portfolioSlug = 'portfolio',
 }: PortfolioGridProps) {
+  // Reset the reveal only when the ordered project set or route context changes,
+  // not when the same limit is silently synchronized into the URL.
+  const revealKey = JSON.stringify([
+    lang,
+    mode,
+    portfolioSlug,
+    projects.map((project) => project._id),
+  ]);
+
   return (
-    <section className='grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3'>
+    <AnimatedPortfolioGrid
+      key={revealKey}
+      className='grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3'
+    >
       {projects.map((project) => (
         <ProjectCard
           key={project._id}
@@ -26,6 +39,6 @@ export default function PortfolioGrid({
           portfolioSlug={portfolioSlug}
         />
       ))}
-    </section>
+    </AnimatedPortfolioGrid>
   );
 }
