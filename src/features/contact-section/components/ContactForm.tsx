@@ -24,19 +24,33 @@ import { cn } from '@shared/utils';
 import { mapCtaVariant } from '@shared/components/common/CtaButton';
 import type { ContactSubmitButton } from '../types';
 import { contactFormCopy } from '../formCopy';
+import { TurnstileWidget } from './TurnstileWidget';
+import type { Locale } from '@shared/config/preferences';
 
 interface ContactFormProps {
-  lang?: 'en' | 'th';
+  lang?: Locale;
   presentation?: 'standalone' | 'embedded';
   submitButton?: ContactSubmitButton;
+  isEmailEnabled?: boolean;
+  turnstileSiteKey?: string;
 }
 
 export function ContactForm({
   lang = 'en',
   presentation = 'standalone',
   submitButton,
+  isEmailEnabled = false,
+  turnstileSiteKey,
 }: ContactFormProps) {
-  const { form, onSubmit, isPending, isWedding } = useContactForm();
+  const {
+    form,
+    onSubmit,
+    isPending,
+    isWedding,
+    turnstileToken,
+    turnstileResetKey,
+    onTurnstileTokenChange,
+  } = useContactForm(lang);
   const copy = contactFormCopy[lang];
 
   return (
@@ -48,10 +62,13 @@ export function ContactForm({
         presentation === 'standalone' && 'mx-auto max-w-lg p-4 md:p-8'
       )}
     >
-      {presentation === 'standalone' && <ContactHeader isWedding={isWedding} />}
+      {presentation === 'standalone' && (
+        <ContactHeader isWedding={isWedding} lang={lang} />
+      )}
 
       <Form {...form}>
         <form
+          noValidate
           onSubmit={form.handleSubmit(onSubmit)}
           className='flex min-w-0 flex-col gap-6'
         >
@@ -147,11 +164,26 @@ export function ContactForm({
             )}
           />
 
+          {isEmailEnabled && turnstileSiteKey && (
+            <TurnstileWidget
+              siteKey={turnstileSiteKey}
+              lang={lang}
+              resetKey={turnstileResetKey}
+              onTokenChange={onTurnstileTokenChange}
+              errorMessage={copy.verificationUnavailable}
+            />
+          )}
+
           <Button
             type='submit'
             variant={mapCtaVariant(submitButton?.style ?? 'primary')}
             size={submitButton?.size ?? 'default'}
-            disabled={isPending}
+            disabled={
+              isPending ||
+              !isEmailEnabled ||
+              !turnstileSiteKey ||
+              !turnstileToken
+            }
             aria-busy={isPending}
             className={cn(
               'max-w-full wrap-anywhere whitespace-normal',
@@ -171,6 +203,20 @@ export function ContactForm({
               ? copy.sending
               : submitButton?.label?.trim() || copy.submit}
           </Button>
+          {!isEmailEnabled && (
+            <p role='status' className='text-text-secondary text-sm'>
+              {copy.unavailable}
+            </p>
+          )}
+          {isEmailEnabled && (
+            <p role='status' className='text-text-secondary text-sm'>
+              {!turnstileSiteKey
+                ? copy.verificationUnavailable
+                : !turnstileToken
+                  ? copy.verificationPrompt
+                  : null}
+            </p>
+          )}
         </form>
       </Form>
     </div>

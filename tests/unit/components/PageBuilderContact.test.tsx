@@ -29,9 +29,13 @@ describe('PageBuilder contact context', () => {
           block: ContactSectionBlock;
           lang: Locale;
           mode: SiteMode;
+          isEmailEnabled: boolean;
+          turnstileSiteKey?: string;
         }>;
       }>
     >;
     expect(boundary.props.children.props).toMatchObject({ block, lang, mode });
+    expect(boundary.props.children.props.isEmailEnabled).toBe(false);
+    expect(boundary.props.children.props.turnstileSiteKey).toBeUndefined();
   });
 });

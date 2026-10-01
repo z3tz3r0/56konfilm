@@ -1,22 +1,42 @@
 'use server';
 
+import { env } from '@shared/config/env';
+import { EmailDeliveryStatus, EmailService } from '@services/emailService';
+import { headers } from 'next/headers';
+import { isIP } from 'node:net';
 import {
-  contactFormSchema,
-  ContactFormValues,
+  contactSubmissionSchema,
+  type ContactSubmission,
 } from '@features/contact-section/validation';
 
 type ActionState = {
   success: boolean;
   message?: string;
   errors?: Record<string, string[]>;
+  reason?: 'rate-limit' | 'verification' | 'unavailable' | 'unconfirmed';
 };
 
-const CONTACT_RECEIVER_EMAIL = '56konfilm@gmail.com';
+async function getVerifiedContactIp(): Promise<string | undefined> {
+  if (process.env.VERCEL !== '1') return undefined;
+  const value = (await headers()).get('x-vercel-forwarded-for');
+  const ip = value?.split(',')[0]?.trim();
+  return ip && isIP(ip) ? ip : undefined;
+}
 
 export async function submitContactForm(
-  data: ContactFormValues | unknown
+  data: ContactSubmission | unknown,
+  turnstileToken?: string | null
 ): Promise<ActionState> {
-  const parsed = contactFormSchema.safeParse(data);
+  if (!env.CONTACT_EMAIL_ENABLED) {
+    return {
+      success: false,
+      reason: 'unavailable',
+      message:
+        'Email inquiries are not available yet. Please use the contact details on this page.',
+    };
+  }
+
+  const parsed = contactSubmissionSchema.safeParse(data);
 
   if (!parsed.success) {
     return {
@@ -26,37 +46,50 @@ export async function submitContactForm(
     };
   }
 
-  const validData = parsed.data;
+  const inquiry = parsed.data;
+  const ip = await getVerifiedContactIp();
+  const delivery = await EmailService.sendContactInquiry(inquiry, {
+    token: turnstileToken,
+    ip,
+  });
 
-  // Simulate routing logic
-  try {
-    if (validData.type === 'commercial') {
-      console.log(
-        `[ROUTING] Commercial Inquiry -> ${CONTACT_RECEIVER_EMAIL}: ${validData.name}`
-      );
-      // In real implementation: await sendEmail(validData);
-      return {
-        success: true,
-        message: 'Commercial Inquiry received. We will contact you shortly.',
-      };
-    } else if (validData.type === 'wedding') {
-      console.log(
-        `[ROUTING] Wedding Inquiry -> ${CONTACT_RECEIVER_EMAIL}: ${validData.name} - ${validData.weddingDate.toLocaleDateString()}`
-      );
-      // In real implementation: await sendEmail(validData);
-      return {
-        success: true,
-        message: 'Love story received! We will be in touch soon.',
-      };
-    }
-
-    // Fallback for exhaustive check
-    return { success: false, message: 'Invalid form type' };
-  } catch (error) {
-    console.error('Submission error:', error);
+  if (delivery.status === EmailDeliveryStatus.RateLimited) {
     return {
       success: false,
-      message: 'Something went wrong. Please try again.',
+      reason: 'rate-limit',
+      message: 'Too many attempts. Please wait two minutes and try again.',
     };
   }
+
+  if (delivery.status === EmailDeliveryStatus.VerificationFailed) {
+    return {
+      success: false,
+      reason: 'verification',
+      message: 'Verification failed. Please try again.',
+    };
+  }
+
+  if (delivery.status === EmailDeliveryStatus.Sent) {
+    return {
+      success: true,
+      message:
+        inquiry.type === 'wedding'
+          ? 'Love story received! We will be in touch soon.'
+          : 'Commercial Inquiry received. We will contact you shortly.',
+    };
+  }
+
+  if (delivery.status === EmailDeliveryStatus.Unconfirmed) {
+    return {
+      success: false,
+      reason: 'unconfirmed',
+      message:
+        'We could not confirm your message was sent. Please contact us directly.',
+    };
+  }
+
+  return {
+    success: false,
+    message: 'We could not send your message. Please try again later.',
+  };
 }

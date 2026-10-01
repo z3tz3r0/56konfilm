@@ -9,6 +9,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ContactForm } from '@features/contact-section/components/ContactForm';
 import { useMode } from '@shared/hooks';
 import { submitContactForm } from '@features/contact-section/actions';
+import { toast } from 'sonner';
+import { contactFormCopy } from '@features/contact-section/formCopy';
 
 // Mock useMode
 vi.mock('@shared/hooks', async (importOriginal) => {
@@ -24,6 +26,24 @@ vi.mock('@features/contact-section/actions', () => ({
   submitContactForm: vi.fn(),
 }));
 
+vi.mock('@features/contact-section/components/TurnstileWidget', async () => {
+  const { useEffect } = await import('react');
+  return {
+    TurnstileWidget: ({
+      onTokenChange,
+      resetKey,
+    }: {
+      onTokenChange: (token: string) => void;
+      resetKey: number;
+    }) => {
+      useEffect(() => {
+        onTokenChange(`test-token-${resetKey}`);
+      }, [onTokenChange, resetKey]);
+      return <div data-testid='contact-turnstile' />;
+    },
+  };
+});
+
 // Mock ResizeObserver for Framer Motion or Layout functionality
 global.ResizeObserver = class {
   observe() {}
@@ -32,6 +52,70 @@ global.ResizeObserver = class {
 };
 
 describe('ContactForm Component', () => {
+  it.each(['en', 'th'] as const)(
+    'shows localized errors beneath all fields in %s',
+    async (lang) => {
+      vi.mocked(useMode).mockReturnValue({ mode: 'wedding' } as ReturnType<
+        typeof useMode
+      >);
+      render(
+        <ContactForm
+          lang={lang}
+          isEmailEnabled
+          turnstileSiteKey='test-site-key'
+        />
+      );
+      const copy = contactFormCopy[lang];
+      const button = screen.getByRole('button', { name: copy.submit });
+      expect(button.closest('form')).toHaveAttribute('novalidate');
+      fireEvent.change(screen.getByLabelText(copy.email), {
+        target: { value: 'not-an-email' },
+      });
+      fireEvent.click(button);
+      for (const [label, message] of [
+        [copy.name, copy.validation.name],
+        [copy.surname, copy.validation.surname],
+        [copy.email, copy.validation.email],
+        [copy.message, copy.validation.message],
+        [copy.weddingDate, copy.validation.weddingDateRequired],
+        [copy.venue, copy.validation.venue],
+      ]) {
+        const error = await screen.findByText(message);
+        const control = screen.getByLabelText(label);
+        expect(control).toHaveAttribute('aria-invalid', 'true');
+        expect(control.getAttribute('aria-describedby')?.split(' ')).toContain(
+          error.id
+        );
+      }
+      expect(submitContactForm).not.toHaveBeenCalled();
+      expect(
+        screen.getByRole('heading', { name: copy.weddingHeading })
+      ).toBeInTheDocument();
+      expect(screen.getByText(copy.weddingIntroduction)).toBeInTheDocument();
+    }
+  );
+
+  it('updates existing errors when language changes without resetting entered values', async () => {
+    vi.mocked(useMode).mockReturnValue({ mode: 'production' } as ReturnType<
+      typeof useMode
+    >);
+    const { rerender } = render(<ContactForm lang='en' />);
+    fireEvent.change(screen.getByLabelText('Name'), {
+      target: { value: 'Example' },
+    });
+    fireEvent.blur(screen.getByLabelText('Surname'));
+    await screen.findByText('Please enter your surname.');
+    rerender(<ContactForm lang='th' />);
+    await screen.findByText('กรุณากรอกนามสกุล');
+    expect(
+      screen.queryByText('Please enter your surname.')
+    ).not.toBeInTheDocument();
+    expect(screen.getByLabelText('ชื่อ')).toHaveValue('Example');
+    expect(
+      screen.getByRole('heading', { name: 'สอบถามงานโปรดักชัน' })
+    ).toBeInTheDocument();
+    expect(submitContactForm).not.toHaveBeenCalled();
+  });
   afterEach(() => {
     cleanup();
     vi.clearAllMocks();
@@ -54,6 +138,10 @@ describe('ContactForm Component', () => {
     );
     expect(screen.queryByLabelText(/Wedding Date/i)).not.toBeInTheDocument();
     expect(screen.queryByLabelText(/Venue/i)).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Send Message' })).toBeDisabled();
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Message sending is not available yet.'
+    );
   });
 
   it('renders wedding fields in wedding mode', () => {
@@ -68,13 +156,33 @@ describe('ContactForm Component', () => {
     expect(screen.getByLabelText(/Venue/i)).toBeInTheDocument();
   });
 
+  it('explains the disabled state in Thai without submitting', () => {
+    vi.mocked(useMode).mockReturnValue({ mode: 'production' } as ReturnType<
+      typeof useMode
+    >);
+    render(<ContactForm lang='th' />);
+    expect(screen.getByRole('button', { name: 'ส่งข้อความ' })).toBeDisabled();
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'ขณะนี้ยังส่งข้อความผ่านฟอร์มไม่ได้'
+    );
+    expect(submitContactForm).not.toHaveBeenCalled();
+  });
+
   it.each(['production', 'wedding'])(
     'embeds the existing %s form without a duplicate heading or wrapper spacing',
     (mode) => {
       vi.mocked(useMode).mockReturnValue({ mode } as ReturnType<
         typeof useMode
       >);
-      render(<ContactForm presentation='embedded' lang='th' />);
+      render(
+        <ContactForm
+          presentation='embedded'
+          lang='th'
+          isEmailEnabled
+          turnstileSiteKey='test-site-key'
+        />
+      );
+      expect(screen.getByTestId('contact-turnstile')).toBeInTheDocument();
       expect(screen.queryByRole('heading')).not.toBeInTheDocument();
       expect(screen.getByTestId('contact-form')).toHaveAttribute(
         'data-presentation',
@@ -127,7 +235,13 @@ describe('ContactForm Component', () => {
       success: true,
       message: 'Received',
     });
-    render(<ContactForm presentation='embedded' />);
+    render(
+      <ContactForm
+        presentation='embedded'
+        isEmailEnabled
+        turnstileSiteKey='test-site-key'
+      />
+    );
 
     const trigger = screen.getByLabelText(/^Wedding Date/i);
     trigger.focus();
@@ -173,7 +287,7 @@ describe('ContactForm Component', () => {
     expect(vi.mocked(submitContactForm).mock.calls[0][0]).toMatchObject({
       type: 'wedding',
       surname: 'Example',
-      weddingDate: date,
+      weddingDate: '2050-07-21',
       venue: 'Example venue',
     });
     await waitFor(() => expect(trigger).toHaveTextContent('Pick a date'));
@@ -188,7 +302,13 @@ describe('ContactForm Component', () => {
       vi.mocked(useMode).mockReturnValue({ mode } as ReturnType<
         typeof useMode
       >);
-      render(<ContactForm presentation='embedded' />);
+      render(
+        <ContactForm
+          presentation='embedded'
+          isEmailEnabled
+          turnstileSiteKey='test-site-key'
+        />
+      );
       fireEvent.change(screen.getByLabelText('Name'), {
         target: { value: 'Example' },
       });
@@ -321,6 +441,8 @@ describe('ContactForm Component', () => {
       render(
         <ContactForm
           lang={lang}
+          isEmailEnabled
+          turnstileSiteKey='test-site-key'
           submitButton={{ label: 'CMS submit', style: 'secondary', size: 'lg' }}
         />
       );
@@ -360,7 +482,7 @@ describe('ContactForm Component', () => {
     }
   );
 
-  it('retains entered data when the simulated action fails', async () => {
+  it('retains entered data when the email action fails', async () => {
     vi.mocked(useMode).mockReturnValue({ mode: 'production' } as ReturnType<
       typeof useMode
     >);
@@ -368,7 +490,7 @@ describe('ContactForm Component', () => {
       success: false,
       message: 'Try again',
     });
-    render(<ContactForm />);
+    render(<ContactForm isEmailEnabled turnstileSiteKey='test-site-key' />);
     for (const [label, value] of [
       ['Name', 'Example'],
       ['Surname', 'Family'],
@@ -385,6 +507,75 @@ describe('ContactForm Component', () => {
     expect(screen.getByLabelText('Surname')).toHaveValue('Family');
   });
 
+  it('keeps submit disabled without a Turnstile site key', () => {
+    vi.mocked(useMode).mockReturnValue({ mode: 'production' } as ReturnType<
+      typeof useMode
+    >);
+    render(<ContactForm isEmailEnabled />);
+    expect(screen.getByRole('button', { name: 'Send Message' })).toBeDisabled();
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Verification is unavailable.'
+    );
+  });
+
+  it.each([
+    ['en', 'verification', 'Verification failed.'],
+    ['th', 'rate-limit', 'ส่งข้อความบ่อยเกินไป'],
+  ] as const)(
+    'keeps %s form values and requests a fresh token after %s',
+    async (lang, reason, copy) => {
+      vi.mocked(useMode).mockReturnValue({ mode: 'production' } as ReturnType<
+        typeof useMode
+      >);
+      const errorToast = vi.spyOn(toast, 'error').mockImplementation(() => '');
+      vi.mocked(submitContactForm).mockResolvedValue({
+        success: false,
+        reason,
+        message: 'Rejected',
+      });
+      render(
+        <ContactForm
+          lang={lang}
+          isEmailEnabled
+          turnstileSiteKey='test-site-key'
+        />
+      );
+
+      const labels =
+        lang === 'th'
+          ? ['ชื่อ', 'นามสกุล', 'อีเมล', 'ข้อความ']
+          : ['Name', 'Surname', 'Email', 'Message'];
+      for (const [index, value] of [
+        'Example',
+        'Family',
+        'example@example.com',
+        'A detailed project inquiry',
+      ].entries()) {
+        fireEvent.change(screen.getByLabelText(labels[index]), {
+          target: { value },
+        });
+      }
+      const button = screen.getByRole('button', {
+        name: lang === 'th' ? 'ส่งข้อความ' : 'Send Message',
+      });
+      fireEvent.click(button);
+      await waitFor(() => expect(submitContactForm).toHaveBeenCalledTimes(1));
+      expect(vi.mocked(submitContactForm).mock.calls[0][1]).toBe(
+        'test-token-0'
+      );
+      await waitFor(() =>
+        expect(errorToast).toHaveBeenCalledWith(expect.stringContaining(copy))
+      );
+      expect(screen.getByLabelText(labels[1])).toHaveValue('Family');
+      await waitFor(() => expect(button).toBeEnabled());
+      fireEvent.click(button);
+      await waitFor(() => expect(submitContactForm).toHaveBeenCalledTimes(2));
+      expect(vi.mocked(submitContactForm).mock.calls[1][1]).toBe(
+        'test-token-1'
+      );
+    }
+  );
+
   it('keeps surname when changing modes and clears wedding-only errors for production', async () => {
     vi.mocked(useMode).mockReturnValue({ mode: 'wedding' } as ReturnType<
       typeof useMode
@@ -393,7 +584,13 @@ describe('ContactForm Component', () => {
       success: true,
       message: 'Received',
     });
-    const { rerender } = render(<ContactForm presentation='embedded' />);
+    const { rerender } = render(
+      <ContactForm
+        presentation='embedded'
+        isEmailEnabled
+        turnstileSiteKey='test-site-key'
+      />
+    );
     for (const [label, value] of [
       ['Name', 'Example'],
       ['Surname', 'Family'],
@@ -410,7 +607,13 @@ describe('ContactForm Component', () => {
     vi.mocked(useMode).mockReturnValue({ mode: 'production' } as ReturnType<
       typeof useMode
     >);
-    rerender(<ContactForm presentation='embedded' />);
+    rerender(
+      <ContactForm
+        presentation='embedded'
+        isEmailEnabled
+        turnstileSiteKey='test-site-key'
+      />
+    );
     await waitFor(() =>
       expect(
         screen.queryByText('Please select your wedding date.')

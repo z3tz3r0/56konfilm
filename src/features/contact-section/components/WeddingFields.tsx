@@ -6,6 +6,7 @@ import { m } from 'motion/react';
 import { useMemo } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import type { ContactFormValues } from '@features/contact-section/validation';
+import type { Locale } from '@shared/config/preferences';
 import { contactFormCopy } from '../formCopy';
 import {
   Button,
@@ -23,7 +24,7 @@ import {
 
 interface WeddingFieldsProps {
   form: UseFormReturn<ContactFormValues>;
-  lang?: 'en' | 'th';
+  lang?: Locale;
 }
 
 export function WeddingFields({ form, lang = 'en' }: WeddingFieldsProps) {

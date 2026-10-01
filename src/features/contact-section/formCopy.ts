@@ -15,6 +15,34 @@ export const contactFormCopy = {
     venuePlaceholder: 'City, Country or Venue Name',
     submit: 'Send Message',
     sending: 'Sending...',
+    unavailable:
+      'Message sending is not available yet. Please use the contact details on this page.',
+    verificationPrompt: 'Complete the verification before sending.',
+    verificationFailed: 'Verification failed. Please try again.',
+    verificationUnavailable:
+      'Verification is unavailable. Please try again later.',
+    rateLimited: 'Too many attempts. Please wait two minutes and try again.',
+    submissionFailed: 'We could not send your message. Please try again later.',
+    submissionUnconfirmed:
+      'We could not confirm your message was sent. Please contact us directly.',
+    validationFailed: 'Please fix the errors in the form.',
+    commercialSuccess:
+      'Commercial Inquiry received. We will contact you shortly.',
+    weddingSuccess: 'Love story received! We will be in touch soon.',
+    commercialHeading: 'Commercial Inquiry',
+    weddingHeading: 'Tell us your love story',
+    commercialIntroduction: 'Ready to elevate your brand visual identity?',
+    weddingIntroduction:
+      "We accept a limited number of weddings per year. Let's see if we are a match.",
+    validation: {
+      name: 'Name must be at least 2 characters',
+      surname: 'Please enter your surname.',
+      email: 'Please enter a valid email address',
+      message: 'Please provide more details (at least 10 characters)',
+      weddingDateRequired: 'Please select your wedding date.',
+      weddingDateInvalid: 'Please select a valid wedding date.',
+      venue: 'Venue is required',
+    },
   },
   th: {
     name: 'ชื่อ',
@@ -32,5 +60,31 @@ export const contactFormCopy = {
     venuePlaceholder: 'เมือง ประเทศ หรือชื่อสถานที่จัดงาน',
     submit: 'ส่งข้อความ',
     sending: 'กำลังส่ง...',
+    unavailable:
+      'ขณะนี้ยังส่งข้อความผ่านฟอร์มไม่ได้ กรุณาติดต่อผ่านช่องทางที่แสดงในหน้านี้',
+    verificationPrompt: 'กรุณายืนยันตัวตนก่อนส่งข้อความ',
+    verificationFailed: 'การยืนยันตัวตนไม่สำเร็จ กรุณาลองอีกครั้ง',
+    verificationUnavailable: 'ขณะนี้ยืนยันตัวตนไม่ได้ กรุณาลองใหม่ภายหลัง',
+    rateLimited: 'ส่งข้อความบ่อยเกินไป กรุณารอ 2 นาทีแล้วลองอีกครั้ง',
+    submissionFailed: 'ส่งข้อความไม่สำเร็จ กรุณาลองใหม่ภายหลัง',
+    submissionUnconfirmed:
+      'ยังยืนยันไม่ได้ว่าข้อความของคุณส่งสำเร็จหรือไม่ กรุณาติดต่อเราผ่านช่องทางที่แสดงในหน้านี้',
+    validationFailed: 'กรุณาแก้ไขข้อมูลในช่องที่แจ้งเตือน แล้วลองส่งอีกครั้ง',
+    commercialSuccess: 'ได้รับข้อความของคุณแล้ว เราจะติดต่อกลับโดยเร็ว',
+    weddingSuccess: 'ได้รับเรื่องราวของคุณแล้ว เราจะติดต่อกลับโดยเร็ว',
+    commercialHeading: 'สอบถามงานโปรดักชัน',
+    weddingHeading: 'เล่าเรื่องราวความรักของคุณให้เราฟัง',
+    commercialIntroduction: 'พร้อมยกระดับภาพลักษณ์แบรนด์ของคุณแล้วหรือยัง?',
+    weddingIntroduction:
+      'เรารับงานแต่งงานจำนวนจำกัดในแต่ละปี มาพูดคุยกันว่าเราจะช่วยบันทึกวันสำคัญของคุณได้อย่างไร',
+    validation: {
+      name: 'กรุณากรอกชื่ออย่างน้อย 2 ตัวอักษร',
+      surname: 'กรุณากรอกนามสกุล',
+      email: 'กรุณากรอกอีเมลให้ถูกต้อง',
+      message: 'กรุณากรอกรายละเอียดอย่างน้อย 10 ตัวอักษร',
+      weddingDateRequired: 'กรุณาเลือกวันแต่งงาน',
+      weddingDateInvalid: 'กรุณาเลือกวันแต่งงานที่ถูกต้อง',
+      venue: 'กรุณากรอกสถานที่จัดงานอย่างน้อย 2 ตัวอักษร',
+    },
   },
 } as const;

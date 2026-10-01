@@ -1,23 +1,41 @@
 'use client';
 
 import { submitContactForm } from '@features/contact-section/actions';
+import type { Locale } from '@shared/config/preferences';
 import { useMode } from '@shared/hooks';
 import {
-  contactFormSchema,
+  createContactFormSchema,
   type ContactFormValues,
-} from '@features/contact-section/validation';
+  type ContactSubmission,
+} from '../validation/contactSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useTransition } from 'react';
-import { useForm, type DefaultValues } from 'react-hook-form';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from 'react';
+import { useForm, type DefaultValues, type FieldPath } from 'react-hook-form';
 import { toast } from 'sonner';
+import { contactFormCopy } from '../formCopy';
 
-export function useContactForm() {
+export function useContactForm(lang: Locale = 'en') {
   const { mode } = useMode();
   const [isPending, startTransition] = useTransition();
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileResetKey, setTurnstileResetKey] = useState(0);
+  const onTurnstileTokenChange = useCallback((token: string | null) => {
+    setTurnstileToken(token);
+  }, []);
   const currentType = mode === 'wedding' ? 'wedding' : 'commercial';
+  const copy = contactFormCopy[lang];
+  const schema = useMemo(() => createContactFormSchema(lang), [lang]);
+  const previousLang = useRef(lang);
 
   const form = useForm<ContactFormValues, unknown, ContactFormValues>({
-    resolver: zodResolver(contactFormSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       type: currentType,
       name: '',
@@ -37,20 +55,58 @@ export function useContactForm() {
     }
   }, [currentType, form]);
 
+  // Refresh existing errors after a locale switch without resetting input values.
+  useEffect(() => {
+    if (previousLang.current === lang) return;
+    previousLang.current = lang;
+    const fields = Object.keys(
+      form.formState.errors
+    ) as FieldPath<ContactFormValues>[];
+    if (fields.length) void form.trigger(fields);
+  }, [lang, form, form.formState.errors]);
+
   const onSubmit = async (data: ContactFormValues) => {
     startTransition(async () => {
-      const result = await submitContactForm(data);
+      const submission: ContactSubmission =
+        data.type === 'wedding'
+          ? {
+              ...data,
+              weddingDate: [
+                data.weddingDate.getFullYear(),
+                String(data.weddingDate.getMonth() + 1).padStart(2, '0'),
+                String(data.weddingDate.getDate()).padStart(2, '0'),
+              ].join('-'),
+            }
+          : data;
+      try {
+        const result = await submitContactForm(submission, turnstileToken);
 
-      if (result.success) {
-        toast.success(result.message);
-        form.reset();
-        form.setValue('type', currentType);
-      } else {
-        if (result.errors) {
-          toast.error('Please fix the errors in the form.');
+        if (result.success) {
+          toast.success(
+            data.type === 'wedding'
+              ? copy.weddingSuccess
+              : copy.commercialSuccess
+          );
+          form.reset();
+          form.setValue('type', currentType);
+        } else if (result.reason === 'verification') {
+          toast.error(copy.verificationFailed);
+        } else if (result.reason === 'rate-limit') {
+          toast.error(copy.rateLimited);
+        } else if (result.reason === 'unavailable') {
+          toast.error(copy.unavailable);
+        } else if (result.reason === 'unconfirmed') {
+          toast.error(copy.submissionUnconfirmed);
+        } else if (result.errors) {
+          toast.error(copy.validationFailed);
         } else {
-          toast.error(result.message || 'Something went wrong.');
+          toast.error(copy.submissionFailed);
         }
+      } catch {
+        toast.error(copy.submissionFailed);
+      } finally {
+        setTurnstileToken(null);
+        setTurnstileResetKey((current) => current + 1);
       }
     });
   };
@@ -60,5 +116,8 @@ export function useContactForm() {
     onSubmit,
     isPending,
     isWedding: mode === 'wedding',
+    turnstileToken,
+    turnstileResetKey,
+    onTurnstileTokenChange,
   };
 }
