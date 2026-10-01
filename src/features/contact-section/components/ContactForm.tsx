@@ -62,10 +62,13 @@ export function ContactForm({
         presentation === 'standalone' && 'mx-auto max-w-lg p-4 md:p-8'
       )}
     >
-      {presentation === 'standalone' && <ContactHeader isWedding={isWedding} />}
+      {presentation === 'standalone' && (
+        <ContactHeader isWedding={isWedding} lang={lang} />
+      )}
 
       <Form {...form}>
         <form
+          noValidate
           onSubmit={form.handleSubmit(onSubmit)}
           className='flex min-w-0 flex-col gap-6'
         >

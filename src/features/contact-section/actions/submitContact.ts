@@ -13,7 +13,7 @@ type ActionState = {
   success: boolean;
   message?: string;
   errors?: Record<string, string[]>;
-  reason?: 'rate-limit' | 'verification';
+  reason?: 'rate-limit' | 'verification' | 'unavailable' | 'unconfirmed';
 };
 
 async function getVerifiedContactIp(): Promise<string | undefined> {
@@ -30,6 +30,7 @@ export async function submitContactForm(
   if (!env.CONTACT_EMAIL_ENABLED) {
     return {
       success: false,
+      reason: 'unavailable',
       message:
         'Email inquiries are not available yet. Please use the contact details on this page.',
     };
@@ -81,6 +82,7 @@ export async function submitContactForm(
   if (delivery.status === EmailDeliveryStatus.Unconfirmed) {
     return {
       success: false,
+      reason: 'unconfirmed',
       message:
         'We could not confirm your message was sent. Please contact us directly.',
     };

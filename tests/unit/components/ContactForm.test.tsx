@@ -10,6 +10,7 @@ import { ContactForm } from '@features/contact-section/components/ContactForm';
 import { useMode } from '@shared/hooks';
 import { submitContactForm } from '@features/contact-section/actions';
 import { toast } from 'sonner';
+import { contactFormCopy } from '@features/contact-section/formCopy';
 
 // Mock useMode
 vi.mock('@shared/hooks', async (importOriginal) => {
@@ -51,6 +52,70 @@ global.ResizeObserver = class {
 };
 
 describe('ContactForm Component', () => {
+  it.each(['en', 'th'] as const)(
+    'shows localized errors beneath all fields in %s',
+    async (lang) => {
+      vi.mocked(useMode).mockReturnValue({ mode: 'wedding' } as ReturnType<
+        typeof useMode
+      >);
+      render(
+        <ContactForm
+          lang={lang}
+          isEmailEnabled
+          turnstileSiteKey='test-site-key'
+        />
+      );
+      const copy = contactFormCopy[lang];
+      const button = screen.getByRole('button', { name: copy.submit });
+      expect(button.closest('form')).toHaveAttribute('novalidate');
+      fireEvent.change(screen.getByLabelText(copy.email), {
+        target: { value: 'not-an-email' },
+      });
+      fireEvent.click(button);
+      for (const [label, message] of [
+        [copy.name, copy.validation.name],
+        [copy.surname, copy.validation.surname],
+        [copy.email, copy.validation.email],
+        [copy.message, copy.validation.message],
+        [copy.weddingDate, copy.validation.weddingDateRequired],
+        [copy.venue, copy.validation.venue],
+      ]) {
+        const error = await screen.findByText(message);
+        const control = screen.getByLabelText(label);
+        expect(control).toHaveAttribute('aria-invalid', 'true');
+        expect(control.getAttribute('aria-describedby')?.split(' ')).toContain(
+          error.id
+        );
+      }
+      expect(submitContactForm).not.toHaveBeenCalled();
+      expect(
+        screen.getByRole('heading', { name: copy.weddingHeading })
+      ).toBeInTheDocument();
+      expect(screen.getByText(copy.weddingIntroduction)).toBeInTheDocument();
+    }
+  );
+
+  it('updates existing errors when language changes without resetting entered values', async () => {
+    vi.mocked(useMode).mockReturnValue({ mode: 'production' } as ReturnType<
+      typeof useMode
+    >);
+    const { rerender } = render(<ContactForm lang='en' />);
+    fireEvent.change(screen.getByLabelText('Name'), {
+      target: { value: 'Example' },
+    });
+    fireEvent.blur(screen.getByLabelText('Surname'));
+    await screen.findByText('Please enter your surname.');
+    rerender(<ContactForm lang='th' />);
+    await screen.findByText('กรุณากรอกนามสกุล');
+    expect(
+      screen.queryByText('Please enter your surname.')
+    ).not.toBeInTheDocument();
+    expect(screen.getByLabelText('ชื่อ')).toHaveValue('Example');
+    expect(
+      screen.getByRole('heading', { name: 'สอบถามงานโปรดักชัน' })
+    ).toBeInTheDocument();
+    expect(submitContactForm).not.toHaveBeenCalled();
+  });
   afterEach(() => {
     cleanup();
     vi.clearAllMocks();

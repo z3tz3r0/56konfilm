@@ -172,6 +172,8 @@ function assertContactEmailConfig(
       );
     }
   }
+  // Use the normalized values that passed validation, not the original input.
+  Object.assign(data, result.data);
 }
 
 export const env = validateEnv();

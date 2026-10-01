@@ -48,6 +48,7 @@ describe('submitContactForm Server Action', () => {
   it('never invokes delivery while disabled', async () => {
     const result = await submitContactForm(commercial);
     expect(result.success).toBe(false);
+    expect(result.reason).toBe('unavailable');
     expect(result.message).toMatch(/not available/i);
     expect(sendContactInquiry).not.toHaveBeenCalled();
   });
@@ -131,6 +132,9 @@ describe('submitContactForm Server Action', () => {
       const result = await submitContactForm(commercial);
       expect(result.success).toBe(false);
       expect(result.message).toMatch(/could not/i);
+      expect(result.reason).toBe(
+        status === EmailDeliveryStatus.Unconfirmed ? 'unconfirmed' : undefined
+      );
     }
   );
 });
