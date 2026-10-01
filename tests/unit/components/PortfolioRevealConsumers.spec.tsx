@@ -60,7 +60,11 @@ vi.mock('@shared/components/common/portfolio-grid/ProjectCard', () => ({
   ),
 }));
 vi.mock('@features/PageBuilder', () => ({
-  default: () => <header>Page introduction</header>,
+  default: () => (
+    <div className='contents' data-testid='page-content'>
+      <header>Page introduction</header>
+    </div>
+  ),
 }));
 vi.mock(
   '@/app/[lang]/[mode]/[firstSegment]/_components/PortfolioFilter',
@@ -137,8 +141,8 @@ describe('Portfolio reveal consumers', () => {
       }
     );
 
-    it(`uses the shared reveal for the ${mode} Portfolio page without wrapping navigation`, () => {
-      render(
+    it(`keeps a page-level scroll target around the ${mode} introduction and project list`, () => {
+      const { container } = render(
         <PortfolioPage
           page={{} as FullPageDocument}
           projects={projects}
@@ -151,7 +155,21 @@ describe('Portfolio reveal consumers', () => {
           portfolioSlug={slug}
         />
       );
+      const pageRoot = screen.getByTestId('portfolio-page');
+      expect(container.children).toHaveLength(1);
+      expect(container.firstElementChild).toBe(pageRoot);
+      expect(pageRoot).not.toHaveClass('contents');
+      expect(pageRoot.firstElementChild).toBe(
+        screen.getByTestId('page-content')
+      );
+      expect(pageRoot).toContainElement(
+        screen.getByRole('navigation', { name: 'Project filters' })
+      );
+      expect(pageRoot).toContainElement(
+        screen.getByRole('navigation', { name: 'Project pagination' })
+      );
       const grid = screen.getByTestId('animated-portfolio-grid');
+      expect(pageRoot).toContainElement(grid);
       expect(within(grid).getAllByRole('link')).toHaveLength(2);
       expect(within(grid).getAllByRole('link')[0]).toHaveAttribute(
         'href',
