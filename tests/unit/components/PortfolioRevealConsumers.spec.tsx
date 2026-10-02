@@ -37,48 +37,7 @@ vi.mock('@shared/components', async () => ({
   CtaButton: ({ ctaButton }: { ctaButton: { label: string } }) => (
     <button>{ctaButton.label}</button>
   ),
-  ModeGuard: ({
-    mode,
-    ProductionComponent,
-    WeddingComponent,
-    props,
-  }: {
-    mode: 'production' | 'wedding';
-    ProductionComponent: (props: Record<string, unknown>) => ReactNode;
-    WeddingComponent: (props: Record<string, unknown>) => ReactNode;
-    props: Record<string, unknown>;
-  }) =>
-    mode === 'wedding' ? (
-      <WeddingComponent {...props} />
-    ) : (
-      <ProductionComponent {...props} />
-    ),
-  ImageWithFrame: ({ alt }: { alt: string }) => (
-    <div role='img' aria-label={alt} />
-  ),
 }));
-vi.mock(
-  '@features/featured-project-section/components/AnimatedWeddingImage',
-  () => ({
-    default: ({
-      children,
-      className,
-      order,
-    }: {
-      children: ReactNode;
-      className: string;
-      order: number;
-    }) => (
-      <div
-        data-testid='wedding-featured-image'
-        data-order={order}
-        className={className}
-      >
-        {children}
-      </div>
-    ),
-  })
-);
 vi.mock(
   '@shared/components/common/portfolio-grid/AnimatedPortfolioGrid',
   () => ({
@@ -154,51 +113,45 @@ describe('Portfolio reveal consumers', () => {
   for (const mode of ['production', 'wedding'] as const) {
     const slug = mode === 'production' ? 'work' : 'films';
 
-    if (mode === 'production') {
-      it.each(['latest', 'curated'] as const)(
-        `uses the shared reveal for ${mode} Featured Projects with %s`,
-        async (sourceType) => {
-          const block: FeaturedProjectsSectionBlock = {
-            _type: 'featuredProjectsSection',
-            heading: { heading: 'Featured work' },
-            ctaButton: {
-              label: 'View all',
-              style: 'primary',
-              linkType: 'internal',
-            },
-            ...(sourceType === 'latest'
-              ? { sourceType }
-              : { sourceType, selectedProjects: projects }),
-          };
-          render(await FeaturedProjectSection({ block, lang: 'en', mode }));
-          const grid = screen.getByTestId('animated-portfolio-grid');
-          expect(
-            within(grid)
-              .getAllByRole('link')
-              .map((link) => link.getAttribute('href'))
-          ).toEqual([
-            `/en/${mode}/${slug}/first`,
-            `/en/${mode}/${slug}/second`,
-          ]);
-          expect(grid).not.toContainElement(
-            screen.getByRole('heading', { name: 'Featured work' })
-          );
-          expect(grid).not.toContainElement(
-            screen.getByRole('button', { name: 'View all' })
-          );
-          expect(service.getSetting).toHaveBeenCalledWith({ lang: 'en' });
-          if (sourceType === 'latest') {
-            expect(service.getLatestProjects).toHaveBeenCalledWith({
-              lang: 'en',
-              mode,
-            });
-          } else {
-            expect(service.getLatestProjects).not.toHaveBeenCalled();
-          }
+    it.each(['latest', 'curated'] as const)(
+      `uses the shared reveal for ${mode} Featured Projects with %s`,
+      async (sourceType) => {
+        const block: FeaturedProjectsSectionBlock = {
+          _type: 'featuredProjectsSection',
+          heading: { heading: 'Featured work' },
+          ctaButton: {
+            label: 'View all',
+            style: 'primary',
+            linkType: 'internal',
+          },
+          ...(sourceType === 'latest'
+            ? { sourceType }
+            : { sourceType, selectedProjects: projects }),
+        };
+        render(await FeaturedProjectSection({ block, lang: 'en', mode }));
+        const grid = screen.getByTestId('animated-portfolio-grid');
+        expect(
+          within(grid)
+            .getAllByRole('link')
+            .map((link) => link.getAttribute('href'))
+        ).toEqual([`/en/${mode}/${slug}/first`, `/en/${mode}/${slug}/second`]);
+        expect(grid).not.toContainElement(
+          screen.getByRole('heading', { name: 'Featured work' })
+        );
+        expect(grid).not.toContainElement(
+          screen.getByRole('button', { name: 'View all' })
+        );
+        expect(service.getSetting).toHaveBeenCalledWith({ lang: 'en' });
+        if (sourceType === 'latest') {
+          expect(service.getLatestProjects).toHaveBeenCalledWith({
+            lang: 'en',
+            mode,
+          });
+        } else {
+          expect(service.getLatestProjects).not.toHaveBeenCalled();
         }
-      );
-    }
-
+      }
+    );
     it(`keeps a page-level scroll target around the ${mode} introduction and project list`, () => {
       const { container } = render(
         <PortfolioPage
@@ -243,95 +196,6 @@ describe('Portfolio reveal consumers', () => {
       expect(service.getLatestProjects).not.toHaveBeenCalled();
     });
   }
-
-  it('renders the Wedding collage in CMS order without the Production grid', async () => {
-    const weddingProjects = [
-      ...projects,
-      {
-        ...projects[0],
-        _id: 'third',
-        slug: 'third',
-        title: 'Project third',
-      },
-    ];
-    const block: FeaturedProjectsSectionBlock = {
-      _type: 'featuredProjectsSection',
-      sourceType: 'curated',
-      selectedProjects: weddingProjects,
-      heading: {
-        eyebrow: 'Featured stories',
-        heading: 'Love Stories',
-        body: 'Captured with care',
-      },
-      ctaButton: {
-        label: 'Discover more memories',
-        style: 'primary',
-        linkType: 'internal',
-      },
-    };
-
-    render(
-      await FeaturedProjectSection({ block, lang: 'en', mode: 'wedding' })
-    );
-
-    expect(screen.queryByTestId('animated-portfolio-grid')).toBeNull();
-    expect(screen.getByRole('heading', { name: 'Love Stories' })).toBeVisible();
-    expect(screen.getByText('Featured stories')).toBeVisible();
-    expect(screen.getByText('Captured with care')).toBeVisible();
-    expect(
-      screen.getByRole('button', { name: 'Discover more memories' })
-    ).toBeVisible();
-    const images = screen.getAllByTestId('wedding-featured-image');
-    expect(images.map((image) => image.getAttribute('data-order'))).toEqual([
-      '0',
-      '1',
-      '2',
-    ]);
-    expect(images[2]).toHaveClass('hidden');
-    expect(
-      screen.getAllByRole('link').map((link) => link.getAttribute('href'))
-    ).toEqual([
-      '/en/wedding/films/first',
-      '/en/wedding/films/second',
-      '/en/wedding/films/third',
-    ]);
-    expect(service.getLatestProjects).not.toHaveBeenCalled();
-  });
-
-  it.each([
-    { background: 'default', colorClass: 'bg-background-secondary' },
-    { background: 'muted', colorClass: 'bg-secondary' },
-    { background: 'contrast', colorClass: 'bg-primary' },
-  ])(
-    'keeps the $background Wedding background inside the bounded panel',
-    async ({ background, colorClass }) => {
-      const { container } = render(
-        await FeaturedProjectSection({
-          block: {
-            _type: 'featuredProjectsSection',
-            sourceType: 'curated',
-            selectedProjects: projects,
-            heading: { heading: 'Love Stories' },
-            background,
-          },
-          lang: 'en',
-          mode: 'wedding',
-        })
-      );
-
-      expect(container.querySelector('section')).toHaveAttribute(
-        'data-background',
-        'none'
-      );
-      expect(screen.getByTestId('wedding-featured-panel')).toHaveClass(
-        'lg:w-3/5',
-        colorClass
-      );
-      expect(
-        screen.getByTestId('wedding-featured-landscape-backdrop')
-      ).toHaveClass('h-1/2', colorClass);
-    }
-  );
 
   it('keeps the Production background on SectionShell', async () => {
     const { container } = render(

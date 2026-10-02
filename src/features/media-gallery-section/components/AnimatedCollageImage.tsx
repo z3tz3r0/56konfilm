@@ -8,17 +8,17 @@ import {
   staggerContainerVariants,
 } from '@shared/lib/motion';
 
-interface AnimatedWeddingImageProps {
+interface AnimatedCollageImageProps {
   children: ReactNode;
   className: string;
   order: number;
 }
 
-export default function AnimatedWeddingImage({
+export default function AnimatedCollageImage({
   children,
   className,
   order,
-}: AnimatedWeddingImageProps) {
+}: AnimatedCollageImageProps) {
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
 
   if (isInitialized && !allowHeavyMotion) {
@@ -41,7 +41,7 @@ export default function AnimatedWeddingImage({
   return (
     <m.div
       className={className}
-      data-testid='wedding-featured-image'
+      data-testid='wedding-gallery-image'
       initial='hidden'
       whileInView='visible'
       viewport={{ once: true, margin: '-100px' }}

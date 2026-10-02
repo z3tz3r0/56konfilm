@@ -1,7 +1,7 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import AnimatedWeddingImage from '@features/featured-project-section/components/AnimatedWeddingImage';
+import AnimatedCollageImage from '@features/media-gallery-section/components/AnimatedCollageImage';
 
 const mocks = vi.hoisted(() => ({
   useDeviceTier: vi.fn(),
@@ -18,7 +18,7 @@ vi.mock('motion/react', () => ({
   },
 }));
 
-describe('AnimatedWeddingImage', () => {
+describe('AnimatedCollageImage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.useDeviceTier.mockReturnValue({
@@ -30,9 +30,9 @@ describe('AnimatedWeddingImage', () => {
 
   it('reveals images once with the shared stagger timing', () => {
     render(
-      <AnimatedWeddingImage className='frame' order={2}>
+      <AnimatedCollageImage className='frame' order={2}>
         Image content
-      </AnimatedWeddingImage>
+      </AnimatedCollageImage>
     );
 
     expect(screen.getByTestId('motion-image')).toHaveTextContent(
@@ -63,9 +63,9 @@ describe('AnimatedWeddingImage', () => {
     });
 
     render(
-      <AnimatedWeddingImage className='frame' order={0}>
+      <AnimatedCollageImage className='frame' order={0}>
         Image content
-      </AnimatedWeddingImage>
+      </AnimatedCollageImage>
     );
 
     expect(screen.getByText('Image content')).toHaveClass('frame');

@@ -1,10 +1,15 @@
 import type { Locale, SiteMode } from '@shared/config';
 import type { FeaturedProjectsSectionBlock } from './types';
-import { ModeGuard } from '@shared/components';
+import {
+  CtaButton,
+  PortfolioGrid,
+  SectionHeader,
+  SectionShell,
+} from '@shared/components';
 import type { Project } from '@shared/types';
 import { ContentService } from '@services/contentService';
-import Production from './components/Production';
-import Wedding from './components/Wedding';
+import { cn } from '@shared/utils/styling/tailwindUtils';
+import { getJustifyClass } from '@shared/utils/styling/styleVariants';
 
 interface FeaturedProjectsSectionProps {
   block: FeaturedProjectsSectionBlock;
@@ -37,11 +42,21 @@ export default async function FeaturedProjectSection({
   }
 
   return (
-    <ModeGuard
-      ProductionComponent={Production}
-      WeddingComponent={Wedding}
-      mode={mode}
-      props={{ block, projects, portfolioSlug, lang, mode }}
-    />
+    <SectionShell background={block.background} sanityType={block._type}>
+      <div className='flex flex-col gap-8'>
+        <SectionHeader heading={block.heading} />
+        <PortfolioGrid
+          projects={projects}
+          portfolioSlug={portfolioSlug}
+          lang={lang}
+          mode={mode}
+        />
+        {block.ctaButton && (
+          <div className={cn('flex', getJustifyClass(block.heading?.align))}>
+            <CtaButton ctaButton={block.ctaButton} mode={mode} lang={lang} />
+          </div>
+        )}
+      </div>
+    </SectionShell>
   );
 }

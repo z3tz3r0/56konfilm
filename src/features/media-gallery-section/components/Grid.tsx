@@ -12,21 +12,14 @@ import {
 } from '@shared/lib/motion';
 import { cn } from '@shared/utils/styling/tailwindUtils';
 import { urlFor } from '@/sanity/lib/image';
-import { MediaGallerySectionBlock } from '../types';
 import { GalleryCard, VideoItem } from '.';
-import { Locale, SiteMode } from '@shared/config';
+import type { MediaGalleryPresentationProps } from './presentation.types';
 
-interface MediaGallerySectionProps {
-  block: MediaGallerySectionBlock;
-  lang: Locale;
-  mode: SiteMode;
-}
-
-export default function MediaGallerySection({
+export default function Grid({
   block,
   lang: propLang,
   mode,
-}: MediaGallerySectionProps) {
+}: MediaGalleryPresentationProps) {
   const params = useParams();
   const lang = propLang || (params?.lang as string) || 'en';
   const isCentered = block.heading?.align === 'center';
