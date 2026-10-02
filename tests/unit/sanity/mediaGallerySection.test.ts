@@ -36,12 +36,18 @@ const inactiveContexts: Context[] = [
   },
 ];
 
+/**
+ * Returns a Media Gallery schema field, throwing if the name is unknown.
+ */
 function getField(name: string) {
   const field = fields.find((item) => item.name === name);
   if (!field) throw new Error(`Missing schema field: ${name}`);
   return field;
 }
 
+/**
+ * Captures and returns a field's custom validator using a mocked Sanity rule.
+ */
 function getValidator(name: string) {
   const rule = { custom: vi.fn().mockReturnThis() };
   getField(name).validation?.(rule);
@@ -51,6 +57,9 @@ function getValidator(name: string) {
   ) => true | string;
 }
 
+/**
+ * Creates valid asset-reference fixtures for all three collage image slots.
+ */
 function createImages() {
   return {
     smallPortrait: { image: { asset: { _ref: 'image-small' } } },

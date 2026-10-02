@@ -33,6 +33,10 @@ interface ProjectedSection {
   }>;
 }
 
+/**
+ * Evaluates the page query against a gallery fixture and optional documents,
+ * returning the first projected section without calling Sanity.
+ */
 async function resolveSection(
   section: Record<string, unknown>,
   lang = 'en',

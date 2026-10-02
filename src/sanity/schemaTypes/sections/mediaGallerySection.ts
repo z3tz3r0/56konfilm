@@ -9,6 +9,9 @@ import { galleryItemType } from '../objects/galleryItem';
 import { localizedBlockType } from '../objects/localized';
 import { mediaBlockType } from '../objects/mediaBlock';
 
+/**
+ * Returns whether the section uses Collage in Wedding mode.
+ */
 function isWeddingCollage(sectionVariant: unknown, siteMode: unknown) {
   return sectionVariant === 'collage' && siteMode === 'wedding';
 }
@@ -190,6 +193,10 @@ export const mediaGallerySectionType = defineType({
       collageImages: 'collageImages',
       background: 'background',
     },
+    /**
+     * Builds the Studio preview from the stored variant, background, and item count.
+     * For Collage, counts only slots with an image asset reference.
+     */
     prepare({ title, items, sectionVariant, collageImages, background }) {
       const isCollage = sectionVariant === 'collage';
       const count = isCollage

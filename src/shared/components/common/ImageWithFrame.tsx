@@ -10,6 +10,11 @@ interface ImageWithFrameProps extends React.ComponentPropsWithoutRef<'section'> 
   placeholder?: ReactNode;
 }
 
+/**
+ * Renders a framed image or placeholder with responsive image sizes.
+ * An explicit aspect ratio sizes the inner frame; otherwise the legacy frame
+ * dimensions are used.
+ */
 export default function ImageWithFrame({
   src,
   alt,

@@ -1,3 +1,6 @@
+/**
+ * Renders the Wedding-themed Grid preview for the Studio variant picker.
+ */
 function GalleryGridThumbnail() {
   return (
     <div data-mode='wedding' className='bg-background text-foreground p-2'>
@@ -25,6 +28,9 @@ function GalleryGridThumbnail() {
   );
 }
 
+/**
+ * Renders the three-image Collage preview for the Studio variant picker.
+ */
 function GalleryCollageThumbnail() {
   return (
     <div data-mode='wedding' className='bg-background text-foreground p-2'>

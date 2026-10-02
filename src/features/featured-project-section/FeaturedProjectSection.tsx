@@ -17,6 +17,10 @@ interface FeaturedProjectsSectionProps {
   mode: SiteMode;
 }
 
+/**
+ * Renders latest or curated projects using the portfolio route for the site
+ * mode, with the configured heading, background, and optional CTA.
+ */
 export default async function FeaturedProjectSection({
   block,
   lang,

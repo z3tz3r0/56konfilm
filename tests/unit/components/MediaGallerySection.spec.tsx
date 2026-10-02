@@ -67,6 +67,9 @@ vi.mock('@/sanity/lib/image', async () => {
   return { urlFor: builder.image.bind(builder) };
 });
 
+/**
+ * Creates a gallery media fixture with an asset reference, crop, hotspot, and alt.
+ */
 function media(id: string, alt: string): MediaItem {
   return {
     image: {

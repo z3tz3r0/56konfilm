@@ -12,6 +12,10 @@ interface SectionHeaderProps {
   isEmphasizedVariant?: boolean;
 }
 
+/**
+ * Renders the available heading content with configured alignment and styles.
+ * Returns null for empty content and supports an emphasized heading variant.
+ */
 export default function SectionHeader({
   heading,
   className,

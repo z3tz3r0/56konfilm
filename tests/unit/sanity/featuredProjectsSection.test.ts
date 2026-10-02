@@ -15,12 +15,19 @@ interface SchemaField {
 
 const fields = featuredProjectsSectionType.fields as unknown as SchemaField[];
 
+/**
+ * Returns a Featured Projects schema field, throwing if the name is unknown.
+ */
 function getField(name: string) {
   const field = fields.find((item) => item.name === name);
   if (!field) throw new Error(`Missing schema field: ${name}`);
   return field;
 }
 
+/**
+ * Captures a field's custom validator and returns it with the mocked rule
+ * so tests can inspect required-field configuration.
+ */
 function getValidator(name: string) {
   const rule = {
     required: vi.fn().mockReturnThis(),

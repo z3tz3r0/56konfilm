@@ -37,6 +37,10 @@ const projects = Array.from({ length: 8 }, (_, index) => ({
   siteMode: ['production', 'wedding'],
 }));
 
+/**
+ * Evaluates the page query against an in-memory featured-projects fixture
+ * for the requested mode and locale, returning the projected page.
+ */
 async function resolveSelection(
   section: Record<string, unknown>,
   mode: SiteMode,

@@ -16,6 +16,10 @@ import GalleryCard from './GalleryCard';
 import VideoItem from './VideoItem';
 import type { MediaGalleryPresentationProps } from '../../types/presentation.types';
 
+/**
+ * Renders image, video, and linked project cards with device-aware motion
+ * and an optional CMS call to action.
+ */
 export default function Grid({
   block,
   lang: propLang,

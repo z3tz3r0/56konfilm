@@ -14,6 +14,10 @@ interface AnimatedCollageImageProps {
   order: number;
 }
 
+/**
+ * Reveals an image once with an order-based delay, or renders it without motion
+ * when the initialized device tier disallows heavy animation.
+ */
 export default function AnimatedCollageImage({
   children,
   className,

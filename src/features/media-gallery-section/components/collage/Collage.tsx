@@ -40,6 +40,10 @@ const imageSlots = [
   },
 ] as const;
 
+/**
+ * Renders a collage slot with cropped media or a localized placeholder.
+ * The reveal key remounts its animation when the image set or locale changes.
+ */
 function CollageImage({
   media,
   index,
@@ -80,6 +84,10 @@ function CollageImage({
   );
 }
 
+/**
+ * Renders the responsive Wedding collage with three image slots, CMS heading,
+ * optional CTA, and the selected panel background.
+ */
 export default function Collage({
   block,
   lang,

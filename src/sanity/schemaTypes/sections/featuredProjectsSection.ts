@@ -2,6 +2,10 @@ import { defineField, defineType } from 'sanity';
 import { ctaType } from '../objects/cta';
 import { localizedBlockType } from '../objects/localized';
 
+/**
+ * Validates curated selections for one to six entries and duplicate references.
+ * Returns true for valid or non-curated selections, otherwise an error message.
+ */
 function validateProjectSelection(value: unknown, sourceType: unknown) {
   if (sourceType !== 'curated') return true;
   if (!Array.isArray(value) || value.length === 0)
@@ -107,6 +111,9 @@ export const featuredProjectsSectionType = defineType({
       title: 'heading.heading.0.value',
       sourceType: 'sourceType',
     },
+    /**
+     * Builds the Studio preview title and content-source label.
+     */
     prepare({ title, sourceType }) {
       const sourceLabel = sourceType === 'latest' ? 'Auto (Latest)' : 'Curated';
 

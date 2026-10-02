@@ -23,6 +23,10 @@ import { AllProjectsParams, BaseParams } from './contentService.types';
 
 export class ContentService extends SanityBaseService {
   // --- Page ---
+  /**
+   * Fetches a localized page by mode and slug with page cache tags.
+   * Returns null when no matching page exists.
+   */
   static async getPage({ lang, mode, slug }: BaseParams) {
     return this.fetch<FullPageDocument | null>({
       query: pageBySlugQuery,
