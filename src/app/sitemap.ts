@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { getBaseURL } from '@shared/utils';
+import { getBaseURL } from '@shared/utils/url/siteUrl';
 import { SUPPORTED_LOCALES } from '@shared/config';
 import { ContentService } from '@/services';
 

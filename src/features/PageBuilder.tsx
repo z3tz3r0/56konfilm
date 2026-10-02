@@ -21,6 +21,7 @@ import { ContactSectionBlock } from './contact-section/types';
 import { BlogPreviewSectionBlock } from './blog-preview-section/types';
 import { CapabilitiesSectionBlock } from './capabilities-section/types';
 import { Locale, SiteMode } from '@shared/config';
+import { env } from '@shared/config/env';
 import { FeaturedProjectsSectionBlock } from './featured-project-section/types';
 
 const TwoColumnSection = dynamic(
@@ -39,7 +40,7 @@ const CtaBannerSection = dynamic(
   () => import('./cta-banner-section/components/CtaBannerSection')
 );
 const MediaGallerySection = dynamic(
-  () => import('./media-gallery-section/components/MediaGallerySection')
+  () => import('./media-gallery-section/MediaGallerySection')
 );
 const PackagesSection = dynamic(
   () => import('./package-section/components/PackagesSection')
@@ -233,7 +234,20 @@ function renderBlock(
     case 'awardsSection':
       return <AwardsSection key={key} block={block} />;
     case 'contactSection':
-      return <ContactSection key={key} block={block} lang={lang} mode={mode} />;
+      return (
+        <ContactSection
+          key={key}
+          block={block}
+          lang={lang}
+          mode={mode}
+          isEmailEnabled={env.CONTACT_EMAIL_ENABLED}
+          turnstileSiteKey={
+            env.CONTACT_EMAIL_ENABLED
+              ? env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
+              : undefined
+          }
+        />
+      );
     case 'blogPreviewSection':
       return (
         <BlogPreviewSection key={key} block={block} lang={lang} mode={mode} />

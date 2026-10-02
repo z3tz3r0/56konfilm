@@ -18,6 +18,10 @@ interface PortfolioPageProps {
   portfolioSlug: string;
 }
 
+/**
+ * Renders the portfolio introduction, filters, project grid, and pagination
+ * within a single page-level scroll target for Next.js navigation.
+ */
 export default function PortfolioPage({
   page,
   projects,
@@ -31,8 +35,10 @@ export default function PortfolioPage({
   portfolioSlug,
 }: PortfolioPageProps) {
   const commonProps = { lang, mode };
+  // Give Next.js a page-level scroll target. PageBuilder uses display: contents,
+  // so a fragment would let the router skip the introduction and target the list.
   return (
-    <>
+    <div data-testid='portfolio-page'>
       <PageBuilder page={page} {...commonProps} enableSignature={isMockMode} />
       <SectionShell contentWrapperClass='space-y-8'>
         <PortfolioFilter tags={tags} {...commonProps} />
@@ -48,6 +54,6 @@ export default function PortfolioPage({
           totalPages={totalPages}
         />
       </SectionShell>
-    </>
+    </div>
   );
 }

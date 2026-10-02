@@ -2,9 +2,9 @@
 
 import {
   classifyDeviceTier,
-  DeviceTier,
   getTierFeatureFlags,
-} from '@shared/lib/performance';
+} from '@shared/utils/performance/deviceTier';
+import type { DeviceTier } from '@shared/utils/performance/deviceTier.types';
 import { useSyncExternalStore } from 'react';
 
 const SSR_SNAPSHOT = {

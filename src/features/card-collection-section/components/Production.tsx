@@ -1,5 +1,5 @@
 import { AppIcon, SectionShell } from '@shared/components';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import HomeHighlightVariant from './HomeHighlightVariant';
 import {
   CardCollectionSectionProps,

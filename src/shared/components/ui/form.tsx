@@ -12,7 +12,7 @@ import {
   type FieldPath,
   type FieldValues,
 } from 'react-hook-form';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { Label } from '@shared/components';
 
 const Form = FormProvider;

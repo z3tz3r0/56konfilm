@@ -3,12 +3,12 @@
 import { m, type Variants } from 'motion/react';
 import { AppIcon, SectionShell, SectionHeader } from '@shared/components';
 import { DynamicLucideIcon } from '@shared/components/common/DynamicLucideIcon';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { useDeviceTier } from '@shared/hooks';
 import { ContactForm } from './components';
 import type { ContactSectionBlock } from './types';
 import type { Locale, SiteMode } from '@shared/config';
-import { isGoogleMapsEmbedUrl } from '@shared/utils/googleMaps';
+import { isGoogleMapsEmbedUrl } from '@shared/utils/url/googleMaps';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -53,6 +53,8 @@ interface ContactSectionProps {
   block: ContactSectionBlock;
   lang?: Locale;
   mode?: SiteMode;
+  isEmailEnabled?: boolean;
+  turnstileSiteKey?: string;
 }
 
 /**
@@ -66,6 +68,8 @@ interface ContactSectionProps {
 export default function ContactSection({
   block,
   lang = 'en',
+  isEmailEnabled = false,
+  turnstileSiteKey,
 }: ContactSectionProps) {
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
   const useLiteMotion = isInitialized && !allowHeavyMotion;
@@ -177,6 +181,8 @@ export default function ContactSection({
                   lang={lang}
                   presentation='embedded'
                   submitButton={block.submitButton}
+                  isEmailEnabled={isEmailEnabled}
+                  turnstileSiteKey={turnstileSiteKey}
                 />
               )}
               {(block.socialHeading || socialLinks.length > 0) && (

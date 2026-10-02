@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 
 // Shared with button-based form controls such as date-picker triggers.
 const inputControlStyles = cn(

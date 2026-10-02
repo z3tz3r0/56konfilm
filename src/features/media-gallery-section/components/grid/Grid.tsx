@@ -10,23 +10,21 @@ import {
   staggerContainerVariants,
   fadeUpItemVariants,
 } from '@shared/lib/motion';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { urlFor } from '@/sanity/lib/image';
-import { MediaGallerySectionBlock } from '../types';
-import { GalleryCard, VideoItem } from '.';
-import { Locale, SiteMode } from '@shared/config';
+import GalleryCard from './GalleryCard';
+import VideoItem from './VideoItem';
+import type { MediaGalleryPresentationProps } from '../../types/presentation.types';
 
-interface MediaGallerySectionProps {
-  block: MediaGallerySectionBlock;
-  lang: Locale;
-  mode: SiteMode;
-}
-
-export default function MediaGallerySection({
+/**
+ * Renders image, video, and linked project cards with device-aware motion
+ * and an optional CMS call to action.
+ */
+export default function Grid({
   block,
   lang: propLang,
   mode,
-}: MediaGallerySectionProps) {
+}: MediaGalleryPresentationProps) {
   const params = useParams();
   const lang = propLang || (params?.lang as string) || 'en';
   const isCentered = block.heading?.align === 'center';

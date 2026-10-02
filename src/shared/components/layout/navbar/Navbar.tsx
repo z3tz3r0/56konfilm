@@ -13,11 +13,11 @@ import {
 } from '@shared/components';
 import { Locale, SiteMode } from '@shared/config';
 import { SiteSettings } from '@shared/types';
-import { withContextPrefix } from '@shared/lib/url';
+import { withContextPrefix } from '@shared/utils/url/contextUrl';
 import ActiveLink from './ActiveLink';
 import NavbarScrollController from './NavbarScrollController';
 import { VisuallyHidden } from 'radix-ui';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 
 interface NavbarProps {
   settings: SiteSettings;

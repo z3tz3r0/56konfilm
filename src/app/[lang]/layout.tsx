@@ -11,7 +11,10 @@ import {
 import { cookies } from 'next/headers';
 import { Toaster } from 'sonner';
 import '../globals.css';
-import { isSupportedLocale, isSupportedMode } from '@shared/utils';
+import {
+  isSupportedLocale,
+  isSupportedMode,
+} from '@shared/utils/preferences/preferenceGuards';
 import Script from 'next/script';
 import { env } from '@shared/config';
 import { ReactNode } from 'react';

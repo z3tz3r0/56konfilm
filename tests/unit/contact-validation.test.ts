@@ -1,8 +1,87 @@
 import { describe, expect, it } from 'vitest';
 // @ts-ignore - Module does not exist yet (Red Phase)
 import { contactFormSchema } from '@features/contact-section/validation';
+import { createContactFormSchema } from '@features/contact-section/validation/contactSchema';
+import { contactFormCopy } from '@features/contact-section/formCopy';
 
 describe('Contact Form Validation', () => {
+  describe.each(['en', 'th'] as const)('localized %s validation', (lang) => {
+    it.each(['commercial', 'wedding'] as const)(
+      'localizes every visible field in %s without changing the rules',
+      (type) => {
+        const result = createContactFormSchema(lang).safeParse({
+          type,
+          name: '',
+          surname: ' \n\t ',
+          email: '',
+          message: '',
+          venue: '',
+        });
+        expect(result.success).toBe(false);
+        if (result.success) return;
+        const errors = result.error.flatten().fieldErrors;
+        const copy = contactFormCopy[lang].validation;
+        expect(errors).toMatchObject({
+          name: [copy.name],
+          surname: [copy.surname],
+          email: [copy.email],
+          message: [copy.message],
+        });
+        if (type === 'wedding') {
+          expect(errors.weddingDate).toEqual([copy.weddingDateRequired]);
+          expect(errors.venue).toEqual([copy.venue]);
+        } else {
+          expect(errors.weddingDate).toBeUndefined();
+          expect(errors.venue).toBeUndefined();
+        }
+      }
+    );
+
+    it.each([null, '2050-07-21', new Date('invalid')])(
+      'localizes an invalid wedding date: %s',
+      (weddingDate) => {
+        const result = createContactFormSchema(lang).safeParse({
+          type: 'wedding',
+          name: 'Example',
+          surname: 'Family',
+          email: 'visitor@example.com',
+          message: 'A detailed inquiry',
+          venue: 'Example venue',
+          weddingDate,
+        });
+        expect(result.success).toBe(false);
+        if (!result.success)
+          expect(result.error.flatten().fieldErrors.weddingDate).toEqual([
+            contactFormCopy[lang].validation.weddingDateInvalid,
+          ]);
+      }
+    );
+  });
+
+  it('keeps English and Thai schemas independent and preserves valid values', () => {
+    const thaiSchema = createContactFormSchema('th');
+    const data = {
+      type: 'commercial',
+      name: 'AB',
+      surname: '  ก  ',
+      email: 'visitor@example.com',
+      message: '1234567890',
+    };
+    expect(thaiSchema.parse(data)).toEqual({ ...data, surname: 'ก' });
+    const invalid = { ...data, name: 'A', message: '123456789' };
+    const thai = thaiSchema.safeParse(invalid);
+    const english = contactFormSchema.safeParse(invalid);
+    expect(thai.success).toBe(false);
+    expect(english.success).toBe(false);
+    if (!thai.success && !english.success) {
+      expect(thai.error.flatten().fieldErrors.name).toEqual([
+        'กรุณากรอกชื่ออย่างน้อย 2 ตัวอักษร',
+      ]);
+      expect(english.error.flatten().fieldErrors.name).toEqual([
+        'Name must be at least 2 characters',
+      ]);
+    }
+  });
   describe.each(['commercial', 'wedding'] as const)(
     'surname in %s inquiries',
     (type) => {

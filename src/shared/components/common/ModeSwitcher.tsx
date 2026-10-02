@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useTransition } from 'react';
 import { useMode } from '@shared/hooks';
 import { Locale, MODE_TO_THEME, type SiteMode } from '@shared/config';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { useTheme } from 'next-themes';
 
 interface ModeSwitcherProps {

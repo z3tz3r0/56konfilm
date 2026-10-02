@@ -2,7 +2,7 @@
 
 import { useDeviceTier } from '@shared/hooks';
 import { RotatingText } from '@shared/components';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 
 interface DynamicRotatingTextProps {
   rotatingWords: string[];

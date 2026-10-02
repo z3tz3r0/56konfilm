@@ -5,10 +5,10 @@ import {
   verifyPassword,
   hashPassword,
   updatePasswordInSanity,
-  validatePasswordStrength,
   verifySession,
-  checkPasswordChangeRateLimit,
 } from '@shared/lib/auth';
+import { validatePasswordStrength } from '@shared/utils/password/passwordValidation';
+import { checkPasswordChangeRateLimit } from '@shared/utils/rate-limit/authRateLimit';
 
 export async function POST(request: NextRequest) {
   try {

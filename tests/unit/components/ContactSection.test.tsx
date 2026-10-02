@@ -62,10 +62,14 @@ vi.mock('@features/contact-section/components', () => ({
     lang,
     presentation,
     submitButton,
+    isEmailEnabled,
+    turnstileSiteKey,
   }: {
     lang: string;
     presentation?: string;
     submitButton?: ContactSectionBlock['submitButton'];
+    isEmailEnabled?: boolean;
+    turnstileSiteKey?: string;
   }) => (
     <div
       data-testid='contact-form'
@@ -74,6 +78,8 @@ vi.mock('@features/contact-section/components', () => ({
       data-submit-label={submitButton?.label}
       data-submit-style={submitButton?.style}
       data-submit-size={submitButton?.size}
+      data-email-enabled={String(isEmailEnabled)}
+      data-turnstile-site-key={turnstileSiteKey}
     />
   ),
 }));
@@ -231,6 +237,28 @@ describe('ContactSection', () => {
     expect(screen.getByTestId('contact-form')).toHaveAttribute(
       'data-presentation',
       'embedded'
+    );
+    expect(screen.getByTestId('contact-form')).toHaveAttribute(
+      'data-email-enabled',
+      'false'
+    );
+  });
+
+  it('passes delivery readiness and the public Turnstile key to the embedded form', () => {
+    render(
+      <ContactSection
+        block={{ ...legacyBlock, showForm: true }}
+        isEmailEnabled
+        turnstileSiteKey='test-site-key'
+      />
+    );
+    expect(screen.getByTestId('contact-form')).toHaveAttribute(
+      'data-email-enabled',
+      'true'
+    );
+    expect(screen.getByTestId('contact-form')).toHaveAttribute(
+      'data-turnstile-site-key',
+      'test-site-key'
     );
   });
 

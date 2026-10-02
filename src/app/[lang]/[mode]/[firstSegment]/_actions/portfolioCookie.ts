@@ -1,6 +1,6 @@
 'use server';
 
-import { sanitizePaginationLimit } from '@shared/utils';
+import { sanitizePaginationLimit } from '@shared/utils/paginationUtils';
 import { cookies } from 'next/headers';
 
 export async function setPortfolioLimitCookie(limit: string) {

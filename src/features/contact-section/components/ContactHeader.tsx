@@ -1,12 +1,16 @@
 'use client';
 
 import { AnimatePresence, m } from 'motion/react';
+import type { Locale } from '@shared/config/preferences';
+import { contactFormCopy } from '../formCopy';
 
 interface ContactHeaderProps {
   isWedding: boolean;
+  lang?: Locale;
 }
 
-export function ContactHeader({ isWedding }: ContactHeaderProps) {
+export function ContactHeader({ isWedding, lang = 'en' }: ContactHeaderProps) {
+  const copy = contactFormCopy[lang];
   return (
     <m.div
       initial={false}
@@ -24,12 +28,10 @@ export function ContactHeader({ isWedding }: ContactHeaderProps) {
           transition={{ duration: 0.2, ease: 'easeOut' }}
         >
           <h2 className='mb-2 text-3xl font-bold tracking-tight'>
-            {isWedding ? 'Tell us your love story' : 'Commercial Inquiry'}
+            {isWedding ? copy.weddingHeading : copy.commercialHeading}
           </h2>
           <p className='opacity-80'>
-            {isWedding
-              ? `We accept a limited number of weddings per year. Let's see if we are a match.`
-              : 'Ready to elevate your brand visual identity?'}
+            {isWedding ? copy.weddingIntroduction : copy.commercialIntroduction}
           </p>
         </m.div>
       </AnimatePresence>

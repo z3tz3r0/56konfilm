@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Slot } from 'radix-ui';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { inputControlStyles } from './input';
 
 const buttonVariants = cva(
@@ -10,15 +10,15 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'shadow-xs hover:shadow-[0_0_10px_var(--primary)] bg-primary text-primary-foreground',
+          'shadow-xs hover:not-disabled:shadow-[0_0_10px_var(--primary)] bg-primary text-primary-foreground',
         destructive:
-          'bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
+          'bg-destructive text-white shadow-xs hover:not-disabled:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
         secondary:
           'text-primary border-2 border-primary shadow-xs hover:not-disabled:bg-primary hover:not-disabled:text-primary-foreground dark:border-primary dark:hover:not-disabled:text-background dark:hover:not-disabled:bg-primary',
         neutral:
           'bg-neutral text-neutral-foreground shadow-xs hover:not-disabled:text-primary-foreground hover:not-disabled:bg-primary dark:hover:not-disabled:bg-background dark:hover:not-disabled:text-text-primary',
-        ghost: 'hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 hover:underline',
+        ghost: 'hover:not-disabled:text-accent-foreground',
+        link: 'text-primary underline-offset-4 hover:not-disabled:underline',
         input: '',
       },
       size: {

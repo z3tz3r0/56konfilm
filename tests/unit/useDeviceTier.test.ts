@@ -2,7 +2,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { useDeviceTier } from '@shared/hooks';
 
-vi.mock('@shared/lib/performance', () => ({
+vi.mock('@shared/utils/performance/deviceTier', () => ({
   getDeviceCapabilities: vi.fn(() => ({
     hardwareConcurrency: 2,
     saveData: true,

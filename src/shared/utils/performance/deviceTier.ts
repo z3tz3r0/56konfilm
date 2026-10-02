@@ -10,7 +10,7 @@
  * - high: high-end devices with full capability
  */
 
-import {
+import type {
   DeviceCapabilities,
   DeviceTier,
   NavigatorWithConnection,
@@ -37,7 +37,7 @@ function getDeviceCapabilities(): DeviceCapabilities {
     hardwareConcurrency: nav.hardwareConcurrency || 0,
     saveData: nav.connection?.saveData ?? false,
     prefersReducedMotion:
-      window.matchMedia?.('(prefer-reduced-motion: reduce)').matches ?? false,
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false,
   };
 }
 

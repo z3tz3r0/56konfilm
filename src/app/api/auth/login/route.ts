@@ -4,9 +4,11 @@ import {
   getCredentialsFromSanity,
   verifyPassword,
   createSession,
+} from '@shared/lib/auth';
+import {
   getClientIP,
   checkLoginRateLimit,
-} from '@shared/lib/auth';
+} from '@shared/utils/rate-limit/authRateLimit';
 import { env } from '@shared/config';
 
 export async function POST(request: NextRequest) {

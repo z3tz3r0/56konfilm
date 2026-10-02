@@ -1,5 +1,5 @@
 import { env } from '@shared/config';
-import { getBaseURL } from '@shared/utils';
+import { getBaseURL } from '@shared/utils/url/siteUrl';
 import type { MetadataRoute } from 'next';
 
 function isProductionEnvironment() {

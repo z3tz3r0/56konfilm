@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { m, AnimatePresence, type Variants } from 'motion/react';
 import { SectionShell, SectionHeader } from '@shared/components';
 import { DynamicLucideIcon } from '@shared/components/common/DynamicLucideIcon';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { urlFor } from '@/sanity/lib/image';
 import { useDeviceTier } from '@shared/hooks';
 import { CapabilitiesSectionBlock } from '../types';

@@ -6,10 +6,10 @@
 
 import {
   classifyDeviceTier,
-  DeviceCapabilities,
   getDeviceCapabilities,
   getTierFeatureFlags,
-} from '@shared/lib/performance';
+} from '@shared/utils/performance/deviceTier';
+import type { DeviceCapabilities } from '@shared/utils/performance/deviceTier.types';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('deviceTier', () => {
@@ -191,17 +191,42 @@ describe('deviceTier', () => {
       expect(capabilities.saveData).toBe(false);
     });
 
-    it('reads prefers-reduced-motion media query', () => {
+    it.each([true, false])(
+      'reads the exact prefers-reduced-motion query when matches=%s',
+      (matches) => {
+        global.window = {} as Window & typeof globalThis;
+        Object.defineProperty(global, 'navigator', {
+          value: { hardwareConcurrency: 8 },
+          writable: true,
+          configurable: true,
+        });
+        global.window.matchMedia = vi.fn((query: string) => ({
+          matches: query === '(prefers-reduced-motion: reduce)' && matches,
+        })) as unknown as typeof window.matchMedia;
+
+        const capabilities = getDeviceCapabilities();
+        expect(global.window.matchMedia).toHaveBeenCalledWith(
+          '(prefers-reduced-motion: reduce)'
+        );
+        expect(capabilities.prefersReducedMotion).toBe(matches);
+        expect(classifyDeviceTier(capabilities)).toBe(matches ? 'low' : 'high');
+        expect(getTierFeatureFlags()).toEqual({
+          allowHeavyMotion: !matches,
+          allowVideoAutoplay: !matches,
+          useSimplifiedTransitions: matches,
+        });
+      }
+    );
+
+    it('uses non-reduced defaults when matchMedia is unavailable', () => {
       global.window = {} as Window & typeof globalThis;
       Object.defineProperty(global, 'navigator', {
-        value: { hardwareConcurrency: 4 },
+        value: { hardwareConcurrency: 8 },
         writable: true,
         configurable: true,
       });
-      global.window.matchMedia = vi.fn().mockReturnValue({ matches: true });
-
-      const capabilities = getDeviceCapabilities();
-      expect(capabilities.prefersReducedMotion).toBe(true);
+      expect(getDeviceCapabilities().prefersReducedMotion).toBe(false);
+      expect(classifyDeviceTier()).toBe('high');
     });
   });
 });

@@ -1,4 +1,4 @@
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { CardCollectionSectionProps } from '../CardCollectionSection';
 import {
   ScrollableCarousel,

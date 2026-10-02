@@ -2,7 +2,7 @@
 
 import { m, type Variants } from 'motion/react';
 import { CtaButton, SectionShell } from '@shared/components';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { PackagesSectionBlock } from '../types';
 import { Locale, SiteMode } from '@shared/config';
 

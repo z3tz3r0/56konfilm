@@ -14,7 +14,7 @@ import {
   type CarouselApi,
 } from '@shared/components';
 import { fadeUpItemVariants } from '@shared/lib/motion';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { getImageUrl, THUMBNAIL_IMAGE } from '@/sanity/lib/image';
 import { TestimonialSectionBlock } from '../types';
 

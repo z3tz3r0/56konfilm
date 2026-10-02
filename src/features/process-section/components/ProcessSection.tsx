@@ -3,7 +3,7 @@
 import { m, type Variants } from 'motion/react';
 import { SectionShell, SectionHeader } from '@shared/components';
 import { DynamicLucideIcon } from '@shared/components/common/DynamicLucideIcon';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import { useDeviceTier } from '@shared/hooks';
 import { ProcessSectionBlock } from '../types';
 

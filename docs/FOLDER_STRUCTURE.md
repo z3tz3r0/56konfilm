@@ -21,7 +21,8 @@ src/
 │   └── [other-features]/
 ├── 📁 sanity/                # Sanity CMS Configuration & Schemas
 ├── 📁 services/              # 🟡 Data Access Layer (DAL)
-│   └── ContentService.ts     # Centralized fetching logic
+│   ├── contentService.ts     # Sanity content use cases
+│   └── emailService.ts       # Contact email delivery use case
 └── 📁 shared/                # 🔧 Shared Utilities & Core Foundation
     ├── components/
     │   ├── common/           # Smart/Context-aware components (ModeSwitcher, SectionHeader, SectionErrorBoundary)
@@ -29,10 +30,23 @@ src/
     │   └── ui/               # "Dumb" UI primitives (Button, Input)
     ├── config/               # Env, Cache Tags, Preferences
     ├── hooks/                # Global reusable hooks
-    ├── lib/                  # Core engine (i18n, SEO, Auth, Motion)
+    ├── lib/                  # Third-party library and external API integrations
+    │   ├── auth/             # password.ts, session.ts, sanityCredentials.ts; integration barrel
+    │   ├── http/             # Shared HTTP transport
+    │   ├── integrations/     # Resend and Turnstile adapters
+    │   └── motion/           # Motion library helpers
     ├── providers/            # Providers
     ├── stores/               # Global state management (Zustand)
-    └── types/                # Global types (BaseBlock, SectionHeading, etc.)
+    ├── types/                # Global types (BaseBlock, SectionHeading, etc.)
+    └── utils/                # Application helpers; direct file imports, no index.ts
+        ├── password/         # passwordValidation.ts
+        ├── performance/      # deviceTier.ts and deviceTier.types.ts
+        ├── preferences/      # preferenceGuards.ts and derivePreferences.ts
+        ├── rate-limit/       # authRateLimit.ts and contactRateLimit.ts
+        ├── seo/              # metadata.ts and projectJsonLd.ts
+        ├── styling/          # tailwindUtils.ts and styleVariants.ts
+        ├── url/              # siteUrl.ts, contextUrl.ts and googleMaps.ts
+        └── paginationUtils.ts
 ```
 
 ## 🎯 Architectural Layers
@@ -43,6 +57,22 @@ The foundation of the project. Everything here must be reusable across more than
 
 - 📌 **Rule**: If a component is used in both HeroSection and ContactSection, it belongs here.
 - 📌 **Sub-folders**: Separated by responsibility (UI, Layout, Lib, etc.) to prevent a "messy middle".
+
+#### Library integrations vs application utilities
+
+- **`lib/`** contains code that integrates with third-party libraries or external APIs, including bcrypt, JWT, Sanity, Motion, HTTP, Resend and Turnstile. Integration does not necessarily mean a network request: bcrypt and Motion also run locally.
+- **`utils/`** contains application helpers grouped by concern. Styling helpers remain here even when they use small supporting libraries such as `clsx` and `tailwind-merge`; the folder is not a ban on dependencies.
+- There is no `index.ts` at the root or in any subdirectory of `utils/`. Import from the implementation file, including type-only imports; do not re-export utilities through another barrel.
+- Keep Auth and Contact rate-limit modules and counters separate. Client-safe utilities and the Contact limiter must not import the Auth integration barrel or start its cleanup timer.
+- Auth's `lib/auth/index.ts` exports only password, session and Sanity credential helpers. Password-strength validation belongs in `utils/password/` and is imported directly.
+
+```typescript
+import { cn } from '@shared/utils/styling/tailwindUtils';
+import { validatePasswordStrength } from '@shared/utils/password/passwordValidation';
+import type { DeviceTier } from '@shared/utils/performance/deviceTier.types';
+```
+
+The shadcn `aliases.utils` setting in `components.json` points directly to `@shared/utils/styling/tailwindUtils` so generated components follow this convention.
 
 ### 2. Feature Layer (/src/features/)
 
@@ -60,9 +90,10 @@ The Next.js App Router hierarchy.
 
 ### 4. Service Layer (/src/services/)
 
-Centralized business logic for data fetching.
+Centralized use-case services for content access and email delivery.
 
 - 📌 **ContentService**: Acts as the single source of truth for interacting with Sanity CMS, ensuring consistent cache-tagging and revalidation.
+- 📌 **EmailService**: Coordinates Contact email delivery through HTTP and provider adapters; its activation process is documented in [CONTACT_EMAIL_ACTIVATION.md](CONTACT_EMAIL_ACTIVATION.md).
 
 ## 🏷️ Naming Conventions
 

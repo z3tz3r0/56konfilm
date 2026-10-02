@@ -1,7 +1,7 @@
 import { urlFor } from '@/sanity/lib/image';
 import { TwoColumnByMode } from '../types';
 import { CtaGroup, HighlightedText, SectionShell } from '@shared/components';
-import { cn } from '@shared/utils';
+import { cn } from '@shared/utils/styling/tailwindUtils';
 import Image from 'next/image';
 
 export default function Production({
