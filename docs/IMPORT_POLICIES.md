@@ -71,14 +71,32 @@ _Note: This policy is enforced via ESLint `no-restricted-imports` rule._
 
 To keep our import statements clean and concise, we use the **Barrel Export** pattern throughout the project.
 
-- **Standard:** Directories under `features/` or `shared/` use `index.ts` to export their public API, except `src/shared/utils/` and all of its subdirectories.
-- **Requirement:** Import from the folder level where a barrel is provided. Shared utilities must be imported directly from their implementation files.
+- **Standard:** Public APIs under `features/` or `shared/` use their existing `index.ts` barrels, except `src/shared/utils/` and all of its subdirectories. This does not require an `index.ts` in every private implementation folder.
+- **Requirement:** External consumers use the provided public barrel or an approved section entry used by PageBuilder's dynamic import. Private components/types may be imported directly within their own feature. Shared utilities must be imported directly from their implementation files.
 - ✅ `import { Button, ModeSwitcher } from '@shared/components'`
 - ❌ `import { Button } from '@shared/components/ui/Button/Button'`
 - **🚫 Prohibited:** DO NOT use `index.ts` inside the `src/app/` directory.
 - **Reasons:**:
   1. **Architectural Role:** `src/app/` is the **"Assembler"** (the end-of-the-line for our dependency tree). No other layer should ever import from it, making barrel exports unnecessary.
   2. **Next.js Constraints:** App Router uses file-based routing. `index.ts` can cause routing conflicts and unintended "Client/Server Component" boundary leaks, potentially damaging performance.
+
+#### **Private Feature Implementation**
+
+- Do not add feature exports without explicit maintainer approval, including exports through a nested barrel. Organizing files is not permission to expand a feature's public API.
+- Presentation folders such as `media-gallery-section/components/collage/` and `components/grid/` contain private implementation files; they do not need their own `index.ts`.
+- Shared feature-only props can live in `types/` without being re-exported through `types/index.ts` or the feature root barrel.
+- Prefer direct sibling imports internally rather than importing back through an ancestor barrel, which can introduce cycles. Existing relative-import depth limits still apply.
+- Media Gallery's existing public surface is `MediaGallerySection`, `GalleryCard`, `VideoItem` and the `MediaGallerySectionBlock` type. `Collage`, `Grid`, `AnimatedCollageImage` and `MediaGalleryPresentationProps` remain private. Tests may import private files to verify them; that does not make them public application APIs.
+
+Examples from inside `media-gallery-section/`:
+
+```typescript
+// Root section entry composes a private presentation.
+import Collage from './components/collage/Collage';
+
+// A component inside components/collage/ imports private feature props.
+import type { MediaGalleryPresentationProps } from '../../types/presentation.types';
+```
 
 #### **Exception: Shared Utilities**
 

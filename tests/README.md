@@ -64,6 +64,45 @@ import { checkContactRateLimit } from '@shared/utils/rate-limit/contactRateLimit
 import { cn } from '@shared/utils/styling/tailwindUtils';
 ```
 
+## Media Gallery and Featured Projects Regressions
+
+These suites cover Gallery presentation, CMS validation, data projection and Featured Projects regressions. The checklist below describes browser verification separately from mocked unit/component coverage.
+
+| Test file under `tests/unit/`                  | Coverage                                                                                                                                                             |
+| :--------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sanity/mediaGallerySection.test.ts`           | Wedding-only visual options, conditional field visibility, Grid item requirements, required Collage H2/assets and Studio preview                                     |
+| `mediaGalleryQueries.test.ts`                  | Full page-query projection, named image slots, localized alt fallbacks, retained inactive data and legacy project arrays/order/limits/missing references             |
+| `components/MediaGallerySection.spec.tsx`      | Mode/variant selection, EN/TH, CTA, image transforms/ratios, placeholders, background choices, static fallback, replay after image edits and legacy Grid media/links |
+| `components/AnimatedCollageImage.spec.tsx`     | Shared reveal timings/viewport configuration and initialized low-tier static rendering                                                                               |
+| `sanity/featuredProjectsSection.test.ts`       | Required main heading, shared curated selection rules in both modes and content-source preview                                                                       |
+| `featuredProjectQueries.test.ts`               | Latest/curated project results, locale projection, selection order, limits and unresolved/missing references                                                         |
+| `components/PortfolioRevealConsumers.spec.tsx` | Featured Projects latest/curated consumers in both modes and the existing Portfolio page/reveal integration                                                          |
+
+For a focused run without reading local environment files, use the same isolation settings as above:
+
+```bash
+node --input-type=module -e "process.env.SKIP_TEST_DOTENV='true'; const { startVitest } = await import('vitest/node'); const ctx = await startVitest('test', ['tests/unit/sanity/mediaGallerySection.test.ts', 'tests/unit/mediaGalleryQueries.test.ts', 'tests/unit/components/MediaGallerySection.spec.tsx', 'tests/unit/components/AnimatedCollageImage.spec.tsx', 'tests/unit/sanity/featuredProjectsSection.test.ts', 'tests/unit/featuredProjectQueries.test.ts', 'tests/unit/components/PortfolioRevealConsumers.spec.tsx'], { run: true, maxWorkers: 2 }, { envFile: false }); if (ctx) await ctx.close();"
+```
+
+Query tests evaluate the real GROQ against an in-memory dataset using the installed `groq-js` dependency; they do not query a live Sanity dataset. Component tests mock hooks, Motion/Next Image or services as appropriate. Keep mock/import paths aligned with `components/collage/`, `components/grid/` and `types/presentation.types.ts`; do not expose private components just to test them.
+
+### Gallery Browser Verification
+
+The committed component tests validate markup/classes and contracts, not browser-computed geometry or a full-app transition. Record any offline browser-fixture checks separately from committed automated coverage and actual application E2E.
+
+When application access is permitted, check widths 320/375/768/1024/1280/1920px and verify:
+
+- Production and Wedding Grid retain existing image/video/project behavior; data without a variant remains Grid.
+- Wedding Collage below `lg` hides the large left image and places optional eyebrow → small image → H2 → optional body → optional CTA → landscape in order. Long text and missing optional fields do not cause horizontal overflow.
+- At `lg` (1024px) and above, the collage panel occupies 60% of the container and aligns right. Below `lg` it fills the container. The standard container is at most 1280px on the default spacing scale; the backdrop ends at the midpoint of the lower **frame**, including its padding.
+- Default, empty and missing background values add no panel color. Muted/Contrast use theme tokens, Contrast text remains legible, and frame/placeholder backgrounds remain independent.
+- Photo crops respect the Sanity editor's settings, collage images have no links, and the CTA uses the configured destination safely.
+- Reveals use the shared stagger timing; scrolling out and back does not replay a mounted wrapper. Text-only changes preserve wrappers, while image-data/locale changes remount them. Initialized devices that disallow heavy motion display static content.
+
+Stable selectors include `wedding-gallery-panel`, `wedding-gallery-landscape-backdrop`, `wedding-gallery-image` and `gallery-item-image`/`gallery-item-video`/`gallery-item-project`. The static Collage fallback intentionally has no `wedding-gallery-image` motion-wrapper test ID; assert its image or placeholder content instead.
+
+For offline geometry checks, use fixture markup with the project's CSS and block all network requests. If Motion and Next Image are mocked, report that limitation: such a fixture does not verify real image loading, motion playback, live Studio publishing or full-app E2E. Do not introduce a separate test application or root configuration just to perform these checks.
+
 ## Playwright Browser and API Checks
 
 Install the browsers when setting up a machine:
