@@ -48,7 +48,7 @@ async function resolveSection(
       { _key: 'gallery', _type: 'mediaGallerySection', ...section },
     ],
   };
-  const params = { lang, mode, slug: 'home', featuredProjectLimit: 3 };
+  const params = { lang, mode, slug: 'home' };
   const query = parse(pageBySlugQuery, { params });
   const result = (await (
     await evaluate(query, { dataset: [page, ...extraDocuments], params })

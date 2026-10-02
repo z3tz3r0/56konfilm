@@ -13,11 +13,6 @@ const MODE_TO_THEME: Record<SiteMode, 'dark' | 'light'> = {
   wedding: 'light',
 };
 
-const FEATURED_PROJECT_LIMITS: Record<SiteMode, number> = {
-  production: 6,
-  wedding: 3,
-};
-
 // Types
 type Locale = (typeof SUPPORTED_LOCALES)[number];
 type SiteMode = (typeof SUPPORTED_SITE_MODES)[number];
@@ -30,6 +25,5 @@ export {
   DEFAULT_LOCALE,
   DEFAULT_MODE,
   MODE_TO_THEME,
-  FEATURED_PROJECT_LIMITS,
 };
 export type { Locale, SiteMode };

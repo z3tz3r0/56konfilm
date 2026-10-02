@@ -1,22 +1,12 @@
 import { defineField, defineType } from 'sanity';
-import {
-  FEATURED_PROJECT_LIMITS,
-  type SiteMode,
-} from '@shared/config/preferences';
 import { ctaType } from '../objects/cta';
 import { localizedBlockType } from '../objects/localized';
 
-function validateProjectSelection(
-  value: unknown,
-  sourceType: unknown,
-  siteMode: unknown,
-  fieldMode: SiteMode
-) {
-  if (siteMode !== fieldMode || sourceType !== 'curated') return true;
+function validateProjectSelection(value: unknown, sourceType: unknown) {
+  if (sourceType !== 'curated') return true;
   if (!Array.isArray(value) || value.length === 0)
     return 'Please select at least one project.';
-  if (value.length > FEATURED_PROJECT_LIMITS[fieldMode])
-    return `You can select a maximum of ${FEATURED_PROJECT_LIMITS[fieldMode]} projects.`;
+  if (value.length > 6) return 'You can select a maximum of 6 projects.';
 
   const refs = value
     .map((item) => (item as { _ref?: string })._ref)
@@ -59,7 +49,7 @@ export const featuredProjectsSectionType = defineType({
       options: {
         list: [
           {
-            title: 'Auto (ระบบดึงผลงานล่าสุดอัตโนมัติ โดยเรียงตามวันเวลา)',
+            title: 'Auto (ระบบดึง 6 ผลงานล่าสุดอัตโนมัติ โดยเรียงตามวันเวลา)',
             value: 'latest',
           },
           {
@@ -75,10 +65,10 @@ export const featuredProjectsSectionType = defineType({
     defineField({
       name: 'selectedProjects',
       title: 'Selected Projects',
-      description: `เลือกผลงานที่ต้องการแสดงได้สูงสุด ${FEATURED_PROJECT_LIMITS.production} รายการ และลากเพื่อจัดลำดับ`,
+      description:
+        'เลือกผลงานที่ต้องการแสดงได้สูงสุด 6 รายการ และลากเพื่อจัดลำดับ',
       type: 'array',
-      hidden: ({ document, parent }) =>
-        document?.siteMode !== 'production' || parent?.sourceType !== 'curated',
+      hidden: ({ parent }) => parent?.sourceType !== 'curated',
       of: [
         {
           type: 'reference',
@@ -88,36 +78,7 @@ export const featuredProjectsSectionType = defineType({
       validation: (Rule) =>
         Rule.custom((value, context) => {
           const parent = context.parent as { sourceType?: string } | undefined;
-          return validateProjectSelection(
-            value,
-            parent?.sourceType,
-            context.document?.siteMode,
-            'production'
-          );
-        }),
-    }),
-    defineField({
-      name: 'weddingSelectedProjects',
-      title: 'Selected Projects',
-      description: `เลือกผลงานที่ต้องการแสดงได้สูงสุด ${FEATURED_PROJECT_LIMITS.wedding} รายการ และลากเพื่อจัดลำดับ`,
-      type: 'array',
-      hidden: ({ document, parent }) =>
-        document?.siteMode !== 'wedding' || parent?.sourceType !== 'curated',
-      of: [
-        {
-          type: 'reference',
-          to: [{ type: 'project' }],
-        },
-      ],
-      validation: (Rule) =>
-        Rule.custom((value, context) => {
-          const parent = context.parent as { sourceType?: string } | undefined;
-          return validateProjectSelection(
-            value,
-            parent?.sourceType,
-            context.document?.siteMode,
-            'wedding'
-          );
+          return validateProjectSelection(value, parent?.sourceType);
         }),
     }),
     defineField({

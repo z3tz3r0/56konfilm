@@ -300,11 +300,8 @@ const FEATURED_PROJECT_SECTION = groq`
   },
   sourceType,
   "selectedProjects": (
-    select(
-      $mode == "wedding" => coalesce(weddingSelectedProjects, selectedProjects, []),
-      coalesce(selectedProjects, [])
-    )[]->{ _id, ${PROJECT_PROJECTION} }
-  )[defined(_id)][0...$featuredProjectLimit],
+    coalesce(selectedProjects, [])[]->{ _id, ${PROJECT_PROJECTION} }
+  )[defined(_id)][0...6],
   ctaButton { ${CTA_PROJECTION} },
   background
 `;

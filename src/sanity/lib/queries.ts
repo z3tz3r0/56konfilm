@@ -168,7 +168,7 @@ export const projectBySlugQuery = groq`
 `;
 
 export const latestProjectsQuery = groq`
-  *[_type == "project" && $mode in siteMode] | order(coalesce(projectDate, _createdAt) desc)[0...$featuredProjectLimit] {
+  *[_type == "project" && $mode in siteMode] | order(coalesce(projectDate, _createdAt) desc)[0...6] {
     _id,
     _type,
     ${PROJECT_PROJECTION}
