@@ -40,7 +40,7 @@ const CtaBannerSection = dynamic(
   () => import('./cta-banner-section/components/CtaBannerSection')
 );
 const MediaGallerySection = dynamic(
-  () => import('./media-gallery-section/components/MediaGallerySection')
+  () => import('./media-gallery-section/MediaGallerySection')
 );
 const PackagesSection = dynamic(
   () => import('./package-section/components/PackagesSection')

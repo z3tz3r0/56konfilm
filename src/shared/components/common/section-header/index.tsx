@@ -12,6 +12,10 @@ interface SectionHeaderProps {
   isEmphasizedVariant?: boolean;
 }
 
+/**
+ * Renders the available heading content with configured alignment and styles.
+ * Returns null for empty content and supports an emphasized heading variant.
+ */
 export default function SectionHeader({
   heading,
   className,
@@ -30,7 +34,7 @@ export default function SectionHeader({
   return (
     <header className={cn('flex flex-col gap-3', alignClass, className)}>
       {heading?.eyebrow ? (
-        <span className='text-primary text-sm font-semibold tracking-[0.2em] uppercase'>
+        <span className='text-text-primary dark:text-primary text-sm font-semibold tracking-[0.2em] uppercase'>
           {heading.eyebrow}
         </span>
       ) : null}

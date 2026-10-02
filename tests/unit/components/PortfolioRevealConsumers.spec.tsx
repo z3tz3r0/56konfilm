@@ -16,11 +16,23 @@ vi.mock('@shared/components', async () => ({
   PortfolioGrid: (
     await import('@shared/components/common/portfolio-grid/PortfolioGrid')
   ).default,
-  SectionShell: ({ children }: { children: ReactNode }) => (
-    <section>{children}</section>
-  ),
-  SectionHeader: ({ heading }: { heading: { heading: string } }) => (
-    <h2>{heading.heading}</h2>
+  SectionShell: ({
+    children,
+    background,
+  }: {
+    children: ReactNode;
+    background?: string;
+  }) => <section data-background={background ?? 'none'}>{children}</section>,
+  SectionHeader: ({
+    heading,
+  }: {
+    heading: { eyebrow?: string; heading: string; body?: string };
+  }) => (
+    <header>
+      {heading.eyebrow && <span>{heading.eyebrow}</span>}
+      <h2>{heading.heading}</h2>
+      {heading.body && <p>{heading.body}</p>}
+    </header>
   ),
   CtaButton: ({ ctaButton }: { ctaButton: { label: string } }) => (
     <button>{ctaButton.label}</button>
@@ -140,7 +152,6 @@ describe('Portfolio reveal consumers', () => {
         }
       }
     );
-
     it(`keeps a page-level scroll target around the ${mode} introduction and project list`, () => {
       const { container } = render(
         <PortfolioPage
@@ -185,6 +196,58 @@ describe('Portfolio reveal consumers', () => {
       expect(service.getLatestProjects).not.toHaveBeenCalled();
     });
   }
+
+  it('keeps the Production background on SectionShell', async () => {
+    const { container } = render(
+      await FeaturedProjectSection({
+        block: {
+          _type: 'featuredProjectsSection',
+          sourceType: 'latest',
+          heading: { heading: 'Featured work' },
+          background: 'muted',
+        },
+        lang: 'en',
+        mode: 'production',
+      })
+    );
+
+    expect(container.querySelector('section')).toHaveAttribute(
+      'data-background',
+      'muted'
+    );
+  });
+
+  it.each([
+    { fetchedProjects: null, expectedImages: 0 },
+    { fetchedProjects: [projects[0]], expectedImages: 1 },
+  ])(
+    'keeps the Wedding heading and optional CTA with $expectedImages latest projects',
+    async ({ fetchedProjects, expectedImages }) => {
+      service.getLatestProjects.mockResolvedValue(fetchedProjects);
+
+      render(
+        await FeaturedProjectSection({
+          block: {
+            _type: 'featuredProjectsSection',
+            sourceType: 'latest',
+            heading: { heading: 'Love Stories' },
+          },
+          lang: 'en',
+          mode: 'wedding',
+        })
+      );
+
+      expect(
+        screen.getByRole('heading', { name: 'Love Stories' })
+      ).toBeVisible();
+      expect(screen.queryAllByRole('link')).toHaveLength(expectedImages);
+      expect(screen.queryByRole('button')).toBeNull();
+      expect(service.getLatestProjects).toHaveBeenCalledWith({
+        lang: 'en',
+        mode: 'wedding',
+      });
+    }
+  );
 
   it('preserves the empty latest-project fallback', async () => {
     service.getLatestProjects.mockResolvedValue(null);

@@ -1,5 +1,6 @@
 import { groq } from 'next-sanity';
 import {
+  COLLAGE_MEDIA_PROJECTION,
   CTA_PROJECTION,
   IMAGE_PROJECTION,
   LOCALIZED,
@@ -88,6 +89,12 @@ const MEDIA_GALLERY_SECTION = groq`
   _type == "mediaGallerySection" => {
     background,
     sourceType,
+    "sectionVariant": coalesce(sectionVariant, 'grid'),
+    collageImages{
+      smallPortrait{ ${COLLAGE_MEDIA_PROJECTION} },
+      landscape{ ${COLLAGE_MEDIA_PROJECTION} },
+      largePortrait{ ${COLLAGE_MEDIA_PROJECTION} }
+    },
     heading{
       "eyebrow": ${LOCALIZED('eyebrow')},
       "heading": ${LOCALIZED('heading')},
@@ -95,21 +102,23 @@ const MEDIA_GALLERY_SECTION = groq`
       align
     },
     "items": select(
-      sourceType == "projects" => selectedProjects[]->{
-        "_key": _id,
-        "mediaType": "image",
-        "media": {
-          "image": coverImage{
-            asset,
-            crop,
-            hotspot
+      sourceType == "projects" => (
+        coalesce(selectedProjects, [])[]->{
+          "_key": _id,
+          "mediaType": "image",
+          "media": {
+            "image": coverImage{
+              asset,
+              crop,
+              hotspot
+            },
+            "alt": ${LOCALIZED('title')}
           },
-          "alt": ${LOCALIZED('title')}
-        },
-        "label": ${LOCALIZED('title')},
-        "projectSlug": slug.current,
-        "projectOverview": ${LOCALIZED('overview')}
-      }[0...6],
+          "label": ${LOCALIZED('title')},
+          "projectSlug": slug.current,
+          "projectOverview": ${LOCALIZED('overview')}
+        }
+      )[defined(_key)][0...6],
       items[]{
         _key,
         mediaType,
@@ -292,7 +301,9 @@ const FEATURED_PROJECT_SECTION = groq`
     align
   },
   sourceType,
-  selectedProjects[]->{ ${PROJECT_PROJECTION} },
+  "selectedProjects": (
+    coalesce(selectedProjects, [])[]->{ _id, ${PROJECT_PROJECTION} }
+  )[defined(_id)][0...6],
   ctaButton { ${CTA_PROJECTION} },
   background
 `;

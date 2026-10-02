@@ -2,6 +2,25 @@ import { defineField, defineType } from 'sanity';
 import { ctaType } from '../objects/cta';
 import { localizedBlockType } from '../objects/localized';
 
+/**
+ * Validates curated selections for one to six entries and duplicate references.
+ * Returns true for valid or non-curated selections, otherwise an error message.
+ */
+function validateProjectSelection(value: unknown, sourceType: unknown) {
+  if (sourceType !== 'curated') return true;
+  if (!Array.isArray(value) || value.length === 0)
+    return 'Please select at least one project.';
+  if (value.length > 6) return 'You can select a maximum of 6 projects.';
+
+  const refs = value
+    .map((item) => (item as { _ref?: string })._ref)
+    .filter(Boolean);
+  if (new Set(refs).size !== refs.length)
+    return 'Duplicate projects are not allowed. Please remove duplicates.';
+
+  return true;
+}
+
 export const featuredProjectsSectionType = defineType({
   name: 'featuredProjectsSection',
   title: 'Featured Projects Section',
@@ -12,6 +31,19 @@ export const featuredProjectsSectionType = defineType({
       title: 'Heading',
       description: 'หัวข้อของ Section (เช่น Our Previous Work)',
       type: localizedBlockType.name,
+      validation: (Rule) =>
+        Rule.required().custom((value) => {
+          if (!value || typeof value !== 'object') return true;
+          const headings = (value as { heading?: Array<{ value?: string }> })
+            .heading;
+          return Array.isArray(headings) &&
+            headings.length > 0 &&
+            headings.every(
+              (item) => typeof item.value === 'string' && item.value.trim()
+            )
+            ? true
+            : 'Please enter the main heading.';
+        }),
     }),
     defineField({
       name: 'sourceType',
@@ -38,9 +70,8 @@ export const featuredProjectsSectionType = defineType({
       name: 'selectedProjects',
       title: 'Selected Projects',
       description:
-        'เลือกโปรเจกต์ที่ต้องการแสดง (ลากเพื่อจัดลำดับได้) สูงสุด 6 รายการ',
+        'เลือกผลงานที่ต้องการแสดงได้สูงสุด 6 รายการ และลากเพื่อจัดลำดับ',
       type: 'array',
-      // ✨ ซ่อนฟิลด์นี้ถ้า Editor เลือกดึงแบบ Auto
       hidden: ({ parent }) => parent?.sourceType !== 'curated',
       of: [
         {
@@ -51,21 +82,7 @@ export const featuredProjectsSectionType = defineType({
       validation: (Rule) =>
         Rule.custom((value, context) => {
           const parent = context.parent as { sourceType?: string } | undefined;
-          const sourceType = parent?.sourceType;
-          if (sourceType !== 'curated') return true;
-          if (!value || value.length === 0)
-            return 'Please select at least one project.';
-          if (value.length > 6)
-            return 'You can select a maximum of 6 projects.';
-
-          const refs = (value as Array<{ _ref: string }>)
-            .map((item) => item._ref)
-            .filter(Boolean);
-          const uniqueRefs = new Set(refs);
-          if (uniqueRefs.size !== refs.length) {
-            return 'Duplicate projects are not allowed. Please remove duplicates.';
-          }
-          return true;
+          return validateProjectSelection(value, parent?.sourceType);
         }),
     }),
     defineField({
@@ -93,19 +110,16 @@ export const featuredProjectsSectionType = defineType({
     select: {
       title: 'heading.heading.0.value',
       sourceType: 'sourceType',
-      selectedProjects: 'selectedProjects',
     },
-    prepare({ title, sourceType, selectedProjects }) {
-      // คำนวณเพื่อแสดงจำนวนบน Preview ให้อ่านง่าย
-      const count =
-        sourceType === 'curated' && Array.isArray(selectedProjects)
-          ? selectedProjects.length
-          : 6;
+    /**
+     * Builds the Studio preview title and content-source label.
+     */
+    prepare({ title, sourceType }) {
       const sourceLabel = sourceType === 'latest' ? 'Auto (Latest)' : 'Curated';
 
       return {
         title: title ? `${title} section` : 'Featured Projects Section',
-        subtitle: `${sourceLabel} · ${count} project${count === 1 ? '' : 's'}`,
+        subtitle: sourceLabel,
       };
     },
   },
