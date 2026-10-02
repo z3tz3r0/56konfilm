@@ -1,2 +1,2 @@
-export { default as GalleryCard } from './GalleryCard';
-export { default as VideoItem } from './VideoItem';
+export { default as GalleryCard } from './grid/GalleryCard';
+export { default as VideoItem } from './grid/VideoItem';

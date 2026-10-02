@@ -53,7 +53,7 @@ vi.mock('@shared/components', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@shared/components')>()),
   VideoLoop: () => null,
 }));
-vi.mock('@features/media-gallery-section/components/VideoItem', () => ({
+vi.mock('@features/media-gallery-section/components/grid/VideoItem', () => ({
   default: ({ src }: { src: string }) => (
     <video data-testid='fixture-video' src={src} />
   ),
@@ -184,7 +184,10 @@ describe('MediaGallerySection presentations', () => {
   );
 
   it.each([
-    { background: 'default', colorClass: 'bg-background-secondary' },
+    { background: undefined, colorClass: '' },
+    { background: '', colorClass: '' },
+    { background: 'default', colorClass: '' },
+    { background: 'unknown', colorClass: '' },
     { background: 'muted', colorClass: 'bg-secondary' },
     { background: 'contrast', colorClass: 'bg-primary' },
   ])(
@@ -201,15 +204,28 @@ describe('MediaGallerySection presentations', () => {
       expect(shell).toHaveAttribute('data-sanity-type', 'mediaGallerySection');
       expect(shell).not.toHaveClass('bg-secondary', 'bg-primary');
       expect(shell.firstElementChild).toHaveClass('max-w-7xl', 'mx-auto');
-      expect(screen.getByTestId('wedding-gallery-panel')).toHaveClass(
-        'w-full',
-        'lg:w-3/5',
-        'lg:ml-auto',
-        colorClass
-      );
-      expect(
-        screen.getByTestId('wedding-gallery-landscape-backdrop')
-      ).toHaveClass('h-1/2', colorClass);
+      const panel = screen.getByTestId('wedding-gallery-panel');
+      const backdrop = screen.getByTestId('wedding-gallery-landscape-backdrop');
+      expect(panel).toHaveClass('w-full', 'lg:w-3/5', 'lg:ml-auto');
+      expect(backdrop).toHaveClass('h-1/2');
+      for (const surface of [panel, backdrop]) {
+        expect(surface).not.toHaveClass('bg-background-secondary');
+        if (colorClass) {
+          expect(surface).toHaveClass(colorClass);
+        } else {
+          expect(surface.className).not.toMatch(/\bbg-/);
+        }
+      }
+      if (background === 'contrast') {
+        expect(panel).toHaveClass('text-primary-foreground');
+        expect(backdrop).toHaveClass('text-primary-foreground');
+        expect(
+          screen.getByRole('heading', { name: 'Love Stories' }).parentElement
+        ).toHaveClass(
+          '[--text-primary:var(--primary-foreground)]',
+          '[--text-secondary:var(--primary-foreground)]'
+        );
+      }
     }
   );
 
@@ -232,6 +248,9 @@ describe('MediaGallerySection presentations', () => {
       expect(
         screen.getAllByText(lang === 'th' ? 'ไม่มีรูปภาพ' : 'No Image')
       ).toHaveLength(2);
+      expect(
+        screen.getAllByText(lang === 'th' ? 'ไม่มีรูปภาพ' : 'No Image')[0]
+      ).toHaveClass('bg-background-secondary');
       expect(screen.getByAltText('Landscape')).toBeVisible();
       expect(screen.queryByAltText('Grid photo')).toBeNull();
       expect(screen.queryByRole('link')).toBeNull();

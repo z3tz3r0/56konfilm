@@ -10,7 +10,7 @@ import { urlFor } from '@/sanity/lib/image';
 import { cn } from '@shared/utils/styling/tailwindUtils';
 import { getBGVariants } from '@shared/utils/styling/styleVariants';
 import AnimatedCollageImage from './AnimatedCollageImage';
-import type { MediaGalleryPresentationProps } from './presentation.types';
+import type { MediaGalleryPresentationProps } from '../../types/presentation.types';
 
 const imageSlots = [
   {
@@ -91,10 +91,7 @@ export default function Collage({
   ]);
   const hasBody = Boolean(block.heading?.body);
   const isContrast = block.background === 'contrast';
-  const panelBackgroundClass = cn(
-    'bg-background-secondary',
-    getBGVariants(block.background)
-  );
+  const panelBackgroundClass = getBGVariants(block.background);
   const desktopAlign = {
     start: 'lg:text-left',
     center: 'lg:text-center',

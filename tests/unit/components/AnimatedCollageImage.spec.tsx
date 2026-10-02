@@ -1,7 +1,7 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import AnimatedCollageImage from '@features/media-gallery-section/components/AnimatedCollageImage';
+import AnimatedCollageImage from '@features/media-gallery-section/components/collage/AnimatedCollageImage';
 
 const mocks = vi.hoisted(() => ({
   useDeviceTier: vi.fn(),

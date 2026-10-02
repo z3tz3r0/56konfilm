@@ -12,8 +12,9 @@ import {
 } from '@shared/lib/motion';
 import { cn } from '@shared/utils/styling/tailwindUtils';
 import { urlFor } from '@/sanity/lib/image';
-import { GalleryCard, VideoItem } from '.';
-import type { MediaGalleryPresentationProps } from './presentation.types';
+import GalleryCard from './GalleryCard';
+import VideoItem from './VideoItem';
+import type { MediaGalleryPresentationProps } from '../../types/presentation.types';
 
 export default function Grid({
   block,

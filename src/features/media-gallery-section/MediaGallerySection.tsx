@@ -1,7 +1,7 @@
 import { ModeGuard } from '@shared/components';
-import Collage from './components/Collage';
-import Grid from './components/Grid';
-import type { MediaGalleryPresentationProps } from './components/presentation.types';
+import Collage from './components/collage/Collage';
+import Grid from './components/grid/Grid';
+import type { MediaGalleryPresentationProps } from './types/presentation.types';
 
 function Wedding(props: MediaGalleryPresentationProps) {
   return props.block.sectionVariant === 'collage' ? (
