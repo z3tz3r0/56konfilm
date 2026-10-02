@@ -102,21 +102,23 @@ const MEDIA_GALLERY_SECTION = groq`
       align
     },
     "items": select(
-      sourceType == "projects" => selectedProjects[]->{
-        "_key": _id,
-        "mediaType": "image",
-        "media": {
-          "image": coverImage{
-            asset,
-            crop,
-            hotspot
+      sourceType == "projects" => (
+        coalesce(selectedProjects, [])[]->{
+          "_key": _id,
+          "mediaType": "image",
+          "media": {
+            "image": coverImage{
+              asset,
+              crop,
+              hotspot
+            },
+            "alt": ${LOCALIZED('title')}
           },
-          "alt": ${LOCALIZED('title')}
-        },
-        "label": ${LOCALIZED('title')},
-        "projectSlug": slug.current,
-        "projectOverview": ${LOCALIZED('overview')}
-      }[0...6],
+          "label": ${LOCALIZED('title')},
+          "projectSlug": slug.current,
+          "projectOverview": ${LOCALIZED('overview')}
+        }
+      )[defined(_key)][0...6],
       items[]{
         _key,
         mediaType,

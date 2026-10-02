@@ -57,6 +57,112 @@ async function resolveSection(
 }
 
 describe('Media Gallery query integration', () => {
+  for (const mode of ['production', 'wedding'] as const) {
+    it.each(['en', 'th'] as const)(
+      `resolves up to six legacy ${mode} projects in selection order with %s content`,
+      async (lang) => {
+        const crop = { top: 0.1, bottom: 0, left: 0.2, right: 0 };
+        const hotspot = { x: 0.6, y: 0.4, width: 0.3, height: 0.4 };
+        const projects = Array.from({ length: 8 }, (_, index) => ({
+          _id: `project-${index}`,
+          _type: 'project',
+          slug: { current: `project-${index}` },
+          coverImage: {
+            asset: { _ref: `image-${index}` },
+            crop,
+            hotspot,
+          },
+          title: [
+            { _key: 'en', value: `Project ${index}` },
+            { _key: 'th', value: `ผลงาน ${index}` },
+          ],
+          overview: [
+            { _key: 'en', value: `Overview ${index}` },
+            { _key: 'th', value: `รายละเอียด ${index}` },
+          ],
+        }));
+        const order = [7, 2, 5, 0, 6, 1, 4, 3];
+        const result = await resolveSection(
+          {
+            sourceType: 'projects',
+            selectedProjects: [
+              { _ref: 'missing-first' },
+              ...order
+                .slice(0, 2)
+                .map((index) => ({ _ref: `project-${index}` })),
+              { _ref: 'missing-middle' },
+              ...order.slice(2).map((index) => ({ _ref: `project-${index}` })),
+            ],
+          },
+          lang,
+          mode,
+          projects
+        );
+
+        expect(result.sectionVariant).toBe('grid');
+        expect(result.items).toEqual(
+          order.slice(0, 6).map((index) => ({
+            _key: `project-${index}`,
+            mediaType: 'image',
+            media: {
+              image: { asset: { _ref: `image-${index}` }, crop, hotspot },
+              alt: `${lang === 'th' ? 'ผลงาน' : 'Project'} ${index}`,
+            },
+            label: `${lang === 'th' ? 'ผลงาน' : 'Project'} ${index}`,
+            projectSlug: `project-${index}`,
+            projectOverview: `${lang === 'th' ? 'รายละเอียด' : 'Overview'} ${index}`,
+          }))
+        );
+      }
+    );
+
+    it.each([
+      { name: 'absent selection', selectedProjects: undefined },
+      { name: 'null selection', selectedProjects: null },
+      { name: 'empty selection', selectedProjects: [] },
+      {
+        name: 'unresolved references',
+        selectedProjects: [{ _ref: 'missing' }],
+      },
+    ])(
+      `returns an empty legacy ${mode} gallery for $name`,
+      async ({ selectedProjects }) => {
+        const result = await resolveSection(
+          { sourceType: 'projects', selectedProjects },
+          'en',
+          mode
+        );
+        expect(result.items).toEqual([]);
+      }
+    );
+  }
+
+  it('keeps a short legacy selection without requiring a cover image', async () => {
+    const result = await resolveSection(
+      { sourceType: 'projects', selectedProjects: [{ _ref: 'no-cover' }] },
+      'th',
+      'wedding',
+      [
+        {
+          _id: 'no-cover',
+          _type: 'project',
+          title: [{ _key: 'en', value: 'English fallback' }],
+          slug: { current: 'no-cover' },
+        },
+      ]
+    );
+    expect(result.items).toEqual([
+      {
+        _key: 'no-cover',
+        mediaType: 'image',
+        media: { image: null, alt: 'English fallback' },
+        label: 'English fallback',
+        projectSlug: 'no-cover',
+        projectOverview: null,
+      },
+    ]);
+  });
+
   it.each(['production', 'wedding'])(
     'defaults legacy %s galleries to Grid and preserves image/video items',
     async (mode) => {
