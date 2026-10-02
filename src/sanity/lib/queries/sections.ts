@@ -1,5 +1,6 @@
 import { groq } from 'next-sanity';
 import {
+  COLLAGE_MEDIA_PROJECTION,
   CTA_PROJECTION,
   IMAGE_PROJECTION,
   LOCALIZED,
@@ -88,6 +89,12 @@ const MEDIA_GALLERY_SECTION = groq`
   _type == "mediaGallerySection" => {
     background,
     sourceType,
+    "sectionVariant": coalesce(sectionVariant, 'grid'),
+    collageImages{
+      smallPortrait{ ${COLLAGE_MEDIA_PROJECTION} },
+      landscape{ ${COLLAGE_MEDIA_PROJECTION} },
+      largePortrait{ ${COLLAGE_MEDIA_PROJECTION} }
+    },
     heading{
       "eyebrow": ${LOCALIZED('eyebrow')},
       "heading": ${LOCALIZED('heading')},

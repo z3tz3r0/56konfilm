@@ -26,6 +26,14 @@ const IMAGE_PROJECTION = groq`
 `;
 
 /**
+ * Media block projection for collage image slots
+ */
+const COLLAGE_MEDIA_PROJECTION = groq`
+  image { asset, crop, hotspot },
+  "alt": ${LOCALIZED('alt')}
+`;
+
+/**
  * Common CTA projection
  */
 const CTA_PROJECTION = groq`
@@ -89,6 +97,7 @@ const PROJECT_PROJECTION = groq`
 export {
   LOCALIZED,
   IMAGE_PROJECTION,
+  COLLAGE_MEDIA_PROJECTION,
   CTA_PROJECTION,
   MEDIA_ASSET_PROJECTION,
   SEO_PROJECTION,
