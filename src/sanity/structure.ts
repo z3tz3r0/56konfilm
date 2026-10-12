@@ -16,10 +16,30 @@ export const structure: StructureResolver = (S) =>
           item.getId() !== 'settings' &&
           item.getId() !== 'cmsCredentials' &&
           item.getId() !== 'page' &&
-          item.getId() !== 'projectTag'
+          item.getId() !== 'projectTag' &&
+          item.getId() !== 'package' &&
+          item.getId() !== 'packageService'
       ),
       S.divider(),
 
+      ...(['package', 'packageService'] as const).map((type) => {
+        const title = type === 'package' ? 'Packages' : 'Package Services';
+        const template =
+          type === 'package'
+            ? 'production-packages'
+            : 'production-package-services';
+        return S.listItem()
+          .title(`Production — ${title}`)
+          .id(template)
+          .child(
+            S.documentList()
+              .title(`Production — ${title}`)
+              .filter('_type == $type && siteMode == "production"')
+              .params({ type })
+              .apiVersion(env.NEXT_PUBLIC_SANITY_API_VERSION)
+              .initialValueTemplates([S.initialValueTemplateItem(template)])
+          );
+      }),
       S.listItem()
         .title('Production — Project Tags')
         .id('production-project-tags')
@@ -46,6 +66,22 @@ export const structure: StructureResolver = (S) =>
         ),
       S.divider(),
 
+      ...(['package', 'packageService'] as const).map((type) => {
+        const title = type === 'package' ? 'Packages' : 'Package Services';
+        const template =
+          type === 'package' ? 'wedding-packages' : 'wedding-package-services';
+        return S.listItem()
+          .title(`Wedding — ${title}`)
+          .id(template)
+          .child(
+            S.documentList()
+              .title(`Wedding — ${title}`)
+              .filter('_type == $type && siteMode == "wedding"')
+              .params({ type })
+              .apiVersion(env.NEXT_PUBLIC_SANITY_API_VERSION)
+              .initialValueTemplates([S.initialValueTemplateItem(template)])
+          );
+      }),
       S.listItem()
         .title('Wedding — Project Tags')
         .id('wedding-project-tags')

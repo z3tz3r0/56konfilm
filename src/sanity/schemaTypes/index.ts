@@ -45,6 +45,9 @@ import { settingsType } from './settings';
 import { featuredProjectsSectionType } from './sections/featuredProjectsSection';
 import { projectTagType } from './projectTag';
 import { richTextType } from './richText';
+import { packageType } from './package';
+import { packageServiceType } from './packageService';
+import { packageComparisonSectionType } from './sections/packageComparisonSection';
 
 export const schemaType = {
   types: [
@@ -53,6 +56,8 @@ export const schemaType = {
     cmsCredentialsType, // Hidden from Studio UI but registered for API access
     projectType,
     projectTagType,
+    packageType,
+    packageServiceType,
     pageType,
     heroSectionType,
     twoColumnSectionType,
@@ -60,6 +65,7 @@ export const schemaType = {
     timelineSectionType,
     mediaGallerySectionType,
     packagesSectionType,
+    packageComparisonSectionType,
     philosophySectionType,
     testimonialSectionType,
     logoGridSectionType,
@@ -98,6 +104,20 @@ export const schemaType = {
   // บังคับค่า siteMode โดยตัดสินใจจาก document ที่ user กดสร้าง
   // จาก document 'Production Pages' หรือ 'Wedding Pages'?
   templates: (prev: Template[]) => {
+    const packageTemplates = ['production', 'wedding'].flatMap((mode) => [
+      {
+        id: `${mode}-packages`,
+        title: `${mode === 'production' ? 'Production' : 'Wedding'} Packages`,
+        schemaType: 'package',
+        value: { siteMode: mode },
+      },
+      {
+        id: `${mode}-package-services`,
+        title: `${mode === 'production' ? 'Production' : 'Wedding'} Package Services`,
+        schemaType: 'packageService',
+        value: { siteMode: mode },
+      },
+    ]);
     const defaultTemplate = [
       {
         id: 'production-project-tags',
@@ -132,6 +152,13 @@ export const schemaType = {
         },
       },
     ];
-    return [...prev, ...defaultTemplate];
+    return [
+      ...prev.filter(
+        (template) =>
+          !['package', 'packageService'].includes(template.schemaType)
+      ),
+      ...defaultTemplate,
+      ...packageTemplates,
+    ];
   },
 };

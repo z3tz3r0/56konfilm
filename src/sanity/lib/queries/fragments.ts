@@ -46,6 +46,45 @@ const CTA_PROJECTION = groq`
   externalUrl
 `;
 
+const PACKAGE_SERVICE_PROJECTION = groq`
+  _id,
+  "title": ${LOCALIZED('title')},
+  "information": ${LOCALIZED('information')}
+`;
+
+// Filter before projection so missing or cross-mode references cannot shift IDs.
+const PACKAGE_SERVICE_REFERENCES = groq`
+  coalesce(services, [])[
+    @->_type == "packageService" && @->siteMode == $mode
+  ]
+`;
+
+const PACKAGE_PROJECTION = groq`
+  _id,
+  "title": ${LOCALIZED('title')},
+  price,
+  currency,
+  "badgeLabel": ${LOCALIZED('badgeLabel')},
+  cta { ${CTA_PROJECTION} },
+  "serviceIds": ${PACKAGE_SERVICE_REFERENCES}[]->_id
+`;
+
+const PACKAGE_RECAP_PROJECTION = groq`
+  "title": ${LOCALIZED('title')},
+  price,
+  currency,
+  cta { ${CTA_PROJECTION} },
+  "features": select(
+    count(coalesce(recapHighlights, [])) > 0 => (
+      recapHighlights[
+        _ref in ^.services[]._ref &&
+        @->_type == "packageService" && @->siteMode == $mode
+      ][]->{ "title": ${LOCALIZED('title')} }
+    )[].title,
+    (${PACKAGE_SERVICE_REFERENCES}[]->{ "title": ${LOCALIZED('title')} })[0...3][].title
+  )
+`;
+
 /**
  * Media Asset projection (used in Hero)
  */
@@ -99,6 +138,9 @@ export {
   IMAGE_PROJECTION,
   COLLAGE_MEDIA_PROJECTION,
   CTA_PROJECTION,
+  PACKAGE_SERVICE_PROJECTION,
+  PACKAGE_PROJECTION,
+  PACKAGE_RECAP_PROJECTION,
   MEDIA_ASSET_PROJECTION,
   SEO_PROJECTION,
   PROJECT_PROJECTION,

@@ -6,7 +6,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 interface WebhookPayload {
   _type: string;
-  page: {
+  page?: {
     mode?: SiteMode;
     slug?: string;
   };
@@ -38,10 +38,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Invalid payload' }, { status: 400 });
     }
 
-    const {
-      _type,
-      page: { mode, slug },
-    } = body;
+    const { _type } = body;
+    const { mode, slug } = body.page ?? {};
     const cacheLife = { expire: 0 }; // บอก next js ให้ไม่ติด cache ให้ update content ทันที
 
     // --- กรณีที่เป็น Page (ทั้ง Production และ Wedding) ---
@@ -56,6 +54,11 @@ export async function POST(req: NextRequest) {
       revalidateTag(CACHE_TAGS.ALL_PROJECTS, cacheLife);
       console.info(
         `[Revalidation] ✅ Projects: ${mode} | Slug: ${slug} | Path: /${mode}/${slug}`
+      );
+    } else if (_type === 'package' || _type === 'packageService') {
+      revalidateTag(CACHE_TAGS.ALL_PAGES, cacheLife);
+      console.info(
+        `[Revalidation] ✅ Package Catalog: ${_type} | All Pages Updated`
       );
     }
 
