@@ -16,3 +16,4 @@ export { default as SectionErrorBoundary } from './SectionErrorBoundary';
 export { default as SectionHeader } from './section-header';
 export { default as SectionShell } from './SectionShell';
 export { default as VideoLoop } from './VideoLoop';
+export { default as AppTooltip } from './AppTooltip';

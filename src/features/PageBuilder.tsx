@@ -9,6 +9,7 @@ import { MediaGallerySectionBlock } from './media-gallery-section/types';
 import { LogoGridSectionBlock } from './logo-grid-section/types';
 import { CtaBannerSectionBlock } from './cta-banner-section/types';
 import { PackagesSectionBlock } from './package-section/types';
+import type { PackageComparisonSectionBlock } from './package-comparison-section';
 import { TestimonialSectionBlock } from './testimonial-section/types';
 import { PhilosophySectionBlock } from './philosophy-section/types';
 import { StatsCounterSectionBlock } from './stats-counter-section/types';
@@ -44,6 +45,9 @@ const MediaGallerySection = dynamic(
 );
 const PackagesSection = dynamic(
   () => import('./package-section/components/PackagesSection')
+);
+const PackageComparisonSection = dynamic(
+  () => import('./package-comparison-section/PackageComparisonSection')
 );
 const TestimonialSection = dynamic(
   () => import('./testimonial-section/components/TestimonialSection')
@@ -87,6 +91,7 @@ type PageContentBlock =
   | LogoGridSectionBlock
   | CtaBannerSectionBlock
   | PackagesSectionBlock
+  | PackageComparisonSectionBlock
   | TestimonialSectionBlock
   | PhilosophySectionBlock
   | StatsCounterSectionBlock
@@ -207,6 +212,15 @@ function renderBlock(
     case 'packagesSection':
       return (
         <PackagesSection key={key} block={block} lang={lang} mode={mode} />
+      );
+    case 'packageComparisonSection':
+      return (
+        <PackageComparisonSection
+          key={key}
+          block={block}
+          lang={lang}
+          mode={mode}
+        />
       );
     case 'testimonialSection':
       return <TestimonialSection key={key} block={block} />;

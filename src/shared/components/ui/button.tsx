@@ -20,6 +20,8 @@ const buttonVariants = cva(
         ghost: 'hover:not-disabled:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:not-disabled:underline',
         input: '',
+        information:
+          'text-text-secondary hover:not-disabled:text-text-primary rounded-full',
       },
       size: {
         default: 'px-6 py-3 has-[>svg]:px-3',
@@ -27,6 +29,7 @@ const buttonVariants = cva(
         md: 'text-sm px-4 py-1.5 has-[>svg]:px-3',
         lg: 'text-sm px-6 py-2 has-[>svg]:px-4',
         icon: 'size-12',
+        'icon-sm': 'size-6',
       },
     },
     compoundVariants: [
