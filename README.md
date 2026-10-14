@@ -100,7 +100,7 @@ To enable on-demand revalidation, configure a webhook in the Sanity project mana
 
 1. **URL**: `https://[YOUR_PRODUCTION_URL]/api/revalidate`
 2. **Trigger on**: Create, Update, Delete
-3. **Filter**: `_type in ["page", "project", "settings", "package", "packageService"] && !(_id in path("drafts.**"))`
+3. **Filter**: `_type in ["page", "project", "settings", "package", "packageService", "packageGroup"] && !(_id in path("drafts.**")) && !(_id in path("versions.**"))`
 4. **Projection**:
 
 ```
@@ -115,7 +115,7 @@ To enable on-demand revalidation, configure a webhook in the Sanity project mana
 
 5. **Secret**: Set a secure secret and add it as `SANITY_REVALIDATE_SECRET` in your environment variables.
 
-Package and package service changes invalidate all page caches so sections using shared catalog data refresh in both site modes. Existing webhooks must include these two document types in their filter; they do not require a page slug.
+Package, package service, and package group changes invalidate all page caches so sections using shared catalog data refresh in both site modes. Existing webhooks must include these three document types in their filter; they do not require a page slug. Keep draft and release-version events excluded: dragging Group rows saves a draft, and the website uses that order only after publishing the Group. Publishing a Service updates availability and automatically adds eligible rows without republishing the Group.
 
 ## 🗺️ Roadmap
 

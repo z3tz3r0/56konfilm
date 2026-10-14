@@ -47,6 +47,7 @@ import { projectTagType } from './projectTag';
 import { richTextType } from './richText';
 import { packageType } from './package';
 import { packageServiceType } from './packageService';
+import { packageGroupType } from './packageGroup';
 import { packageComparisonSectionType } from './sections/packageComparisonSection';
 
 export const schemaType = {
@@ -58,6 +59,7 @@ export const schemaType = {
     projectTagType,
     packageType,
     packageServiceType,
+    packageGroupType,
     pageType,
     heroSectionType,
     twoColumnSectionType,
@@ -117,6 +119,12 @@ export const schemaType = {
         schemaType: 'packageService',
         value: { siteMode: mode },
       },
+      {
+        id: `${mode}-package-groups`,
+        title: `${mode === 'production' ? 'Production' : 'Wedding'} Package Groups`,
+        schemaType: 'packageGroup',
+        value: { siteMode: mode },
+      },
     ]);
     const defaultTemplate = [
       {
@@ -155,7 +163,9 @@ export const schemaType = {
     return [
       ...prev.filter(
         (template) =>
-          !['package', 'packageService'].includes(template.schemaType)
+          !['package', 'packageService', 'packageGroup'].includes(
+            template.schemaType
+          )
       ),
       ...defaultTemplate,
       ...packageTemplates,

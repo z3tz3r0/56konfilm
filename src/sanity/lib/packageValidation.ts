@@ -1,10 +1,15 @@
 import type { ReferenceOptions, ValidationContext } from 'sanity';
+import {
+  catalogReferenceId,
+  PACKAGE_CATALOG_API_VERSION,
+} from './packageCatalog';
 
 /** Restricts catalog selection to the mode of the containing document. */
 export const packageReferenceOptions: ReferenceOptions = {
   disableNew: true,
   filter: ({ document }) => ({
-    filter: 'siteMode == $mode',
+    filter:
+      'siteMode == $mode && !(_id in path("drafts.**")) && !(_id in path("versions.**"))',
     params: { mode: document.siteMode ?? '' },
   }),
 };
@@ -19,23 +24,16 @@ export function hasLocalizedPackageText(value: unknown): boolean {
   );
 }
 
-function referenceId(value: unknown): string | undefined {
-  if (!value || typeof value !== 'object' || !('_ref' in value)) return;
-  return typeof value._ref === 'string' && value._ref.trim()
-    ? value._ref.replace(/^drafts\./, '')
-    : undefined;
-}
-
 /** Checks IDs, uniqueness, and mode in Studio; callers can skip inactive fields. */
 export async function validatePackageReferences(
   value: unknown,
   context: ValidationContext,
-  targetType: 'package' | 'packageService'
+  targetType: 'package' | 'packageService' | 'packageGroup'
 ): Promise<true | string> {
   if (!Array.isArray(value) || value.length === 0)
     return 'กรุณาเลือกอย่างน้อยหนึ่งรายการ';
 
-  const ids = value.map(referenceId);
+  const ids = value.map(catalogReferenceId);
   if (ids.some((id) => !id)) return 'กรุณาเลือกรายการให้ครบ';
   if (new Set(ids).size !== ids.length)
     return 'มีรายการซ้ำ กรุณาลบรายการที่ซ้ำออก';
@@ -46,38 +44,53 @@ export async function validatePackageReferences(
 
   try {
     const documents = await context
-      .getClient({ apiVersion: '2025-08-12' })
-      .withConfig({ useCdn: false, perspective: 'raw' })
-      .fetch<Array<{ _id: string; _type: string; siteMode?: string }>>(
-        '*[_id in $ids]{_id, _type, siteMode}',
-        { ids: ids.flatMap((id) => [id, `drafts.${id}`]) }
-      );
+      .getClient({ apiVersion: PACKAGE_CATALOG_API_VERSION })
+      .withConfig({ useCdn: false, perspective: 'published' })
+      .fetch<
+        Array<{ _id: string; _type: string; siteMode?: string }>
+      >('*[_id in $ids && !(_id in path("drafts.**")) && !(_id in path("versions.**"))]{_id, _type, siteMode}', { ids });
 
     return ids.every((id) => {
-      const target =
-        documents.find((item) => item._id === `drafts.${id}`) ??
-        documents.find((item) => item._id === id);
+      const target = documents.find((item) => item._id === id);
       return target?._type === targetType && target.siteMode === mode;
     })
       ? true
-      : 'กรุณาเลือกรายการที่ยังมีอยู่และเป็นของโหมดเดียวกัน';
+      : 'กรุณาเลือกรายการที่เผยแพร่แล้วและเป็นของโหมดเดียวกัน';
   } catch (error) {
     console.error('[Package Catalog Validation]', error);
     return 'ยังตรวจสอบรายการไม่ได้ กรุณาลองอีกครั้งก่อนเผยแพร่';
   }
 }
 
-/** Recap selections must be unique members of the package's service list. */
-export function validateRecapHighlights(value: unknown, services: unknown) {
+/** Highlights remain editor-selected, but membership belongs to Services. */
+export async function validateRecapHighlights(
+  value: unknown,
+  context: ValidationContext
+) {
   if (value === undefined || (Array.isArray(value) && value.length === 0))
     return true;
   if (!Array.isArray(value)) return 'กรุณาเลือกรายการเด่นจากแพ็กเกจ';
-  const ids = value.map(referenceId);
-  const includedIds = new Set(
-    Array.isArray(services) ? services.map(referenceId) : []
+  const referenceValidation = await validatePackageReferences(
+    value,
+    context,
+    'packageService'
   );
-  return ids.every((id) => id && includedIds.has(id)) &&
-    new Set(ids).size === ids.length
-    ? true
-    : 'รายการเด่นต้องไม่ซ้ำ และต้องอยู่ในสิ่งที่รวมในแพ็กเกจนี้';
+  if (referenceValidation !== true) return referenceValidation;
+  const packageId = context.document?._id?.replace(/^drafts\./, '');
+  if (!packageId) return 'กรุณาสร้างแพ็กเกจก่อนเลือกรายการเด่น';
+  try {
+    const ids = value.map(catalogReferenceId);
+    const includedIds = await context
+      .getClient({ apiVersion: PACKAGE_CATALOG_API_VERSION })
+      .withConfig({ useCdn: false, perspective: 'published' })
+      .fetch<
+        string[]
+      >('*[_type == "packageService" && siteMode == $mode && _id in $ids && $packageId in packages[]._ref]._id', { ids, mode: context.document?.siteMode, packageId });
+    return ids.every((id) => id && includedIds.includes(id))
+      ? true
+      : 'รายการเด่นต้องอยู่ในบริการที่เลือกแพ็กเกจนี้';
+  } catch (error) {
+    console.error('[Package Highlights Validation]', error);
+    return 'ยังตรวจสอบรายการเด่นไม่ได้ กรุณาลองอีกครั้งก่อนเผยแพร่';
+  }
 }

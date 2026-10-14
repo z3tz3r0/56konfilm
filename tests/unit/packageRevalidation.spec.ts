@@ -27,7 +27,7 @@ beforeEach(() => {
 afterEach(() => vi.restoreAllMocks());
 
 describe('Package catalog cache invalidation', () => {
-  it.each(['package', 'packageService'])(
+  it.each(['package', 'packageService', 'packageGroup'])(
     'refreshes all page caches for %s without a page slug',
     async (_type) => {
       parseBody.mockResolvedValue({ body: { _type }, isValidSignature: true });

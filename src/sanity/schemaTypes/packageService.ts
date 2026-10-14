@@ -1,5 +1,10 @@
 import { defineField, defineType } from 'sanity';
-import { hasLocalizedPackageText } from '../lib/packageValidation';
+import {
+  hasLocalizedPackageText,
+  packageReferenceOptions,
+  validatePackageReferences,
+} from '../lib/packageValidation';
+import { PackageServicePackagesInput } from '../components/inputs/PackageServicePackagesInput';
 import { localizedStringField, localizedTextField } from './objects/localized';
 
 export const packageServiceType = defineType({
@@ -36,7 +41,30 @@ export const packageServiceType = defineType({
       description:
         'แสดงเมื่อผู้ชมชี้หรือกดไอคอนข้อมูลข้างชื่อรายการ หากไม่ต้องการแสดงไอคอน ให้เว้นว่าง',
     }),
+    defineField({
+      name: 'packages',
+      title: 'แพ็กเกจที่รวมบริการนี้',
+      type: 'array',
+      description:
+        'ติ๊กแพ็กเกจที่มีบริการนี้ เลือกอย่างน้อยหนึ่งแพ็กเกจก่อนเผยแพร่ ตัวเลือกแสดงเฉพาะแพ็กเกจที่เผยแพร่แล้วของโหมดนี้',
+      components: { input: PackageServicePackagesInput },
+      of: [
+        {
+          type: 'reference',
+          to: [{ type: 'package' }],
+          options: packageReferenceOptions,
+        },
+      ],
+      validation: (Rule) =>
+        Rule.required()
+          .min(1)
+          .unique()
+          .custom((value, context) =>
+            validatePackageReferences(value, context, 'package')
+          ),
+    }),
   ],
+  // Membership is authored here only; groups and cards derive it by ID.
   preview: {
     select: { title: 'title.0.value', mode: 'siteMode' },
     prepare({ title, mode }) {

@@ -55,7 +55,11 @@ export async function POST(req: NextRequest) {
       console.info(
         `[Revalidation] ✅ Projects: ${mode} | Slug: ${slug} | Path: /${mode}/${slug}`
       );
-    } else if (_type === 'package' || _type === 'packageService') {
+    } else if (
+      _type === 'package' ||
+      _type === 'packageService' ||
+      _type === 'packageGroup'
+    ) {
       revalidateTag(CACHE_TAGS.ALL_PAGES, cacheLife);
       console.info(
         `[Revalidation] ✅ Package Catalog: ${_type} | All Pages Updated`

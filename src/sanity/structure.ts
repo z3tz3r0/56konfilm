@@ -18,28 +18,38 @@ export const structure: StructureResolver = (S) =>
           item.getId() !== 'page' &&
           item.getId() !== 'projectTag' &&
           item.getId() !== 'package' &&
-          item.getId() !== 'packageService'
+          item.getId() !== 'packageService' &&
+          item.getId() !== 'packageGroup'
       ),
       S.divider(),
 
-      ...(['package', 'packageService'] as const).map((type) => {
-        const title = type === 'package' ? 'Packages' : 'Package Services';
-        const template =
-          type === 'package'
-            ? 'production-packages'
-            : 'production-package-services';
-        return S.listItem()
-          .title(`Production — ${title}`)
-          .id(template)
-          .child(
-            S.documentList()
-              .title(`Production — ${title}`)
-              .filter('_type == $type && siteMode == "production"')
-              .params({ type })
-              .apiVersion(env.NEXT_PUBLIC_SANITY_API_VERSION)
-              .initialValueTemplates([S.initialValueTemplateItem(template)])
-          );
-      }),
+      ...(['package', 'packageService', 'packageGroup'] as const).map(
+        (type) => {
+          const title =
+            type === 'package'
+              ? 'Packages'
+              : type === 'packageService'
+                ? 'Package Services'
+                : 'Package Groups';
+          const template =
+            type === 'package'
+              ? 'production-packages'
+              : type === 'packageService'
+                ? 'production-package-services'
+                : 'production-package-groups';
+          return S.listItem()
+            .title(`Production — ${title}`)
+            .id(template)
+            .child(
+              S.documentList()
+                .title(`Production — ${title}`)
+                .filter('_type == $type && siteMode == "production"')
+                .params({ type })
+                .apiVersion(env.NEXT_PUBLIC_SANITY_API_VERSION)
+                .initialValueTemplates([S.initialValueTemplateItem(template)])
+            );
+        }
+      ),
       S.listItem()
         .title('Production — Project Tags')
         .id('production-project-tags')
@@ -66,22 +76,33 @@ export const structure: StructureResolver = (S) =>
         ),
       S.divider(),
 
-      ...(['package', 'packageService'] as const).map((type) => {
-        const title = type === 'package' ? 'Packages' : 'Package Services';
-        const template =
-          type === 'package' ? 'wedding-packages' : 'wedding-package-services';
-        return S.listItem()
-          .title(`Wedding — ${title}`)
-          .id(template)
-          .child(
-            S.documentList()
-              .title(`Wedding — ${title}`)
-              .filter('_type == $type && siteMode == "wedding"')
-              .params({ type })
-              .apiVersion(env.NEXT_PUBLIC_SANITY_API_VERSION)
-              .initialValueTemplates([S.initialValueTemplateItem(template)])
-          );
-      }),
+      ...(['package', 'packageService', 'packageGroup'] as const).map(
+        (type) => {
+          const title =
+            type === 'package'
+              ? 'Packages'
+              : type === 'packageService'
+                ? 'Package Services'
+                : 'Package Groups';
+          const template =
+            type === 'package'
+              ? 'wedding-packages'
+              : type === 'packageService'
+                ? 'wedding-package-services'
+                : 'wedding-package-groups';
+          return S.listItem()
+            .title(`Wedding — ${title}`)
+            .id(template)
+            .child(
+              S.documentList()
+                .title(`Wedding — ${title}`)
+                .filter('_type == $type && siteMode == "wedding"')
+                .params({ type })
+                .apiVersion(env.NEXT_PUBLIC_SANITY_API_VERSION)
+                .initialValueTemplates([S.initialValueTemplateItem(template)])
+            );
+        }
+      ),
       S.listItem()
         .title('Wedding — Project Tags')
         .id('wedding-project-tags')

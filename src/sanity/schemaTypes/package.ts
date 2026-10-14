@@ -1,8 +1,6 @@
 import { defineField, defineType } from 'sanity';
 import {
   hasLocalizedPackageText,
-  packageReferenceOptions,
-  validatePackageReferences,
   validateRecapHighlights,
 } from '../lib/packageValidation';
 import { ctaType } from './objects/cta';
@@ -72,31 +70,10 @@ export const packageType = defineType({
         'เช่น Most Popular แสดงเหนือชื่อแพ็กเกจในตารางเปรียบเทียบ เว้นว่างได้',
     }),
     defineField({
-      name: 'services',
-      title: 'สิ่งที่รวมในแพ็กเกจ',
-      description:
-        'เลือกทุกรายการที่แพ็กเกจนี้มี ตารางจะแสดงเครื่องหมายถูกให้ และลากเพื่อเรียงลำดับได้ สร้างรายการใหม่ได้จากเมนูสิ่งที่รวมในแพ็กเกจของโหมดนี้',
-      type: 'array',
-      of: [
-        {
-          type: 'reference',
-          to: [{ type: 'packageService' }],
-          options: packageReferenceOptions,
-        },
-      ],
-      validation: (Rule) =>
-        Rule.required()
-          .min(1)
-          .unique()
-          .custom((value, context) =>
-            validatePackageReferences(value, context, 'packageService')
-          ),
-    }),
-    defineField({
       name: 'recapHighlights',
       title: 'รายการเด่นสำหรับการ์ดแพ็กเกจ',
       description:
-        'เลือกจากสิ่งที่รวมในแพ็กเกจนี้ และลากเพื่อเรียงลำดับ หากเว้นว่าง การ์ดจะแสดงสามรายการแรกของแพ็กเกจ หรือเท่าที่มี',
+        'เลือกบริการที่เชื่อมกับแพ็กเกจนี้ และลากเพื่อเรียงรายการบนการ์ด หากเว้นว่าง จะใช้สามบริการแรกตามวันที่สร้าง หรือเท่าที่มี',
       type: 'array',
       of: [
         {
@@ -105,12 +82,11 @@ export const packageType = defineType({
           options: {
             disableNew: true,
             filter: ({ document }) => ({
-              filter: 'siteMode == $mode && _id in $ids',
+              filter:
+                'siteMode == $mode && $packageId in packages[]._ref && !(_id in path("drafts.**")) && !(_id in path("versions.**"))',
               params: {
                 mode: document.siteMode ?? '',
-                ids: Array.isArray(document.services)
-                  ? document.services.map((item) => item._ref)
-                  : [],
+                packageId: document._id.replace(/^drafts\./, ''),
               },
             }),
           },
@@ -118,7 +94,7 @@ export const packageType = defineType({
       ],
       validation: (Rule) =>
         Rule.unique().custom((value, context) =>
-          validateRecapHighlights(value, context.document?.services)
+          validateRecapHighlights(value, context)
         ),
     }),
   ],

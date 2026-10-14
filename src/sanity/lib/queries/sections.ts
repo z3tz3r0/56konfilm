@@ -1,5 +1,10 @@
 import { groq } from 'next-sanity';
 import {
+  CATALOG_SERVICE_ORDER,
+  PACKAGE_REFERENCE_FILTER,
+  PUBLISHED_CATALOG_FILTER,
+} from './packageCatalog';
+import {
   COLLAGE_MEDIA_PROJECTION,
   CTA_PROJECTION,
   IMAGE_PROJECTION,
@@ -182,7 +187,8 @@ const PACKAGES_SECTION = groq`
     },
     "packages": select(
       sourceType == "catalog" => coalesce(selectedPackages, [])[
-        packageRef->_type == "package" && packageRef->siteMode == $mode
+        packageRef->_type == "package" && packageRef->siteMode == $mode &&
+        !(packageRef->_id in path("drafts.**")) && !(packageRef->_id in path("versions.**"))
       ]{
         _key,
         featured,
@@ -209,15 +215,26 @@ const PACKAGE_COMPARISON_SECTION = groq`
       "body": ${LOCALIZED('body')},
       align
     },
-    "groups": coalesce(groups, [])[]{
+    "groups": coalesce(groups, [])[
+      @->_type == "packageGroup" && @->siteMode == $mode &&
+      !(@->_id in path("drafts.**")) && !(@->_id in path("versions.**"))
+    ]{
       _key,
-      "label": ${LOCALIZED('label')},
-      "packages": coalesce(packages, [])[
-        @->_type == "package" && @->siteMode == $mode
-      ][]->{ ${PACKAGE_PROJECTION} },
-      "rows": coalesce(rows, [])[
-        @->_type == "packageService" && @->siteMode == $mode
-      ][]->{ ${PACKAGE_SERVICE_PROJECTION} }
+      ...@->{
+        "label": ${LOCALIZED('label')},
+        "packages": coalesce(packages, [])[${PACKAGE_REFERENCE_FILTER}][]->{ ${PACKAGE_PROJECTION} },
+        "rows": (
+          (coalesce(serviceOrder, [])[]->)[
+            _type == "packageService" && siteMode == $mode && ${PUBLISHED_CATALOG_FILTER} &&
+            count(packages[_ref in ^.^.packages[${PACKAGE_REFERENCE_FILTER}][]._ref]) > 0
+          ]{ ${PACKAGE_SERVICE_PROJECTION} }
+          +
+          (*[_type == "packageService" && siteMode == $mode && ${PUBLISHED_CATALOG_FILTER} &&
+            !(_id in coalesce(^.serviceOrder, [])[]._ref) &&
+            count(packages[_ref in ^.^.packages[${PACKAGE_REFERENCE_FILTER}][]._ref]) > 0
+          ] | order(${CATALOG_SERVICE_ORDER}))[]{ ${PACKAGE_SERVICE_PROJECTION} }
+        )
+      }
     }
   }
 `;

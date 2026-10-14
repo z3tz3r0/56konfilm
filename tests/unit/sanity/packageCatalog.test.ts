@@ -8,6 +8,7 @@ import {
 } from '@/sanity/lib/packageValidation';
 import { packageType } from '@/sanity/schemaTypes/package';
 import { packageServiceType } from '@/sanity/schemaTypes/packageService';
+import { packageGroupType } from '@/sanity/schemaTypes/packageGroup';
 import { packageComparisonSectionType } from '@/sanity/schemaTypes/sections/packageComparisonSection';
 import { packagesSectionType } from '@/sanity/schemaTypes/sections/packagesSection';
 import { pageType } from '@/sanity/schemaTypes/page';
@@ -59,7 +60,7 @@ function context(mode: string, documents: unknown[] = []) {
   return {
     fetch,
     value: {
-      document: { siteMode: mode },
+      document: { siteMode: mode, _id: 'drafts.package' },
       getClient: vi.fn().mockReturnValue(client),
     } as unknown as ValidationContext,
   };
@@ -99,7 +100,7 @@ describe('Package catalog validation', () => {
         context: unknown
       ) => unknown;
       expect(filter({ document: { siteMode: mode } })).toEqual({
-        filter: 'siteMode == $mode',
+        filter: expect.stringContaining('siteMode == $mode'),
         params: { mode },
       });
       expect(packageReferenceOptions.disableNew).toBe(true);
@@ -113,7 +114,10 @@ describe('Package catalog validation', () => {
           'packageService'
         )
       ).toBe(true);
-      expect(fetch.mock.calls[0][1]).toEqual({ ids: ['item', 'drafts.item'] });
+      expect(fetch.mock.calls[0][1]).toEqual({ ids: ['item'] });
+      expect(
+        value.getClient({ apiVersion: '2025-08-12' }).withConfig
+      ).toHaveBeenCalledWith({ useCdn: false, perspective: 'published' });
     }
   );
 
@@ -137,6 +141,14 @@ describe('Package catalog validation', () => {
       [],
       [{ _id: 'target', _type: 'project', siteMode: 'wedding' }],
       [{ _id: 'target', _type: 'package', siteMode: 'production' }],
+      [{ _id: 'drafts.target', _type: 'package', siteMode: 'wedding' }],
+      [
+        {
+          _id: 'versions.release.target',
+          _type: 'package',
+          siteMode: 'wedding',
+        },
+      ],
     ]) {
       expect(
         await validatePackageReferences(
@@ -157,7 +169,7 @@ describe('Package catalog validation', () => {
     expect(unknownMode.fetch).not.toHaveBeenCalled();
   });
 
-  it('checks the target draft during editing and blocks publication when validation is unavailable', async () => {
+  it('uses the published target even when a draft exists and blocks publication when validation is unavailable', async () => {
     const target = context('wedding', [
       { _id: 'target', _type: 'package', siteMode: 'wedding' },
       { _id: 'drafts.target', _type: 'package', siteMode: 'production' },
@@ -168,7 +180,7 @@ describe('Package catalog validation', () => {
         target.value,
         'package'
       )
-    ).toEqual(expect.any(String));
+    ).toBe(true);
     vi.spyOn(console, 'error').mockImplementation(() => {});
     target.fetch.mockRejectedValueOnce(new Error('fixture outage'));
     expect(
@@ -184,21 +196,59 @@ describe('Package catalog validation', () => {
     );
   });
 
-  it('allows automatic highlights or an ordered unique subset of services', () => {
-    const services = [reference('one'), reference('two')];
-    expect(validateRecapHighlights(undefined, services)).toBe(true);
-    expect(validateRecapHighlights([], services)).toBe(true);
+  it('allows automatic highlights or an ordered unique subset of included published services', async () => {
+    const target = context(
+      'wedding',
+      ['one', 'two'].map((_id) => ({
+        _id,
+        _type: 'packageService',
+        siteMode: 'wedding',
+      }))
+    );
+    expect(await validateRecapHighlights(undefined, target.value)).toBe(true);
+    expect(await validateRecapHighlights([], target.value)).toBe(true);
+    target.fetch
+      .mockResolvedValueOnce(
+        ['one', 'two'].map((_id) => ({
+          _id,
+          _type: 'packageService',
+          siteMode: 'wedding',
+        }))
+      )
+      .mockResolvedValueOnce(['one', 'two']);
     expect(
-      validateRecapHighlights([reference('two'), reference('one')], services)
+      await validateRecapHighlights(
+        [reference('two'), reference('one')],
+        target.value
+      )
     ).toBe(true);
+    expect(target.fetch).toHaveBeenLastCalledWith(
+      expect.stringContaining('$packageId in packages[]._ref'),
+      { ids: ['two', 'one'], mode: 'wedding', packageId: 'package' }
+    );
     for (const highlights of [
       [reference('three')],
       [reference('one'), reference('one')],
       [{}],
     ])
-      expect(validateRecapHighlights(highlights, services)).toEqual(
+      expect(await validateRecapHighlights(highlights, target.value)).toEqual(
         expect.any(String)
       );
+    target.fetch
+      .mockResolvedValueOnce(
+        ['one', 'two'].map((_id) => ({
+          _id,
+          _type: 'packageService',
+          siteMode: 'wedding',
+        }))
+      )
+      .mockResolvedValueOnce(['one']);
+    expect(
+      await validateRecapHighlights([reference('two')], target.value)
+    ).toEqual(expect.any(String));
+    expect(await validateRecapHighlights('bad', target.value)).toEqual(
+      expect.any(String)
+    );
   });
 
   it('validates only the selected recap source and counts that source in preview', async () => {
@@ -247,17 +297,34 @@ describe('Package catalog validation', () => {
     ).toMatchObject({ subtitle: 'Catalog · 1 package' });
   });
 
-  it('requires package and row selections without imposing a three-package limit', () => {
+  it('requires Service membership and Group packages while allowing automatic rows and independent Packages', async () => {
     const groups = field(packageComparisonSectionType, 'groups');
-    const groupFields = groups.of?.[0];
-    expect(groupFields).toBeDefined();
-    for (const name of ['packages', 'rows']) {
-      const { rule } = validator(field({ fields: groupFields!.fields }, name));
+    expect(groups.of?.[0].type).toBe('reference');
+    for (const schema of [packageServiceType, packageGroupType]) {
+      const { rule, validate } = validator(field(schema, 'packages'));
       expect(rule.required).toHaveBeenCalledOnce();
       expect(rule.min).toHaveBeenCalledWith(1);
       expect(rule.unique).toHaveBeenCalledOnce();
+      expect(await validate([], context('wedding').value)).toEqual(
+        expect.any(String)
+      );
     }
-    for (const schema of [packageType, packageServiceType]) {
+    expect(
+      (packageType.fields as Field[]).some((item) => item.name === 'services')
+    ).toBe(false);
+    expect(
+      (packageGroupType.fields as Field[]).some(
+        (item) => item.name === 'rows' || item.name === 'sortOrder'
+      )
+    ).toBe(false);
+    expect(field(packageGroupType, 'serviceOrder').validation).toBeDefined();
+    expect(
+      await validator(field(packageType, 'recapHighlights')).validate(
+        undefined,
+        context('wedding').value
+      )
+    ).toBe(true);
+    for (const schema of [packageType, packageServiceType, packageGroupType]) {
       const mode = field(schema, 'siteMode');
       expect(mode.hidden).toBe(true);
       expect(mode.readOnly).toBe(true);
@@ -271,6 +338,7 @@ describe('Package catalog validation', () => {
 
 describe('Package catalog Studio registration', () => {
   it('registers comparison in both page builders and provides only mode-specific catalog templates', () => {
+    expect(schemaType.types).toContain(packageGroupType);
     for (const name of ['commercialSections', 'weddingSections'])
       expect(field(pageType, name).of?.map((item) => item.type)).toContain(
         'packageComparisonSection'
@@ -283,10 +351,16 @@ describe('Package catalog Studio registration', () => {
         schemaType: 'packageService',
         value: {},
       },
+      {
+        id: 'packageGroup',
+        title: 'Default',
+        schemaType: 'packageGroup',
+        value: {},
+      },
     ]);
     expect(
-      templates.some(
-        (item) => item.id === 'package' || item.id === 'packageService'
+      templates.some((item) =>
+        ['package', 'packageService', 'packageGroup'].includes(item.id)
       )
     ).toBe(false);
     for (const mode of ['production', 'wedding']) {
@@ -297,6 +371,12 @@ describe('Package catalog Studio registration', () => {
         templates.find((item) => item.id === `${mode}-package-services`)
       ).toMatchObject({
         schemaType: 'packageService',
+        value: { siteMode: mode },
+      });
+      expect(
+        templates.find((item) => item.id === `${mode}-package-groups`)
+      ).toMatchObject({
+        schemaType: 'packageGroup',
         value: { siteMode: mode },
       });
     }
@@ -363,6 +443,7 @@ describe('Package catalog Studio registration', () => {
           'projectTag',
           'package',
           'packageService',
+          'packageGroup',
           'project',
         ].map((id) => new Node().id(id)),
     };
@@ -372,10 +453,12 @@ describe('Package catalog Studio registration', () => {
     expect(entries.map((entry) => entry.getId())).not.toContain(
       'packageService'
     );
+    expect(entries.map((entry) => entry.getId())).not.toContain('packageGroup');
     for (const mode of ['production', 'wedding']) {
       for (const [suffix, type] of [
         ['packages', 'package'],
         ['package-services', 'packageService'],
+        ['package-groups', 'packageGroup'],
       ]) {
         const entry = entries.find(
           (item) => item.getId() === `${mode}-${suffix}`

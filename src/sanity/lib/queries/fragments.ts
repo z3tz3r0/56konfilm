@@ -1,4 +1,8 @@
 import { groq } from 'next-sanity';
+import {
+  CATALOG_SERVICE_ORDER,
+  PUBLISHED_CATALOG_FILTER,
+} from './packageCatalog';
 
 /**
  * Reusable localization fragment
@@ -52,11 +56,11 @@ const PACKAGE_SERVICE_PROJECTION = groq`
   "information": ${LOCALIZED('information')}
 `;
 
-// Filter before projection so missing or cross-mode references cannot shift IDs.
-const PACKAGE_SERVICE_REFERENCES = groq`
-  coalesce(services, [])[
-    @->_type == "packageService" && @->siteMode == $mode
-  ]
+// Availability is authored on Services, independently of any Group's row order.
+const PACKAGE_SERVICES = groq`
+  *[_type == "packageService" && siteMode == $mode &&
+    ${PUBLISHED_CATALOG_FILTER} && ^._id in packages[]._ref
+  ] | order(${CATALOG_SERVICE_ORDER})
 `;
 
 const PACKAGE_PROJECTION = groq`
@@ -66,7 +70,7 @@ const PACKAGE_PROJECTION = groq`
   currency,
   "badgeLabel": ${LOCALIZED('badgeLabel')},
   cta { ${CTA_PROJECTION} },
-  "serviceIds": ${PACKAGE_SERVICE_REFERENCES}[]->_id
+  "serviceIds": (${PACKAGE_SERVICES})[]._id
 `;
 
 const PACKAGE_RECAP_PROJECTION = groq`
@@ -77,11 +81,12 @@ const PACKAGE_RECAP_PROJECTION = groq`
   "features": select(
     count(coalesce(recapHighlights, [])) > 0 => (
       recapHighlights[
-        _ref in ^.services[]._ref &&
-        @->_type == "packageService" && @->siteMode == $mode
+        @->_type == "packageService" && @->siteMode == $mode &&
+        !(@->_id in path("drafts.**")) && !(@->_id in path("versions.**")) &&
+        ^._id in @->packages[]._ref
       ][]->{ "title": ${LOCALIZED('title')} }
     )[].title,
-    (${PACKAGE_SERVICE_REFERENCES}[]->{ "title": ${LOCALIZED('title')} })[0...3][].title
+    (${PACKAGE_SERVICES})[0...3]{ "title": ${LOCALIZED('title')} }.title
   )
 `;
 

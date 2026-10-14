@@ -1,6 +1,7 @@
 import { defineField, defineType } from 'sanity';
 import { localizedBlockType } from '../objects/localized';
 import { packageItemType } from '../objects/packageItem';
+import { PackageSourceTypeInput } from '../../components/inputs/PackageSourceTypeInput';
 import {
   packageReferenceOptions,
   validatePackageReferences,
@@ -23,17 +24,21 @@ export const packagesSectionType = defineType({
       description:
         'เลือกกรอกข้อมูลในการ์ดนี้ หรือใช้แพ็กเกจกลางที่แก้ไขร่วมกับตารางเปรียบเทียบได้',
       type: 'string',
+      components: { input: PackageSourceTypeInput },
       options: {
         list: [
-          { title: 'กรอกข้อมูลใน section นี้', value: 'inline' },
-          { title: 'เลือกจากแพ็กเกจกลาง', value: 'catalog' },
+          { title: 'กรอกข้อมูลเองสำหรับ Section นี้', value: 'manual' },
+          { title: 'เลือกจากแพ็กเกจของโหมดนี้', value: 'catalog' },
         ],
         layout: 'radio',
       },
-      initialValue: 'inline',
+      initialValue: 'manual',
       validation: (Rule) =>
         Rule.custom((value) =>
-          value === undefined || value === 'inline' || value === 'catalog'
+          value === undefined ||
+          value === 'inline' ||
+          value === 'manual' ||
+          value === 'catalog'
             ? true
             : 'กรุณาเลือกแหล่งข้อมูลแพ็กเกจ'
         ),
