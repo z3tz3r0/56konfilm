@@ -6,6 +6,12 @@ import {
 } from '../lib/packageValidation';
 import { PackageGroupServiceOrderInput } from '../components/inputs/PackageGroupServiceOrderInput';
 import { localizedStringField } from './objects/localized';
+import { sanitizeUrlSlug } from '../lib/slug';
+import {
+  isPackageGroupSlugUnique,
+  packageGroupSlugSource,
+  validatePackageGroupSlug,
+} from '../lib/packageGroupSlug';
 
 /** Reusable within one mode only; availability remains owned by Services. */
 export const packageGroupType = defineType({
@@ -35,6 +41,20 @@ export const packageGroupType = defineType({
         Rule.required().custom((value) =>
           hasLocalizedPackageText(value) ? true : 'กรุณากรอกชื่อกลุ่ม'
         ),
+    }),
+    defineField({
+      name: 'slug',
+      title: 'URL Slug',
+      description:
+        'ชื่อกลุ่มใน URL ที่ผู้ชมแชร์ เช่น budget-friendly ต้องกรอกก่อน Publish และไม่ซ้ำกับกลุ่มอื่นในโหมดนี้ การเปลี่ยน slug จะทำให้ URL เดิมเลือกกลุ่มนี้ไม่ได้',
+      type: 'slug',
+      options: {
+        source: packageGroupSlugSource,
+        maxLength: 96,
+        slugify: (input) => sanitizeUrlSlug(input).replace(/-+$/, ''),
+        isUnique: isPackageGroupSlugUnique,
+      },
+      validation: (Rule) => Rule.required().custom(validatePackageGroupSlug),
     }),
     defineField({
       name: 'packages',

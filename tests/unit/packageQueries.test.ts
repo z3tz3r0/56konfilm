@@ -73,6 +73,7 @@ interface ProjectedBlock {
   groups?: Array<{
     _key: string;
     label: string;
+    slug?: string | null;
     packages: ProjectedPackage[];
     rows: Array<{ _id: string; title: string; information: string | null }>;
   }>;
@@ -667,4 +668,72 @@ describe('Package catalog GROQ integration without external requests', () => {
       'service-4',
     ]);
   });
+
+  it.each(['production', 'wedding'])(
+    'projects published %s Group slugs without changing group identity or legacy visibility',
+    async (mode) => {
+      const published = {
+        ...group('budget', ['first'], ['service-3']),
+        siteMode: mode,
+        slug: { _type: 'slug', current: 'budget-friendly' },
+      };
+      const draft = {
+        ...published,
+        _id: 'drafts.budget',
+        slug: { _type: 'slug', current: 'new-budget' },
+      };
+      const legacy = { ...group('legacy', ['second'], []), siteMode: mode };
+      const block = {
+        _type: 'packageComparisonSection',
+        groups: [
+          { ...reference('budget'), _key: 'budget-placement' },
+          { ...reference('legacy'), _key: 'legacy-placement' },
+        ],
+      };
+      const documents = [
+        ...catalog(mode).documents,
+        published,
+        draft,
+        legacy,
+        {
+          ...published,
+          _id: 'versions.release.budget',
+          slug: { _type: 'slug', current: 'future-budget' },
+        },
+      ];
+      for (const lang of ['th', 'en']) {
+        const [before] = await project([block], documents, mode, lang);
+        expect(
+          before.groups?.map(({ _key, slug }) => ({ _key, slug }))
+        ).toEqual([
+          { _key: 'budget-placement', slug: 'budget-friendly' },
+          { _key: 'legacy-placement', slug: null },
+        ]);
+        expect(before.groups?.[0].rows.map((row) => row._id)).toEqual([
+          'service-3',
+          'service-1',
+          'service-2',
+          'service-4',
+        ]);
+        expect(before.groups?.[0].packages[0].serviceIds).toEqual([
+          'service-1',
+          'service-2',
+          'service-3',
+          'service-4',
+        ]);
+      }
+      const [after] = await project(
+        [block],
+        [
+          ...catalog(mode).documents,
+          { ...published, slug: draft.slug },
+          draft,
+          legacy,
+        ],
+        mode
+      );
+      expect(after.groups?.[0].slug).toBe('new-budget');
+      expect(after.groups?.[0]._key).toBe('budget-placement');
+    }
+  );
 });

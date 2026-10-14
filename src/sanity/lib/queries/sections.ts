@@ -222,6 +222,7 @@ const PACKAGE_COMPARISON_SECTION = groq`
       _key,
       ...@->{
         "label": ${LOCALIZED('label')},
+        "slug": slug.current,
         "packages": coalesce(packages, [])[${PACKAGE_REFERENCE_FILTER}][]->{ ${PACKAGE_PROJECTION} },
         "rows": (
           (coalesce(serviceOrder, [])[]->)[
