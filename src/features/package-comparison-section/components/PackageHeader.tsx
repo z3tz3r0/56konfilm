@@ -8,6 +8,7 @@ interface PackageHeaderProps {
   lang: Locale;
   mode: SiteMode;
   hasGroupBadge: boolean;
+  presentation?: boolean;
 }
 
 /** Renders CMS header content; the comparison table controls cell alignment. */
@@ -16,6 +17,7 @@ export default function PackageHeader({
   lang,
   mode,
   hasGroupBadge,
+  presentation = false,
 }: PackageHeaderProps) {
   const { _id, title, badgeLabel, price, currency, cta } = packageData;
   const formattedPrice =
@@ -31,17 +33,25 @@ export default function PackageHeader({
       )}
       data-testid='comparison-package-header'
       data-package-id={_id}
+      role={presentation ? 'group' : undefined}
+      aria-label={
+        presentation
+          ? title || (lang === 'th' ? 'แพ็กเกจ' : 'Package')
+          : undefined
+      }
     >
       {badgeLabel?.trim() ? (
         <Badge
           variant='secondary'
           size='lg'
           className='row-start-1 justify-self-center'
+          aria-hidden={presentation || undefined}
         >
           {badgeLabel}
         </Badge>
       ) : null}
       <div
+        aria-hidden={presentation || undefined}
         className={cn(
           'grid grid-rows-[1fr_auto] gap-2',
           hasGroupBadge ? 'row-start-2' : 'row-start-1'

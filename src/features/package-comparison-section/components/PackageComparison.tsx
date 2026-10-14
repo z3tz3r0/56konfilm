@@ -30,6 +30,7 @@ import PackageHeader from './PackageHeader';
 import PackageGroupControls from './PackageGroupControls';
 import PackageGroupUrlReader from './PackageGroupUrlReader';
 import ComparisonScrollport from './ComparisonScrollport';
+import ComparisonStickyHeader from './ComparisonStickyHeader';
 import { packageGroupUrl } from '../utils/packageGroupUrl';
 import { cn } from '@shared/utils/styling/tailwindUtils';
 import styles from '../packageComparison.module.css';
@@ -152,128 +153,141 @@ export default function PackageComparison({
         aria-label={activeGroup.label}
       >
         <div className={styles.tableFrame}>
-          <ComparisonScrollport
+          <ComparisonStickyHeader
             scrollRef={scrollContainer}
-            groupKey={activeGroup._key}
-            id={`${id}-scrollport`}
-            label={`${labels.comparison} — ${activeGroup.label}`}
+            group={activeGroup}
+            hasGroupBadge={hasGroupBadge}
             lang={lang}
+            mode={mode}
+            label={labels.comparison}
+            id={id}
             reducedMotion={!!reducedMotion}
           >
-            <div className={styles.tableTrack}>
-              <Table
-                variant='comparison'
-                className={styles.comparisonTable}
-                containerClassName='max-w-none justify-self-center overflow-visible'
-                role='table'
-                style={
-                  {
-                    '--comparison-column-count':
-                      activeGroup.packages.length + 1,
-                    '--comparison-header-rows': hasGroupBadge ? 3 : 2,
-                  } as CSSProperties
-                }
-              >
-                <TableCaption className='sr-only'>
-                  {caption || labels.comparison} — {activeGroup.label}
-                </TableCaption>
-                <TableHeader className={styles.rowGroup} role='rowgroup'>
-                  <TableRow
-                    className={cn(styles.gridRow, styles.headerRow)}
-                    role='row'
-                  >
-                    <TableHead
-                      scope='col'
-                      className={styles.cornerHead}
-                      role='columnheader'
-                    >
-                      <span className='text-2xl font-medium'>
-                        {labels.comparison}
-                      </span>
-                    </TableHead>
-                    {activeGroup.packages.map((packageData, index) => (
-                      <TableHead
-                        key={packageData._id}
-                        scope='col'
-                        id={`${id}-package-${packageData._id}`}
-                        className={styles.packageHead}
-                        role='columnheader'
-                        style={{ gridColumn: index + 2 }}
-                      >
-                        <PackageHeader
-                          packageData={packageData}
-                          lang={lang}
-                          mode={mode}
-                          hasGroupBadge={hasGroupBadge}
-                        />
-                      </TableHead>
-                    ))}
-                  </TableRow>
-                </TableHeader>
-                <TableBody className={styles.rowGroup} role='rowgroup'>
-                  {activeGroup.rows.map((row) => (
+            <ComparisonScrollport
+              scrollRef={scrollContainer}
+              groupKey={activeGroup._key}
+              id={`${id}-scrollport`}
+              label={`${labels.comparison} — ${activeGroup.label}`}
+              lang={lang}
+              reducedMotion={!!reducedMotion}
+            >
+              <div className={styles.tableTrack}>
+                <Table
+                  variant='comparison'
+                  className={styles.comparisonTable}
+                  containerClassName='max-w-none justify-self-center overflow-visible'
+                  role='table'
+                  style={
+                    {
+                      '--comparison-column-count':
+                        activeGroup.packages.length + 1,
+                      '--comparison-header-rows': hasGroupBadge ? 3 : 2,
+                    } as CSSProperties
+                  }
+                >
+                  <TableCaption className='sr-only'>
+                    {caption || labels.comparison} — {activeGroup.label}
+                  </TableCaption>
+                  <TableHeader className={styles.rowGroup} role='rowgroup'>
                     <TableRow
-                      key={row._id}
-                      className={styles.gridRow}
+                      className={cn(styles.gridRow, styles.headerRow)}
                       role='row'
                     >
                       <TableHead
-                        scope='row'
-                        id={`${id}-service-${row._id}`}
-                        role='rowheader'
+                        scope='col'
+                        className={styles.cornerHead}
+                        role='columnheader'
                       >
-                        <div className='flex items-center gap-2'>
-                          <span className='whitespace-pre-line'>
-                            {row.title}
-                          </span>
-                          {row.information?.trim() ? (
-                            <AppTooltip content={row.information}>
-                              <Button
-                                type='button'
-                                variant='information'
-                                size='icon-sm'
-                                aria-label={`${labels.information} ${row.title ?? ''}`}
-                              >
-                                <InfoIcon aria-hidden='true' />
-                              </Button>
-                            </AppTooltip>
-                          ) : null}
-                        </div>
+                        <span className='text-2xl font-medium'>
+                          {labels.comparison}
+                        </span>
                       </TableHead>
-                      {activeGroup.packages.map((packageData) => {
-                        const included =
-                          packageData.serviceIds?.includes(row._id) ?? false;
-                        return (
-                          <TableCell
-                            key={packageData._id}
-                            headers={`${id}-package-${packageData._id} ${id}-service-${row._id}`}
-                            role='cell'
-                          >
-                            {included ? (
-                              <CheckIcon
-                                aria-hidden='true'
-                                className='text-text-secondary mx-auto size-6'
-                              />
-                            ) : (
-                              <span
-                                aria-hidden='true'
-                                className='text-text-secondary text-xl'
-                              >
-                                -
-                              </span>
-                            )}
-                            <span className='sr-only'>
-                              {included ? labels.included : labels.notIncluded}
-                            </span>
-                          </TableCell>
-                        );
-                      })}
+                      {activeGroup.packages.map((packageData, index) => (
+                        <TableHead
+                          key={packageData._id}
+                          scope='col'
+                          id={`${id}-package-${packageData._id}`}
+                          className={styles.packageHead}
+                          role='columnheader'
+                          style={{ gridColumn: index + 2 }}
+                        >
+                          <PackageHeader
+                            packageData={packageData}
+                            lang={lang}
+                            mode={mode}
+                            hasGroupBadge={hasGroupBadge}
+                          />
+                        </TableHead>
+                      ))}
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </ComparisonScrollport>
+                  </TableHeader>
+                  <TableBody className={styles.rowGroup} role='rowgroup'>
+                    {activeGroup.rows.map((row) => (
+                      <TableRow
+                        key={row._id}
+                        className={styles.gridRow}
+                        role='row'
+                      >
+                        <TableHead
+                          scope='row'
+                          id={`${id}-service-${row._id}`}
+                          role='rowheader'
+                        >
+                          <div className='flex items-center gap-2'>
+                            <span className='whitespace-pre-line'>
+                              {row.title}
+                            </span>
+                            {row.information?.trim() ? (
+                              <AppTooltip content={row.information}>
+                                <Button
+                                  type='button'
+                                  variant='information'
+                                  size='icon-sm'
+                                  aria-label={`${labels.information} ${row.title ?? ''}`}
+                                >
+                                  <InfoIcon aria-hidden='true' />
+                                </Button>
+                              </AppTooltip>
+                            ) : null}
+                          </div>
+                        </TableHead>
+                        {activeGroup.packages.map((packageData) => {
+                          const included =
+                            packageData.serviceIds?.includes(row._id) ?? false;
+                          return (
+                            <TableCell
+                              key={packageData._id}
+                              headers={`${id}-package-${packageData._id} ${id}-service-${row._id}`}
+                              role='cell'
+                            >
+                              {included ? (
+                                <CheckIcon
+                                  aria-hidden='true'
+                                  className='text-text-secondary mx-auto size-6'
+                                />
+                              ) : (
+                                <span
+                                  aria-hidden='true'
+                                  className='text-text-secondary text-xl'
+                                >
+                                  -
+                                </span>
+                              )}
+                              <span className='sr-only'>
+                                {included
+                                  ? labels.included
+                                  : labels.notIncluded}
+                              </span>
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </ComparisonScrollport>
+          </ComparisonStickyHeader>
         </div>
       </TabsContent>
     </Tabs>

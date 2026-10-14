@@ -19,6 +19,8 @@ interface ComparisonScrollportProps {
   lang: Locale;
   reducedMotion: boolean;
   children: ReactNode;
+  showControls?: boolean;
+  testId?: string;
 }
 
 /** Adds mouse dragging to native scrolling; touch and child controls stay native. */
@@ -30,6 +32,8 @@ export default function ComparisonScrollport({
   lang,
   reducedMotion,
   children,
+  showControls = true,
+  testId = 'comparison-scrollport',
 }: ComparisonScrollportProps) {
   const [position, setPosition] = useState({ previous: false, next: false });
   const [dragging, setDragging] = useState(false);
@@ -189,7 +193,7 @@ export default function ComparisonScrollport({
         ref={scrollRef}
         id={id}
         className={styles.scrollport}
-        data-testid='comparison-scrollport'
+        data-testid={testId}
         data-overflow={overflowing}
         data-dragging={dragging}
         tabIndex={0}
@@ -198,7 +202,7 @@ export default function ComparisonScrollport({
       >
         {children}
       </div>
-      {overflowing ? (
+      {overflowing && showControls ? (
         <div className={cn(styles.content, 'mt-4 flex justify-end gap-2')}>
           <Button
             type='button'

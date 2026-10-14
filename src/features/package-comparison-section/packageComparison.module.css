@@ -1,6 +1,69 @@
 .section {
+  overflow-x: clip;
+  overflow-y: visible;
   container-type: inline-size;
   --comparison-gutter: calc(var(--spacing) * 4);
+}
+
+.tableBoundary {
+  position: relative;
+}
+
+/* The absolute overlay reserves no space. Its full table height gives the
+   sticky child a containing block that ends with the table, before controls. */
+.stickyOverlay {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.stickyHeader {
+  position: sticky;
+  inset-block-start: var(--navbar-visible-height, 0px);
+  visibility: hidden;
+  transition: inset-block-start var(--navbar-transition-duration, 570ms)
+    var(--navbar-transition-easing, ease);
+}
+
+.stickyHeader[data-active='true'] {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.stickyCard {
+  display: grid;
+  border: 1px solid var(--color-titanium-white);
+  border-block-end: 0;
+  border-start-start-radius: var(--radius-2xl, 1rem);
+  border-start-end-radius: var(--radius-2xl, 1rem);
+  background: var(--card);
+  color: var(--card-foreground);
+}
+
+.rowGroup[data-sticky-active='true'] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.stickyCell {
+  display: grid;
+  block-size: auto;
+  text-align: center;
+  align-items: center;
+}
+
+@media (min-width: 48rem) {
+  .stickyOverlay {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stickyHeader {
+    transition: none;
+  }
 }
 
 .content {
