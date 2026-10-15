@@ -12,6 +12,7 @@ interface WebhookPayload {
   };
 }
 
+/** Validates a Sanity webhook and expires the cache tags for its document type. */
 export async function POST(req: NextRequest) {
   try {
     const { body, isValidSignature } = await parseBody<WebhookPayload>(

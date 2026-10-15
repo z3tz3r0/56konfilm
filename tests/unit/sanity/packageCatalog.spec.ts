@@ -52,12 +52,14 @@ interface Field {
   validation?: (rule: unknown) => unknown;
 }
 
+/** Finds a named schema field, throwing when the fixture schema does not contain it. */
 function field(schema: { fields: unknown }, name: string): Field {
   const result = (schema.fields as Field[]).find((item) => item.name === name);
   if (!result) throw new Error(`Missing field: ${name}`);
   return result;
 }
 
+/** Captures a schema field's custom validator using chainable rule spies. */
 function validator(target: Field) {
   const rule = {
     required: vi.fn().mockReturnThis(),
@@ -73,8 +75,10 @@ function validator(target: Field) {
   return { rule, validate };
 }
 
+/** Creates a Sanity document reference for query or validation fixtures. */
 const reference = (_ref: string) => ({ _type: 'reference', _ref });
 
+/** Creates a mode-specific validation context backed by a mocked catalog fetch. */
 function context(mode: string, documents: unknown[] = []) {
   const fetch = vi.fn().mockResolvedValue(documents);
   const client = { fetch, withConfig: vi.fn().mockReturnThis() };
@@ -110,6 +114,7 @@ describe.each(['production', 'wedding'])('Recap highlights in %s', (mode) => {
         { ...included, _id: 'drafts.unpublished' },
         { ...included, _id: 'versions.release.unpublished' },
       ];
+      /** Evaluates a catalog GROQ query against the test dataset with the supplied parameters. */
       const queryCatalog = async (
         query: string,
         params: Record<string, unknown>

@@ -50,6 +50,7 @@ vi.mock('sanity', async (importOriginal) => ({
 // Test form interactions with native semantics, independently of Studio theming.
 vi.mock('@sanity/ui', async () => {
   const { createElement } = await import('react');
+  /** Renders a lightweight Sanity UI substitute that preserves relevant DOM and event props. */
   function container(props: any, fallback = 'div') {
     const attributes = Object.fromEntries(
       Object.entries(props).filter(
@@ -85,16 +86,19 @@ vi.mock('@sanity/ui', async () => {
       container({ ...props, children: props.text }, 'button'),
   };
 });
+/** Creates a keyed Sanity reference for catalog input fixtures. */
 const reference = (_ref: string, _key = `key-${_ref}`): Reference => ({
   _type: 'reference',
   _ref,
   _key,
 });
+/** Creates a catalog entry with a predictable title and creation timestamp. */
 const entry = (_id: string, day = 1) => ({
   _id,
   _createdAt: `2026-01-0${day}T00:00:00Z`,
   title: [{ value: _id }],
 });
+/** Creates catalog input props with a change spy and optional value or read-only state. */
 function inputProps(value?: Reference[], readOnly = false) {
   const onChange = vi.fn();
   return {
@@ -102,12 +106,14 @@ function inputProps(value?: Reference[], readOnly = false) {
     props: { value, readOnly, onChange } as unknown as ArrayOfObjectsInputProps,
   };
 }
+/** Extracts the reference IDs from the first insert patch, if present. */
 const insertedIds = (patches: FormPatch[]) =>
   (
     patches.find((patch) => patch.type === 'insert') as
       | { items: Reference[] }
       | undefined
   )?.items.map((item) => item._ref);
+/** Reads the displayed service labels in their current list order. */
 const listIds = () =>
   within(screen.getByRole('list', { name: 'รายการเปรียบเทียบ' }))
     .getAllByRole('listitem')

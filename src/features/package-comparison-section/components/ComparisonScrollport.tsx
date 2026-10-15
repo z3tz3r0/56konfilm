@@ -53,6 +53,7 @@ export default function ComparisonScrollport({
     let suppressClick = false;
     let clickTimer: number | undefined;
 
+    /** Updates scroll controls from overflow and cancels dragging when content fits. */
     function measure() {
       if (!mounted || !element) return;
       const max = element.scrollWidth - element.clientWidth;
@@ -66,6 +67,7 @@ export default function ComparisonScrollport({
       );
     }
 
+    /** Ends the mouse gesture, releases capture, and suppresses its click unless cancelled. */
     function finish(cancelled = false) {
       if (!gesture || !element) return;
       const current = gesture;
@@ -80,6 +82,7 @@ export default function ComparisonScrollport({
         element.releasePointerCapture(current.pointerId);
     }
 
+    /** Starts a primary mouse gesture on overflowing content outside interactive elements. */
     function down(event: PointerEvent) {
       if (
         !element ||
@@ -103,6 +106,7 @@ export default function ComparisonScrollport({
       };
     }
 
+    /** Scrolls after a horizontal drag threshold, cancelling gestures that move vertically. */
     function move(event: PointerEvent) {
       if (!gesture || !element || event.pointerId !== gesture.pointerId) return;
       const x = event.clientX - gesture.x;
@@ -131,12 +135,15 @@ export default function ComparisonScrollport({
       element.scrollLeft = gesture.scroll - x;
     }
 
+    /** Finishes the gesture when its matching pointer is released. */
     function up(event: PointerEvent) {
       if (event.pointerId === gesture?.pointerId) finish();
     }
+    /** Cancels the current gesture without suppressing a subsequent click. */
     function cancel() {
       finish(true);
     }
+    /** Suppresses the mouse click immediately following a completed drag. */
     function click(event: MouseEvent) {
       if (!suppressClick || event.detail === 0) return;
       suppressClick = false;
@@ -178,6 +185,7 @@ export default function ComparisonScrollport({
     };
   }, [groupKey, scrollRef]);
 
+  /** Scrolls 80% of the viewport in the given direction, respecting reduced motion. */
   function scroll(direction: number) {
     const element = scrollRef.current;
     if (!element) return;

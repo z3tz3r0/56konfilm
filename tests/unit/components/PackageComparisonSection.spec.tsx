@@ -63,10 +63,12 @@ const sizing = {
   mediaListeners: new Set<() => void>(),
 };
 
+/** Runs mocked resize observers inside act to update the group controls presentation. */
 function measureControls() {
   act(() => sizing.observers.forEach((measure) => measure()));
 }
 
+/** Replaces the fixture URL and dispatches popstate inside act to notify URL readers. */
 function visitUrl(url: string) {
   act(() => {
     window.history.replaceState({}, '', url);
@@ -86,6 +88,7 @@ vi.mock('@shared/config', async () => ({
   env: {},
 }));
 
+/** Renders the localized comparison fixture with its motion provider for the requested site mode. */
 function renderComparison(lang: Locale = 'en', mode: SiteMode = 'wedding') {
   return render(
     <MotionProvider>

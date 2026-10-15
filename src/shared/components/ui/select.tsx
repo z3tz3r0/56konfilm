@@ -24,6 +24,7 @@ function SelectValue({
   return <SelectPrimitive.Value data-slot='select-value' {...props} />;
 }
 
+/** Renders the select trigger with default or pill styling and its dropdown indicator. */
 function SelectTrigger({
   className,
   size = 'default',

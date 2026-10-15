@@ -23,6 +23,7 @@ interface PackageGroupControlsProps {
   onChange: (key: string) => void;
 }
 
+/** Uses tabs when the full group list fits, otherwise a select, transferring focus as needed. */
 export default function PackageGroupControls({
   groups,
   activeGroup,
@@ -47,6 +48,7 @@ export default function PackageGroupControls({
 
     const media = window.matchMedia('(min-width: 48rem)');
     let mounted = true;
+    /** Chooses tabs when their measured width fits on desktop and records focus to transfer. */
     function measure() {
       if (!mounted || !available || !tabs) return;
       // CSS owns intrinsic equal column widths; observation only selects a control.

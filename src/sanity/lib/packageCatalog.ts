@@ -8,6 +8,7 @@ import {
 
 export const PACKAGE_CATALOG_API_VERSION = '2025-08-12';
 
+/** Reads a nonempty reference ID and removes its draft prefix, returning undefined otherwise. */
 export function catalogReferenceId(value: unknown): string | undefined {
   if (!value || typeof value !== 'object' || !('_ref' in value)) return;
   return typeof value._ref === 'string' && value._ref.trim()
@@ -15,6 +16,7 @@ export function catalogReferenceId(value: unknown): string | undefined {
     : undefined;
 }
 
+/** Extracts valid catalog IDs from a reference array, returning an empty array for other values. */
 export function catalogReferenceIds(value: unknown): string[] {
   return Array.isArray(value)
     ? value.flatMap((entry) => {
@@ -46,6 +48,7 @@ export function orderedCatalogServices<
   });
 }
 
+/** Creates a Sanity reference with a fresh key and optional weak reference semantics. */
 export function newCatalogReference(id: string, weak = false): Reference {
   return {
     _type: 'reference',

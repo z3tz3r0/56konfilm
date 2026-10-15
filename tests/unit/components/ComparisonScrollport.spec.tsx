@@ -40,6 +40,7 @@ const originalMethods = nativeMethods.map(
     ] as const
 );
 
+/** Renders a scrollport with interactive children for drag and click regression checks. */
 function Harness({ group = 'a', reducedMotion = true } = {}) {
   const ref = useRef<HTMLDivElement>(null);
   return (
@@ -69,6 +70,7 @@ function Harness({ group = 'a', reducedMotion = true } = {}) {
   );
 }
 
+/** Dispatches a primary mouse pointer event with overridable gesture properties. */
 function pointer(
   target: Element | Window,
   kind: 'pointerDown' | 'pointerMove' | 'pointerUp',

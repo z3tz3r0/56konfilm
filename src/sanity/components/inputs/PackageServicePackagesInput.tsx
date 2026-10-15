@@ -14,6 +14,7 @@ import {
 import { PUBLISHED_PACKAGES_QUERY } from '../../lib/queries/packageCatalog';
 import { catalogEntryLabel, usePackageCatalog } from './usePackageCatalog';
 
+/** Lists published packages for the current mode and lets editors update service membership. */
 export function PackageServicePackagesInput(props: ArrayOfObjectsInputProps) {
   const mode = useFormValue(['siteMode']);
   const id = useId();
@@ -29,6 +30,7 @@ export function PackageServicePackagesInput(props: ArrayOfObjectsInputProps) {
     (selectedId) => !entries.some((entry) => entry._id === selectedId)
   );
 
+  /** Emits keyed membership patches for a package when the input is editable. */
   function toggle(packageId: string, checked: boolean) {
     if (disabled) return;
     const patches = toggleCatalogReference(value, packageId, checked);

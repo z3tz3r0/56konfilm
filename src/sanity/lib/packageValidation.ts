@@ -18,6 +18,7 @@ export const packageReferenceOptions: ReferenceOptions = {
   }),
 };
 
+/** Checks that a nonempty localization array has nonblank text in every entry. */
 export function hasLocalizedPackageText(value: unknown): boolean {
   return (
     Array.isArray(value) &&

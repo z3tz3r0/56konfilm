@@ -15,6 +15,7 @@ interface Props {
   children: ReactNode;
 }
 
+/** Controls navbar visibility during scrolling and publishes its geometry for sticky content. */
 export default function NavbarScrollController({
   threshold = 50,
   children,
@@ -23,6 +24,7 @@ export default function NavbarScrollController({
   const [isVisible, setIsVisible] = useState(true);
   const headerRef = useRef<HTMLElement>(null);
 
+  /** Publishes navbar height, visible height, and transition settings as root CSS properties. */
   const publishLayout = useEffectEvent(() => {
     const header = headerRef.current;
     if (!header) return;

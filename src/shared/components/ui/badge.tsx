@@ -24,6 +24,7 @@ const badgeVariants = cva(
   }
 );
 
+/** Renders a styled badge as a span or delegates its props to a child element. */
 function Badge({
   className,
   variant = 'default',

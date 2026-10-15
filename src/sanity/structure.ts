@@ -1,6 +1,7 @@
 import { env } from '@shared/config';
 import type { StructureResolver } from 'sanity/structure';
 
+/** Builds the Studio navigation with separate catalog lists and creation templates for each site mode. */
 export const structure: StructureResolver = (S) =>
   S.list()
     .title('56KonFilm CMS')

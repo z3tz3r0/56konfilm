@@ -13,6 +13,7 @@ import {
 
 const HOVER_QUERY = '(min-width: 48rem) and (hover: hover)';
 
+/** Subscribes to changes in desktop hover capability and returns the listener cleanup. */
 function subscribeToHover(onChange: () => void) {
   if (typeof window.matchMedia !== 'function') return () => {};
   const media = window.matchMedia(HOVER_QUERY);
@@ -20,6 +21,7 @@ function subscribeToHover(onChange: () => void) {
   return () => media.removeEventListener('change', onChange);
 }
 
+/** Checks whether the viewport is at least 48rem wide and supports hover. */
 function canHover() {
   return (
     typeof window.matchMedia === 'function' &&

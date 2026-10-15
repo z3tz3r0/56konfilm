@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Tooltip as TooltipPrimitive } from 'radix-ui';
 import { cn } from '@shared/utils/styling/tailwindUtils';
 
+/** Configures shared tooltip behavior with an immediate opening delay by default. */
 function TooltipProvider({
   delayDuration = 0,
   ...props
@@ -17,16 +18,19 @@ function TooltipProvider({
   );
 }
 
+/** Provides the tooltip root and forwards its controlled or uncontrolled state props. */
 function Tooltip(props: React.ComponentProps<typeof TooltipPrimitive.Root>) {
   return <TooltipPrimitive.Root data-slot='tooltip' {...props} />;
 }
 
+/** Renders the tooltip trigger, forwarding primitive props including asChild. */
 function TooltipTrigger(
   props: React.ComponentProps<typeof TooltipPrimitive.Trigger>
 ) {
   return <TooltipPrimitive.Trigger data-slot='tooltip-trigger' {...props} />;
 }
 
+/** Renders styled tooltip content and its arrow inside a portal. */
 function TooltipContent({
   className,
   sideOffset = 0,

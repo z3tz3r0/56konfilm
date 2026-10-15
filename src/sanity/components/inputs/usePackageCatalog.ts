@@ -11,6 +11,7 @@ export interface CatalogEntry {
   title?: Array<{ value?: string }>;
 }
 
+/** Returns the first nonempty localized title, falling back to the catalog document ID. */
 export function catalogEntryLabel(entry: CatalogEntry) {
   return entry.title?.find((item) => item.value?.trim())?.value ?? entry._id;
 }
@@ -41,6 +42,7 @@ export function usePackageCatalog(
     if (!validMode) return;
     let disposed = false;
     let request = 0;
+    /** Marks the current catalog request as failed while retaining entries for the same query. */
     const reportError = () => {
       if (!disposed)
         setState((previous) => ({
@@ -49,6 +51,7 @@ export function usePackageCatalog(
           error: true,
         }));
     };
+    /** Fetches published catalog entries and applies only the latest request while mounted. */
     async function refresh() {
       const currentRequest = ++request;
       try {

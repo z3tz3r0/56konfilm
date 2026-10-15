@@ -9,6 +9,7 @@ import { renderToString } from 'react-dom/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import AppTooltip from '@shared/components/common/AppTooltip';
 
+/** Stubs hover media queries and exposes an updater that notifies listeners inside act. */
 function mediaFixture(matches: boolean) {
   const listeners = new Set<() => void>();
   const media = {

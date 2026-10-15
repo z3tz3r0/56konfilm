@@ -15,6 +15,7 @@ export function packageGroupSlugSource(document: SanityDocument): string {
   return typeof english?.value === 'string' ? english.value : '';
 }
 
+/** Returns true for a required kebab-case slug of up to 96 characters, or a validation message. */
 export function validatePackageGroupSlug(value: unknown): true | string {
   const current =
     value && typeof value === 'object' && 'current' in value

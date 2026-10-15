@@ -18,6 +18,7 @@ function Tabs({
   );
 }
 
+/** Renders the tab list with default or segmented presentation. */
 function TabsList({
   className,
   variant = 'default',
@@ -41,6 +42,7 @@ function TabsList({
   );
 }
 
+/** Renders an accessible tab trigger with styling for the chosen presentation. */
 function TabsTrigger({
   className,
   variant = 'default',

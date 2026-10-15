@@ -21,12 +21,15 @@ const { parse, evaluate } = requireFromSanity('groq-js') as {
   ) => Promise<{ get: () => Promise<unknown> }>;
 };
 
+/** Creates English and Thai entries in the Sanity localized text array format. */
 const localized = (en: string, th = `ไทย ${en}`) => [
   { _key: 'en', language: 'en', value: en },
   { _key: 'th', language: 'th', value: th },
 ];
+/** Creates a Sanity document reference for query or validation fixtures. */
 const reference = (id: string) => ({ _type: 'reference', _ref: id });
 
+/** Creates mode-specific packages and services with predictable membership for GROQ tests. */
 function catalog(mode: string) {
   const services = Array.from({ length: 4 }, (_, index) => ({
     _id: `service-${index + 1}`,
@@ -79,6 +82,7 @@ interface ProjectedBlock {
   }>;
 }
 
+/** Evaluates the page query against a synthetic dataset and returns its projected content blocks. */
 async function project(
   blocks: unknown[],
   documents: unknown[],
@@ -120,6 +124,7 @@ async function project(
   return (result as { contentBlocks: ProjectedBlock[] }).contentBlocks;
 }
 
+/** Creates a catalog-backed packages section fixture with optional field overrides. */
 const recap = (
   selectedPackages: unknown[],
   extra: Record<string, unknown> = {}
@@ -129,6 +134,7 @@ const recap = (
   selectedPackages,
   ...extra,
 });
+/** Creates a comparison section fixture with references and synthetic group documents. */
 const comparison = (groups: unknown[]) => ({
   _type: 'packageComparisonSection',
   heading: {
@@ -142,6 +148,7 @@ const comparison = (groups: unknown[]) => ({
   })),
   fixtureGroups: groups,
 });
+/** Creates a package group fixture with the requested package and service ordering. */
 const group = (key: string, packages: string[], rows: string[]) => ({
   _id: key,
   _type: 'packageGroup',

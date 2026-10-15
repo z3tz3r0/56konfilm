@@ -15,6 +15,7 @@ vi.mock('@shared/config', async () => ({
   env: { NODE_ENV: 'production', SANITY_REVALIDATE_SECRET: 'fixture-only' },
 }));
 
+/** Creates a POST request for the revalidation route without contacting an external service. */
 const request = () =>
   new NextRequest('https://example.com/api/revalidate', { method: 'POST' });
 

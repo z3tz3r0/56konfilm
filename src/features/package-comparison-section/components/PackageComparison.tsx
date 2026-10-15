@@ -60,6 +60,7 @@ interface PackageComparisonProps {
   caption?: string;
 }
 
+/** Renders group selection and an accessible comparison table with URL and sticky header support. */
 export default function PackageComparison({
   sectionKey,
   groups,
@@ -86,6 +87,7 @@ export default function PackageComparison({
     groups: ComparisonGroup[];
   } | null>(null);
 
+  /** Changes the selected group and resets horizontal scrolling only when the key changes. */
   const changeGroup = useCallback((value: string) => {
     if (value === selected.current) return;
     selected.current = value;
@@ -93,6 +95,7 @@ export default function PackageComparison({
     setSelectedKey(value);
   }, []);
 
+  /** Selects the group matching the URL slug, falling back to the first group. */
   const readUrl = useCallback(
     (slug: string | null, pathname: string) => {
       const previous = lastUrl.current;
@@ -110,6 +113,7 @@ export default function PackageComparison({
     [groups, changeGroup]
   );
 
+  /** Selects a group and replaces its URL parameter while preserving history state. */
   function selectGroup(value: string) {
     const group = groups.find((item) => item._key === value);
     if (!group || value === activeGroup._key) return;

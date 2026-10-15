@@ -16,6 +16,7 @@ import {
 import { GROUP_SERVICES_QUERY } from '../../lib/queries/packageCatalog';
 import { catalogEntryLabel, usePackageCatalog } from './usePackageCatalog';
 
+/** Lets Studio editors reorder eligible services with drag, keyboard, or button controls. */
 export function PackageGroupServiceOrderInput(props: ArrayOfObjectsInputProps) {
   const mode = useFormValue(['siteMode']);
   const packageIds = catalogReferenceIds(useFormValue(['packages']));
@@ -32,6 +33,7 @@ export function PackageGroupServiceOrderInput(props: ArrayOfObjectsInputProps) {
   const instructionsId = useId();
   const [announcement, setAnnouncement] = useState('');
 
+  /** Patches a service into the requested position, announces the move, and restores focus. */
   function move(serviceId: string, to: number) {
     if (disabled || to < 0 || to >= services.length) return;
     const from = services.findIndex((service) => service._id === serviceId);

@@ -39,6 +39,7 @@ const schema = createSchema({
   name: 'slug-fixture',
   types: [{ name: 'packageGroup', type: 'document', fields: [slugField] }],
 });
+/** Creates a package group document fixture with a configurable site mode and ID. */
 const document = (
   siteMode = 'wedding',
   _id = 'drafts.group'
@@ -50,6 +51,7 @@ const document = (
   _updatedAt: '2026-01-01T00:00:00Z',
   siteMode,
 });
+/** Creates a slug validation context whose mocked client evaluates GROQ against a fixture dataset. */
 function context(doc = document(), dataset: unknown[] = []) {
   const fetch = vi.fn(async (query: string, params: Record<string, unknown>) =>
     (await evaluate(parse(query, { params }), { params, dataset })).get()
@@ -63,6 +65,7 @@ function context(doc = document(), dataset: unknown[] = []) {
     value: { document: doc, getClient } as unknown as SlugValidationContext,
   };
 }
+/** Runs native Sanity document validation with the supplied slug and fixture workspace. */
 async function nativeValidation(value: unknown, target = context()) {
   const workspace = {
     schema,
@@ -78,6 +81,7 @@ async function nativeValidation(value: unknown, target = context()) {
     getDocumentExists: async () => true,
   });
 }
+/** Selects error markers attached to the slug field from native validation results. */
 const atSlug = (markers: Awaited<ReturnType<typeof nativeValidation>>) =>
   markers.filter(
     (marker) => marker.path[0] === 'slug' && marker.level === 'error'

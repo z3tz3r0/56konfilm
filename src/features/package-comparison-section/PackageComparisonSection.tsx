@@ -11,6 +11,7 @@ interface PackageComparisonSectionProps {
   mode: SiteMode;
 }
 
+/** Renders the CMS comparison section, omitting groups that lack displayable content. */
 export default function PackageComparisonSection({
   block,
   lang,

@@ -20,6 +20,7 @@ interface LanguageSwitcherProps {
   mode: SiteMode;
 }
 
+/** Switches the current page locale while retaining its mode, query parameters, and fragment. */
 export default function LanguageSwitcher({
   lang,
   mode,

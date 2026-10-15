@@ -32,6 +32,7 @@ const frames = new Map<number, FrameRequestCallback>();
 let nextFrame = 0;
 const mediaListeners = new Set<() => void>();
 
+/** Runs the queued animation frame callbacks inside act for deterministic geometry updates. */
 function flush() {
   act(() => {
     const tasks = [...frames.values()];
@@ -40,6 +41,7 @@ function flush() {
   });
 }
 
+/** Pairs a sticky header with a semantic fixture table to test geometry, scrolling, and focus. */
 function Harness({ group = comparisonFixture().groups![0] } = {}) {
   const ref = useRef<HTMLDivElement>(null);
   const hasGroupBadge = group.packages.some((item) => item.badgeLabel?.trim());

@@ -5,6 +5,7 @@ import NavbarScrollController from '@shared/components/layout/navbar/NavbarScrol
 let height = 80;
 const observers = new Set<() => void>();
 const originalScrollY = Object.getOwnPropertyDescriptor(window, 'scrollY');
+/** Sets the mocked vertical scroll position and dispatches a scroll event. */
 function scroll(y: number) {
   Object.defineProperty(window, 'scrollY', { configurable: true, value: y });
   fireEvent.scroll(window);

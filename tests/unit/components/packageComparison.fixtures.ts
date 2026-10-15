@@ -1,6 +1,7 @@
 import type { Locale } from '@shared/config/preferences';
 import type { PackageComparisonSectionBlock } from '@features/package-comparison-section';
 
+/** Creates localized comparison groups with prices, badges, CTAs, and service membership. */
 export function comparisonFixture(
   lang: Locale = 'en'
 ): PackageComparisonSectionBlock {

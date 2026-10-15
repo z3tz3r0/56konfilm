@@ -75,6 +75,7 @@ export default function ComparisonStickyHeader({
     let fullMeasurement = false;
     let mounted = true;
 
+    /** Remembers the focused package CTA so focus can survive header or group changes. */
     function rememberFocus() {
       const node = document.activeElement;
       const cta =
@@ -92,6 +93,7 @@ export default function ComparisonStickyHeader({
       else lastFocus.current = null;
     }
 
+    /** Updates sticky visibility within table bounds and records any CTA focus to transfer. */
     function updateActive() {
       if (!mounted || !card) return;
       const geometry = card.getBoundingClientRect();
@@ -142,6 +144,7 @@ export default function ComparisonStickyHeader({
       }
     }
 
+    /** Copies table and header geometry for the sticky view, then updates its visibility. */
     function measure() {
       if (!mounted || !scrollport || !header || !card || !row) return;
       const headerRect = header.getBoundingClientRect();
@@ -179,6 +182,7 @@ export default function ComparisonStickyHeader({
       updateActive();
     }
 
+    /** Coalesces geometry or visibility updates into the next animation frame. */
     function scheduleFrame() {
       if (frame) return;
       frame = requestAnimationFrame(() => {
@@ -190,10 +194,12 @@ export default function ComparisonStickyHeader({
       });
     }
 
+    /** Requests a full geometry measurement on the next animation frame. */
     function scheduleMeasure() {
       fullMeasurement = true;
       scheduleFrame();
     }
+    /** Requests a visibility update on the next animation frame. */
     function scheduleBounds() {
       scheduleFrame();
     }
@@ -283,6 +289,7 @@ export default function ComparisonStickyHeader({
     // echo cannot overwrite a newer gesture on the other scrollport.
     let bodyWrite: number | null = null;
     let headerWrite: number | null = null;
+    /** Copies body scrolling to the sticky header while ignoring echoes of prior writes. */
     const fromBody = () => {
       if (!source || !target) return;
       const value = source.scrollLeft;
@@ -292,6 +299,7 @@ export default function ComparisonStickyHeader({
       target.scrollLeft = value;
       headerWrite = target.scrollLeft;
     };
+    /** Copies sticky header scrolling to the body while ignoring echoes of prior writes. */
     const fromHeader = () => {
       if (!source || !target) return;
       const value = target.scrollLeft;

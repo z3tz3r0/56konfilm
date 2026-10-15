@@ -4,6 +4,7 @@ import * as React from 'react';
 import { cn } from '@shared/utils/styling/tailwindUtils';
 
 // ShadCN Table, with an opt-in content-sized comparison appearance.
+/** Wraps a semantic table in a scroll container with default or comparison styling. */
 function Table({
   className,
   variant = 'default',
@@ -43,6 +44,7 @@ function Table({
   );
 }
 
+/** Renders the table header group with shared row border styling. */
 function TableHeader({ className, ...props }: React.ComponentProps<'thead'>) {
   return (
     <thead
@@ -53,6 +55,7 @@ function TableHeader({ className, ...props }: React.ComponentProps<'thead'>) {
   );
 }
 
+/** Renders the table body group without a border on its last row. */
 function TableBody({ className, ...props }: React.ComponentProps<'tbody'>) {
   return (
     <tbody
@@ -63,6 +66,7 @@ function TableBody({ className, ...props }: React.ComponentProps<'tbody'>) {
   );
 }
 
+/** Renders the table footer group with a muted background and top border. */
 function TableFooter({ className, ...props }: React.ComponentProps<'tfoot'>) {
   return (
     <tfoot
@@ -76,6 +80,7 @@ function TableFooter({ className, ...props }: React.ComponentProps<'tfoot'>) {
   );
 }
 
+/** Renders a table row with shared hover and selection styling. */
 function TableRow({ className, ...props }: React.ComponentProps<'tr'>) {
   return (
     <tr
@@ -89,6 +94,7 @@ function TableRow({ className, ...props }: React.ComponentProps<'tr'>) {
   );
 }
 
+/** Renders a header cell, forwarding native props such as scope and ID. */
 function TableHead({ className, ...props }: React.ComponentProps<'th'>) {
   return (
     <th
@@ -102,6 +108,7 @@ function TableHead({ className, ...props }: React.ComponentProps<'th'>) {
   );
 }
 
+/** Renders a data cell with shared spacing and checkbox alignment. */
 function TableCell({ className, ...props }: React.ComponentProps<'td'>) {
   return (
     <td
@@ -115,6 +122,7 @@ function TableCell({ className, ...props }: React.ComponentProps<'td'>) {
   );
 }
 
+/** Renders a table caption with shared muted text styling. */
 function TableCaption({
   className,
   ...props

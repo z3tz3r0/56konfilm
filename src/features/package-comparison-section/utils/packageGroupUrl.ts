@@ -1,3 +1,4 @@
+/** Returns the query parameter name that isolates selection for a comparison section. */
 export function packageGroupParameter(sectionKey: string) {
   return `package-group-${sectionKey}`;
 }
