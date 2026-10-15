@@ -20,6 +20,7 @@ interface LanguageSwitcherProps {
   mode: SiteMode;
 }
 
+/** Switches the current page locale while retaining its mode, query parameters, and fragment. */
 export default function LanguageSwitcher({
   lang,
   mode,
@@ -50,7 +51,9 @@ export default function LanguageSwitcher({
       <Select
         defaultValue={safeLang}
         onValueChange={(value) => {
-          router.push(getPathFor(value, safeMode));
+          router.push(
+            `${getPathFor(value, safeMode)}${window.location.search}${window.location.hash}`
+          );
         }}
       >
         <SelectTrigger>

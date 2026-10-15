@@ -44,6 +44,7 @@ export abstract class SanityBaseService {
   }: SanityFetchParams): Promise<T> {
     try {
       return client.fetch<T>(query, params, {
+        perspective: 'published',
         cache: 'force-cache', // ต้องใส่เพื่อประหยัด API
         next: {
           revalidate: tags?.length ? false : revalidate, // 👈 Sanity recommended settings

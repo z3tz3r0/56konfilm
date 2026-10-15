@@ -1,19 +1,73 @@
 'use client';
 
 import { cn } from '@shared/utils/styling/tailwindUtils';
-import { ReactNode, useEffect, useEffectEvent, useRef, useState } from 'react';
+import {
+  ReactNode,
+  useEffect,
+  useEffectEvent,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 
 interface Props {
   threshold?: number;
   children: ReactNode;
 }
 
+/** Controls navbar visibility during scrolling and publishes its geometry for sticky content. */
 export default function NavbarScrollController({
   threshold = 50,
   children,
 }: Props) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  const headerRef = useRef<HTMLElement>(null);
+
+  /** Publishes navbar height, visible height, and transition settings as root CSS properties. */
+  const publishLayout = useEffectEvent(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const height = header.getBoundingClientRect().height;
+    const style = getComputedStyle(header);
+    const root = document.documentElement.style;
+    root.setProperty('--navbar-height', `${height}px`);
+    root.setProperty('--navbar-visible-height', `${isVisible ? height : 0}px`);
+    root.setProperty('--navbar-transition-duration', style.transitionDuration);
+    root.setProperty(
+      '--navbar-transition-easing',
+      style.transitionTimingFunction
+    );
+  });
+
+  useLayoutEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const properties = [
+      '--navbar-height',
+      '--navbar-visible-height',
+      '--navbar-transition-duration',
+      '--navbar-transition-easing',
+    ];
+    const previous = properties.map((name) =>
+      document.documentElement.style.getPropertyValue(name)
+    );
+    const observer = new ResizeObserver(publishLayout);
+    observer.observe(header);
+    publishLayout();
+    return () => {
+      observer.disconnect();
+      properties.forEach((name, index) => {
+        if (previous[index])
+          document.documentElement.style.setProperty(name, previous[index]);
+        else document.documentElement.style.removeProperty(name);
+      });
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    publishLayout();
+  }, [isVisible]);
 
   const startDragY = useRef<number | null>(null);
   const startScrollY = useRef(0);
@@ -92,11 +146,12 @@ export default function NavbarScrollController({
 
   return (
     <header
+      ref={headerRef}
       suppressHydrationWarning
       data-scrolled={isScrolled}
       data-visible={isVisible}
       className={cn(
-        'group fixed z-50 w-screen transition-all duration-570 ease-[ease-out-expo] data-[visible=false]:-translate-y-full',
+        'group fixed z-50 w-screen transition-all duration-570 ease-[ease-out-expo] data-[visible=false]:-translate-y-full motion-reduce:transition-none',
         isScrolled
           ? 'bg-background dark:bg-charcoal-gray/40 shadow-sm dark:backdrop-blur-md'
           : 'bg-transparent'
