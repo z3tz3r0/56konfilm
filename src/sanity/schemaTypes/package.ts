@@ -1,4 +1,4 @@
-import { defineField, defineType } from 'sanity';
+import { defineField, defineType, getPublishedId } from 'sanity';
 import {
   hasLocalizedPackageText,
   validateRecapHighlights,
@@ -86,7 +86,7 @@ export const packageType = defineType({
                 'siteMode == $mode && $packageId in packages[]._ref && !(_id in path("drafts.**")) && !(_id in path("versions.**"))',
               params: {
                 mode: document.siteMode ?? '',
-                packageId: document._id.replace(/^drafts\./, ''),
+                packageId: getPublishedId(document._id),
               },
             }),
           },

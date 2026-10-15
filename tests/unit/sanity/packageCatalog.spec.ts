@@ -1,3 +1,4 @@
+import { createRequire } from 'node:module';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { ValidationContext } from 'sanity';
 import {
@@ -15,6 +16,20 @@ import { pageType } from '@/sanity/schemaTypes/page';
 import { schemaType } from '@/sanity/schemaTypes';
 import { structure } from '@/sanity/structure';
 
+const requireFromSanity = createRequire(
+  createRequire(import.meta.url).resolve('sanity')
+);
+const { parse, evaluate } = requireFromSanity('groq-js') as {
+  parse: (
+    query: string,
+    options: { params: Record<string, unknown> }
+  ) => unknown;
+  evaluate: (
+    query: unknown,
+    options: { dataset: unknown[]; params: Record<string, unknown> }
+  ) => Promise<{ get: () => Promise<unknown> }>;
+};
+
 vi.mock('@shared/config', () => ({
   env: { NEXT_PUBLIC_SANITY_API_VERSION: '2025-08-12' },
 }));
@@ -28,6 +43,12 @@ interface Field {
   readOnly?: boolean;
   fields?: Field[];
   of?: Field[];
+  options?: {
+    filter?: (context: { document: { _id: string; siteMode: string } }) => {
+      filter: string;
+      params: Record<string, unknown>;
+    };
+  };
   validation?: (rule: unknown) => unknown;
 }
 
@@ -67,6 +88,73 @@ function context(mode: string, documents: unknown[] = []) {
 }
 
 afterEach(() => vi.restoreAllMocks());
+
+describe.each(['production', 'wedding'])('Recap highlights in %s', (mode) => {
+  it.each(['package', 'drafts.package', 'versions.release.package'])(
+    'keeps only included published services selectable and valid when editing %s',
+    async (_id) => {
+      const included = {
+        _id: 'included',
+        _type: 'packageService',
+        siteMode: mode,
+        packages: [reference('package')],
+      };
+      const dataset = [
+        included,
+        { ...included, _id: 'unrelated', packages: [reference('other')] },
+        {
+          ...included,
+          _id: 'cross-mode',
+          siteMode: mode === 'production' ? 'wedding' : 'production',
+        },
+        { ...included, _id: 'drafts.unpublished' },
+        { ...included, _id: 'versions.release.unpublished' },
+      ];
+      const queryCatalog = async (
+        query: string,
+        params: Record<string, unknown>
+      ) =>
+        (await evaluate(parse(query, { params }), { params, dataset })).get();
+      const document = { _id, siteMode: mode };
+      const filter = field(packageType, 'recapHighlights').of?.[0].options
+        ?.filter;
+      if (!filter) throw new Error('Missing recap highlights reference filter');
+      const selection = filter({ document });
+      expect(
+        await queryCatalog(
+          `*[_type == "packageService" && ${selection.filter}]._id`,
+          selection.params
+        )
+      ).toEqual(['included']);
+
+      const fetch = vi.fn(queryCatalog);
+      const client = { fetch, withConfig: vi.fn().mockReturnThis() };
+      const validationContext = {
+        document,
+        getClient: vi.fn().mockReturnValue(client),
+      } as unknown as ValidationContext;
+      expect(
+        await validateRecapHighlights(
+          [reference('included')],
+          validationContext
+        )
+      ).toBe(true);
+      for (const id of [
+        'unrelated',
+        'cross-mode',
+        'drafts.unpublished',
+        'versions.release.unpublished',
+      ])
+        expect(
+          await validateRecapHighlights([reference(id)], validationContext)
+        ).toEqual(expect.any(String));
+      expect(client.withConfig).toHaveBeenCalledWith({
+        useCdn: false,
+        perspective: 'published',
+      });
+    }
+  );
+});
 
 describe('Package catalog validation', () => {
   it('requires meaningful localized content and rejects blank entered translations', () => {
@@ -249,6 +337,17 @@ describe('Package catalog validation', () => {
     expect(await validateRecapHighlights('bad', target.value)).toEqual(
       expect.any(String)
     );
+  });
+
+  it('requires a document ID before validating highlight membership', async () => {
+    const target = context('wedding', [
+      { _id: 'included', _type: 'packageService', siteMode: 'wedding' },
+    ]);
+    Reflect.deleteProperty(target.value.document!, '_id');
+    expect(
+      await validateRecapHighlights([reference('included')], target.value)
+    ).toBe('กรุณาสร้างแพ็กเกจก่อนเลือกรายการเด่น');
+    expect(target.fetch).toHaveBeenCalledOnce();
   });
 
   it('validates only the selected recap source and counts that source in preview', async () => {

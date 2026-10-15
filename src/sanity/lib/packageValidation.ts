@@ -1,4 +1,8 @@
-import type { ReferenceOptions, ValidationContext } from 'sanity';
+import {
+  getPublishedId,
+  type ReferenceOptions,
+  type ValidationContext,
+} from 'sanity';
 import {
   catalogReferenceId,
   PACKAGE_CATALOG_API_VERSION,
@@ -76,7 +80,9 @@ export async function validateRecapHighlights(
     'packageService'
   );
   if (referenceValidation !== true) return referenceValidation;
-  const packageId = context.document?._id?.replace(/^drafts\./, '');
+  const packageId = context.document?._id
+    ? getPublishedId(context.document._id)
+    : undefined;
   if (!packageId) return 'กรุณาสร้างแพ็กเกจก่อนเลือกรายการเด่น';
   try {
     const ids = value.map(catalogReferenceId);
