@@ -1,10 +1,18 @@
 import { groq } from 'next-sanity';
 import {
+  CATALOG_SERVICE_ORDER,
+  PACKAGE_REFERENCE_FILTER,
+  PUBLISHED_CATALOG_FILTER,
+} from './packageCatalog';
+import {
   COLLAGE_MEDIA_PROJECTION,
   CTA_PROJECTION,
   IMAGE_PROJECTION,
   LOCALIZED,
   MEDIA_ASSET_PROJECTION,
+  PACKAGE_SERVICE_PROJECTION,
+  PACKAGE_PROJECTION,
+  PACKAGE_RECAP_PROJECTION,
   PROJECT_PROJECTION,
 } from './fragments';
 
@@ -177,17 +185,58 @@ const PACKAGES_SECTION = groq`
       "body": ${LOCALIZED('body')},
       align
     },
-    packages[]{
-      "title": ${LOCALIZED('title')},
-      price,
-      currency,
-      features,
-      featured,
-      cta{
-        ${CTA_PROJECTION}
+    "packages": select(
+      sourceType == "catalog" => coalesce(selectedPackages, [])[
+        packageRef->_type == "package" && packageRef->siteMode == $mode &&
+        !(packageRef->_id in path("drafts.**")) && !(packageRef->_id in path("versions.**"))
+      ]{
+        _key,
+        featured,
+        ...packageRef->{ ${PACKAGE_RECAP_PROJECTION} }
+      },
+      packages[]{
+        "title": ${LOCALIZED('title')},
+        price,
+        currency,
+        features,
+        featured,
+        cta{ ${CTA_PROJECTION} }
       }
-    },
+    ),
     background
+  }
+`;
+
+const PACKAGE_COMPARISON_SECTION = groq`
+  _type == "packageComparisonSection" => {
+    heading {
+      "eyebrow": ${LOCALIZED('eyebrow')},
+      "heading": ${LOCALIZED('heading')},
+      "body": ${LOCALIZED('body')},
+      align
+    },
+    "groups": coalesce(groups, [])[
+      @->_type == "packageGroup" && @->siteMode == $mode &&
+      !(@->_id in path("drafts.**")) && !(@->_id in path("versions.**"))
+    ]{
+      _key,
+      ...@->{
+        "label": ${LOCALIZED('label')},
+        "slug": slug.current,
+        "packages": coalesce(packages, [])[${PACKAGE_REFERENCE_FILTER}][]->{ ${PACKAGE_PROJECTION} },
+        "rows": (
+          (coalesce(serviceOrder, [])[]->)[
+            _type == "packageService" && siteMode == $mode && ${PUBLISHED_CATALOG_FILTER} &&
+            count(packages[_ref in ^.^.packages[${PACKAGE_REFERENCE_FILTER}][]._ref]) > 0
+          ]{ ${PACKAGE_SERVICE_PROJECTION} }
+          +
+          (*[_type == "packageService" && siteMode == $mode && ${PUBLISHED_CATALOG_FILTER} &&
+            !(_id in coalesce(^.serviceOrder, [])[]._ref) &&
+            count(packages[_ref in ^.^.packages[${PACKAGE_REFERENCE_FILTER}][]._ref]) > 0
+          ] | order(${CATALOG_SERVICE_ORDER}))[]{ ${PACKAGE_SERVICE_PROJECTION} }
+        )
+      }
+    }
   }
 `;
 
@@ -428,6 +477,7 @@ export {
   LOGO_GRID_SECTION,
   CTA_BANNER_SECTION,
   PACKAGES_SECTION,
+  PACKAGE_COMPARISON_SECTION,
   TESTIMONIAL_SECTION,
   PHILOSOPHY_SECTION,
   STATS_COUNTER_SECTION,

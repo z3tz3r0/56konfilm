@@ -1,4 +1,8 @@
 import { groq } from 'next-sanity';
+import {
+  CATALOG_SERVICE_ORDER,
+  PUBLISHED_CATALOG_FILTER,
+} from './packageCatalog';
 
 /**
  * Reusable localization fragment
@@ -44,6 +48,46 @@ const CTA_PROJECTION = groq`
     "slug": slug.current
   },
   externalUrl
+`;
+
+const PACKAGE_SERVICE_PROJECTION = groq`
+  _id,
+  "title": ${LOCALIZED('title')},
+  "information": ${LOCALIZED('information')}
+`;
+
+// Availability is authored on Services, independently of any Group's row order.
+const PACKAGE_SERVICES = groq`
+  *[_type == "packageService" && siteMode == $mode &&
+    ${PUBLISHED_CATALOG_FILTER} && ^._id in packages[]._ref
+  ] | order(${CATALOG_SERVICE_ORDER})
+`;
+
+const PACKAGE_PROJECTION = groq`
+  _id,
+  "title": ${LOCALIZED('title')},
+  price,
+  currency,
+  "badgeLabel": ${LOCALIZED('badgeLabel')},
+  cta { ${CTA_PROJECTION} },
+  "serviceIds": (${PACKAGE_SERVICES})[]._id
+`;
+
+const PACKAGE_RECAP_PROJECTION = groq`
+  "title": ${LOCALIZED('title')},
+  price,
+  currency,
+  cta { ${CTA_PROJECTION} },
+  "features": select(
+    count(coalesce(recapHighlights, [])) > 0 => (
+      recapHighlights[
+        @->_type == "packageService" && @->siteMode == $mode &&
+        !(@->_id in path("drafts.**")) && !(@->_id in path("versions.**")) &&
+        ^._id in @->packages[]._ref
+      ][]->{ "title": ${LOCALIZED('title')} }
+    )[].title,
+    (${PACKAGE_SERVICES})[0...3]{ "title": ${LOCALIZED('title')} }.title
+  )
 `;
 
 /**
@@ -99,6 +143,9 @@ export {
   IMAGE_PROJECTION,
   COLLAGE_MEDIA_PROJECTION,
   CTA_PROJECTION,
+  PACKAGE_SERVICE_PROJECTION,
+  PACKAGE_PROJECTION,
+  PACKAGE_RECAP_PROJECTION,
   MEDIA_ASSET_PROJECTION,
   SEO_PROJECTION,
   PROJECT_PROJECTION,

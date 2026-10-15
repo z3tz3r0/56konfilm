@@ -1,0 +1,176 @@
+.section {
+  overflow-x: clip;
+  overflow-y: visible;
+  container-type: inline-size;
+  --comparison-gutter: calc(var(--spacing) * 4);
+}
+
+.tableBoundary {
+  position: relative;
+}
+
+/* The absolute overlay reserves no space. Its full table height gives the
+   sticky child a containing block that ends with the table, before controls. */
+.stickyOverlay {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.stickyHeader {
+  position: sticky;
+  inset-block-start: var(--navbar-visible-height, 0px);
+  visibility: hidden;
+  transition: inset-block-start var(--navbar-transition-duration, 570ms)
+    var(--navbar-transition-easing, ease);
+}
+
+.stickyHeader[data-active='true'] {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.stickyCard {
+  display: grid;
+  border: 1px solid var(--color-titanium-white);
+  border-block-end: 0;
+  border-start-start-radius: var(--radius-2xl, 1rem);
+  border-start-end-radius: var(--radius-2xl, 1rem);
+  background: var(--card);
+  color: var(--card-foreground);
+}
+
+.rowGroup[data-sticky-active='true'] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.stickyCell {
+  display: grid;
+  block-size: auto;
+  text-align: center;
+  align-items: center;
+}
+
+@media (min-width: 48rem) {
+  .stickyOverlay {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stickyHeader {
+    transition: none;
+  }
+}
+
+.content {
+  inline-size: min(
+    calc(100% - var(--comparison-gutter) * 2),
+    var(--container-7xl)
+  );
+  margin-inline: auto;
+}
+
+.tableLane {
+  --comparison-edge-gap: max(
+    var(--comparison-gutter),
+    calc((100cqw - var(--container-7xl)) / 2)
+  );
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Break out of the centered lane so content clips at both section edges.
+   The track's gutters move with its content, leaving space only at each end. */
+.tableFrame {
+  inline-size: 100cqw;
+  min-inline-size: 0;
+  margin-inline-start: calc(-1 * var(--comparison-edge-gap));
+  justify-self: start;
+}
+
+.tableTrack {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  inline-size: max-content;
+  min-inline-size: 100%;
+  box-sizing: border-box;
+  padding-inline: var(--comparison-edge-gap);
+}
+
+/* Share content-sized columns through both row groups, and header rows through
+   every package cell. Keep the native table elements and header associations. */
+.comparisonTable {
+  display: grid;
+  grid-template-columns: repeat(var(--comparison-column-count), max-content);
+}
+
+.rowGroup,
+.gridRow {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+}
+
+.gridRow > th,
+.gridRow > td {
+  display: grid;
+  block-size: auto;
+  align-items: center;
+}
+
+.headerRow {
+  grid-template-rows: repeat(var(--comparison-header-rows), auto);
+  row-gap: calc(var(--spacing) * 4);
+}
+
+.headerRow > .packageHead {
+  grid-row: 1 / -1;
+  grid-template-rows: subgrid;
+  align-items: stretch;
+}
+
+.headerRow > .cornerHead {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  place-items: center;
+}
+
+.scrollport {
+  inline-size: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.scrollport::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollport[data-overflow='true'] {
+  cursor: grab;
+}
+
+.scrollport[data-dragging='true'] {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.measurement {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0;
+  inline-size: 100%;
+  block-size: 0;
+  overflow: clip;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media (min-width: 64rem) {
+  .section {
+    --comparison-gutter: calc(var(--spacing) * 14);
+  }
+}

@@ -20,3 +20,6 @@ export * from './sheet';
 export * from './sonner';
 export * from './tabs';
 export { Textarea } from './textarea';
+export * from './badge';
+export * from './table';
+export * from './tooltip';
