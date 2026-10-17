@@ -1,6 +1,6 @@
 # 56konfilm Test Suite
 
-The test suite uses **Vitest** for unit, component and in-process route regression tests, and **Playwright** for browser/API checks against a running application.
+The test suite uses **Vitest** for unit, component and in-process route regression tests, and **Playwright** for browser/API checks against a running application. Opt-in browser geometry fixtures use Vitest to load components and Playwright to measure their rendered layout offline.
 
 ## Directory Structure
 
@@ -11,7 +11,8 @@ tests/
 ├── e2e/                      # Playwright browser tests
 ├── support/
 │   ├── factories/            # Deterministic test data
-│   └── fixtures/             # Playwright mode/device fixtures
+│   ├── fixtures/             # Playwright mode/device fixtures
+│   └── browser/              # Opt-in offline geometry fixtures, grouped by concern
 ├── setup.ts                  # Vitest DOM matchers and test environment defaults
 └── README.md
 ```
@@ -102,6 +103,38 @@ When application access is permitted, check widths 320/375/768/1024/1280/1920px 
 Stable selectors include `wedding-gallery-panel`, `wedding-gallery-landscape-backdrop`, `wedding-gallery-image` and `gallery-item-image`/`gallery-item-video`/`gallery-item-project`. The static Collage fallback intentionally has no `wedding-gallery-image` motion-wrapper test ID; assert its image or placeholder content instead.
 
 For offline geometry checks, use fixture markup with the project's CSS and block all network requests. If Motion and Next Image are mocked, report that limitation: such a fixture does not verify real image loading, motion playback, live Studio publishing or full-app E2E. Do not introduce a separate test application or root configuration just to perform these checks.
+
+## Package Recap Browser Geometry
+
+The committed fixture in `tests/support/browser/package-recap/` renders the real `PackagesSection`, `SectionShell`, `CtaButton` and `Button` with deterministic data and compiled project CSS. It complements `PackagesSection.spec.tsx`, which retains content, ordering, CTA, class and animation-configuration checks.
+
+Run it separately from ordinary unit tests, from the repository root:
+
+```bash
+node tests/support/browser/package-recap/run.mjs
+```
+
+The default requires Playwright Chromium to be installed (`pnpm exec playwright install chromium`). Alternatively, use an already installed Chrome or Edge without downloading a browser:
+
+```bash
+node tests/support/browser/package-recap/run.mjs --channel=chrome
+node tests/support/browser/package-recap/run.mjs --channel=msedge
+```
+
+The runner sets `SKIP_TEST_DOTENV=true` and Vite `envFile: false`, never imports the root Playwright configuration, and does not start a server. It includes only the `.fixture.tsx` file; the normal unit/E2E discovery patterns do not select this file. A missing browser fails with setup instructions rather than silently skipping the checks.
+
+Coverage includes:
+
+- Production/Wedding and EN/TH at 320/375/767/768/1024/1280px, including both sides of the `md` breakpoint.
+- Browser-computed alignment of detail and CTA rows, including multiline names, unequal detail counts and long CTA labels.
+- Centering of actual heading text lines via `Range` rectangles and of the combined price/currency content, not just their full-width containers.
+- Prices following their own titles naturally rather than sharing a forced baseline; stacked mobile cards with natural heights and no page overflow.
+- Missing optional title/details/CTA content and cards wrapping onto a subsequent desktop row.
+- Three negative controls that alter only fixture DOM styles: left-aligned names, left-aligned prices and disabled subgrid. The geometry assertions must reject these intentionally broken layouts while production source stays unchanged.
+
+Measurements allow up to one CSS pixel of rounding error. Each case has a fresh browser context with networking and service workers blocked. Screenshots are written to the ignored `play-results/package-recap-layout/` directory only on failure; no pixel-snapshot baseline is maintained.
+
+Motion/Next navigation/media integrations are mocked, and local fallback fonts replace downloadable application fonts. These checks establish layout relationships, not animation playback, real navigation, exact production typography, live Sanity integration or full-app E2E behavior.
 
 ## Playwright Browser and API Checks
 
