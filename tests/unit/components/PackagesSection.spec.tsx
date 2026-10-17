@@ -48,7 +48,9 @@ vi.mock('next/link', () => ({
 }));
 
 vi.mock('motion/react', () => {
+  /** Create a Motion stand-in for the requested HTML tag. */
   const component = (tag: string) =>
+    /** Render children and expose animation settings as inspectable attributes. */
     function MotionMock({
       children,
       initial,
@@ -79,6 +81,7 @@ vi.mock('motion/react', () => {
 
 afterEach(cleanup);
 
+/** Build localized normal, highlighted, and sparse cards for recap regression tests. */
 function packageFixture(lang: Locale): PackagesSectionBlock {
   return {
     _type: 'packagesSection',

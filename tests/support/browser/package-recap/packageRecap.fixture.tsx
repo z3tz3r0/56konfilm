@@ -60,7 +60,9 @@ vi.mock('next/link', () => ({
   default: (props: ComponentProps<'a'>) => <a {...props} />,
 }));
 vi.mock('motion/react', () => {
+  /** Create a static Motion stand-in for the requested HTML tag. */
   const element = (tag: string) =>
+    /** Render the element without Motion props so geometry checks see its final layout. */
     function StaticMotion({
       initial: _initial,
       whileInView: _whileInView,
@@ -132,6 +134,7 @@ afterAll(async () => {
   await browser?.close();
 });
 
+/** Build localized cards with varied title lengths, detail counts, prices, and CTAs. */
 function packages(lang: Locale): PackagesSectionBlock {
   const cta = {
     label: lang === 'th' ? 'ดูรายละเอียด' : 'Discover more',
@@ -184,6 +187,7 @@ function packages(lang: Locale): PackagesSectionBlock {
   };
 }
 
+/** Render real recap markup and CSS at the requested viewport, optionally with sparse cards. */
 async function renderFixture(
   mode: SiteMode,
   lang: Locale,
@@ -226,6 +230,7 @@ async function renderFixture(
   });
 }
 
+/** Assert that the fixture fits the viewport and has requested no network resources. */
 async function assertNoPageOverflow() {
   expect(
     await page.evaluate(

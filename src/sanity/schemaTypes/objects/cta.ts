@@ -7,6 +7,7 @@ export const ctaStyleField = defineField({
   title: 'Style',
   description: 'รูปแบบของปุ่ม CTA',
   type: 'string',
+  /** Hide manual recap CTA styles, including legacy sources; keep unresolved contexts visible. */
   hidden: ({ document, path }) => {
     const section = getParentSectionFromPath(document, path);
     return (

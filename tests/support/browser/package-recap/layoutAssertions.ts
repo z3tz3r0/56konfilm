@@ -29,6 +29,7 @@ const tolerance = 1;
 export async function measureCards(page: Page): Promise<CardLayout[]> {
   return page.getByTestId('package-card').evaluateAll((cards) =>
     cards.map((card) => {
+      /** Copy an element's bounds or an existing rectangle into serializable coordinates. */
       const box = (element: Element | DOMRect) => {
         const rect =
           element instanceof Element
@@ -43,6 +44,7 @@ export async function measureCards(page: Page): Promise<CardLayout[]> {
           height: rect.height,
         };
       };
+      /** Return the smallest rectangle enclosing a nonempty set of text rectangles. */
       const union = (rects: Box[]): Box => {
         const left = Math.min(...rects.map((rect) => rect.left));
         const right = Math.max(...rects.map((rect) => rect.right));
@@ -114,6 +116,7 @@ export function assertCentered(cards: CardLayout[]) {
 
 /** Align only cards sharing one desktop row, not cards from subsequent grid rows. */
 export function assertDesktopRows(cards: CardLayout[]) {
+  /** Assert that multiple coordinates differ by at most the rounding tolerance. */
   const aligned = (values: number[], name: string) => {
     if (values.length > 1) {
       expect(
@@ -160,6 +163,7 @@ export function assertNaturalPriceSpacing(cards: CardLayout[]) {
   }
 }
 
+/** Assert that cards stack without overlap and the first two retain different heights. */
 export function assertMobileStack(cards: CardLayout[]) {
   for (let index = 1; index < cards.length; index++) {
     expect(

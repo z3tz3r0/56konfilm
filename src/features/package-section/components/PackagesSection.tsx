@@ -35,6 +35,7 @@ const itemVariants = {
   },
 } satisfies Variants;
 
+/** Render localized recap cards with aligned rows and highlight-based colors and CTAs. */
 export default function PackagesSection({
   block,
   lang,

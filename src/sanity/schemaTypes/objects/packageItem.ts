@@ -59,6 +59,7 @@ export const packageItemType = defineType({
       features: 'features',
       featured: 'featured',
     },
+    /** Summarize the first nonblank localized name, price, details count, and Highlight status. */
     prepare({ title, price, currency, features, featured }) {
       const packageTitle = Array.isArray(title)
         ? title

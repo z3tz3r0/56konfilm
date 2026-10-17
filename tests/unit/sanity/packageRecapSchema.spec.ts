@@ -19,6 +19,7 @@ interface SchemaField {
   validation?: (rule: unknown) => unknown;
 }
 
+/** Find a schema field by name, throwing if the expected field is missing. */
 function field(schema: { fields?: unknown }, name: string): SchemaField {
   const result = (schema.fields as SchemaField[] | undefined)?.find(
     (item) => item.name === name
@@ -27,6 +28,7 @@ function field(schema: { fields?: unknown }, name: string): SchemaField {
   return result;
 }
 
+/** Build a page fixture with configurable section storage, source, and section type. */
 function pageDocument(
   sections: string,
   sourceType?: string,
@@ -57,6 +59,7 @@ function pageDocument(
   };
 }
 
+/** Return the keyed path to the fixture's manual recap CTA style field. */
 function recapStylePath(sections: string): Path {
   return [
     sections,
@@ -68,6 +71,7 @@ function recapStylePath(sections: string): Path {
   ];
 }
 
+/** Evaluate the real CTA style visibility callback with the supplied document and path. */
 function isStyleHidden(document?: SanityDocument, path?: Path) {
   const hidden = ctaStyleField.hidden;
   if (typeof hidden !== 'function')
@@ -80,6 +84,7 @@ function isStyleHidden(document?: SanityDocument, path?: Path) {
   } as Parameters<typeof hidden>[0]);
 }
 
+/** Run the manual package preview callback, failing if the schema omits it. */
 function prepareManualPackagePreview(selection: Record<string, unknown> = {}) {
   const prepare = packageItemType.preview?.prepare;
   if (!prepare) throw new Error('Missing manual package preview');
