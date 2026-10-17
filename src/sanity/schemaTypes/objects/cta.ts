@@ -1,11 +1,26 @@
 import { defineField, defineType } from 'sanity';
 import { localizedStringField } from './localized';
+import { getParentSectionFromPath } from '@/sanity/lib/schemaHelpers';
 
 export const ctaStyleField = defineField({
   name: 'style',
   title: 'Style',
   description: 'รูปแบบของปุ่ม CTA',
   type: 'string',
+  hidden: ({ document, path }) => {
+    const section = getParentSectionFromPath(document, path);
+    return (
+      section?._type === 'packagesSection' &&
+      (section.sourceType === undefined ||
+        section.sourceType === 'manual' ||
+        section.sourceType === 'inline') &&
+      path?.length === 6 &&
+      (path[0] === 'commercialSections' || path[0] === 'weddingSections') &&
+      path[2] === 'packages' &&
+      path[4] === 'cta' &&
+      path[5] === 'style'
+    );
+  },
   options: {
     list: [
       { title: 'Primary', value: 'primary' },

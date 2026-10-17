@@ -38,7 +38,7 @@ export const packageItemType = defineType({
     }),
     defineField({
       name: 'featured',
-      title: 'Featured',
+      title: 'Highlight',
       description: 'ไฮไลต์แพ็กเกจนี้',
       type: 'boolean',
       initialValue: false,
@@ -51,4 +51,45 @@ export const packageItemType = defineType({
       validation: (Rule) => Rule.required(),
     }),
   ],
+  preview: {
+    select: {
+      title: 'title',
+      price: 'price',
+      currency: 'currency',
+      features: 'features',
+      featured: 'featured',
+    },
+    prepare({ title, price, currency, features, featured }) {
+      const packageTitle = Array.isArray(title)
+        ? title
+            .find(
+              (translation) =>
+                typeof translation?.value === 'string' &&
+                translation.value.trim()
+            )
+            ?.value.trim()
+        : undefined;
+      const priceLabel =
+        typeof price === 'number' && Number.isFinite(price)
+          ? price.toLocaleString('en-US', { maximumFractionDigits: 20 })
+          : 'ยังไม่ระบุราคา';
+      const currencyLabel = typeof currency === 'string' ? currency.trim() : '';
+      const featureCount = Array.isArray(features)
+        ? features.filter(
+            (feature) => typeof feature === 'string' && feature.trim()
+          ).length
+        : 0;
+
+      return {
+        title: packageTitle || 'ยังไม่ระบุชื่อแพ็กเกจ',
+        subtitle: [
+          [priceLabel, currencyLabel].filter(Boolean).join(' '),
+          `${featureCount} รายการ`,
+          featured === true ? 'Highlight' : null,
+        ]
+          .filter(Boolean)
+          .join(' · '),
+      };
+    },
+  },
 });
