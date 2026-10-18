@@ -13,6 +13,10 @@ interface TeamSectionProps {
   block: TeamSectionBlock;
 }
 
+/**
+ * Renders localized team cards with reveals governed by the shared device
+ * motion policy.
+ */
 export default function TeamSection({ lang, block }: TeamSectionProps) {
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
   const useLiteMotion = isInitialized && !allowHeavyMotion;

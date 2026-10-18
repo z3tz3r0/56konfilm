@@ -23,6 +23,10 @@ interface StatsCounterSectionProps {
   block: StatsCounterSectionBlock;
 }
 
+/**
+ * Renders statistics with staggered reveals or immediate visibility under lite
+ * motion.
+ */
 export default function StatsCounterSection({
   block,
 }: StatsCounterSectionProps) {

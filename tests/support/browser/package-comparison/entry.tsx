@@ -11,6 +11,10 @@ interface Options {
   mode: SiteMode;
 }
 
+/**
+ * Renders the comparison section and live device policy for offline browser
+ * tests.
+ */
 function Fixture({
   block,
   lang,

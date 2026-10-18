@@ -32,6 +32,10 @@ interface CapabilitiesSectionProps {
   block: CapabilitiesSectionBlock;
 }
 
+/**
+ * Renders capabilities as an image accordion or a grid with device-aware
+ * reveals.
+ */
 export default function CapabilitiesSection({
   block,
 }: CapabilitiesSectionProps) {

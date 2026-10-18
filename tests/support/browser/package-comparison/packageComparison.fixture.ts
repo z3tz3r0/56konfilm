@@ -203,6 +203,10 @@ afterAll(async () => {
   await browser?.close();
 });
 
+/**
+ * Mounts the offline comparison fixture for a locale and mode, then waits for
+ * policy initialization.
+ */
 async function show(lang: Locale = 'en', mode: SiteMode = 'wedding') {
   await page.evaluate(
     (options) =>

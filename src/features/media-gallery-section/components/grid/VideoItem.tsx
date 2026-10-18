@@ -12,6 +12,10 @@ interface VideoItemProps {
   posterUrl?: string;
 }
 
+/**
+ * Renders viewport-controlled video or a poster fallback when the initialized
+ * policy disallows autoplay.
+ */
 export default function VideoItem({
   src,
   className,

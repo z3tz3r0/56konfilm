@@ -14,6 +14,10 @@ interface TeamCardProps {
   member: NonNullableMember;
 }
 
+/**
+ * Renders a team member profile with a localized image fallback and device-
+ * aware reveal.
+ */
 export default function TeamCard({ lang, member }: TeamCardProps) {
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
   const useLiteMotion = isInitialized && !allowHeavyMotion;

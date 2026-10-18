@@ -8,6 +8,10 @@ import StatsCounterSection from '@features/stats-counter-section/components/Stat
 import VideoLoop from '@shared/components/common/VideoLoop';
 import VideoItem from '@features/media-gallery-section/components/grid/VideoItem';
 
+/**
+ * Renders a stateful project button to detect remounts during motion preference
+ * changes.
+ */
 function Project({ name }: { name: string }) {
   const [count, setCount] = useState(0);
   return (
@@ -17,6 +21,10 @@ function Project({ name }: { name: string }) {
   );
 }
 
+/**
+ * Combines real motion consumers and stateful cards for offline browser
+ * preference tests.
+ */
 function Fixture() {
   const tier = useDeviceTier();
   return (

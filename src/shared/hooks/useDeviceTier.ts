@@ -46,6 +46,10 @@ function refreshSnapshot() {
   return clientSnapshotCache;
 }
 
+/**
+ * Refreshes device capabilities and notifies consumers only when the snapshot
+ * identity changes.
+ */
 function notifyChange() {
   const previous = clientSnapshotCache;
   if (refreshSnapshot() !== previous) {
@@ -74,6 +78,10 @@ function subscribe(listener: () => void) {
   };
 }
 
+/**
+ * Returns the shared snapshot, refreshing capabilities when no consumers are
+ * subscribed.
+ */
 function getClientSnapshot() {
   // No listener could have updated the cache while every consumer was unmounted.
   return !clientSnapshotCache || listeners.size === 0
@@ -81,6 +89,10 @@ function getClientSnapshot() {
     : clientSnapshotCache;
 }
 
+/**
+ * Returns the stable conservative snapshot used for server rendering and
+ * initial hydration.
+ */
 function getServerSnapshot() {
   return SSR_SNAPSHOT;
 }

@@ -14,6 +14,10 @@ interface VideoLoopProps {
   enableObserver?: boolean;
 }
 
+/**
+ * Shows a poster until device initialization permits autoplay, then mounts
+ * looping playback.
+ */
 export default function VideoLoop(props: VideoLoopProps) {
   const { posterUrl, className, priority = false } = props;
   const { allowVideoAutoplay, isInitialized } = useDeviceTier();

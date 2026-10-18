@@ -1,12 +1,22 @@
 import type { ComponentProps, ReactNode } from 'react';
 
 // Only unrelated shell/image integrations are replaced; hook and Motion stay real.
+/**
+ * Provides a plain section wrapper for the offline device-motion fixture.
+ */
 export function SectionShell({ children }: { children: ReactNode }) {
   return <section>{children}</section>;
 }
+/**
+ * Omits section headings from the offline device-motion fixture.
+ */
 export function SectionHeader() {
   return null;
 }
+/**
+ * Renders a native image for the offline fixture, discarding Next.js-only image
+ * props.
+ */
 export default function FixtureImage({
   fill: _fill,
   priority: _priority,

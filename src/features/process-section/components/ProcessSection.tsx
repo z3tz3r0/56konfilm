@@ -29,6 +29,10 @@ interface ProcessSectionProps {
   block: ProcessSectionBlock;
 }
 
+/**
+ * Renders process steps as a timeline or grid, adapting reveals to the device
+ * motion policy.
+ */
 export default function ProcessSection({ block }: ProcessSectionProps) {
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
   const useLiteMotion = isInitialized && !allowHeavyMotion;

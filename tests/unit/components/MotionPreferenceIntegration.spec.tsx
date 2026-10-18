@@ -147,6 +147,10 @@ afterEach(() => {
   else Reflect.deleteProperty(HTMLElement.prototype, 'scrollBy');
 });
 
+/**
+ * Renders logo and package-comparison consumers together for the requested
+ * locale and site mode.
+ */
 function renderConsumers(lang: Locale = 'en', mode: SiteMode = 'wedding') {
   return render(
     <>

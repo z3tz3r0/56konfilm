@@ -152,6 +152,9 @@ describe('useDeviceTier', () => {
 
   it('uses a stable conservative server snapshot without reading browser APIs', () => {
     const snapshots: ReturnType<typeof useDeviceTier>[] = [];
+    /**
+     * Captures server-rendered snapshots for identity and policy assertions.
+     */
     function Probe() {
       const value = useDeviceTier();
       snapshots.push(value);
@@ -176,6 +179,9 @@ describe('useDeviceTier', () => {
     async (reduced) => {
       motion.set(reduced);
       const snapshots: ReturnType<typeof useDeviceTier>[] = [];
+      /**
+       * Captures device snapshots across server rendering and client hydration.
+       */
       function Probe() {
         const value = useDeviceTier();
         snapshots.push(value);

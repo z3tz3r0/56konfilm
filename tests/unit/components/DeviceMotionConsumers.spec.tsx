@@ -71,6 +71,10 @@ let observers: Array<{
   targets: Set<Element>;
 }>;
 
+/**
+ * Delivers a synthetic visibility change to every mock observer tracking the
+ * element.
+ */
 function intersect(element: Element, visible: boolean) {
   for (const observer of observers) {
     if (observer.targets.has(element)) {
@@ -168,6 +172,10 @@ describe('real device-tier consumers during preference changes', () => {
   it.each(['portfolio', 'collage'] as const)(
     'preserves DOM identity, focus and child state in %s',
     async (kind) => {
+      /**
+       * Renders a stateful button to verify card identity, focus and state
+       * survive policy changes.
+       */
       function Card() {
         const [count, setCount] = useState(0);
         return (

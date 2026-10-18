@@ -131,6 +131,10 @@ afterAll(async () => {
   await browser?.close();
 });
 
+/**
+ * Mounts the offline device-motion fixture and waits for capability
+ * initialization.
+ */
 async function show() {
   await page.evaluate(() =>
     (

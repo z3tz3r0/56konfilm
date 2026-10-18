@@ -13,6 +13,10 @@ interface GalleryCardProps {
   extra?: ReactNode;
 }
 
+/**
+ * Wraps gallery media and its caption, revealing immediately when lite motion
+ * is enabled.
+ */
 export default function GalleryCard({
   children,
   variants,

@@ -29,6 +29,10 @@ interface AwardsSectionProps {
   block: AwardsSectionBlock;
 }
 
+/**
+ * Renders award rows with staggered reveals or immediate visibility under lite
+ * motion.
+ */
 export default function AwardsSection({ block }: AwardsSectionProps) {
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
   const useLiteMotion = isInitialized && !allowHeavyMotion;
