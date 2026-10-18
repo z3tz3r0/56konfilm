@@ -6,7 +6,7 @@ import { TwoColumnSectionBlock } from './two-column-section/types';
 import { CardCollectionSectionBlock } from './card-collection-section/types';
 import { TimelineSectionBlock } from './timeline-section/types';
 import { MediaGallerySectionBlock } from './media-gallery-section/types';
-import { LogoGridSectionBlock } from './logo-grid-section/types';
+import type { LogoShowcaseSectionBlock } from './logo-showcase-section';
 import { CtaBannerSectionBlock } from './cta-banner-section/types';
 import { PackagesSectionBlock } from './package-section/types';
 import type { PackageComparisonSectionBlock } from './package-comparison-section';
@@ -34,8 +34,8 @@ const CardCollectionSection = dynamic(
 const TimelineSection = dynamic(
   () => import('./timeline-section/TimelineSection')
 );
-const LogoGridSection = dynamic(
-  () => import('./logo-grid-section/components/LogoGridSection')
+const LogoShowcaseSection = dynamic(
+  () => import('./logo-showcase-section/LogoShowcaseSection')
 );
 const CtaBannerSection = dynamic(
   () => import('./cta-banner-section/components/CtaBannerSection')
@@ -88,7 +88,7 @@ type PageContentBlock =
   | CardCollectionSectionBlock
   | TimelineSectionBlock
   | MediaGallerySectionBlock
-  | LogoGridSectionBlock
+  | LogoShowcaseSectionBlock
   | CtaBannerSectionBlock
   | PackagesSectionBlock
   | PackageComparisonSectionBlock
@@ -203,8 +203,8 @@ function renderBlock(
       return (
         <MediaGallerySection key={key} block={block} lang={lang} mode={mode} />
       );
-    case 'logoGridSection':
-      return <LogoGridSection key={key} block={block} />;
+    case 'logoShowcaseSection':
+      return <LogoShowcaseSection key={key} block={block} lang={lang} />;
     case 'ctaBannerSection':
       return (
         <CtaBannerSection key={key} block={block} lang={lang} mode={mode} />
