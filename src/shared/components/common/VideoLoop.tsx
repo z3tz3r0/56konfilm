@@ -14,51 +14,12 @@ interface VideoLoopProps {
   enableObserver?: boolean;
 }
 
-export default function VideoLoop({
-  url,
-  mimeType,
-  posterUrl,
-  className,
-  priority = false,
-  enableObserver = true,
-}: VideoLoopProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+export default function VideoLoop(props: VideoLoopProps) {
+  const { posterUrl, className, priority = false } = props;
   const { allowVideoAutoplay, isInitialized } = useDeviceTier();
 
   // Keep first paint conservative until client capability detection completes.
   const shouldAutoplay = isInitialized && allowVideoAutoplay;
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || !enableObserver) return;
-
-    // If autoplay is not allowed, don't set up the observer
-    if (!shouldAutoplay) {
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            video.play().catch(() => {
-              // Auto-play was prevented
-            });
-          } else {
-            video.pause();
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    observer.observe(video);
-
-    return () => {
-      observer.unobserve(video);
-    };
-  }, [enableObserver, shouldAutoplay]);
 
   // For low-power devices: render poster-first experience (no video at all)
   if (!shouldAutoplay) {
@@ -84,6 +45,49 @@ export default function VideoLoop({
     );
   }
 
+  return <VideoPlayback {...props} />;
+}
+
+/** Remount playback state with the video, not with the capability fallback. */
+function VideoPlayback({
+  url,
+  mimeType,
+  posterUrl,
+  className,
+  priority = false,
+  enableObserver = true,
+}: VideoLoopProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const observer = enableObserver
+      ? new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                video.play().catch(() => {
+                  // Auto-play was prevented.
+                });
+              } else {
+                video.pause();
+              }
+            });
+          },
+          { threshold: 0.1 }
+        )
+      : undefined;
+    observer?.observe(video);
+
+    return () => {
+      observer?.disconnect();
+      video.pause();
+    };
+  }, [enableObserver]);
+
   return (
     <div className={cn('relative h-full w-full overflow-hidden', className)}>
       {posterUrl ? (
@@ -105,7 +109,7 @@ export default function VideoLoop({
           'absolute inset-0 h-full w-full object-cover transition-opacity duration-700',
           isLoaded ? 'opacity-100' : 'opacity-0'
         )}
-        autoPlay={shouldAutoplay}
+        autoPlay
         muted
         loop
         playsInline

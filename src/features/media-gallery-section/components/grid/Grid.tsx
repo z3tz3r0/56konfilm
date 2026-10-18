@@ -9,6 +9,7 @@ import { useDeviceTier } from '@shared/hooks';
 import {
   staggerContainerVariants,
   fadeUpItemVariants,
+  instantReveal,
 } from '@shared/lib/motion';
 import { cn } from '@shared/utils/styling/tailwindUtils';
 import { urlFor } from '@/sanity/lib/image';
@@ -52,6 +53,7 @@ export default function Grid({
             whileInView='visible'
             viewport={{ once: true, margin: '-100px' }}
             variants={useLiteMotion ? undefined : staggerContainerVariants}
+            animate={useLiteMotion ? instantReveal : undefined}
             transition={useLiteMotion ? { duration: 0.2 } : undefined}
           >
             {block.items.filter(Boolean).map((item, index) => {

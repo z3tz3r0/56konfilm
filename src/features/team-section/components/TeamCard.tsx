@@ -3,7 +3,7 @@
 import { m } from 'motion/react';
 import { urlFor } from '@/sanity/lib/image';
 import { useDeviceTier } from '@shared/hooks';
-import { fadeUpItemVariants } from '@shared/lib/motion';
+import { fadeUpItemVariants, instantReveal } from '@shared/lib/motion';
 import Image from 'next/image';
 import { TeamSectionBlock } from '../types';
 import { Locale } from '@shared/config';
@@ -22,6 +22,7 @@ export default function TeamCard({ lang, member }: TeamCardProps) {
     <m.article
       className='bg-neutral mx-auto flex w-full max-w-[370px] flex-col items-center overflow-hidden rounded-2xl text-center'
       variants={useLiteMotion ? undefined : fadeUpItemVariants}
+      animate={useLiteMotion ? instantReveal : undefined}
       data-testid='team-member'
     >
       <div className='group relative aspect-4/3 w-full overflow-hidden'>

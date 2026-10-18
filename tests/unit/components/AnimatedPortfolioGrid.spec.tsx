@@ -1,4 +1,4 @@
-import { act, cleanup, render, screen } from '@testing-library/react';
+import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
 import { renderToString } from 'react-dom/server';
 import { useSyncExternalStore } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -56,9 +56,13 @@ describe('AnimatedPortfolioGrid hydration with real Motion', () => {
       render(ui, { container, hydrate: true });
     });
     const grid = container.querySelector('section')!;
-    expect(grid).not.toHaveAttribute('style');
+    await waitFor(() => expect(grid).toHaveStyle({ opacity: '1' }));
     expect(grid.children).toHaveLength(2);
-    expect(grid.firstElementChild?.tagName).toBe('A');
+    expect(grid.firstElementChild).toHaveClass(
+      'row-span-2',
+      'grid-rows-subgrid'
+    );
+    expect(grid.firstElementChild).toHaveStyle({ opacity: '1' });
     expect(screen.getAllByRole('link').map((link) => link.textContent)).toEqual(
       ['First project', 'Second project']
     );

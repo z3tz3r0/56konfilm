@@ -3,6 +3,7 @@
 import { m, type Variants } from 'motion/react';
 import { SectionShell, SectionHeader } from '@shared/components';
 import { useDeviceTier } from '@shared/hooks';
+import { instantReveal } from '@shared/lib/motion';
 import { StatsCounterSectionBlock } from '../types';
 
 const containerVariants: Variants = {
@@ -47,12 +48,14 @@ export default function StatsCounterSection({
             whileInView='visible'
             viewport={{ once: true, margin: '-80px' }}
             variants={useLiteMotion ? undefined : containerVariants}
+            animate={useLiteMotion ? instantReveal : undefined}
           >
             {block.stats.map((stat, index) => (
               <m.div
                 key={stat._key ?? index}
                 className='flex flex-col items-center text-center'
                 variants={useLiteMotion ? undefined : itemVariants}
+                animate={useLiteMotion ? instantReveal : undefined}
                 data-testid='stat-item'
               >
                 <span className='text-primary text-4xl font-black md:text-5xl lg:text-6xl'>

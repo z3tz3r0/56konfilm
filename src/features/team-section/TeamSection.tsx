@@ -5,7 +5,7 @@ import { SectionShell, SectionHeader } from '@shared/components';
 import { TeamSectionBlock } from './types';
 import TeamCard from './components/TeamCard';
 import { useDeviceTier } from '@shared/hooks';
-import { staggerContainerVariants } from '@shared/lib/motion';
+import { staggerContainerVariants, instantReveal } from '@shared/lib/motion';
 import { Locale } from '@shared/config';
 
 interface TeamSectionProps {
@@ -34,6 +34,7 @@ export default function TeamSection({ lang, block }: TeamSectionProps) {
             whileInView='visible'
             viewport={{ once: true, margin: '-80px' }}
             variants={useLiteMotion ? undefined : staggerContainerVariants}
+            animate={useLiteMotion ? instantReveal : undefined}
           >
             {block.members?.map((member, index) => (
               <TeamCard

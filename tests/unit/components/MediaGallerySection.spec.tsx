@@ -310,7 +310,7 @@ describe('MediaGallerySection presentations', () => {
     });
     render(<MediaGallerySection block={block} lang='en' mode='wedding' />);
     expect(screen.getAllByRole('img')).toHaveLength(3);
-    expect(screen.queryByTestId('wedding-gallery-image')).toBeNull();
+    expect(screen.getAllByTestId('wedding-gallery-image')).toHaveLength(3);
     expect(
       screen.getByAltText('Large portrait').closest('section')!.parentElement
     ).toHaveClass('hidden', 'lg:block');

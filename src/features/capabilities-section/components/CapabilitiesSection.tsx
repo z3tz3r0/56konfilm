@@ -8,6 +8,7 @@ import { DynamicLucideIcon } from '@shared/components/common/DynamicLucideIcon';
 import { cn } from '@shared/utils/styling/tailwindUtils';
 import { urlFor } from '@/sanity/lib/image';
 import { useDeviceTier } from '@shared/hooks';
+import { instantReveal } from '@shared/lib/motion';
 import { CapabilitiesSectionBlock } from '../types';
 
 const containerVariants: Variants = {
@@ -189,12 +190,14 @@ export default function CapabilitiesSection({
               whileInView='visible'
               viewport={{ once: true, margin: '-60px' }}
               variants={useLiteMotion ? undefined : containerVariants}
+              animate={useLiteMotion ? instantReveal : undefined}
             >
               {features.map((feature, index) => (
                 <m.div
                   key={feature._key ?? index}
                   className='border-border bg-card flex flex-col gap-4 rounded-xl border p-6'
                   variants={useLiteMotion ? undefined : cardVariants}
+                  animate={useLiteMotion ? instantReveal : undefined}
                   data-testid='feature-grid-item'
                 >
                   {feature.icon && (

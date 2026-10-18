@@ -5,6 +5,7 @@ import PortfolioGrid from '@shared/components/common/portfolio-grid/PortfolioGri
 import {
   staggerContainerVariants,
   fadeUpItemVariants,
+  instantReveal,
 } from '@shared/lib/motion';
 import type { Project } from '@shared/types';
 
@@ -22,13 +23,15 @@ vi.mock('motion/react', () => {
       whileInView,
       viewport,
       variants,
+      animate,
       ...props
     }: HTMLAttributes<HTMLElement> & {
       children?: ReactNode;
-      initial?: string;
+      initial?: string | boolean;
       whileInView?: string;
       viewport?: unknown;
       variants?: unknown;
+      animate?: unknown;
     }) {
       return createElement(
         tag,
@@ -39,6 +42,7 @@ vi.mock('motion/react', () => {
           'data-while-in-view': whileInView,
           'data-viewport': JSON.stringify(viewport),
           'data-variants': JSON.stringify(variants),
+          'data-animate': JSON.stringify(animate),
         },
         children
       );
@@ -206,17 +210,23 @@ describe('PortfolioGrid reveal', () => {
     }
   );
 
-  it('uses static, directly rendered cards on low-tier or reduced-motion devices', () => {
+  it('disables reveals while retaining stable subgrid wrappers on low-tier devices', () => {
     tier.allowHeavyMotion = false;
     const { container } = render(<PortfolioGrid {...props} />);
     const grid = container.firstElementChild!;
-    expect(grid).not.toHaveAttribute('data-motion');
-    expect(grid.querySelector('[data-motion]')).toBeNull();
+    expect(grid).toHaveAttribute('data-initial', 'false');
+    expect(grid).not.toHaveAttribute('data-while-in-view');
+    expect(grid).not.toHaveAttribute('data-variants');
+    expect(grid).toHaveAttribute('data-animate', JSON.stringify(instantReveal));
     expect(grid.children).toHaveLength(2);
-    expect(grid.firstElementChild?.tagName).toBe('A');
+    expect(grid.firstElementChild).toHaveClass(
+      'row-span-2',
+      'grid-rows-subgrid'
+    );
+    expect(grid.firstElementChild?.firstElementChild?.tagName).toBe('A');
   });
 
-  it('removes hidden animation wrappers after low-tier initialization without changing order', () => {
+  it('reveals existing wrappers after low-tier initialization without replacing cards', () => {
     tier.allowHeavyMotion = false;
     tier.isInitialized = false;
     const { container, rerender } = render(<PortfolioGrid {...props} />);
@@ -224,9 +234,18 @@ describe('PortfolioGrid reveal', () => {
       'data-initial',
       'hidden'
     );
+    const card = screen.getAllByRole('link')[0];
     tier.isInitialized = true;
     rerender(<PortfolioGrid {...props} />);
-    expect(container.querySelector('[data-initial]')).toBeNull();
+    expect(container.firstElementChild).toHaveAttribute(
+      'data-initial',
+      'false'
+    );
+    expect(container.firstElementChild).toHaveAttribute(
+      'data-animate',
+      JSON.stringify(instantReveal)
+    );
+    expect(screen.getAllByRole('link')[0]).toBe(card);
     expect(
       screen.getAllByRole('heading').map((heading) => heading.textContent)
     ).toEqual(['Project first', 'Project second']);

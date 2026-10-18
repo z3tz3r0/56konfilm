@@ -6,6 +6,7 @@ import { useDeviceTier } from '@shared/hooks';
 import {
   fadeUpItemVariants,
   staggerContainerVariants,
+  instantReveal,
 } from '@shared/lib/motion';
 
 interface AnimatedCollageImageProps {
@@ -25,9 +26,7 @@ export default function AnimatedCollageImage({
 }: AnimatedCollageImageProps) {
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
 
-  if (isInitialized && !allowHeavyMotion) {
-    return <div className={className}>{children}</div>;
-  }
+  const useLiteMotion = isInitialized && !allowHeavyMotion;
 
   const { delayChildren, staggerChildren } =
     staggerContainerVariants.visible.transition;
@@ -46,10 +45,11 @@ export default function AnimatedCollageImage({
     <m.div
       className={className}
       data-testid='wedding-gallery-image'
-      initial='hidden'
-      whileInView='visible'
+      initial={useLiteMotion ? false : 'hidden'}
+      whileInView={useLiteMotion ? undefined : 'visible'}
+      animate={useLiteMotion ? instantReveal : undefined}
       viewport={{ once: true, margin: '-100px' }}
-      variants={variants}
+      variants={useLiteMotion ? undefined : variants}
     >
       {children}
     </m.div>
