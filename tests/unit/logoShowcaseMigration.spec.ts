@@ -1,12 +1,14 @@
 // @vitest-environment node
 import { createRequire } from 'node:module';
+import { dirname, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import type { SanityDocument } from 'sanity';
 import {
   collectMigrationMutations,
   type MigrationContext,
   type Transaction,
 } from 'sanity/migrate';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import migration from '../../migrations/rename-logo-grid-to-logo-showcase';
 import { planLogoShowcaseMigration } from '../../migrations/rename-logo-grid-to-logo-showcase/logoShowcaseMigration';
 
@@ -26,6 +28,209 @@ const logoSection = (key = 'logos') => ({
     },
     alt: [{ _key: 'random-key', language: 'th', value: `แบรนด์ ${index}` }],
   })),
+});
+
+describe('Logo Showcase with the installed native SDK wrapper', () => {
+  let createContextClient: (
+    config: Record<string, unknown>
+  ) => MigrationContext['client'];
+  let response: (value: unknown) => unknown;
+
+  beforeAll(async () => {
+    const requireFromSanity = createRequire(
+      createRequire(import.meta.url).resolve('sanity')
+    );
+    const migratePackage = requireFromSanity.resolve(
+      '@sanity/migrate/package.json'
+    );
+    // Test-only access to the runner's actual wrapper; no application env or CLI startup.
+    ({ createContextClient } = await import(
+      pathToFileURL(
+        resolve(
+          dirname(migratePackage),
+          'dist/runner/utils/createContextClient.js'
+        )
+      ).href
+    ));
+    const requireFromMigrate = createRequire(migratePackage);
+    const requireFromClient = createRequire(
+      requireFromMigrate.resolve('@sanity/client')
+    );
+    const { of } = requireFromClient('rxjs');
+    response = (body) =>
+      of({ type: 'response', statusCode: 200, headers: {}, body });
+  });
+
+  /** Stop at the SDK HTTP boundary: exercise real methods and Proxy bindings, never a service. */
+  function sdkContext(
+    currentPages: SanityDocument[],
+    dryRun = false,
+    apiVersion = '2025-02-19'
+  ) {
+    const request = vi.fn(
+      (options: {
+        url: string;
+        method: string;
+        query?: Record<string, unknown>;
+      }) => {
+        const url = new URL(options.url);
+        if (
+          options.method !== 'GET' ||
+          !url.pathname.endsWith('/data/query/fixture')
+        ) {
+          throw new Error(
+            'Unexpected SDK request; no network fallback is permitted.'
+          );
+        }
+        const ids: string[] = JSON.parse(url.searchParams.get('$ids') ?? '[]');
+        return response({
+          result: currentPages
+            .filter((page) => ids.includes(page._id))
+            .map(({ _id, _rev }) => ({ _id, _rev })),
+        });
+      }
+    );
+    const client = createContextClient({
+      projectId: 'fixture',
+      dataset: 'fixture',
+      apiVersion,
+      perspective: 'published',
+      useCdn: true,
+      maxRetries: 0,
+      _requestHandler: request,
+    });
+    const context: MigrationContext = {
+      dryRun,
+      client,
+      filtered: {
+        getDocument: vi.fn(async () => undefined),
+        getDocuments: vi.fn(async () => []),
+      },
+    };
+    return { context, request };
+  }
+
+  it.each([
+    ['production', '2024-01-29'],
+    ['production', '2025-02-19'],
+    ['wedding', '2024-01-29'],
+    ['wedding', '2025-02-19'],
+  ])(
+    'generates a draft transaction with the real SDK (%s, API %s)',
+    async (siteMode, apiVersion) => {
+      const field =
+        siteMode === 'wedding' ? 'weddingSections' : 'commercialSections';
+      const source = page({
+        siteMode,
+        commercialSections: undefined,
+        [field]: [logoSection()],
+      });
+      const original = structuredClone(source);
+      const { context, request } = sdkContext([source], false, apiVersion);
+      const changes = await generated([source], context);
+      expect(changes).toHaveLength(1);
+      expect(changes[0].mutations).toMatchObject([
+        { type: 'create', document: { _id: 'drafts.page', _type: 'page' } },
+        { type: 'patch', id: 'drafts.page', patches: [typePatch(field)] },
+      ]);
+      expect(request).toHaveBeenCalledOnce();
+      const [options] = request.mock.calls[0];
+      const url = new URL(options.url);
+      expect(url.hostname).toBe('fixture.api.sanity.io');
+      expect(url.searchParams.get('query')).toBe('*[_id in $ids]{_id, _rev}');
+      expect(JSON.parse(url.searchParams.get('$ids')!)).toEqual([
+        'page',
+        'drafts.page',
+      ]);
+      expect(options.query).toMatchObject({ perspective: 'raw' });
+      expect(source).toEqual(original);
+    }
+  );
+
+  it('processes fourteen published-only pages without calling unbound SDK methods', async () => {
+    const pages = Array.from({ length: 14 }, (_, i) =>
+      page({ _id: `page-${i}` })
+    );
+    const { context, request } = sdkContext(pages);
+    const changes = await generated(pages, context);
+    expect(changes).toHaveLength(14);
+    expect(request).toHaveBeenCalledTimes(14);
+    changes.forEach((change, i) =>
+      expect(change.mutations).toMatchObject([
+        {
+          type: 'create',
+          document: { _id: `drafts.page-${i}`, _type: 'page' },
+        },
+        { type: 'patch', id: `drafts.page-${i}`, patches: [typePatch()] },
+      ])
+    );
+  });
+
+  it.each(['changed revision', 'missing source', 'new draft first'])(
+    'fails closed through the real SDK when preflight reports %s',
+    async (change) => {
+      const source = page();
+      const current =
+        change === 'missing source'
+          ? []
+          : change === 'changed revision'
+            ? [page({ _rev: 'changed' })]
+            : [page({ _id: 'drafts.page' }), source];
+      const { context, request } = sdkContext(current);
+      async function* documents() {
+        yield source;
+      }
+      await expect(
+        collectMigrationMutations(migration, documents, context).next()
+      ).rejects.toThrow(/Content changed/);
+      expect(request).toHaveBeenCalledOnce();
+    }
+  );
+
+  it('propagates real SDK transport failures before declaring a draft transaction', async () => {
+    const { context, request } = sdkContext([page()]);
+    const failure = new Error('Offline transport failure');
+    request.mockImplementation(() => {
+      throw failure;
+    });
+    await expect(generated([page()], context)).rejects.toBe(failure);
+    expect(request).toHaveBeenCalledOnce();
+  });
+
+  it('keeps published dry-runs fully offline even with the real SDK context', async () => {
+    const { context, request } = sdkContext([], true);
+    expect(await generated([page()], context)).toHaveLength(1);
+    expect(request).not.toHaveBeenCalled();
+  });
+
+  it('retains the revision guard for existing drafts without any SDK reads', async () => {
+    const draft = page({ _id: 'drafts.page', _rev: 'draft-revision' });
+    const { context, request } = sdkContext([page(), draft]);
+    const changes = await generated([page(), draft], context);
+    expect(changes).toHaveLength(1);
+    expect(changes[0].mutations).toEqual([
+      {
+        type: 'patch',
+        id: 'drafts.page',
+        patches: [typePatch()],
+        options: { ifRevision: 'draft-revision' },
+      },
+    ]);
+    expect(request).not.toHaveBeenCalled();
+  });
+
+  it('remains idempotent after a draft has been migrated', async () => {
+    const pages = [
+      page(),
+      page({
+        _id: 'drafts.page',
+        commercialSections: [{ ...logoSection(), _type: newType }],
+      }),
+    ];
+    const { context, request } = sdkContext(pages);
+    expect(await generated(pages, context)).toEqual([]);
+    expect(request).not.toHaveBeenCalled();
+  });
 });
 
 function page(overrides: Record<string, unknown> = {}): SanityDocument {
@@ -52,21 +257,22 @@ const typePatch = (field = 'commercialSections', key = 'logos') => ({
 
 /** The only live read permitted by the migration is mocked; no client can write. */
 function mockContext(pages: SanityDocument[], dryRun = true) {
-  const getDocuments = vi
+  const fetch = vi
     .fn()
-    .mockImplementation(async ([publishedId, draftId]: string[]) => [
-      pages.find((item) => item._id === publishedId) ?? null,
-      pages.find((item) => item._id === draftId) ?? null,
-    ]);
+    .mockImplementation(async (_query: string, { ids }: { ids: string[] }) =>
+      pages
+        .filter((item) => ids.includes(item._id))
+        .map(({ _id, _rev }) => ({ _id, _rev }))
+    );
   const context: MigrationContext = {
     dryRun,
-    client: { getDocuments } as unknown as MigrationContext['client'],
+    client: { fetch } as unknown as MigrationContext['client'],
     filtered: {
       getDocument: vi.fn(async () => undefined),
       getDocuments: vi.fn(async () => []),
     },
   };
-  return { context, getDocuments };
+  return { context, fetch };
 }
 
 /** Use the actual native entry and collector, but supply all source documents in memory. */
@@ -289,14 +495,14 @@ describe('Logo Showcase native mutation generation', () => {
   it('generates dry-run declarations from offline snapshots without client reads or writes', async () => {
     const pages = [page()];
     const originals = structuredClone(pages);
-    const { context, getDocuments } = mockContext(pages);
+    const { context, fetch } = mockContext(pages);
     const result = await generated(pages, context);
     expect(result).toHaveLength(1);
     expect(result[0].mutations.map((mutation) => mutation.type)).toEqual([
       'create',
       'patch',
     ]);
-    expect(getDocuments).not.toHaveBeenCalled();
+    expect(fetch).not.toHaveBeenCalled();
     expect(pages).toEqual(originals);
   });
 
@@ -305,7 +511,7 @@ describe('Logo Showcase native mutation generation', () => {
     async (dryRun) => {
       const draft = page({ _id: 'drafts.page', _rev: 'draft-revision' });
       const original = structuredClone(draft);
-      const { context, getDocuments } = mockContext([page(), draft], dryRun);
+      const { context, fetch } = mockContext([page(), draft], dryRun);
       expect(await generated([page(), draft], context)).toEqual([
         {
           type: 'transaction',
@@ -319,7 +525,7 @@ describe('Logo Showcase native mutation generation', () => {
           ],
         },
       ]);
-      expect(getDocuments).not.toHaveBeenCalled();
+      expect(fetch).not.toHaveBeenCalled();
       expect(draft).toEqual(original);
     }
   );
@@ -327,7 +533,7 @@ describe('Logo Showcase native mutation generation', () => {
   it('strictly creates a draft copy and changes only section types in one transaction', async () => {
     const source = page();
     const original = structuredClone(source);
-    const { context, getDocuments } = mockContext([source], false);
+    const { context, fetch } = mockContext([source], false);
     const result = await generated([source], context);
     const {
       _rev: _rev,
@@ -335,10 +541,11 @@ describe('Logo Showcase native mutation generation', () => {
       _updatedAt: _updatedAt,
       ...content
     } = original;
-    expect(getDocuments).toHaveBeenCalledExactlyOnceWith([
-      'page',
-      'drafts.page',
-    ]);
+    expect(fetch).toHaveBeenCalledExactlyOnceWith(
+      '*[_id in $ids]{_id, _rev}',
+      { ids: ['page', 'drafts.page'] },
+      { perspective: 'raw', useCdn: false }
+    );
     expect(result).toEqual([
       {
         type: 'transaction',
@@ -355,15 +562,17 @@ describe('Logo Showcase native mutation generation', () => {
     'refuses draft creation after a concurrent change: %s',
     async (change) => {
       const pages = [page()];
-      const { context, getDocuments } = mockContext(pages, false);
-      getDocuments.mockResolvedValue([
-        change === 'deleted source'
-          ? null
-          : page({
-              _rev:
-                change === 'changed revision' ? 'new-revision' : 'revision-1',
-            }),
-        change === 'new draft' ? page({ _id: 'drafts.page' }) : null,
+      const { context, fetch } = mockContext(pages, false);
+      fetch.mockResolvedValue([
+        ...(change === 'new draft' ? [page({ _id: 'drafts.page' })] : []),
+        ...(change === 'deleted source'
+          ? []
+          : [
+              page({
+                _rev:
+                  change === 'changed revision' ? 'new-revision' : 'revision-1',
+              }),
+            ]),
       ]);
       await expect(generated(pages, context)).rejects.toThrow(
         /Content changed/
@@ -373,11 +582,11 @@ describe('Logo Showcase native mutation generation', () => {
 
   it('propagates a failed preflight read rather than generating a fallback write', async () => {
     const pages = [page()];
-    const { context, getDocuments } = mockContext(pages, false);
+    const { context, fetch } = mockContext(pages, false);
     const failure = new Error('Read failed');
-    getDocuments.mockRejectedValue(failure);
+    fetch.mockRejectedValue(failure);
     await expect(generated(pages, context)).rejects.toBe(failure);
-    expect(getDocuments).toHaveBeenCalledOnce();
+    expect(fetch).toHaveBeenCalledOnce();
   });
 
   it('is a no-op on subsequent runs with a migrated draft snapshot', async () => {
@@ -388,9 +597,9 @@ describe('Logo Showcase native mutation generation', () => {
         commercialSections: [{ ...logoSection(), _type: newType }],
       }),
     ];
-    const { context, getDocuments } = mockContext(pages, false);
+    const { context, fetch } = mockContext(pages, false);
     expect(await generated(pages, context)).toEqual([]);
-    expect(getDocuments).not.toHaveBeenCalled();
+    expect(fetch).not.toHaveBeenCalled();
   });
 
   it('validates every plan before yielding even the first transaction', async () => {

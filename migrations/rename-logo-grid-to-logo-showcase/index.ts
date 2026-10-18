@@ -14,6 +14,8 @@ import { migrateLogoShowcase } from './logoShowcaseMigration';
  *
  * Only drafts are changed. Review them in Studio and manually publish alongside
  * the completed FE release; do not deploy the CMS-only phase on its own.
+ * Pause edits to affected pages during apply: the uncached preflight query can
+ * lag recent writes and is not an atomic lock on the published source.
  * A conflict stops the run, but already committed pages are not rolled back.
  * Resolve the conflict and rerun; migrated drafts produce no further changes.
  */

@@ -12,6 +12,7 @@ import {
 const SOURCE_TYPE = 'logoGridSection';
 const TARGET_TYPE = 'logoShowcaseSection';
 const SECTION_FIELDS = ['commercialSections', 'weddingSections'] as const;
+const LIVE_REVISIONS_QUERY = '*[_id in $ids]{_id, _rev}';
 
 export interface PageSnapshot {
   _id: string;
@@ -134,13 +135,21 @@ export const migrateLogoShowcase: AsyncIterableMigration = async function* (
 
     // Dry-runs use only the supplied snapshot, including --from-export. During
     // apply, recheck live content before declaring a strict draft creation.
-    // This read is not an atomic lock on the published source; avoid concurrent
-    // editing while applying and review drafts before manually publishing.
+    // This uncached GROQ read is a preflight check, not an atomic lock; the query
+    // index can lag recent writes. Avoid concurrent editing and review drafts.
     if (!context.dryRun) {
-      const [published, draft] = await context.client.getDocuments([
-        source._id,
-        targetId,
-      ]);
+      // The installed runner's Proxy does not bind getDocuments() to its SDK
+      // instance (#httpRequest fails). fetch() is safely forwarded by its limiter.
+      // Raw perspective keeps drafts visible even with a published client default.
+      const current = await context.client.fetch<
+        Array<Pick<PageSnapshot, '_id' | '_rev'>>
+      >(
+        LIVE_REVISIONS_QUERY,
+        { ids: [source._id, targetId] },
+        { perspective: 'raw', useCdn: false }
+      );
+      const published = current.find((page) => page._id === source._id);
+      const draft = current.find((page) => page._id === targetId);
       if (draft || !published || published._rev !== source._rev) {
         throw new LogoShowcaseMigrationError(
           `Content changed for ${source._id}; review it and rerun the dry-run.`
