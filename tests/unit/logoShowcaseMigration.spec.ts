@@ -233,6 +233,7 @@ describe('Logo Showcase with the installed native SDK wrapper', () => {
   });
 });
 
+/** Build a published page snapshot with a legacy logo section and test overrides. */
 function page(overrides: Record<string, unknown> = {}): SanityDocument {
   return {
     _id: 'page',

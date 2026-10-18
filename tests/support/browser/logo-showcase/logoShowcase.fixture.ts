@@ -154,6 +154,7 @@ afterAll(async () => {
   await browser?.close();
 });
 
+/** Render the offline fixture with the requested options and wait until visible. */
 async function show(
   options: {
     count?: number;
@@ -168,6 +169,7 @@ async function show(
   );
   await expect(page.getByTestId('logo-showcase-section')).toBeVisible();
 }
+/** Read each animated track's inline transform to observe its current position. */
 async function tracks() {
   return page
     .locator('[data-testid="logo-showcase-loops"] [role="region"] > div')
@@ -175,10 +177,12 @@ async function tracks() {
       elements.map((element) => (element as HTMLElement).style.transform)
     );
 }
+/** Wait until the animated track transforms differ from their initial values. */
 async function waitForTravel() {
   const before = await tracks();
   await expect.poll(tracks).not.toEqual(before);
 }
+/** Assert overflow stays within one pixel and no external requests were made. */
 async function noOverflow() {
   expect(
     await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)

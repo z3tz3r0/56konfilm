@@ -14,12 +14,14 @@ interface Field {
   options?: unknown;
 }
 
+/** Return a named schema field, throwing if the expected field is missing. */
 function field(schema: { fields?: unknown }, name: string) {
   const result = (schema.fields as Field[]).find((item) => item.name === name);
   if (!result) throw new Error(`Missing schema field: ${name}`);
   return result;
 }
 
+/** Prepare the Logo Showcase Studio preview from the selected field values. */
 function preview(selection: Record<string, unknown>) {
   return logoShowcaseSectionType.preview!.prepare!(selection);
 }

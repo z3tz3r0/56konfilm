@@ -4,6 +4,7 @@ import { useSyncExternalStore } from 'react';
 
 const query = '(prefers-reduced-motion: reduce)';
 
+/** Subscribe to reduced-motion changes and return the listener cleanup. */
 function subscribe(onChange: () => void) {
   const media = window.matchMedia?.(query);
   media?.addEventListener('change', onChange);

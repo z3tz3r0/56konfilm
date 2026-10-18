@@ -22,6 +22,7 @@ const localized = (en: string, th: string) => [
   { _key: 'random-th-key', language: 'th', value: th },
 ];
 
+/** Evaluate the page query against an in-memory section for the locale and mode. */
 async function resolveSection(
   section: Record<string, unknown>,
   lang: Locale = 'en',
