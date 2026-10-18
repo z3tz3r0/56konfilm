@@ -143,12 +143,19 @@ const MEDIA_GALLERY_SECTION = groq`
   }
 `;
 
-const LOGO_GRID_SECTION = groq`
-  _type == "logoGridSection" => {
+const LOGO_SHOWCASE_SECTION = groq`
+  _type == "logoShowcaseSection" => {
     background,
-    "title": ${LOCALIZED('title')},
+    "heading": {
+      "eyebrow": ${LOCALIZED('heading.eyebrow')},
+      "heading": coalesce(${LOCALIZED('heading.heading')}, ${LOCALIZED('title')}),
+      "body": ${LOCALIZED('heading.body')},
+      "align": coalesce(heading.align, 'center')
+    },
     logos[]{
-      ${IMAGE_PROJECTION}
+      _key,
+      image { asset, crop, hotspot },
+      "alt": ${LOCALIZED('alt')}
     }
   }
 `;
@@ -474,7 +481,7 @@ export {
   CARD_COLLECTION_SECTION,
   TIMELINE_SECTION,
   MEDIA_GALLERY_SECTION,
-  LOGO_GRID_SECTION,
+  LOGO_SHOWCASE_SECTION,
   CTA_BANNER_SECTION,
   PACKAGES_SECTION,
   PACKAGE_COMPARISON_SECTION,
