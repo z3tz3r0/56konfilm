@@ -307,8 +307,37 @@ it('responds live to reduced motion and preserves manual pause across the change
   await expect(
     page.getByRole('button', { name: 'เล่นภาพเคลื่อนไหวโลโก้' })
   ).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('[data-paused]')).toHaveCount(2);
+  await page.waitForTimeout(100);
+  const stopped = await tracks();
+  await page.waitForTimeout(250);
+  expect(await tracks()).toEqual(stopped);
   await noOverflow();
 });
+
+it.each([false, true])(
+  'resumes actual track movement after reduced motion (initially reduced=%s)',
+  async (initiallyReduced) => {
+    await page.emulateMedia({
+      reducedMotion: initiallyReduced ? 'reduce' : 'no-preference',
+    });
+    await show();
+    if (!initiallyReduced) await waitForTravel();
+    for (let cycle = 0; cycle < 2; cycle++) {
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await expect(page.getByTestId('logo-showcase-loops')).toHaveCount(0);
+      await expect(page.getByRole('img')).toHaveCount(13);
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      await expect(page.getByTestId('logo-showcase-loops')).toBeVisible();
+      await expect(
+        page.getByRole('button', { name: 'Pause logo animation' })
+      ).toHaveAttribute('aria-pressed', 'false');
+      // Observe movement rather than merely asserting that the loop remounted.
+      await waitForTravel();
+    }
+    await noOverflow();
+  }
+);
 
 it('moves the two rows in opposite directions at approximately 20px per second', async () => {
   await show();

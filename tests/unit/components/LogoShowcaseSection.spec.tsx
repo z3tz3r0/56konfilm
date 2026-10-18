@@ -1,5 +1,4 @@
 import {
-  act,
   cleanup,
   fireEvent,
   render,
@@ -16,7 +15,11 @@ import { Button } from '@shared/components/ui/button';
 import type { LogoLoopProps } from '@shared/components/common/LogoLoop';
 
 const mocks = vi.hoisted(() => ({
-  tier: { isInitialized: true, allowHeavyMotion: true },
+  tier: {
+    isInitialized: true,
+    allowHeavyMotion: true,
+    prefersReducedMotion: false,
+  },
   mount: vi.fn(),
   unmount: vi.fn(),
   url: vi.fn(),
@@ -85,8 +88,6 @@ vi.mock('next/image', () => ({
   ),
 }));
 
-let reduced: boolean;
-let listeners: Set<() => void>;
 const fixture = (count: number): LogoShowcaseSectionBlock => ({
   _type: 'logoShowcaseSection',
   background: 'contrast',
@@ -102,21 +103,12 @@ const fixture = (count: number): LogoShowcaseSectionBlock => ({
   })),
 });
 beforeEach(() => {
-  reduced = false;
-  listeners = new Set();
-  mocks.tier = { isInitialized: true, allowHeavyMotion: true };
+  mocks.tier = {
+    isInitialized: true,
+    allowHeavyMotion: true,
+    prefersReducedMotion: false,
+  };
   vi.clearAllMocks();
-  vi.stubGlobal(
-    'matchMedia',
-    vi.fn(() => ({
-      get matches() {
-        return reduced;
-      },
-      addEventListener: (_event: string, fn: () => void) => listeners.add(fn),
-      removeEventListener: (_event: string, fn: () => void) =>
-        listeners.delete(fn),
-    }))
-  );
 });
 afterEach(() => {
   cleanup();
@@ -246,9 +238,9 @@ describe('Logo Showcase motion controls', () => {
     (state) => {
       mocks.tier = {
         isInitialized: state !== 'initializing',
-        allowHeavyMotion: state !== 'low tier',
+        allowHeavyMotion: state !== 'low tier' && state !== 'reduced motion',
+        prefersReducedMotion: state === 'reduced motion',
       };
-      reduced = state === 'reduced motion';
       render(<LogoShowcaseSection block={fixture(20)} lang='en' />);
       expect(screen.queryByTestId('loop')).not.toBeInTheDocument();
       expect(screen.queryByRole('button')).not.toBeInTheDocument();
@@ -257,24 +249,26 @@ describe('Logo Showcase motion controls', () => {
       ).toHaveLength(20);
     }
   );
-  it('reacts to preference changes, retains manual pause, and cleans up the media listener', () => {
-    const { unmount } = render(
+  it('uses shared preference updates without losing the manual pause selection', () => {
+    const { rerender } = render(
       <LogoShowcaseSection block={fixture(7)} lang='en' />
     );
     fireEvent.click(screen.getByRole('button'));
-    act(() => {
-      reduced = true;
-      listeners.forEach((fn) => fn());
-    });
+    mocks.tier = {
+      isInitialized: true,
+      allowHeavyMotion: false,
+      prefersReducedMotion: true,
+    };
+    rerender(<LogoShowcaseSection block={fixture(7)} lang='en' />);
     expect(screen.queryByTestId('loop')).not.toBeInTheDocument();
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
-    act(() => {
-      reduced = false;
-      listeners.forEach((fn) => fn());
-    });
+    mocks.tier = {
+      isInitialized: true,
+      allowHeavyMotion: true,
+      prefersReducedMotion: false,
+    };
+    rerender(<LogoShowcaseSection block={fixture(7)} lang='en' />);
     expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'true');
-    unmount();
-    expect(listeners.size).toBe(0);
   });
   it('renders no controls for a direct empty list', () => {
     const { container } = render(<LogoShowcaseLogos logos={[]} lang='en' />);

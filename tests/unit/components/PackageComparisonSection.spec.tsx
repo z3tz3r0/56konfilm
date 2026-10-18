@@ -19,6 +19,7 @@ import { comparisonFixture } from './packageComparison.fixtures';
 const device = vi.hoisted(() => ({
   allowHeavyMotion: false,
   isInitialized: true,
+  prefersReducedMotion: false,
 }));
 // Geometry is mocked below; browser checks exercise the real CSS separately.
 vi.mock(
@@ -103,6 +104,7 @@ function renderComparison(lang: Locale = 'en', mode: SiteMode = 'wedding') {
 
 beforeEach(() => {
   device.allowHeavyMotion = false;
+  device.prefersReducedMotion = false;
   sizing.desktop = true;
   sizing.available = 900;
   sizing.tabs = 420;

@@ -7,7 +7,6 @@ import { Button, LogoLoop } from '@shared/components';
 import { useDeviceTier } from '@shared/hooks/useDeviceTier';
 import type { Locale } from '@shared/config/preferences';
 import { cn } from '@shared/utils/styling/tailwindUtils';
-import { useShowcaseReducedMotion } from '../hooks/useShowcaseReducedMotion';
 import type { ShowcaseLogo } from '../types/logoShowcase.types';
 
 const copy = {
@@ -31,11 +30,12 @@ export default function LogoShowcaseLogos({
   logos: ShowcaseLogo[];
   lang: Locale;
 }) {
-  const { isInitialized, allowHeavyMotion } = useDeviceTier();
-  const reducedMotion = useShowcaseReducedMotion();
+  const { isInitialized, allowHeavyMotion, prefersReducedMotion } =
+    useDeviceTier();
   const [paused, setPaused] = useState(false);
-  const animated = isInitialized && allowHeavyMotion && !reducedMotion;
-  const staticGrid = reducedMotion || (isInitialized && !allowHeavyMotion);
+  const animated = isInitialized && allowHeavyMotion;
+  const staticGrid =
+    prefersReducedMotion || (isInitialized && !allowHeavyMotion);
   const rows = useMemo(() => {
     const split = Math.ceil(logos.length / 2);
     return logos.length <= 6
