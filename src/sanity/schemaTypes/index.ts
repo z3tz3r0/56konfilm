@@ -18,7 +18,7 @@ import { projectType } from './projects';
 import { cardCollectionSectionType } from './sections/cardCollectionSection';
 import { ctaBannerSectionType } from './sections/ctaBannerSection';
 import { heroSectionType } from './sections/heroSection';
-import { logoGridSectionType } from './sections/logoGridSection';
+import { logoShowcaseSectionType } from './sections/logoShowcaseSection';
 import { mediaGallerySectionType } from './sections/mediaGallerySection';
 import { packagesSectionType } from './sections/packagesSection';
 import { philosophySectionType } from './sections/philosophySection';
@@ -70,7 +70,7 @@ export const schemaType = {
     packageComparisonSectionType,
     philosophySectionType,
     testimonialSectionType,
-    logoGridSectionType,
+    logoShowcaseSectionType,
     ctaBannerSectionType,
     statsCounterSectionType,
     teamSectionType,
