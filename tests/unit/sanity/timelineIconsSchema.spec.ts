@@ -36,6 +36,7 @@ interface Field {
   validation?: (rule: unknown) => unknown;
 }
 
+/** Find a schema field by name, failing explicitly if the fixture schema lacks it. */
 function field(schema: { fields?: unknown }, name: string): Field {
   const result = (schema.fields as Field[]).find((item) => item.name === name);
   if (!result) throw new Error(`Missing field: ${name}`);
@@ -47,6 +48,7 @@ const picker = field(timelineStepType, 'iconPicker');
 function validate(value: unknown, context: Context) {
   let validator: Validator | undefined;
   const rule = {
+    /** Capture the custom validator while preserving the chainable Rule interface. */
     custom(callback: Validator) {
       validator = callback;
       return rule;
@@ -56,6 +58,7 @@ function validate(value: unknown, context: Context) {
   if (!validator) throw new Error('Missing icon validator');
   return validator(value, context);
 }
+/** Evaluate the actual picker visibility callback with the supplied document path. */
 function hidden(context: Context) {
   if (typeof picker.hidden !== 'function')
     throw new Error('Missing hidden rule');
@@ -67,6 +70,7 @@ const legacyImage = {
   asset: { _type: 'reference', _ref: `image-${'a'.repeat(40)}-48x48-png` },
 };
 
+/** Build an owning section, an oppositely toggled sibling, and keyed step contexts. */
 function fixture(mode: 'production' | 'wedding', hasIcon?: boolean) {
   const sectionField =
     mode === 'production' ? 'commercialSections' : 'weddingSections';
@@ -94,6 +98,7 @@ function fixture(mode: 'production' | 'wedding', hasIcon?: boolean) {
       section,
     ],
   };
+  /** Point validation at a selected step within the owning section. */
   const context = (stepKey = 'step-1'): Context => ({
     document,
     path: [
@@ -292,6 +297,7 @@ describe('Native Sanity Timeline icon validation', () => {
       },
     ],
   });
+  /** Return native Sanity blocking errors while asserting validation stays offline. */
   async function markers(document: SanityDocument) {
     const getClient = vi.fn(() => {
       throw new Error('Icon validation must not request a client');

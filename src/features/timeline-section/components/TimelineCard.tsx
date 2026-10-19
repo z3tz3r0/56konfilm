@@ -2,6 +2,10 @@ import type { TimelineStep } from '@features/timeline-section/types';
 import { AppIcon, Card, CardContent } from '@shared/components';
 import { cn } from '@shared/utils/styling/tailwindUtils';
 
+/**
+ * Render a numbered step with a decorative picker icon when enabled by its section.
+ * Missing or blank icon names leave no icon slot; legacy images are not rendered.
+ */
 export default function TimelineCard({
   step,
   index,

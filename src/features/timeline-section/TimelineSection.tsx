@@ -17,6 +17,7 @@ interface TimelineSectionProps {
   mode: SiteMode;
 }
 
+/** Render sorted steps in desktop and mobile layouts using one section icon toggle. */
 export default function TimelineSection({
   block,
   lang,

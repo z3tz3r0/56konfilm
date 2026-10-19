@@ -11,6 +11,7 @@ interface StepRowProps {
   hasIcon?: boolean;
 }
 
+/** Alternate desktop cards around the center line and pass through the icon toggle. */
 export default function StepRow({
   step,
   index,

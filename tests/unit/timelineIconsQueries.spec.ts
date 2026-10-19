@@ -16,6 +16,7 @@ const { parse, evaluate } = requireFromSanity('groq-js') as {
     options: { dataset: unknown[]; params: Record<string, unknown> }
   ) => Promise<{ get: () => Promise<unknown> }>;
 };
+/** Build the English and Thai localized-array values consumed by the real query. */
 const localized = (en: string, th: string) => [
   { _key: 'translation-en', language: 'en', value: en },
   { _key: 'translation-th', language: 'th', value: th },

@@ -120,6 +120,7 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 
+/** Build localized, unsorted steps with both picker icons and legacy image data. */
 function fixture(lang: Locale, hasIcon?: boolean): TimelineSectionBlock {
   return {
     _type: 'timelineSection',

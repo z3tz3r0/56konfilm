@@ -177,6 +177,7 @@ afterAll(async () => {
   await browser?.close();
 });
 
+/** Render the requested fixture state and wait until its section is visible. */
 async function show(
   options: {
     mode?: SiteMode;
@@ -223,6 +224,7 @@ async function assertIconPlacement(card: Locator, desktop: boolean) {
   );
 }
 
+/** Allow at most one pixel of rounding overflow beyond the viewport width. */
 async function noPageOverflow() {
   expect(
     await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)
@@ -284,6 +286,7 @@ for (const mode of ['production', 'wedding'] as const) {
         await expect(layout.locator('[data-slot="app-icon"]')).toHaveCount(4);
         await show({ mode, iconState: 'off' });
         await expect(page.locator('[data-slot="app-icon"]')).toHaveCount(0);
+        /** Measure header content to detect leftover icon space after toggling off. */
         const headerGeometry = () =>
           layout
             .getByTestId('timeline-card')

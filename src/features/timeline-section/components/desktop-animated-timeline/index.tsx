@@ -11,6 +11,10 @@ interface DesktopAnimatedTimelineProps {
   hasIcon?: boolean;
 }
 
+/**
+ * Render desktop step rows with a shared icon toggle and a scroll-driven center line.
+ * Use a static center line when the initialized device tier limits heavy motion.
+ */
 export default function DesktopAnimatedTimeline({
   steps,
   hasIcon = false,

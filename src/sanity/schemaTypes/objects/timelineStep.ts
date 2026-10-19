@@ -31,10 +31,12 @@ export const timelineStepType = defineType({
       description:
         'เลือก Icon สำหรับขั้นตอนนี้เมื่อเปิด "Show Icons on Cards?" ที่ระดับ Section',
       type: 'icon',
+      /** Hide the picker unless its owning Timeline section explicitly enables icons. */
       hidden: ({ document, path }) => {
         const section = getParentSectionFromPath(document, path);
         return section?._type !== 'timelineSection' || section.hasIcon !== true;
       },
+      /** Require a nonblank picker name only when the owning section enables icons. */
       validation: (Rule) =>
         Rule.custom((value, context) => {
           const section = getParentSectionFromPath(
