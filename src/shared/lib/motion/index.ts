@@ -1,1 +1,5 @@
-export { staggerContainerVariants, fadeUpItemVariants } from './variants';
+export {
+  staggerContainerVariants,
+  fadeUpItemVariants,
+  instantReveal,
+} from './variants';

@@ -5,6 +5,7 @@ import { AppIcon, SectionShell, SectionHeader } from '@shared/components';
 import { DynamicLucideIcon } from '@shared/components/common/DynamicLucideIcon';
 import { cn } from '@shared/utils/styling/tailwindUtils';
 import { useDeviceTier } from '@shared/hooks';
+import { instantReveal } from '@shared/lib/motion';
 import { ContactForm } from './components';
 import type { ContactSectionBlock } from './types';
 import type { Locale, SiteMode } from '@shared/config';
@@ -118,6 +119,7 @@ export default function ContactSection({
                 whileInView='visible'
                 viewport={{ once: true, margin: '-60px' }}
                 variants={useLiteMotion ? undefined : containerVariants}
+                animate={useLiteMotion ? instantReveal : undefined}
               >
                 {block.channels?.map((channel, index) => {
                   const link = getSafeLink(channel.linkUrl);
@@ -128,6 +130,7 @@ export default function ContactSection({
                       key={channel._key ?? index}
                       className='min-w-0'
                       variants={useLiteMotion ? undefined : channelVariants}
+                      animate={useLiteMotion ? instantReveal : undefined}
                     >
                       <Channel
                         {...(link ?? {})}

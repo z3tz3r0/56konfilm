@@ -5,7 +5,7 @@ import { SectionShell, SectionHeader } from '@shared/components';
 import { TeamSectionBlock } from './types';
 import TeamCard from './components/TeamCard';
 import { useDeviceTier } from '@shared/hooks';
-import { staggerContainerVariants } from '@shared/lib/motion';
+import { staggerContainerVariants, instantReveal } from '@shared/lib/motion';
 import { Locale } from '@shared/config';
 
 interface TeamSectionProps {
@@ -13,6 +13,10 @@ interface TeamSectionProps {
   block: TeamSectionBlock;
 }
 
+/**
+ * Renders localized team cards with reveals governed by the shared device
+ * motion policy.
+ */
 export default function TeamSection({ lang, block }: TeamSectionProps) {
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
   const useLiteMotion = isInitialized && !allowHeavyMotion;
@@ -34,6 +38,7 @@ export default function TeamSection({ lang, block }: TeamSectionProps) {
             whileInView='visible'
             viewport={{ once: true, margin: '-80px' }}
             variants={useLiteMotion ? undefined : staggerContainerVariants}
+            animate={useLiteMotion ? instantReveal : undefined}
           >
             {block.members?.map((member, index) => (
               <TeamCard

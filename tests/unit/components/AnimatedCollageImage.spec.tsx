@@ -2,6 +2,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import AnimatedCollageImage from '@features/media-gallery-section/components/collage/AnimatedCollageImage';
+import { instantReveal } from '@shared/lib/motion';
 
 const mocks = vi.hoisted(() => ({
   useDeviceTier: vi.fn(),
@@ -68,8 +69,17 @@ describe('AnimatedCollageImage', () => {
       </AnimatedCollageImage>
     );
 
-    expect(screen.getByText('Image content')).toHaveClass('frame');
-    expect(screen.queryByTestId('motion-image')).toBeNull();
-    expect(mocks.motionDiv).not.toHaveBeenCalled();
+    expect(screen.getByTestId('motion-image')).toHaveTextContent(
+      'Image content'
+    );
+    expect(mocks.motionDiv).toHaveBeenCalledWith(
+      expect.objectContaining({
+        className: 'frame',
+        initial: false,
+        variants: undefined,
+        whileInView: undefined,
+        animate: instantReveal,
+      })
+    );
   });
 });

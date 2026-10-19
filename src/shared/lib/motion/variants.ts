@@ -1,4 +1,12 @@
-import type { Variants } from 'motion/react';
+import type { TargetAndTransition, Variants } from 'motion/react';
+
+/** Cancel an in-flight reveal without leaving stale opacity or transforms behind. */
+export const instantReveal = {
+  opacity: 1,
+  x: 0,
+  y: 0,
+  transition: { duration: 0, delay: 0 },
+} satisfies TargetAndTransition;
 
 export const staggerContainerVariants = {
   hidden: { opacity: 0 },

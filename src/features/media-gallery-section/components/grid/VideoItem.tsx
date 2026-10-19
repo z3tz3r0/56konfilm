@@ -12,30 +12,16 @@ interface VideoItemProps {
   posterUrl?: string;
 }
 
+/**
+ * Renders viewport-controlled video or a poster fallback when the initialized
+ * policy disallows autoplay.
+ */
 export default function VideoItem({
   src,
   className,
   posterUrl,
 }: VideoItemProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const { allowVideoAutoplay, isInitialized } = useDeviceTier();
-
-  // useInView hook to detect visibility
-  const isInView = useInView(videoRef, { margin: '0px 0px -10% 0px' });
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    // Only attempt play if device tier allows autoplay
-    if (isInView && allowVideoAutoplay) {
-      video.play().catch(() => {
-        // Auto-play can be blocked by browser policy; ignore silently.
-      });
-    } else {
-      video.pause();
-    }
-  }, [isInView, allowVideoAutoplay]);
 
   // For low-power devices: render poster or placeholder instead of video
   if (isInitialized && !allowVideoAutoplay) {
@@ -58,6 +44,41 @@ export default function VideoItem({
       </div>
     );
   }
+
+  return (
+    <GalleryVideo
+      src={src}
+      className={className}
+      posterUrl={posterUrl}
+      allowVideoAutoplay={allowVideoAutoplay}
+    />
+  );
+}
+
+/** Keep the viewport observer attached to the currently mounted video element. */
+function GalleryVideo({
+  src,
+  className,
+  posterUrl,
+  allowVideoAutoplay,
+}: VideoItemProps & { allowVideoAutoplay: boolean }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const isInView = useInView(videoRef, { margin: '0px 0px -10% 0px' });
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (isInView && allowVideoAutoplay) {
+      video.play().catch(() => {
+        // Auto-play can be blocked by browser policy; ignore silently.
+      });
+    } else {
+      video.pause();
+    }
+
+    return () => video.pause();
+  }, [isInView, allowVideoAutoplay]);
 
   return (
     <video

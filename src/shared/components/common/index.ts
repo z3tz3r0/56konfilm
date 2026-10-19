@@ -17,3 +17,4 @@ export { default as SectionHeader } from './section-header';
 export { default as SectionShell } from './SectionShell';
 export { default as VideoLoop } from './VideoLoop';
 export { default as AppTooltip } from './AppTooltip';
+export { default as LogoLoop } from './LogoLoop';

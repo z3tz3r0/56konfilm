@@ -35,6 +35,7 @@ const itemVariants = {
   },
 } satisfies Variants;
 
+/** Render localized recap cards with aligned rows and highlight-based colors and CTAs. */
 export default function PackagesSection({
   block,
   lang,
@@ -78,45 +79,63 @@ export default function PackagesSection({
           >
             {block.packages.map((pkg, index) => {
               const isFeatured = Boolean(pkg.featured);
+              const isProductionHighlight = isFeatured && mode === 'production';
               return (
                 <m.article
                   key={pkg._key ?? index}
                   className={cn(
-                    'border-border/60 bg-background/80 flex h-full flex-col gap-6 rounded-3xl border p-8 shadow-sm',
-                    isFeatured && 'text-white'
-                  )}
-                  style={
+                    'border-border/60 row-span-3 grid min-w-0 grid-cols-1 grid-rows-subgrid gap-6 rounded-3xl border p-8 shadow-sm',
                     isFeatured
-                      ? { backgroundColor: 'var(--color-brown)' }
-                      : undefined
-                  }
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-neutral text-neutral-foreground'
+                  )}
                   data-testid='package-card'
                   data-featured={isFeatured ? 'true' : 'false'}
                   variants={itemVariants}
                 >
-                  {pkg.title ? (
-                    <h3 className='text-2xl font-semibold md:text-3xl'>
-                      {pkg.title}
-                    </h3>
-                  ) : null}
-                  <div className='space-y-1'>
-                    <p className='text-4xl font-semibold md:text-5xl'>
-                      {pkg.price ?? ''}
-                    </p>
-                    <p
-                      className={cn(
-                        'text-sm tracking-[0.2em] uppercase',
-                        isFeatured ? 'text-white/80' : 'text-muted-foreground'
-                      )}
-                    >
-                      {pkg.currency ?? 'THB'}
-                    </p>
-                  </div>
+                  <header className='row-start-1 flex min-w-0 flex-col gap-6 self-start'>
+                    {pkg.title ? (
+                      <h3
+                        className={cn(
+                          'text-center text-4xl font-semibold wrap-anywhere',
+                          isProductionHighlight && 'text-text-primary'
+                        )}
+                      >
+                        {pkg.title}
+                      </h3>
+                    ) : null}
+                    <div className='flex items-baseline justify-center gap-1'>
+                      <p
+                        className={cn(
+                          'text-5xl font-semibold',
+                          isProductionHighlight && 'text-text-primary'
+                        )}
+                      >
+                        {pkg.price ?? ''}
+                      </p>
+                      <p
+                        className={cn(
+                          'text-base uppercase',
+                          isProductionHighlight
+                            ? 'text-text-primary'
+                            : isFeatured
+                              ? 'text-primary-foreground/80'
+                              : 'text-neutral-foreground-secondary'
+                        )}
+                      >
+                        {pkg.currency ?? 'THB'}
+                      </p>
+                    </div>
+                  </header>
                   {pkg.features?.length ? (
                     <ul
                       className={cn(
-                        'space-y-2 text-sm',
-                        isFeatured ? 'text-white/90' : 'text-muted-foreground'
+                        'row-start-2 flex flex-col gap-2 text-sm',
+                        isProductionHighlight
+                          ? 'text-text-primary'
+                          : isFeatured
+                            ? 'text-primary-foreground'
+                            : 'text-neutral-foreground-secondary'
                       )}
                     >
                       {pkg.features.map((feature, featureIndex) => (
@@ -128,15 +147,21 @@ export default function PackagesSection({
                       ))}
                     </ul>
                   ) : null}
-                  <div className='mt-auto pt-2'>
+                  <div className='row-start-3 grid pt-2 [&>a]:grid'>
                     {pkg.cta ? (
                       <CtaButton
-                        ctaButton={pkg.cta}
+                        ctaButton={{
+                          ...pkg.cta,
+                          style: isFeatured ? 'neutral' : 'secondary',
+                        }}
                         lang={lang}
                         mode={mode}
                         className={cn(
-                          'border border-current bg-transparent text-current hover:bg-white/10',
-                          !isFeatured && 'text-primary'
+                          !isFeatured &&
+                            'text-primary border border-current bg-transparent hover:bg-white/10',
+                          isFeatured &&
+                            mode === 'wedding' &&
+                            'hover:not-disabled:bg-black'
                         )}
                         fullWidth
                       />
