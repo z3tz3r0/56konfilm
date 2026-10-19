@@ -75,6 +75,7 @@ const CARD_COLLECTION_SECTION = groq`
 const TIMELINE_SECTION = groq`
   _type == "timelineSection" => {
     background,
+    "hasIcon": coalesce(hasIcon, false),
     heading{
       "eyebrow": ${LOCALIZED('eyebrow')},
       "heading": ${LOCALIZED('heading')},
@@ -85,7 +86,8 @@ const TIMELINE_SECTION = groq`
       order,
       "title": ${LOCALIZED('title')},
       "description": ${LOCALIZED('description')},
-      icon{ asset, crop, hotspot }
+      icon{ asset, crop, hotspot },
+      iconPicker { name }
     } | order(order asc),
     cta{
       ${CTA_PROJECTION}
