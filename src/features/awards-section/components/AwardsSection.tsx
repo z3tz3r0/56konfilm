@@ -5,6 +5,7 @@ import { m, type Variants } from 'motion/react';
 import { SectionShell, SectionHeader } from '@shared/components';
 import { urlFor } from '@/sanity/lib/image';
 import { useDeviceTier } from '@shared/hooks';
+import { instantReveal } from '@shared/lib/motion';
 import { AwardsSectionBlock } from '../types';
 
 const containerVariants: Variants = {
@@ -28,6 +29,10 @@ interface AwardsSectionProps {
   block: AwardsSectionBlock;
 }
 
+/**
+ * Renders award rows with staggered reveals or immediate visibility under lite
+ * motion.
+ */
 export default function AwardsSection({ block }: AwardsSectionProps) {
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
   const useLiteMotion = isInitialized && !allowHeavyMotion;
@@ -46,6 +51,7 @@ export default function AwardsSection({ block }: AwardsSectionProps) {
             whileInView='visible'
             viewport={{ once: true, margin: '-60px' }}
             variants={useLiteMotion ? undefined : containerVariants}
+            animate={useLiteMotion ? instantReveal : undefined}
           >
             {/* Header row */}
             <div
@@ -62,6 +68,7 @@ export default function AwardsSection({ block }: AwardsSectionProps) {
                 key={award._key ?? index}
                 className='group grid grid-cols-1 items-center gap-2 py-5 md:grid-cols-[1fr_1fr_auto] md:gap-6'
                 variants={useLiteMotion ? undefined : rowVariants}
+                animate={useLiteMotion ? instantReveal : undefined}
                 data-testid='award-item'
               >
                 {/* Award name + optional logo */}

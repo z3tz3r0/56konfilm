@@ -8,7 +8,6 @@ import {
   useState,
   type CSSProperties,
 } from 'react';
-import { useReducedMotion } from 'motion/react';
 import { CheckIcon, InfoIcon } from 'lucide-react';
 import {
   AppTooltip,
@@ -74,9 +73,9 @@ export default function PackageComparison({
     groups.find((group) => group._key === selectedKey) ?? groups[0];
   const scrollContainer = useRef<HTMLDivElement>(null);
   const id = useId();
-  const { allowHeavyMotion, isInitialized } = useDeviceTier();
-  const reducedMotion = useReducedMotion();
-  const animate = isInitialized && allowHeavyMotion && !reducedMotion;
+  const { allowHeavyMotion, isInitialized, prefersReducedMotion } =
+    useDeviceTier();
+  const animate = isInitialized && allowHeavyMotion;
   const labels = copy[lang];
   const hasGroupBadge = activeGroup.packages.some((item) =>
     item.badgeLabel?.trim()
@@ -165,7 +164,7 @@ export default function PackageComparison({
             mode={mode}
             label={labels.comparison}
             id={id}
-            reducedMotion={!!reducedMotion}
+            reducedMotion={prefersReducedMotion}
           >
             <ComparisonScrollport
               scrollRef={scrollContainer}
@@ -173,7 +172,7 @@ export default function PackageComparison({
               id={`${id}-scrollport`}
               label={`${labels.comparison} — ${activeGroup.label}`}
               lang={lang}
-              reducedMotion={!!reducedMotion}
+              reducedMotion={prefersReducedMotion}
             >
               <div className={styles.tableTrack}>
                 <Table

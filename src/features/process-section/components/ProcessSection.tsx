@@ -5,6 +5,7 @@ import { SectionShell, SectionHeader } from '@shared/components';
 import { DynamicLucideIcon } from '@shared/components/common/DynamicLucideIcon';
 import { cn } from '@shared/utils/styling/tailwindUtils';
 import { useDeviceTier } from '@shared/hooks';
+import { instantReveal } from '@shared/lib/motion';
 import { ProcessSectionBlock } from '../types';
 
 const containerVariants: Variants = {
@@ -28,6 +29,10 @@ interface ProcessSectionProps {
   block: ProcessSectionBlock;
 }
 
+/**
+ * Renders process steps as a timeline or grid, adapting reveals to the device
+ * motion policy.
+ */
 export default function ProcessSection({ block }: ProcessSectionProps) {
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
   const useLiteMotion = isInitialized && !allowHeavyMotion;
@@ -52,6 +57,7 @@ export default function ProcessSection({ block }: ProcessSectionProps) {
               whileInView='visible'
               viewport={{ once: true, margin: '-80px' }}
               variants={useLiteMotion ? undefined : containerVariants}
+              animate={useLiteMotion ? instantReveal : undefined}
             >
               {block.steps.map((step, index) => {
                 const isLast = index === block.steps!.length - 1;
@@ -60,6 +66,7 @@ export default function ProcessSection({ block }: ProcessSectionProps) {
                     key={step._key ?? index}
                     className='relative flex gap-6 pb-10'
                     variants={useLiteMotion ? undefined : itemVariants}
+                    animate={useLiteMotion ? instantReveal : undefined}
                     data-testid='process-step'
                   >
                     {/* Vertical connector line */}
@@ -107,12 +114,14 @@ export default function ProcessSection({ block }: ProcessSectionProps) {
               whileInView='visible'
               viewport={{ once: true, margin: '-80px' }}
               variants={useLiteMotion ? undefined : containerVariants}
+              animate={useLiteMotion ? instantReveal : undefined}
             >
               {block.steps.map((step, index) => (
                 <m.li
                   key={step._key ?? index}
                   className='group flex flex-col gap-4'
                   variants={useLiteMotion ? undefined : itemVariants}
+                  animate={useLiteMotion ? instantReveal : undefined}
                   data-testid='process-step'
                 >
                   {/* Step number */}

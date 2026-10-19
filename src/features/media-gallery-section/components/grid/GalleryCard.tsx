@@ -2,6 +2,7 @@
 
 import { m, type Variants } from 'motion/react';
 import { type ReactNode } from 'react';
+import { instantReveal } from '@shared/lib/motion';
 
 interface GalleryCardProps {
   children: ReactNode;
@@ -12,6 +13,10 @@ interface GalleryCardProps {
   extra?: ReactNode;
 }
 
+/**
+ * Wraps gallery media and its caption, revealing immediately when lite motion
+ * is enabled.
+ */
 export default function GalleryCard({
   children,
   variants,
@@ -24,6 +29,7 @@ export default function GalleryCard({
     <m.figure
       className='group bg-muted relative overflow-hidden rounded-2xl'
       variants={variants}
+      animate={useLiteMotion ? instantReveal : undefined}
       data-testid={testId}
     >
       <div className='relative aspect-4/3 overflow-hidden'>

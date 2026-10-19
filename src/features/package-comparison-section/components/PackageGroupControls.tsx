@@ -127,9 +127,8 @@ export default function PackageGroupControls({
                       aria-hidden='true'
                       data-testid='comparison-group-highlight'
                       className='bg-primary pointer-events-none absolute inset-0 -z-10 rounded-full'
-                      layoutId={
-                        animate && showTabs ? 'active-group' : undefined
-                      }
+                      // Retain projection identity so the first selection after re-enabling motion can animate.
+                      layoutId={showTabs ? 'active-group' : undefined}
                       initial={false}
                       transition={
                         animate && showTabs

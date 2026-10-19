@@ -6,6 +6,7 @@ import { useDeviceTier } from '@shared/hooks';
 import {
   staggerContainerVariants,
   fadeUpItemVariants,
+  instantReveal,
 } from '@shared/lib/motion';
 
 interface AnimatedPortfolioGridProps {
@@ -15,7 +16,7 @@ interface AnimatedPortfolioGridProps {
 
 /**
  * Reveals child cards with a staggered animation once the grid enters the viewport.
- * Renders a static grid once device initialization disallows heavy motion.
+ * Disables motion without replacing cards when the initialized device tier changes.
  */
 export default function AnimatedPortfolioGrid({
   children,
@@ -23,22 +24,22 @@ export default function AnimatedPortfolioGrid({
 }: AnimatedPortfolioGridProps) {
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
 
-  if (isInitialized && !allowHeavyMotion) {
-    return <section className={className}>{children}</section>;
-  }
+  const useLiteMotion = isInitialized && !allowHeavyMotion;
 
   return (
     <m.section
       className={className}
-      initial='hidden'
-      whileInView='visible'
+      initial={useLiteMotion ? false : 'hidden'}
+      whileInView={useLiteMotion ? undefined : 'visible'}
+      animate={useLiteMotion ? instantReveal : undefined}
       viewport={{ once: true, margin: '-100px' }}
-      variants={staggerContainerVariants}
+      variants={useLiteMotion ? undefined : staggerContainerVariants}
     >
       {Children.map(children, (child) => (
         <m.div
           className='row-span-2 grid grid-rows-subgrid'
-          variants={fadeUpItemVariants}
+          animate={useLiteMotion ? instantReveal : undefined}
+          variants={useLiteMotion ? undefined : fadeUpItemVariants}
         >
           {child}
         </m.div>

@@ -3,7 +3,7 @@
 import { m } from 'motion/react';
 import { urlFor } from '@/sanity/lib/image';
 import { useDeviceTier } from '@shared/hooks';
-import { fadeUpItemVariants } from '@shared/lib/motion';
+import { fadeUpItemVariants, instantReveal } from '@shared/lib/motion';
 import Image from 'next/image';
 import { TeamSectionBlock } from '../types';
 import { Locale } from '@shared/config';
@@ -14,6 +14,10 @@ interface TeamCardProps {
   member: NonNullableMember;
 }
 
+/**
+ * Renders a team member profile with a localized image fallback and device-
+ * aware reveal.
+ */
 export default function TeamCard({ lang, member }: TeamCardProps) {
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
   const useLiteMotion = isInitialized && !allowHeavyMotion;
@@ -22,6 +26,7 @@ export default function TeamCard({ lang, member }: TeamCardProps) {
     <m.article
       className='bg-neutral mx-auto flex w-full max-w-[370px] flex-col items-center overflow-hidden rounded-2xl text-center'
       variants={useLiteMotion ? undefined : fadeUpItemVariants}
+      animate={useLiteMotion ? instantReveal : undefined}
       data-testid='team-member'
     >
       <div className='group relative aspect-4/3 w-full overflow-hidden'>
