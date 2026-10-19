@@ -66,6 +66,7 @@ afterEach(() => {
   document.documentElement.removeAttribute('data-mode');
 });
 
+/** Creates a minimal Philosophy block with optional CMS quote and background. */
 function fixture(quote?: string, background?: string): PhilosophySectionBlock {
   return { _type: 'philosophySection', quote, background };
 }

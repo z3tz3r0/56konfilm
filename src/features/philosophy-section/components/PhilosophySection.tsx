@@ -9,6 +9,10 @@ interface PhilosophySectionProps {
   block: PhilosophySectionBlock;
 }
 
+/**
+ * Renders a CMS quote with shared highlighting, responsive decorative quotes,
+ * the selected background and reveal animation. Omits quote content when blank.
+ */
 export default function PhilosophySection({ block }: PhilosophySectionProps) {
   const defaultBackground = !block.background || block.background === 'default';
   const quote = block.quote ?? '';

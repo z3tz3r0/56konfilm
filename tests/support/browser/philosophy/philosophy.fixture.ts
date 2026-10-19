@@ -157,6 +157,10 @@ afterAll(async () => {
   await browser?.close();
 });
 
+/**
+ * Renders the browser fixture with the requested content and theme, then waits
+ * for the section to be visible and its reveal animation to reach full opacity.
+ */
 async function show(
   options: {
     mode?: SiteMode;
@@ -184,6 +188,10 @@ async function show(
     .toBe(1);
 }
 
+/**
+ * Asserts quote geometry, typography, closing-icon rotation and lack of
+ * horizontal overflow for the supplied viewport width, with a 768px breakpoint.
+ */
 async function assertLayout(width: number) {
   const heading = page.getByRole('heading', { level: 2 });
   const opening = page
