@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   act,
   cleanup,
@@ -5,6 +8,7 @@ import {
   render,
   screen,
 } from '@testing-library/react';
+import { preProcessFile } from 'typescript';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   Carousel,
@@ -76,6 +80,28 @@ afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
+});
+
+describe('Carousel internal imports', () => {
+  it.each([
+    ['common/ScrollableCarousel.tsx', '../ui/carousel'],
+    ['ui/carousel.tsx', './button'],
+  ])('%s keeps its dependency import direct', (fileName, directImport) => {
+    const source = readFileSync(
+      resolve(
+        dirname(fileURLToPath(import.meta.url)),
+        '../../../src/shared/components',
+        fileName
+      ),
+      'utf8'
+    );
+    const imports = preProcessFile(source).importedFiles.map(
+      (entry) => entry.fileName
+    );
+
+    expect(imports).toContain(directImport);
+    expect(imports).not.toContain('@shared/components');
+  });
 });
 
 function tags(lang: Locale) {
