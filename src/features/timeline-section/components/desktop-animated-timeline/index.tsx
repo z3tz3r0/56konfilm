@@ -1,17 +1,19 @@
 'use client';
 
 import { useRef } from 'react';
-import { TimelineStep } from '@features/timeline-section/types';
+import type { TimelineStep } from '@features/timeline-section/types';
 import { m, useScroll, useTransform } from 'motion/react';
 import StepRow from './StepRow';
 import { useDeviceTier } from '@shared/hooks';
 
 interface DesktopAnimatedTimelineProps {
   steps: TimelineStep[];
+  hasIcon?: boolean;
 }
 
 export default function DesktopAnimatedTimeline({
   steps,
+  hasIcon = false,
 }: DesktopAnimatedTimelineProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
@@ -31,7 +33,11 @@ export default function DesktopAnimatedTimeline({
   );
 
   return (
-    <div ref={containerRef} className='relative hidden md:block'>
+    <div
+      ref={containerRef}
+      className='relative hidden md:block'
+      data-testid='timeline-desktop'
+    >
       {/* 📍 เส้นหลักแนวตั้ง */}
       <div
         aria-hidden='true'
@@ -49,7 +55,12 @@ export default function DesktopAnimatedTimeline({
 
       <ol className='space-y-24'>
         {steps.map((step, index) => (
-          <StepRow key={step._key ?? index} step={step} index={index} />
+          <StepRow
+            key={step._key ?? index}
+            step={step}
+            index={index}
+            hasIcon={hasIcon}
+          />
         ))}
       </ol>
     </div>

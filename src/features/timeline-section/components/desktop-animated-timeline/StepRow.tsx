@@ -1,16 +1,21 @@
 'use client';
 
 import TimelineCard from '@features/timeline-section/components/TimelineCard';
-import { TimelineStep } from '@features/timeline-section/types';
+import type { TimelineStep } from '@features/timeline-section/types';
 import { cn } from '@shared/utils/styling/tailwindUtils';
 import { m } from 'motion/react';
 
 interface StepRowProps {
   step: TimelineStep;
   index: number;
+  hasIcon?: boolean;
 }
 
-export default function StepRow({ step, index }: StepRowProps) {
+export default function StepRow({
+  step,
+  index,
+  hasIcon = false,
+}: StepRowProps) {
   const isEven = index % 2 === 0;
 
   return (
@@ -41,7 +46,7 @@ export default function StepRow({ step, index }: StepRowProps) {
             )}
           />
         </div>
-        <TimelineCard step={step} index={index} />
+        <TimelineCard step={step} index={index} hasIcon={hasIcon} />
       </div>
 
       {/* หมุดกลมตรงกลาง */}

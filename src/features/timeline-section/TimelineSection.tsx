@@ -6,8 +6,8 @@ import {
   SectionHeader,
   SectionShell,
 } from '@shared/components';
-import { TimelineSectionBlock } from './types';
-import { Locale, SiteMode } from '@shared/config';
+import type { TimelineSectionBlock } from './types';
+import type { Locale, SiteMode } from '@shared/config/preferences';
 import TimelineCard from './components/TimelineCard';
 import DesktopAnimatedTimeline from './components/desktop-animated-timeline';
 
@@ -22,22 +22,23 @@ export default function TimelineSection({
   lang,
   mode,
 }: TimelineSectionProps) {
+  const hasIcon = block.hasIcon === true;
   const steps = [...(block.steps ?? [])].sort(
     (a, b) => (a.order ?? 0) - (b.order ?? 0)
   );
 
   return (
-    <SectionShell background={block.background}>
+    <SectionShell background={block.background} dataTestId='timeline-section'>
       <div className='container mx-auto space-y-12'>
         <SectionHeader heading={block.heading} />
 
         {steps.length ? (
           <div className='relative isolate mx-auto mt-8 md:mt-16'>
             {/* --- Desktop Layout (Zig-Zag) --- */}
-            <DesktopAnimatedTimeline steps={steps} />
+            <DesktopAnimatedTimeline steps={steps} hasIcon={hasIcon} />
 
             {/* --- Mobile Layout (Carousel) --- */}
-            <div className='block md:hidden'>
+            <div className='block md:hidden' data-testid='timeline-mobile'>
               <Carousel
                 opts={{ align: 'start', loop: false }}
                 className='w-full'
@@ -51,6 +52,7 @@ export default function TimelineSection({
                       <TimelineCard
                         step={step}
                         index={index}
+                        hasIcon={hasIcon}
                         className='h-full min-h-[280px]'
                       />
                     </CarouselItem>
