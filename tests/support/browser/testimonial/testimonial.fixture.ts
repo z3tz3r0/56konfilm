@@ -10,6 +10,7 @@ import {
   type Browser,
   type BrowserContext,
   type Page,
+  type Locator,
 } from '@playwright/test';
 import {
   afterAll,
@@ -274,8 +275,107 @@ async function assertGeometry() {
   ).toBeLessThanOrEqual(1);
 }
 
+/** Resolve actual button colors and its focus-ring variable against theme tokens. */
+async function navigationColors(button: Locator) {
+  return button.evaluate((node) => {
+    const style = getComputedStyle(node);
+    const probe = document.createElement('span');
+    node.append(probe);
+    const color = (value: string) => {
+      probe.style.color = value;
+      return getComputedStyle(probe).color;
+    };
+    const result = {
+      background: style.backgroundColor,
+      text: style.color,
+      border: style.borderTopColor,
+      shadow: style.boxShadow,
+      ringColor: color(style.getPropertyValue('--tw-ring-color')),
+      primary: color('var(--primary)'),
+      primaryForeground: color('var(--primary-foreground)'),
+      ring: color('var(--ring)'),
+      halfRing: color('color-mix(in oklab, var(--ring) 50%, transparent)'),
+      focusVisible: node.matches(':focus-visible'),
+    };
+    probe.remove();
+    return result;
+  });
+}
+
 for (const mode of ['production', 'wedding'] as const) {
   describe('Testimonial browser (' + mode + ')', () => {
+    it.each(['carousel-prev', 'carousel-next'])(
+      'checks normal, hover and keyboard-focus colors for %s',
+      async (id) => {
+        await show({ mode });
+        const button = page.getByTestId(id);
+        const tokens = await navigationColors(button);
+        await expect(button).toBeEnabled();
+        await expect
+          .poll(() => navigationColors(button))
+          .toMatchObject({
+            background: 'rgba(0, 0, 0, 0)',
+            text: tokens.primary,
+            border: tokens.primary,
+          });
+        await button.hover();
+        await expect
+          .poll(() => navigationColors(button))
+          .toMatchObject({
+            background: tokens.primary,
+            text: tokens.primaryForeground,
+            border: tokens.primary,
+          });
+        await page.mouse.move(0, 0);
+        // Reach the controls using the keyboard, not programmatic focus alone.
+        await page.keyboard.press('Tab');
+        if (id === 'carousel-next') await page.keyboard.press('Tab');
+        await expect(button).toBeFocused();
+        await expect
+          .poll(() => navigationColors(button))
+          .toMatchObject({
+            background: 'rgba(0, 0, 0, 0)',
+            text: tokens.primary,
+            focusVisible: true,
+            border: tokens.ring,
+            ringColor: tokens.halfRing,
+          });
+        const focused = await navigationColors(button);
+        expect(focused.shadow).toContain(focused.ringColor);
+        // Hovering must not remove the visible keyboard-focus border/ring.
+        await button.hover();
+        await expect
+          .poll(() => navigationColors(button))
+          .toMatchObject({
+            background: tokens.primary,
+            text: tokens.primaryForeground,
+            focusVisible: true,
+            border: tokens.ring,
+            ringColor: tokens.halfRing,
+          });
+      }
+    );
+    it('preserves secondary disabled controls without color overrides', async () => {
+      await show({ mode, count: 1 });
+      for (const id of ['carousel-prev', 'carousel-next']) {
+        const button = page.getByTestId(id);
+        await expect(button).toBeDisabled();
+        const tokens = await navigationColors(button);
+        // Force only the pointer action: the browser still treats the button as disabled.
+        await button.hover({ force: true });
+        await expect
+          .poll(() => navigationColors(button))
+          .toMatchObject({
+            background: 'rgba(0, 0, 0, 0)',
+            text: tokens.primary,
+            border: tokens.primary,
+            focusVisible: false,
+          });
+        expect(
+          await button.evaluate((node) => getComputedStyle(node).opacity)
+        ).toBe('0.3');
+      }
+    });
     for (const lang of ['en', 'th'] as const) {
       for (const background of ['default', 'muted', 'contrast']) {
         it.each([375, 1280])(

@@ -133,14 +133,8 @@ export default function TestimonialSection({ block }: TestimonialSectionProps) {
                 ))}
               </CarouselContent>
 
-              <CarouselPrevious
-                data-testid='carousel-prev'
-                className='bg-[var(--color-brown)] text-[var(--color-ivory-white)] hover:bg-[var(--color-mocha-brown)]'
-              />
-              <CarouselNext
-                data-testid='carousel-next'
-                className='bg-[var(--color-brown)] text-[var(--color-ivory-white)] hover:bg-[var(--color-mocha-brown)]'
-              />
+              <CarouselPrevious data-testid='carousel-prev' />
+              <CarouselNext data-testid='carousel-next' />
             </Carousel>
 
             {count > 1 ? (

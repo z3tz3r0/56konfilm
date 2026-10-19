@@ -313,10 +313,28 @@ describe('Testimonial carousel regression', () => {
       screen.getByRole('button', { name: 'Go to testimonial 3' })
     ).toHaveClass('bg-[var(--color-brown)]');
     for (const id of ['carousel-prev', 'carousel-next']) {
-      expect(screen.getByTestId(id)).toHaveClass(
-        'bg-[var(--color-brown)]',
-        'text-[var(--color-ivory-white)]'
+      const button = screen.getByTestId(id);
+      expect(button).toHaveAttribute('data-variant', 'secondary');
+      expect(button).toHaveClass(
+        'text-primary',
+        'border-primary',
+        'hover:not-disabled:bg-primary',
+        'hover:not-disabled:text-primary-foreground',
+        'focus-visible:border-ring',
+        'focus-visible:ring-ring/50'
       );
+      for (const override of [
+        'bg-[var(--color-brown)]',
+        'text-[var(--color-ivory-white)]',
+        'hover:bg-[var(--color-mocha-brown)]',
+        'dark:bg-transparent',
+        'dark:border-neutral',
+        'dark:hover:not-disabled:bg-neutral',
+        'dark:hover:not-disabled:text-neutral-foreground',
+        'dark:focus-visible:border-primary',
+        'dark:focus-visible:ring-primary',
+      ])
+        expect(button).not.toHaveClass(override);
     }
   });
   it('updates on reInit and removes its select/reInit subscriptions on unmount', () => {
