@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { m } from 'motion/react';
 import Image from 'next/image';
 import {
+  AppIcon,
   Carousel,
   CarouselContent,
   CarouselItem,
@@ -67,7 +68,7 @@ export default function TestimonialSection({ block }: TestimonialSectionProps) {
                   <CarouselItem key={testimonial._key ?? index}>
                     <m.article
                       className={cn(
-                        'bg-secondary/80 border-border/40 mx-auto flex max-w-3xl flex-col gap-6 rounded-3xl border p-8 text-center shadow-sm transition-opacity duration-500',
+                        'bg-neutral text-neutral-foreground border-border/40 mx-auto flex max-w-3xl flex-col gap-6 rounded-3xl border p-8 text-center shadow-sm transition-opacity duration-500',
                         index === current
                           ? 'opacity-100'
                           : 'pointer-events-none opacity-0'
@@ -80,12 +81,19 @@ export default function TestimonialSection({ block }: TestimonialSectionProps) {
                         index === current ? 'testimonial-item' : undefined
                       }
                     >
-                      <div className='text-primary flex items-center justify-center text-5xl'>
-                        “
+                      <div
+                        aria-hidden='true'
+                        className='flex items-center justify-center'
+                      >
+                        <AppIcon
+                          iconName='bi:quote'
+                          variant='plain'
+                          className='text-primary'
+                        />
                       </div>
                       {testimonial.quote ? (
                         <p
-                          className='text-foreground text-lg leading-relaxed'
+                          className='text-lg leading-relaxed'
                           style={{
                             fontFamily:
                               'var(--font-primary), "Cormorant Garamond", var(--font-noto-sans-thai), serif',
@@ -115,7 +123,7 @@ export default function TestimonialSection({ block }: TestimonialSectionProps) {
                           </p>
                         ) : null}
                         {testimonial.authorTitle ? (
-                          <p className='text-muted-foreground text-sm'>
+                          <p className='text-neutral-foreground-secondary text-sm'>
                             {testimonial.authorTitle}
                           </p>
                         ) : null}
