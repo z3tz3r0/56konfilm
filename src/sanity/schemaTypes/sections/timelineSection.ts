@@ -15,6 +15,13 @@ export const timelineSectionType = defineType({
       type: localizedBlockType.name,
     }),
     defineField({
+      name: 'hasIcon',
+      title: 'Show Icons on Cards?',
+      type: 'boolean',
+      description: 'เปิดใช้งานเพื่อแสดง Icon บนการ์ดทุกขั้นตอนใน Section นี้',
+      initialValue: false,
+    }),
+    defineField({
       name: 'steps',
       title: 'Steps',
       description: 'ขั้นตอนใน Timeline',
