@@ -1,6 +1,6 @@
 'use client';
 
-import { Carousel, type CarouselApi } from '@shared/components';
+import { Carousel, type CarouselApi } from '../ui/carousel';
 import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
 import { useCallback, useEffect, useState } from 'react';
 
