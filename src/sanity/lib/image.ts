@@ -17,6 +17,7 @@ interface ImageUrlOptions {
   height?: number;
   quality?: number;
   fit?: 'clip' | 'crop' | 'max' | 'fill';
+  auto?: 'format';
 }
 
 export function getImageUrl(
@@ -28,6 +29,7 @@ export function getImageUrl(
   if (options.height) img = img.height(options.height);
   if (options.quality) img = img.quality(options.quality);
   if (options.fit) img = img.fit(options.fit);
+  if (options.auto) img = img.auto(options.auto);
   return img.url();
 }
 

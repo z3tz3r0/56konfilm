@@ -70,6 +70,7 @@ export default function VideoMedia({
       {src && (
         <video
           {...videoProps}
+          poster={poster}
           ref={videoRef}
           aria-busy={status === 'loading'}
           aria-hidden={status === 'error' ? true : videoProps['aria-hidden']}

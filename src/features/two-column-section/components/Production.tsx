@@ -1,8 +1,8 @@
-import { urlFor } from '@/sanity/lib/image';
+import { getImageSource } from '@/sanity/lib/image';
 import { TwoColumnByMode } from '../types';
 import { CtaGroup, HighlightedText, SectionShell } from '@shared/components';
 import { cn } from '@shared/utils/styling/tailwindUtils';
-import Image from 'next/image';
+import { MediaWithFallback } from '@shared/components';
 
 export default function Production({
   block,
@@ -60,19 +60,22 @@ export default function Production({
             fullWidth
           />
         </section>
-        {block.media?.image && (
-          <section className={cn('order-2 min-w-0', mediaColumnOrder)}>
-            <div className='bg-muted relative aspect-568/358 max-h-[358px] max-w-[568px] overflow-hidden rounded-2xl'>
-              <Image
-                src={urlFor(block.media.image).quality(80).fit('clip').url()}
-                alt={block.media.alt ?? ''}
-                fill
-                className='object-cover'
-                sizes='(min-width: 768px) 50vw, 100vw'
-              />
-            </div>
-          </section>
-        )}
+        <section className={cn('order-2 min-w-0', mediaColumnOrder)}>
+          <div className='bg-muted relative aspect-568/358 max-h-[358px] max-w-[568px] overflow-hidden rounded-2xl'>
+            <MediaWithFallback
+              mediaType='image'
+              source={getImageSource(block.media?.image, {
+                quality: 80,
+                fit: 'clip',
+              })}
+              lang={lang}
+              alt={block.media?.alt ?? ''}
+              fill
+              className='object-cover'
+              sizes='(min-width: 768px) 50vw, 100vw'
+            />
+          </div>
+        </section>
       </div>
     </SectionShell>
   );

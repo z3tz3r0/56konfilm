@@ -53,19 +53,27 @@ vi.mock('@shared/components', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@shared/components')>()),
   VideoLoop: () => null,
 }));
-vi.mock('@features/media-gallery-section/components/grid/VideoItem', () => ({
-  default: ({ src }: { src: string }) => (
-    <video data-testid='fixture-video' src={src} />
-  ),
+vi.mock(
+  '@features/media-gallery-section/components/grid/VideoItem',
+  async () => {
+    const { default: MediaWithFallback } =
+      await import('@shared/components/common/MediaWithFallback');
+    return {
+      default: ({ src, lang }: { src?: string | null; lang: Locale }) =>
+        src ? (
+          <video data-testid='fixture-video' src={src} />
+        ) : (
+          <MediaWithFallback mediaType='video' source={src} lang={lang} />
+        ),
+    };
+  }
+);
+vi.mock('@shared/config/env', () => ({
+  env: {
+    NEXT_PUBLIC_SANITY_PROJECT_ID: 'fixture',
+    NEXT_PUBLIC_SANITY_DATASET: 'production',
+  },
 }));
-vi.mock('@/sanity/lib/image', async () => {
-  const { createImageUrlBuilder } = await import('@sanity/image-url');
-  const builder = createImageUrlBuilder({
-    projectId: 'fixture',
-    dataset: 'production',
-  });
-  return { urlFor: builder.image.bind(builder) };
-});
 
 /**
  * Creates a gallery media fixture with an asset reference, crop, hotspot, and alt.
@@ -391,7 +399,88 @@ describe('MediaGallerySection presentations', () => {
         'href',
         '/th/work/legacy'
       );
-      expect(screen.getAllByRole('figure')).toHaveLength(2);
+      expect(screen.getAllByRole('figure')).toHaveLength(3);
+      expect(screen.getByText('ไม่มีรูปภาพ')).toBeVisible();
     }
   );
+
+  it.each([
+    { mode: 'production', lang: 'en' },
+    { mode: 'production', lang: 'th' },
+    { mode: 'wedding', lang: 'en' },
+    { mode: 'wedding', lang: 'th' },
+  ] as const)(
+    'retains missing image/video cards and their order in $mode/$lang',
+    ({ mode, lang }) => {
+      render(
+        <MediaGallerySection
+          mode={mode}
+          lang={lang}
+          block={{
+            ...block,
+            sectionVariant: 'grid',
+            cta: undefined,
+            items: [
+              {
+                _key: 'first',
+                media: media('first', 'First photo'),
+                label: 'First',
+              },
+              null,
+              {
+                _key: 'missing-image',
+                media: { image: { asset: null, crop: null, hotspot: null } },
+                label: 'Second',
+              },
+              {
+                _key: 'missing-video',
+                mediaType: 'video',
+                videoUrl: null,
+                label: 'Third',
+              },
+              {
+                _key: 'missing-project',
+                projectSlug: 'legacy',
+                projectOverview: 'Retained overview',
+                label: 'Fourth',
+              },
+            ],
+          }}
+        />
+      );
+      expect(
+        screen
+          .getAllByRole('figure')
+          .map((node) => node.querySelector('figcaption')?.textContent)
+      ).toEqual(['First', 'Second', 'Third', 'Fourth']);
+      expect(
+        screen.getAllByText(lang === 'th' ? 'ไม่มีรูปภาพ' : 'No Image')
+      ).toHaveLength(2);
+      expect(
+        screen.getByText(lang === 'th' ? 'ไม่มีวิดีโอ' : 'No Video')
+      ).toBeInTheDocument();
+      expect(screen.getByRole('link')).toHaveAttribute(
+        'href',
+        `/${lang}/work/legacy`
+      );
+      expect(screen.getByText('Retained overview')).toBeInTheDocument();
+    }
+  );
+
+  it('does not create Grid cards when no content entries exist', () => {
+    render(
+      <MediaGallerySection
+        mode='production'
+        lang='en'
+        block={{
+          ...block,
+          sectionVariant: 'grid',
+          items: [null],
+          cta: undefined,
+        }}
+      />
+    );
+    expect(screen.queryByRole('figure')).toBeNull();
+    expect(screen.queryByRole('status')).toBeNull();
+  });
 });

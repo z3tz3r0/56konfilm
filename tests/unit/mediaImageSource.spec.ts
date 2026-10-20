@@ -103,4 +103,20 @@ describe('projected image source resolver (local builder only)', () => {
       getImageSource(source, { width: 600, height: 400 })
     );
   });
+  it('preserves opt-in automatic image formatting without changing defaults', () => {
+    const source = {
+      asset: { _ref: id },
+      crop: null,
+      hotspot: null,
+    } satisfies ImageSource;
+    const formatted = getImageSource(source, {
+      width: 1200,
+      fit: 'max',
+      auto: 'format',
+    });
+    expect(formatted).toBe(
+      urlFor(source).width(1200).fit('max').auto('format').url()
+    );
+    expect(new URL(getImageUrl(source)).searchParams.has('auto')).toBe(false);
+  });
 });

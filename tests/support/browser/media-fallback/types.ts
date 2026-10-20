@@ -6,11 +6,22 @@ export interface FixtureOptions {
   mediaType?: 'image' | 'video';
   state?: 'source-missing' | 'loading' | 'success' | 'error' | 'invalid';
   frame?: boolean;
-  consumer?: 'project' | 'team';
+  consumer?:
+    | 'project'
+    | 'team'
+    | 'grid'
+    | 'collage'
+    | 'two-column'
+    | 'hero'
+    | 'portable-text'
+    | 'showreel'
+    | 'gallery-video'
+    | 'blog';
+  videoAutoplay?: boolean;
 }
 
 declare global {
   interface Window {
-    showMediaFixture: (options: FixtureOptions) => void;
+    showMediaFixture: (options: FixtureOptions) => void | Promise<void>;
   }
 }

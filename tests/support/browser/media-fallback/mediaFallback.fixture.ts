@@ -50,6 +50,21 @@ beforeAll(async () => {
     'tests/support/browser/media-fallback/MediaCardFixture.tsx',
     'src/shared/components/common/portfolio-grid/ProjectCard.tsx',
     'src/features/team-section/components/TeamCard.tsx',
+    'tests/support/browser/media-fallback/ContentMediaFixture.tsx',
+    'src/features/media-gallery-section/components/grid/Grid.tsx',
+    'src/features/media-gallery-section/components/grid/GalleryCard.tsx',
+    'src/features/media-gallery-section/components/grid/GalleryVideo.tsx',
+    'src/features/media-gallery-section/components/grid/VideoItem.tsx',
+    'src/features/media-gallery-section/components/collage/Collage.tsx',
+    'src/features/two-column-section/components/Production.tsx',
+    'src/features/two-column-section/components/Wedding.tsx',
+    'src/shared/components/layout/project-detail/ProjectHero.tsx',
+    'src/shared/components/common/PortableTextImage.tsx',
+    'src/shared/components/common/PortableTextRenderer.tsx',
+    'src/features/video-showreel-section/components/VideoShowreelSection.tsx',
+    'src/features/blog-preview-section/components/BlogPreviewSection.tsx',
+    'src/shared/components/common/SectionShell.tsx',
+    'src/shared/components/common/section-header/index.tsx',
   ];
   const original = await readFile(stylesheet, 'utf8');
   const scoped = original.replace(
@@ -78,6 +93,10 @@ beforeAll(async () => {
     define: { 'process.env.NODE_ENV': JSON.stringify('production') },
     resolve: {
       alias: [
+        {
+          find: /^@\/sanity\/lib\/client$/,
+          replacement: resolve(directory, 'fixtureClient.ts'),
+        },
         {
           find: /^@shared\/components$/,
           replacement: resolve(directory, 'fixtureComponents.ts'),
@@ -250,6 +269,14 @@ afterAll(async () => {
 
 async function show(options: FixtureOptions) {
   await page.evaluate((options) => window.showMediaFixture(options), options);
+  if (
+    options.consumer === 'gallery-video' &&
+    options.videoAutoplay === false &&
+    options.state !== 'source-missing'
+  ) {
+    await expect(page.getByTestId('video-item-fallback')).toBeVisible();
+    return;
+  }
   await expect(
     page.locator('[data-slot="media-with-fallback"]').first()
   ).toBeVisible();
@@ -454,6 +481,145 @@ for (const mode of ['production', 'wedding'] as const) {
           await assertGeometry(bounds);
         }
       );
+
+      it.each(
+        (
+          [
+            'grid',
+            'two-column',
+            'hero',
+            'portable-text',
+            'showreel',
+            'blog',
+          ] as const
+        ).flatMap((consumer) =>
+          [320, 1280].map((width) => ({ consumer, width }))
+        )
+      )(
+        'preserves actual $consumer content frames across all image states at $width px',
+        async ({ consumer, width }) => {
+          await page.setViewportSize({ width, height: 900 });
+          await show({ mode, lang, consumer, state: 'loading' });
+          await expect
+            .poll(() => pending.length, {
+              message: `${consumer} at ${width}px: expected a new controlled loading request`,
+            })
+            .toBeGreaterThan(0);
+          await expect(media()).toHaveAttribute('data-media-status', 'loading');
+          const bounds = await media().boundingBox();
+          expect(bounds!.width).toBeGreaterThan(0);
+          expect(bounds!.height).toBeGreaterThan(0);
+          expect(await surface()).toMatchObject({
+            animation: 'pulse',
+            animations: 1,
+          });
+          await Promise.all(pending.splice(0).map((respond) => respond()));
+          await expect(media()).toHaveAttribute('data-media-status', 'success');
+          await assertGeometry(bounds);
+          if (consumer === 'showreel') {
+            const button = await page
+              .getByTestId('showreel-play')
+              .boundingBox();
+            const icon = await page
+              .locator('[data-slot="showreel-overlay"] > div')
+              .boundingBox();
+            expect(icon!.x + icon!.width / 2).toBeCloseTo(
+              button!.x + button!.width / 2,
+              1
+            );
+            expect(icon!.y + icon!.height / 2).toBeCloseTo(
+              button!.y + button!.height / 2,
+              1
+            );
+          }
+          for (const state of ['error', 'source-missing', 'invalid'] as const) {
+            await show({ mode, lang, consumer, state });
+            await expect(media()).toHaveAttribute(
+              'data-media-status',
+              state === 'source-missing' ? 'source-missing' : 'error'
+            );
+            await assertGeometry(bounds);
+            if (consumer === 'showreel') {
+              const icon = await page
+                .locator('[data-slot="showreel-overlay"] > div')
+                .boundingBox();
+              const text = await page
+                .getByRole('status')
+                .locator('span')
+                .boundingBox();
+              const overlaps =
+                icon!.x < text!.x + text!.width &&
+                icon!.x + icon!.width > text!.x &&
+                icon!.y < text!.y + text!.height &&
+                icon!.y + icon!.height > text!.y;
+              expect(overlaps).toBe(false);
+            }
+          }
+        }
+      );
+
+      if (mode === 'wedding') {
+        it('keeps all three Collage design slots and their ratios with missing or failed assets', async () => {
+          await page.setViewportSize({ width: 1280, height: 1000 });
+          await show({ mode, lang, consumer: 'collage', state: 'success' });
+          const frames = page.locator('[data-slot="media-with-fallback"]');
+          await expect(frames).toHaveCount(3);
+          await expect
+            .poll(async () =>
+              frames.evaluateAll((nodes) =>
+                nodes.every(
+                  (node) => node.getAttribute('data-media-status') === 'success'
+                )
+              )
+            )
+            .toBe(true);
+          const bounds = await Promise.all(
+            [0, 1, 2].map((index) => frames.nth(index).boundingBox())
+          );
+          for (const state of ['source-missing', 'invalid'] as const) {
+            await show({ mode, lang, consumer: 'collage', state });
+            await expect(frames).toHaveCount(3);
+            for (let index = 0; index < 3; index++) {
+              const current = await frames.nth(index).boundingBox();
+              expect(current!.width).toBeCloseTo(bounds[index]!.width, 1);
+              expect(current!.height).toBeCloseTo(bounds[index]!.height, 1);
+            }
+          }
+        });
+      }
+
+      it('uses the Gallery video adapter for real decoding, source changes, and policy-disabled static content', async () => {
+        await show({ mode, lang, consumer: 'gallery-video', state: 'loading' });
+        await expect.poll(() => pending.length).toBeGreaterThan(0);
+        await Promise.all(pending.splice(0).map((respond) => respond()));
+        await expect(media()).toHaveAttribute('data-media-status', 'success');
+        await expect(page.getByTestId('video-item')).toHaveAttribute(
+          'preload',
+          'metadata'
+        );
+        await show({ mode, lang, consumer: 'gallery-video', state: 'error' });
+        await expect(media()).toHaveAttribute('data-media-status', 'error');
+        await show({
+          mode,
+          lang,
+          consumer: 'gallery-video',
+          state: 'success',
+          videoAutoplay: false,
+        });
+        await expect(page.getByTestId('video-item-fallback')).toBeVisible();
+        await expect(page.locator('video')).toHaveCount(0);
+        await expect(page.getByRole('status')).toHaveCount(0);
+        await show({
+          mode,
+          lang,
+          consumer: 'gallery-video',
+          state: 'source-missing',
+          videoAutoplay: false,
+        });
+        await expect(page.getByRole('status')).toHaveText(
+          lang === 'th' ? 'ไม่มีวิดีโอ' : 'No Video'
+        );
+      });
     });
   }
 }

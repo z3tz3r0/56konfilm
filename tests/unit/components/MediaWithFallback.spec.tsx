@@ -339,6 +339,10 @@ describe('MediaWithFallback native videos', () => {
       />
     );
     fireEvent.error(screen.getByAltText('Poster'));
+    expect(container.querySelector('video')).toHaveAttribute(
+      'poster',
+      '/poster.jpg'
+    );
     expect(status(container)).toHaveAttribute('data-media-status', 'loading');
     fireEvent.canPlay(container.querySelector('video')!);
     expect(status(container)).toHaveAttribute('data-media-status', 'success');

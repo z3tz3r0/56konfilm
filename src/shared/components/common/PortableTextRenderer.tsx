@@ -1,19 +1,26 @@
-import { urlFor } from '@/sanity/lib/image';
 import { cn } from '@shared/utils/styling/tailwindUtils';
 import { PortableText, PortableTextComponents } from 'next-sanity';
-import Image from 'next/image';
 import { ComponentProps } from 'react';
+import type { Locale } from '@shared/config/preferences';
+import PortableTextImage from './PortableTextImage';
 
 interface PortableTextRendererProps {
+  lang: Locale;
   value: ComponentProps<typeof PortableText>['value'];
   className?: string;
 }
 
 export default function PortableTextRenderer({
   value,
+  lang,
   className,
 }: PortableTextRendererProps) {
   if (!value || (Array.isArray(value) && value.length === 0)) return null;
+  const components: PortableTextComponents = {
+    types: {
+      image: ({ value }) => <PortableTextImage value={value} lang={lang} />,
+    },
+  };
   return (
     <div
       className={cn(
@@ -25,20 +32,3 @@ export default function PortableTextRenderer({
     </div>
   );
 }
-
-const components: PortableTextComponents = {
-  types: {
-    image: ({ value }) =>
-      value ? (
-        <div className='not-prose relative aspect-video w-full overflow-hidden rounded-2xl'>
-          <Image
-            src={urlFor(value).width(1200).fit('max').auto('format').url()}
-            alt={value.alt || 'Project Illustration'}
-            fill
-            className='object-cover'
-            sizes='(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 60vw'
-          />
-        </div>
-      ) : null,
-  },
-};

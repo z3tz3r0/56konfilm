@@ -1,11 +1,11 @@
 import { BaseBlock, SectionHeading } from '@shared/types';
-import { SanityImageSource } from '@sanity/image-url';
+import type { ImageSource } from '@shared/types';
 
 export interface VideoShowreelSectionBlock extends BaseBlock {
   _type: 'videoShowreelSection';
   background?: string;
   heading?: SectionHeading;
   videoUrl?: string;
-  thumbnail?: SanityImageSource;
+  thumbnail?: ImageSource;
   caption?: string;
 }

@@ -1,8 +1,31 @@
 import { renderToStaticMarkup } from 'react-dom/server';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import MediaWithFallback from '@shared/components/common/MediaWithFallback';
+import ProjectHero from '@shared/components/layout/project-detail/ProjectHero';
+
+vi.mock('@shared/config/env', () => ({
+  env: {
+    NEXT_PUBLIC_SANITY_PROJECT_ID: 'fixture',
+    NEXT_PUBLIC_SANITY_DATASET: 'development',
+  },
+}));
 
 describe('MediaWithFallback server output with real next/image', () => {
+  it('keeps the optimized Project Hero priority image available before hydration', () => {
+    const html = renderToStaticMarkup(
+      <ProjectHero
+        lang='th'
+        projectTitle='Project cover'
+        coverImage={{ asset: { _ref: 'image-cover-1200x800-jpg' } }}
+      />
+    );
+    expect(html).toContain('alt="Project cover"');
+    expect(html).toContain('srcSet=');
+    expect(html).toContain('rel="preload"');
+    expect(html).not.toContain('loading="lazy"');
+    expect(html).not.toMatch(/opacity-0|visibility:hidden|display:none/);
+  });
+
   it('preserves the native next/image blur placeholder option', () => {
     const html = renderToStaticMarkup(
       <MediaWithFallback

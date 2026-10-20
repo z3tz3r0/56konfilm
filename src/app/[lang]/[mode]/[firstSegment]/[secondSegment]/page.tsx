@@ -33,7 +33,9 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
           </p>
         )}
       </div>
-      {project.body && <PortableTextRenderer value={project.body} />}
+      {project.body && (
+        <PortableTextRenderer value={project.body} lang={lang} />
+      )}
     </section>
   );
 }

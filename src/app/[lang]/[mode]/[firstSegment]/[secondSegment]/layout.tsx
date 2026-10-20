@@ -55,6 +55,7 @@ export default async function ProjectDetailLayout({
     <SectionShell className='overflow-visible pt-[76px] pb-16'>
       <article className='min-h-screen space-y-8'>
         <ProjectHero
+          lang={lang}
           projectTitle={project.title}
           coverImage={project.coverImage}
         />
