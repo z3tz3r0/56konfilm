@@ -324,7 +324,7 @@ for (const mode of ['production', 'wedding'] as const) {
           await expect.poll(() => pending.length).toBeGreaterThan(0);
           expect(await surface()).toMatchObject({
             animation: 'pulse',
-            color: 'rgb(200, 200, 200)',
+            color: 'rgb(249, 249, 249)',
             animations: 1,
           });
           const text = page.getByRole('status').locator('span');
