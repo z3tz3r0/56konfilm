@@ -1,10 +1,10 @@
 'use client';
 
 import { m } from 'motion/react';
-import { urlFor } from '@/sanity/lib/image';
+import { getImageSource } from '@/sanity/lib/image';
 import { useDeviceTier } from '@shared/hooks';
 import { fadeUpItemVariants, instantReveal } from '@shared/lib/motion';
-import Image from 'next/image';
+import { MediaWithFallback } from '@shared/components';
 import { TeamSectionBlock } from '../types';
 import { Locale } from '@shared/config';
 
@@ -21,6 +21,7 @@ interface TeamCardProps {
 export default function TeamCard({ lang, member }: TeamCardProps) {
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
   const useLiteMotion = isInitialized && !allowHeavyMotion;
+  const imageSource = getImageSource(member.image, { width: 740, height: 555 });
 
   return (
     <m.article
@@ -30,21 +31,17 @@ export default function TeamCard({ lang, member }: TeamCardProps) {
       data-testid='team-member'
     >
       <div className='group relative aspect-4/3 w-full overflow-hidden'>
-        {member.image ? (
-          <>
-            <Image
-              src={urlFor(member.image).width(740).height(555).url()}
-              alt={member.name ?? 'Team member'}
-              fill
-              className='object-cover transition-transform duration-700 ease-out group-hover:scale-105'
-              sizes='(min-width: 1472px) 290px, (min-width: 1024px) calc(25vw - 78px), (min-width: 768px) calc(33.333vw - 37.333px), (min-width: 640px) calc(33.333vw - 32px), (min-width: 402px) 370px, calc(100vw - 32px)'
-            />
-            <div className='group-hover:bg-background/10 absolute inset-0 bg-transparent transition-colors duration-700 ease-out' />
-          </>
-        ) : (
-          <div className='bg-off-white text-text-tertiary flex h-full w-full items-center justify-center'>
-            {lang === 'en' ? 'No Image' : 'ไม่มีรูปภาพ'}
-          </div>
+        <MediaWithFallback
+          mediaType='image'
+          source={imageSource}
+          lang={lang}
+          alt={member.name ?? 'Team member'}
+          fill
+          className='object-cover transition-transform duration-700 ease-out group-hover:scale-105'
+          sizes='(min-width: 1472px) 290px, (min-width: 1024px) calc(25vw - 78px), (min-width: 768px) calc(33.333vw - 37.333px), (min-width: 640px) calc(33.333vw - 32px), (min-width: 402px) 370px, calc(100vw - 32px)'
+        />
+        {typeof imageSource === 'string' && (
+          <div className='group-hover:bg-background/10 absolute inset-0 bg-transparent transition-colors duration-700 ease-out' />
         )}
       </div>
       <section className='text-neutral-foreground-secondary space-y-3 p-4'>

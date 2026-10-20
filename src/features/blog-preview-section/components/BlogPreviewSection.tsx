@@ -1,11 +1,11 @@
-import Image from 'next/image';
 import { m, type Variants } from 'motion/react';
 import { CalendarDays } from 'lucide-react';
 import { SectionShell, SectionHeader, CtaGroup } from '@shared/components';
-import { urlFor } from '@/sanity/lib/image';
+import { getImageSource } from '@/sanity/lib/image';
+import { MediaWithFallback } from '@shared/components';
 import { client } from '@/sanity/lib/client';
 import { groq } from 'next-sanity';
-import { CACHE_TAGS, type SiteMode } from '@shared/config';
+import { CACHE_TAGS, type SiteMode, type Locale } from '@shared/config';
 import { BlogPreviewSectionBlock, BlogPost } from '../types';
 
 const containerVariants: Variants = {
@@ -49,10 +49,11 @@ async function fetchPosts(maxPosts: number, lang: string): Promise<BlogPost[]> {
 
 interface BlogPreviewSectionProps {
   block: BlogPreviewSectionBlock;
-  lang: string;
+  lang: Locale;
   mode?: SiteMode;
 }
 
+/** Render recent posts with localized thumbnail fallbacks; omit the section when no posts exist. */
 export default async function BlogPreviewSection({
   block,
   lang,
@@ -80,9 +81,11 @@ export default async function BlogPreviewSection({
           variants={containerVariants}
         >
           {posts.map((post) => {
-            const imageUrl = post.image
-              ? urlFor(post.image).width(800).height(500).quality(85).url()
-              : null;
+            const imageSource = getImageSource(post.image, {
+              width: 800,
+              height: 500,
+              quality: 85,
+            });
 
             const formattedDate = post.publishedAt
               ? new Date(post.publishedAt).toLocaleDateString(
@@ -99,22 +102,22 @@ export default async function BlogPreviewSection({
                 data-testid='blog-post-card'
               >
                 {/* Thumbnail */}
-                {imageUrl && (
-                  <a
-                    href={`/blog/${post.slug}`}
-                    className='block overflow-hidden'
-                  >
-                    <div className='relative aspect-[16/10] w-full overflow-hidden'>
-                      <Image
-                        src={imageUrl}
-                        alt={post.title ?? ''}
-                        fill
-                        className='object-cover transition-transform duration-500 group-hover:scale-105'
-                        sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-                      />
-                    </div>
-                  </a>
-                )}
+                <a
+                  href={`/blog/${post.slug}`}
+                  className='block overflow-hidden'
+                >
+                  <div className='relative aspect-[16/10] w-full overflow-hidden'>
+                    <MediaWithFallback
+                      mediaType='image'
+                      source={imageSource}
+                      lang={lang}
+                      alt={post.title ?? ''}
+                      fill
+                      className='object-cover transition-transform duration-500 group-hover:scale-105'
+                      sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                    />
+                  </div>
+                </a>
 
                 {/* Content */}
                 <div className='flex flex-col gap-3 p-6'>
@@ -142,11 +145,7 @@ export default async function BlogPreviewSection({
 
         {block.cta && (
           <div className='mt-12 flex justify-center'>
-            <CtaGroup
-              ctas={[block.cta]}
-              lang={lang as 'en' | 'th'}
-              mode={mode}
-            />
+            <CtaGroup ctas={[block.cta]} lang={lang} mode={mode} />
           </div>
         )}
       </div>

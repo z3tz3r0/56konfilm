@@ -1,5 +1,5 @@
 import { BaseBlock, SectionHeading } from '@shared/types';
-import { SanityImageSource } from '@sanity/image-url';
+import type { ImageSource } from '@shared/types/sanity';
 
 export interface TeamSectionBlock extends BaseBlock {
   _type: 'teamSection';
@@ -10,6 +10,6 @@ export interface TeamSectionBlock extends BaseBlock {
     name: string;
     role: string;
     bio?: string;
-    image?: SanityImageSource;
+    image?: ImageSource;
   }>;
 }

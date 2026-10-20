@@ -5,6 +5,7 @@ export { default as CtaButton } from './CtaButton';
 export { default as CtaGroup } from './CtaGroup';
 export { default as HighlightedText } from './HighlightedText';
 export { default as ImageWithFrame } from './ImageWithFrame';
+export { default as MediaWithFallback } from './MediaWithFallback';
 export { default as JsonLd } from './JsonLd';
 export { default as LanguageSwitcher } from './LanguageSwitcher';
 export { default as ModeGuard } from './ModeGuard';

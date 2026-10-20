@@ -2,12 +2,13 @@
 
 import { useDeviceTier } from '@shared/hooks';
 import { cn } from '@shared/utils/styling/tailwindUtils';
-import { useInView } from 'motion/react';
-import Image from 'next/image';
-import { useEffect, useRef } from 'react';
+import type { Locale } from '@shared/config';
+import { MediaWithFallback } from '@shared/components';
+import GalleryVideo from './GalleryVideo';
 
 interface VideoItemProps {
-  src: string;
+  src?: string | null;
+  lang: Locale;
   className?: string;
   posterUrl?: string;
 }
@@ -18,10 +19,22 @@ interface VideoItemProps {
  */
 export default function VideoItem({
   src,
+  lang,
   className,
   posterUrl,
 }: VideoItemProps) {
   const { allowVideoAutoplay, isInitialized } = useDeviceTier();
+
+  if (src === null || src === undefined || !src.trim()) {
+    return (
+      <MediaWithFallback
+        mediaType='video'
+        source={src}
+        lang={lang}
+        containerClassName={className}
+      />
+    );
+  }
 
   // For low-power devices: render poster or placeholder instead of video
   if (isInitialized && !allowVideoAutoplay) {
@@ -31,8 +44,10 @@ export default function VideoItem({
         data-testid='video-item-fallback'
       >
         {posterUrl ? (
-          <Image
-            src={posterUrl}
+          <MediaWithFallback
+            mediaType='image'
+            source={posterUrl}
+            lang={lang}
             alt='Video thumbnail'
             fill
             sizes='100vw'
@@ -47,51 +62,12 @@ export default function VideoItem({
 
   return (
     <GalleryVideo
+      key={src}
       src={src}
+      lang={lang}
       className={className}
       posterUrl={posterUrl}
       allowVideoAutoplay={allowVideoAutoplay}
-    />
-  );
-}
-
-/** Keep the viewport observer attached to the currently mounted video element. */
-function GalleryVideo({
-  src,
-  className,
-  posterUrl,
-  allowVideoAutoplay,
-}: VideoItemProps & { allowVideoAutoplay: boolean }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const isInView = useInView(videoRef, { margin: '0px 0px -10% 0px' });
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (isInView && allowVideoAutoplay) {
-      video.play().catch(() => {
-        // Auto-play can be blocked by browser policy; ignore silently.
-      });
-    } else {
-      video.pause();
-    }
-
-    return () => video.pause();
-  }, [isInView, allowVideoAutoplay]);
-
-  return (
-    <video
-      ref={videoRef}
-      src={src}
-      poster={posterUrl}
-      className={cn('block h-full w-full object-cover', className)}
-      autoPlay={allowVideoAutoplay}
-      muted
-      loop
-      playsInline
-      preload='metadata'
-      data-testid='video-item'
     />
   );
 }

@@ -1,5 +1,7 @@
 import type { ComponentProps, ReactNode } from 'react';
 
+export { default as MediaWithFallback } from '@shared/components/common/MediaWithFallback';
+
 // Only unrelated shell/image integrations are replaced; hook and Motion stay real.
 /**
  * Provides a plain section wrapper for the offline device-motion fixture.
