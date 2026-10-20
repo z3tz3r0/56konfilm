@@ -20,11 +20,15 @@ import CapabilitiesSection from '@features/capabilities-section/components/Capab
 import ProcessSection from '@features/process-section/components/ProcessSection';
 import TeamSection from '@features/team-section/TeamSection';
 import GalleryGrid from '@features/media-gallery-section/components/grid/Grid';
+import type { ImageSource } from '@shared/types/sanity';
 import { mockReducedMotion } from '../../support/fixtures/reduced-motion';
 
 // Avoid unrelated integrations in barrels, but use the real hook and Motion runtime.
 vi.mock('@shared/hooks', async () => import('@shared/hooks/useDeviceTier'));
-vi.mock('@shared/components', () => ({
+vi.mock('@shared/components', async () => ({
+  MediaWithFallback: (
+    await import('@shared/components/common/MediaWithFallback')
+  ).default,
   SectionShell: ({ children }: { children: ReactNode }) => (
     <section>{children}</section>
   ),
@@ -48,6 +52,10 @@ vi.mock('next/image', () => ({
   ),
 }));
 vi.mock('@/sanity/lib/image', () => ({
+  getImageSource: (source: ImageSource | null | undefined) => {
+    if (source) throw new Error('No CMS media in this fixture.');
+    return undefined;
+  },
   urlFor: () => {
     throw new Error('No CMS media in this fixture.');
   },

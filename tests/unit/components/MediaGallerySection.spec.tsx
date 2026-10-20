@@ -155,7 +155,9 @@ describe('MediaGallerySection presentations', () => {
       ];
       images.forEach((image, index) => {
         expect(image.closest('a')).toBeNull();
-        expect(image.parentElement).toHaveStyle({
+        expect(
+          image.closest('[data-slot="media-with-fallback"]')?.parentElement
+        ).toHaveStyle({
           aspectRatio: expected[index].ratio,
         });
         const url = new URL(image.getAttribute('src')!);
@@ -252,8 +254,10 @@ describe('MediaGallerySection presentations', () => {
         screen.getAllByText(lang === 'th' ? 'ไม่มีรูปภาพ' : 'No Image')
       ).toHaveLength(2);
       expect(
-        screen.getAllByText(lang === 'th' ? 'ไม่มีรูปภาพ' : 'No Image')[0]
-      ).toHaveClass('bg-background-secondary');
+        screen
+          .getAllByText(lang === 'th' ? 'ไม่มีรูปภาพ' : 'No Image')[0]
+          .parentElement?.querySelector('[data-slot="media-loading-surface"]')
+      ).toHaveClass('bg-light-gray');
       expect(screen.getByAltText('Landscape')).toBeVisible();
       expect(screen.queryByAltText('Grid photo')).toBeNull();
       expect(screen.queryByRole('link')).toBeNull();

@@ -73,11 +73,11 @@ function CollageImage({
       className={cn(slot.className, index === 0 && hasBody && 'lg:row-span-4')}
     >
       <ImageWithFrame
+        lang={lang}
         src={source}
         alt={media?.alt ?? ''}
         imageAspectRatio={slot.aspectRatio}
         sizes={slot.sizes}
-        placeholder={lang === 'th' ? 'ไม่มีรูปภาพ' : 'No Image'}
         className='shadow-none'
       />
     </AnimatedCollageImage>

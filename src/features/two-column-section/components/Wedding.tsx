@@ -76,6 +76,7 @@ export default function Wedding({
           {/* 🖼️ ฝั่งรูปภาพ */}
           {block.media?.image && (
             <ImageWithFrame
+              lang={lang}
               src={urlFor(block.media.image).quality(80).fit('clip').url()}
               alt={block.media.alt ?? ''}
               className='flex-1'

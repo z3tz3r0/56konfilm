@@ -1,5 +1,6 @@
 import { env } from '@shared/config';
-import { createImageUrlBuilder, SanityImageSource } from '@sanity/image-url';
+import { createImageUrlBuilder } from '@sanity/image-url';
+import type { ImageSource } from '@shared/types/sanity';
 
 // https://www.sanity.io/docs/image-url
 const builder = createImageUrlBuilder({
@@ -7,7 +8,7 @@ const builder = createImageUrlBuilder({
   dataset: env.NEXT_PUBLIC_SANITY_DATASET,
 });
 
-export const urlFor = (source: SanityImageSource) => {
+export const urlFor = (source: ImageSource) => {
   return builder.image(source);
 };
 
@@ -19,7 +20,7 @@ interface ImageUrlOptions {
 }
 
 export function getImageUrl(
-  source: SanityImageSource,
+  source: ImageSource,
   options: ImageUrlOptions = {}
 ): string {
   let img = builder.image(source);
@@ -28,6 +29,28 @@ export function getImageUrl(
   if (options.quality) img = img.quality(options.quality);
   if (options.fit) img = img.fit(options.fit);
   return img.url();
+}
+
+/** Omitted assets are different from malformed sources or builder failures. */
+export function getImageSource(
+  source: ImageSource | null | undefined,
+  options: ImageUrlOptions = {}
+): string | { readonly error: true } | undefined {
+  if (source === null || source === undefined) {
+    return undefined;
+  }
+  if (
+    typeof source === 'object' &&
+    'asset' in source &&
+    (source.asset === null || source.asset === undefined)
+  ) {
+    return undefined;
+  }
+  try {
+    return getImageUrl(source, options);
+  } catch {
+    return { error: true };
+  }
 }
 
 export const THUMBNAIL_IMAGE = {
