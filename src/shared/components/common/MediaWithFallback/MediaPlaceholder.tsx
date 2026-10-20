@@ -56,7 +56,7 @@ export default function MediaPlaceholder({
       <div
         aria-hidden='true'
         className={cn(
-          'bg-light-gray absolute inset-0',
+          'bg-off-white absolute inset-0',
           status === 'loading' && 'motion-safe:animate-pulse'
         )}
         data-slot='media-loading-surface'
