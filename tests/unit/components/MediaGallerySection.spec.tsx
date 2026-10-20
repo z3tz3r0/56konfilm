@@ -265,7 +265,7 @@ describe('MediaGallerySection presentations', () => {
         screen
           .getAllByText(lang === 'th' ? 'ไม่มีรูปภาพ' : 'No Image')[0]
           .parentElement?.querySelector('[data-slot="media-loading-surface"]')
-      ).toHaveClass('bg-light-gray');
+      ).toHaveClass('bg-off-white');
       expect(screen.getByAltText('Landscape')).toBeVisible();
       expect(screen.queryByAltText('Grid photo')).toBeNull();
       expect(screen.queryByRole('link')).toBeNull();

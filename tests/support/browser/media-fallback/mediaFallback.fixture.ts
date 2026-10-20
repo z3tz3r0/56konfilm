@@ -25,10 +25,12 @@ const root = fileURLToPath(new URL('../../../../', import.meta.url));
 const directory = resolve(root, 'tests/support/browser/media-fallback');
 const svg =
   '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="90"><rect width="160" height="90" fill="#237048"/></svg>';
+const posterSvg = svg.replace('#237048', '#7248c8');
 let browser: Browser, context: BrowserContext, page: Page;
 let css: string, script: string;
 let video: Buffer;
 let pending: Array<() => Promise<void>>;
+let pendingPosters: Array<() => Promise<void>>;
 let unexpectedRequests: string[], errors: string[];
 
 beforeAll(async () => {
@@ -208,6 +210,7 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   pending = [];
+  pendingPosters = [];
   unexpectedRequests = [];
   errors = [];
   context = await browser.newContext({
@@ -236,11 +239,18 @@ beforeEach(async () => {
             contentType: url.pathname.endsWith('.webm')
               ? 'video/webm'
               : 'image/svg+xml',
-            body: url.pathname.endsWith('.webm') ? video : svg,
+            body: url.pathname.endsWith('.webm')
+              ? video
+              : url.pathname.includes('poster')
+                ? posterSvg
+                : svg,
           });
     if (url.pathname.includes('loading')) {
       await new Promise<void>((resolve) => {
-        pending.push(async () => {
+        const queue = url.pathname.includes('poster')
+          ? pendingPosters
+          : pending;
+        queue.push(async () => {
           await respond();
           resolve();
         });
@@ -257,8 +267,11 @@ beforeEach(async () => {
 
 afterEach(async () => {
   await Promise.all(
-    pending.splice(0).map((respond) => respond().catch(() => {}))
+    [...pending.splice(0), ...pendingPosters.splice(0)].map((respond) =>
+      respond().catch(() => {})
+    )
   );
+  expect(await page.evaluate(() => window.mediaHydrationErrors)).toEqual([]);
   await context?.close();
   expect(unexpectedRequests).toEqual([]);
   expect(errors).toEqual([]);
@@ -312,9 +325,240 @@ async function assertGeometry(
   ).toBeLessThanOrEqual(1);
 }
 
+/** Sample actual composited pixels, not just the poster's DOM/style visibility. */
+async function framePixel() {
+  const screenshot = await media().screenshot({ animations: 'disabled' });
+  return page.evaluate(async (base64) => {
+    const image = new Image();
+    image.src = `data:image/png;base64,${base64}`;
+    await image.decode();
+    const canvas = document.createElement('canvas');
+    canvas.width = image.width;
+    canvas.height = image.height;
+    const context = canvas.getContext('2d')!;
+    context.drawImage(image, 0, 0);
+    // Stay clear of centered loading text and native controls.
+    return Array.from(
+      context.getImageData(
+        Math.floor(image.width / 4),
+        Math.floor(image.height / 4),
+        1,
+        1
+      ).data
+    );
+  }, screenshot.toString('base64'));
+}
+
 for (const mode of ['production', 'wedding'] as const) {
   for (const lang of ['en', 'th'] as const) {
     describe(`Media fallback ${mode}/${lang}`, () => {
+      it.each(['error', 'success'] as const)(
+        'hydrates an already-settled %s video without replaying media events',
+        async (state) => {
+          await show({
+            mode,
+            lang,
+            mediaType: 'video',
+            state,
+            serverRendered: true,
+          });
+          const nativeVideo = page.getByTestId('native-video');
+          const original = await nativeVideo.elementHandle();
+          const bounds = await media().boundingBox();
+          if (state === 'error') {
+            await expect
+              .poll(() =>
+                nativeVideo.evaluate((node) => {
+                  const video = node as HTMLVideoElement;
+                  return {
+                    network: video.networkState,
+                    ready: video.readyState,
+                    error: video.error,
+                  };
+                })
+              )
+              .toEqual({ network: 3, ready: 0, error: null });
+            await expect
+              .poll(() => page.evaluate(() => window.mediaSourceErrors))
+              .toBe(1);
+          } else {
+            await expect
+              .poll(() =>
+                nativeVideo.evaluate(
+                  (node) => (node as HTMLVideoElement).readyState
+                )
+              )
+              .toBeGreaterThanOrEqual(3);
+          }
+          // Server HTML cannot respond to the load/error event that already occurred.
+          await expect(media()).toHaveAttribute('data-media-status', 'loading');
+          await page.evaluate(() => window.hydrateMediaFixture());
+          await expect(media()).toHaveAttribute('data-media-status', state);
+          expect(
+            await nativeVideo.evaluate(
+              (node, original) => node === original,
+              original
+            )
+          ).toBe(true);
+          if (state === 'error') {
+            expect(await page.evaluate(() => window.mediaSourceErrors)).toBe(1);
+            await expect(page.getByRole('status')).toHaveText(
+              lang === 'th' ? 'ไม่สามารถโหลดวิดีโอได้' : 'Unable to load video'
+            );
+          } else await expect(page.getByRole('status')).toHaveCount(0);
+          await assertGeometry(bounds);
+        }
+      );
+
+      it('keeps slow videos loading across hydration and keyed source changes', async () => {
+        await show({
+          mode,
+          lang,
+          mediaType: 'video',
+          state: 'loading',
+          serverRendered: true,
+          sourceVersion: 1,
+        });
+        await expect.poll(() => pending.length).toBeGreaterThan(0);
+        const first = await page.getByTestId('native-video').elementHandle();
+        await page.evaluate(() => window.hydrateMediaFixture());
+        // Wait a task and paint after hydration so the deferred check has executed.
+        await page.evaluate(
+          () =>
+            new Promise((resolve) =>
+              requestAnimationFrame(() => requestAnimationFrame(resolve))
+            )
+        );
+        await expect(media()).toHaveAttribute('data-media-status', 'loading');
+        await show({
+          mode,
+          lang,
+          mediaType: 'video',
+          state: 'loading',
+          sourceVersion: 2,
+        });
+        await expect.poll(() => pending.length).toBeGreaterThanOrEqual(2);
+        expect(
+          await page
+            .getByTestId('native-video')
+            .evaluate((node, first) => node === first, first)
+        ).toBe(false);
+        await page.evaluate(
+          () =>
+            new Promise((resolve) =>
+              requestAnimationFrame(() => requestAnimationFrame(resolve))
+            )
+        );
+        await expect(media()).toHaveAttribute('data-media-status', 'loading');
+        await Promise.all(pending.splice(0).map((respond) => respond()));
+        await expect(media()).toHaveAttribute('data-media-status', 'success');
+      });
+
+      it.each([375, 1280])(
+        'shows decoded posters above loading feedback at %ipx and falls back when they fail',
+        async (width) => {
+          await page.setViewportSize({ width, height: 800 });
+          await show({
+            mode,
+            lang,
+            mediaType: 'video',
+            state: 'loading',
+            poster: 'loading',
+            preload: 'metadata',
+          });
+          await expect.poll(() => pending.length).toBeGreaterThan(0);
+          await expect.poll(() => pendingPosters.length).toBeGreaterThan(0);
+          const bounds = await media().boundingBox();
+          await expect(media()).toHaveAttribute('data-media-status', 'loading');
+          const poster = page.getByAltText('Fixture poster');
+          expect(
+            await poster.evaluate((node) => (node as HTMLImageElement).complete)
+          ).toBe(false);
+          expect(await surface()).toMatchObject({ animation: 'pulse' });
+          await Promise.all(
+            pendingPosters.splice(0).map((respond) => respond())
+          );
+          await expect
+            .poll(() =>
+              poster.evaluate((node) => (node as HTMLImageElement).naturalWidth)
+            )
+            .toBe(160);
+          await expect(media()).toHaveAttribute('data-media-status', 'loading');
+          expect(await framePixel()).toEqual([114, 72, 200, 255]);
+          // Negative control: restoring the old stacking order must hide the poster.
+          await poster.evaluate((node) => {
+            node.parentElement!.parentElement!.style.zIndex = '0';
+          });
+          expect(await framePixel()).not.toEqual([114, 72, 200, 255]);
+          await poster.evaluate((node) => {
+            node.parentElement!.parentElement!.style.removeProperty('z-index');
+          });
+          expect(await framePixel()).toEqual([114, 72, 200, 255]);
+          expect(
+            await poster.evaluate(
+              (node) =>
+                getComputedStyle(node.parentElement!.parentElement!)
+                  .pointerEvents
+            )
+          ).toBe('none');
+          await page.emulateMedia({ reducedMotion: 'reduce' });
+          expect(await framePixel()).toEqual([114, 72, 200, 255]);
+          // A failed decorative poster must reveal video feedback, not an empty frame.
+          await show({
+            mode,
+            lang,
+            mediaType: 'video',
+            state: 'loading',
+            poster: 'error',
+            preload: 'metadata',
+          });
+          await expect(poster).toHaveCount(0);
+          await expect(media()).toHaveAttribute('data-media-status', 'loading');
+          await expect(page.getByRole('status')).toHaveText(
+            lang === 'th' ? 'กำลังโหลดวิดีโอ…' : 'Loading video…'
+          );
+          expect(await surface()).toMatchObject({
+            animation: 'none',
+            animations: 0,
+          });
+          expect(await framePixel()).toEqual([249, 249, 249, 255]);
+          await assertGeometry(bounds);
+          await show({
+            mode,
+            lang,
+            mediaType: 'video',
+            state: 'loading',
+            poster: 'success',
+            preload: 'metadata',
+          });
+          await expect
+            .poll(() =>
+              poster.evaluate((node) => (node as HTMLImageElement).naturalWidth)
+            )
+            .toBe(160);
+          expect(await framePixel()).toEqual([114, 72, 200, 255]);
+          await Promise.all(pending.splice(0).map((respond) => respond()));
+          await expect(media()).toHaveAttribute('data-media-status', 'success');
+          await expect(poster).toHaveCount(0);
+          await expect(page.getByRole('status')).toHaveCount(0);
+          await assertGeometry(bounds);
+          await show({
+            mode,
+            lang,
+            mediaType: 'video',
+            state: 'error',
+            poster: 'success',
+            preload: 'metadata',
+          });
+          await expect(media()).toHaveAttribute('data-media-status', 'error');
+          await expect(poster).toHaveCount(0);
+          await expect(page.getByRole('status')).toHaveText(
+            lang === 'th' ? 'ไม่สามารถโหลดวิดีโอได้' : 'Unable to load video'
+          );
+          await assertGeometry(bounds);
+        }
+      );
+
       it.each([375, 1280])(
         'renders real loading/success/error geometry at %ipx',
         async (width) => {

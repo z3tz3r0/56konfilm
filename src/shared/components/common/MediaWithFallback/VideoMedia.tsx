@@ -39,7 +39,21 @@ export default function VideoMedia({
       else if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) {
         setStatus('success');
       }
-      return cleanup;
+      // Resource selection briefly starts at NETWORK_NO_SOURCE on healthy mounts.
+      // Check in the next task to also recover source errors missed before hydration.
+      const selectionCheck = window.setTimeout(() => {
+        if (
+          video.error ||
+          (video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE &&
+            video.readyState === HTMLMediaElement.HAVE_NOTHING)
+        ) {
+          setStatus('error');
+        }
+      }, 0);
+      return () => {
+        window.clearTimeout(selectionCheck);
+        cleanup?.();
+      };
     },
     [ref]
   );
@@ -53,7 +67,11 @@ export default function VideoMedia({
       data-media-status={status}
     >
       {src && status === 'loading' && poster && (
-        <div className='absolute inset-0' aria-hidden='true'>
+        // Keep the poster above video feedback; a failed poster exposes that feedback.
+        <div
+          className='pointer-events-none absolute inset-0 z-3'
+          aria-hidden='true'
+        >
           <ImageMedia
             key={posterSource.key}
             mediaType='image'

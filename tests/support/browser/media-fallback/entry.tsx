@@ -1,4 +1,6 @@
-import { createRoot } from 'react-dom/client';
+import type { ReactNode } from 'react';
+import { createRoot, hydrateRoot, type Root } from 'react-dom/client';
+import { renderToString } from 'react-dom/server.browser';
 import MediaWithFallback from '@shared/components/common/MediaWithFallback';
 import ImageWithFrame from '@shared/components/common/ImageWithFrame';
 import type { FixtureOptions } from './types';
@@ -10,7 +12,37 @@ import { setPosts } from './fixtureClient';
 import { fixtureImage } from './mediaFixtures';
 import { setVideoAutoplay } from './fixtureTier';
 
-const root = createRoot(document.getElementById('root')!);
+const container = document.getElementById('root')!;
+let root: Root | undefined;
+let serverElement: ReactNode;
+window.mediaHydrationErrors = [];
+window.mediaSourceErrors = 0;
+
+/** Use actual server markup and hydrate it only after the browser has loaded media. */
+function renderFixture(element: ReactNode, serverRendered = false) {
+  if (serverRendered) {
+    root?.unmount();
+    root = undefined;
+    serverElement = element;
+    window.mediaSourceErrors = 0;
+    container.innerHTML = renderToString(element);
+    container.querySelector('source')?.addEventListener('error', () => {
+      window.mediaSourceErrors++;
+    });
+  } else {
+    root ??= createRoot(container);
+    root.render(element);
+  }
+}
+
+window.hydrateMediaFixture = () => {
+  if (root || !serverElement)
+    throw new Error('Expected unhydrated server markup.');
+  root = hydrateRoot(container, serverElement, {
+    onRecoverableError: (error) =>
+      window.mediaHydrationErrors.push(String(error)),
+  });
+};
 
 window.showMediaFixture = async ({
   mode = 'production',
@@ -20,6 +52,10 @@ window.showMediaFixture = async ({
   frame = false,
   consumer,
   videoAutoplay = true,
+  poster,
+  preload = 'auto',
+  serverRendered = false,
+  sourceVersion,
 }: FixtureOptions) => {
   document.documentElement.dataset.mode = mode;
   document.documentElement.lang = lang;
@@ -38,7 +74,7 @@ window.showMediaFixture = async ({
       lang,
       mode,
     });
-    root.render(
+    renderFixture(
       <main className='bg-background p-4'>
         <MotionProvider>{content}</MotionProvider>
       </main>
@@ -50,8 +86,8 @@ window.showMediaFixture = async ({
       ? undefined
       : state === 'invalid'
         ? ({ error: true } as const)
-        : `https://media.fixture.test/${state}.${mediaType === 'image' ? 'svg' : 'webm'}`;
-  root.render(
+        : `https://media.fixture.test/${state}.${mediaType === 'image' ? 'svg' : 'webm'}${sourceVersion === undefined ? '' : `?v=${sourceVersion}`}`;
+  renderFixture(
     <main className='bg-background p-4'>
       {consumer === 'project' || consumer === 'team' ? (
         <MediaCardFixture
@@ -95,16 +131,23 @@ window.showMediaFixture = async ({
               mediaType='video'
               source={source}
               lang={lang}
+              poster={
+                poster
+                  ? `https://media.fixture.test/poster-${poster}.svg`
+                  : undefined
+              }
+              posterAlt='Fixture poster'
               autoPlay
               muted
               loop
               playsInline
-              preload='auto'
+              preload={preload}
               data-testid='native-video'
             />
           )}
         </div>
       )}
-    </main>
+    </main>,
+    serverRendered
   );
 };

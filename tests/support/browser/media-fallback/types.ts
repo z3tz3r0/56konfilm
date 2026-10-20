@@ -18,10 +18,17 @@ export interface FixtureOptions {
     | 'gallery-video'
     | 'blog';
   videoAutoplay?: boolean;
+  poster?: 'success' | 'loading' | 'error';
+  preload?: 'none' | 'metadata' | 'auto';
+  serverRendered?: boolean;
+  sourceVersion?: number;
 }
 
 declare global {
   interface Window {
     showMediaFixture: (options: FixtureOptions) => void | Promise<void>;
+    hydrateMediaFixture: () => void;
+    mediaHydrationErrors: string[];
+    mediaSourceErrors: number;
   }
 }

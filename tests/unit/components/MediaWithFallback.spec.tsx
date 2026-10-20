@@ -1,5 +1,11 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
-import { createRef } from 'react';
+import {
+  act,
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+} from '@testing-library/react';
+import { createRef, StrictMode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import MediaWithFallback from '@shared/components/common/MediaWithFallback';
 import ImageWithFrame from '@shared/components/common/ImageWithFrame';
@@ -8,6 +14,7 @@ vi.mock('next/image', async () => import('../../support/media/FixtureImage'));
 
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
   vi.restoreAllMocks();
 });
 
@@ -244,6 +251,152 @@ describe('MediaWithFallback images', () => {
 });
 
 describe('MediaWithFallback native videos', () => {
+  it('recovers a source failure missed before ref attachment without replaying an event', () => {
+    vi.useFakeTimers();
+    vi.spyOn(HTMLMediaElement.prototype, 'networkState', 'get').mockReturnValue(
+      HTMLMediaElement.NETWORK_NO_SOURCE
+    );
+    vi.spyOn(HTMLMediaElement.prototype, 'readyState', 'get').mockReturnValue(
+      HTMLMediaElement.HAVE_NOTHING
+    );
+    const onError = vi.fn();
+    const { container } = render(
+      <MediaWithFallback
+        mediaType='video'
+        source='/failed.mp4'
+        lang='en'
+        onError={onError}
+        ref={(video) => {
+          if (video) Object.defineProperty(video, 'error', { value: null });
+        }}
+      />
+    );
+    expect(status(container)).toHaveAttribute('data-media-status', 'loading');
+    act(() => vi.runOnlyPendingTimers());
+    expect(status(container)).toHaveAttribute('data-media-status', 'error');
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Unable to load video'
+    );
+    expect(onError).not.toHaveBeenCalled();
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it.each(['loading', 'ready'] as const)(
+    'does not mistake transient NETWORK_NO_SOURCE for failure when selection becomes %s',
+    (next) => {
+      vi.useFakeTimers();
+      const network = vi
+        .spyOn(HTMLMediaElement.prototype, 'networkState', 'get')
+        .mockReturnValue(HTMLMediaElement.NETWORK_NO_SOURCE);
+      const ready = vi
+        .spyOn(HTMLMediaElement.prototype, 'readyState', 'get')
+        .mockReturnValue(HTMLMediaElement.HAVE_NOTHING);
+      const { container } = render(
+        <MediaWithFallback mediaType='video' source='/healthy.mp4' lang='en' />
+      );
+      expect(status(container)).toHaveAttribute('data-media-status', 'loading');
+      network.mockReturnValue(HTMLMediaElement.NETWORK_LOADING);
+      if (next === 'ready') {
+        ready.mockReturnValue(HTMLMediaElement.HAVE_FUTURE_DATA);
+        fireEvent.canPlay(container.querySelector('video')!);
+      }
+      act(() => vi.runOnlyPendingTimers());
+      expect(status(container)).toHaveAttribute(
+        'data-media-status',
+        next === 'ready' ? 'success' : 'loading'
+      );
+      expect(vi.getTimerCount()).toBe(0);
+    }
+  );
+
+  it('observes a video error appearing during the deferred selection task', () => {
+    vi.useFakeTimers();
+    const { container } = render(
+      <MediaWithFallback mediaType='video' source='/film.mp4' lang='en' />
+    );
+    const error: MediaError = {
+      code: 4,
+      message: 'Unsupported source',
+      MEDIA_ERR_ABORTED: 1,
+      MEDIA_ERR_NETWORK: 2,
+      MEDIA_ERR_DECODE: 3,
+      MEDIA_ERR_SRC_NOT_SUPPORTED: 4,
+    };
+    Object.defineProperty(container.querySelector('video')!, 'error', {
+      value: error,
+    });
+    act(() => vi.runOnlyPendingTimers());
+    expect(status(container)).toHaveAttribute('data-media-status', 'error');
+  });
+
+  it.each([false, true])(
+    'clears selection checks and callback refs under StrictMode=%s',
+    (strict) => {
+      vi.useFakeTimers();
+      const release = vi.fn();
+      const ref = vi.fn(() => release);
+      const element = (
+        <MediaWithFallback
+          mediaType='video'
+          source='/film.mp4'
+          lang='en'
+          ref={ref}
+        />
+      );
+      const { unmount } = render(
+        strict ? <StrictMode>{element}</StrictMode> : element
+      );
+      expect(vi.getTimerCount()).toBe(1);
+      unmount();
+      expect(vi.getTimerCount()).toBe(0);
+      expect(release).toHaveBeenCalledTimes(ref.mock.calls.length);
+    }
+  );
+
+  it('cancels stale checks on source/ref changes and releases object refs', () => {
+    vi.useFakeTimers();
+    const first = createRef<HTMLVideoElement>();
+    const second = createRef<HTMLVideoElement>();
+    const { container, rerender, unmount } = render(
+      <MediaWithFallback
+        mediaType='video'
+        source='/a.mp4'
+        lang='en'
+        ref={first}
+      />
+    );
+    const oldVideo = first.current!;
+    const readOldNetwork = vi.spyOn(oldVideo, 'networkState', 'get');
+    rerender(
+      <MediaWithFallback
+        mediaType='video'
+        source='/b.mp4'
+        lang='en'
+        ref={first}
+      />
+    );
+    expect(first.current).not.toBe(oldVideo);
+    expect(vi.getTimerCount()).toBe(1);
+    const currentVideo = first.current;
+    rerender(
+      <MediaWithFallback
+        mediaType='video'
+        source='/b.mp4'
+        lang='en'
+        ref={second}
+      />
+    );
+    expect(first.current).toBeNull();
+    expect(second.current).toBe(currentVideo);
+    expect(vi.getTimerCount()).toBe(1);
+    act(() => vi.runOnlyPendingTimers());
+    expect(readOldNetwork).not.toHaveBeenCalled();
+    expect(status(container)).toHaveAttribute('data-media-status', 'loading');
+    unmount();
+    expect(second.current).toBeNull();
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
   it.each(['./film.mp4', 'videos/film.mp4'])(
     'lets the browser resolve a relative video source: %s',
     (source) => {
