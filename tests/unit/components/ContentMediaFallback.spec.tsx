@@ -26,6 +26,7 @@ vi.mock('next/image', async () => import('../../support/media/FixtureImage'));
 vi.mock('next/link', async () => import('../../support/media/FixtureLink'));
 vi.mock('@shared/hooks', async () => import('@shared/hooks/useDeviceTier'));
 
+/** Create a valid synthetic CMS image reference for content-media tests. */
 function image(id = 'cover'): ImageSource {
   return {
     asset: { _ref: `image-${id}-1200x800-jpg` },

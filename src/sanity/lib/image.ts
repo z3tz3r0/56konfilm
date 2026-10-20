@@ -8,6 +8,7 @@ const builder = createImageUrlBuilder({
   dataset: env.NEXT_PUBLIC_SANITY_DATASET,
 });
 
+/** Create a chainable Sanity image builder for the supplied CMS image source. */
 export const urlFor = (source: ImageSource) => {
   return builder.image(source);
 };
@@ -20,6 +21,8 @@ interface ImageUrlOptions {
   auto?: 'format';
 }
 
+/** Build a Sanity image URL with the requested sizing, quality, fit, and optional format selection.
+ * Throws when the source cannot be resolved by the image builder. */
 export function getImageUrl(
   source: ImageSource,
   options: ImageUrlOptions = {}

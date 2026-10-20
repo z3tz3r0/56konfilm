@@ -36,6 +36,7 @@ const messages = {
   },
 } as const;
 
+/** Render a localized media status with a loading pulse or static reduced-motion feedback. */
 export default function MediaPlaceholder({
   status,
   mediaType,

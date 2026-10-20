@@ -53,6 +53,7 @@ interface BlogPreviewSectionProps {
   mode?: SiteMode;
 }
 
+/** Render recent posts with localized thumbnail fallbacks; omit the section when no posts exist. */
 export default async function BlogPreviewSection({
   block,
   lang,

@@ -40,6 +40,7 @@ interface VideoShowreelSectionProps {
   lang: Locale;
 }
 
+/** Show a thumbnail with localized fallback feedback until the viewer opens the video embed. */
 export default function VideoShowreelSection({
   block,
   lang,

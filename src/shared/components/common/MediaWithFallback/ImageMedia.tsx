@@ -17,6 +17,8 @@ type Props = Omit<ImageMediaProps, 'source'> & {
   hideFailure?: boolean;
 };
 
+/** Render a Next.js image with localized loading, missing-source, and error feedback.
+ * Detect cached loads on attachment and preserve consumer refs and event callbacks. */
 export default function ImageMedia({
   mediaType,
   resolvedSource,

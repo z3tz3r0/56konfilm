@@ -11,6 +11,7 @@ interface ProjectCardProps {
   portfolioSlug: string;
 }
 
+/** Link to a localized project detail page with its title, year, and cover-image fallback. */
 export default function ProjectCard({
   project,
   lang,
@@ -27,6 +28,7 @@ export default function ProjectCard({
     height: 720,
     fit: 'crop',
   });
+  /** Render the persistent cover frame and add a hover overlay when a URL is available. */
   const renderProjectImage = () => (
     <section className='relative aspect-367/224 w-full overflow-hidden'>
       <MediaWithFallback

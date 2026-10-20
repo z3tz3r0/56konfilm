@@ -11,6 +11,7 @@ interface ProjectPageProps {
   }>;
 }
 
+/** Fetch the project or return a 404, then render its overview and localized body media. */
 export default async function ProjectDetailPage({ params }: ProjectPageProps) {
   const { lang, mode, secondSegment } = await params;
 

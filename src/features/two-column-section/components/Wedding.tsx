@@ -4,6 +4,7 @@ import { cn } from '@shared/utils/styling/tailwindUtils';
 import { getBGVariants } from '@shared/utils/styling/styleVariants';
 import { getImageSource } from '@/sanity/lib/image';
 
+/** Render wedding copy and CTAs beside a framed image with localized fallback feedback. */
 export default function Wedding({
   block,
   lang,

@@ -3,6 +3,7 @@ import TeamCard from '@features/team-section/components/TeamCard';
 import { MotionProvider } from '@shared/providers/MotionProvider';
 import type { FixtureOptions } from './types';
 
+/** Render a project or team card with synthetic image data for the requested browser fixture state. */
 export default function MediaCardFixture({
   mode = 'production',
   lang = 'en',

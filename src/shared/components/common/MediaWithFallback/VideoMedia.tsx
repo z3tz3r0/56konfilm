@@ -16,6 +16,8 @@ type Props = Omit<VideoMediaProps, 'source'> & {
   resolvedSource: ResolvedMediaSource<string>;
 };
 
+/** Render native video with localized source, loading, and error feedback until it can play.
+ * Track poster loading separately and preserve consumer refs, callbacks, and video options. */
 export default function VideoMedia({
   mediaType,
   resolvedSource,

@@ -18,6 +18,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+/** Locate the shared media frame whose status is asserted by these tests. */
 function status(container: HTMLElement) {
   return container.querySelector('[data-slot="media-with-fallback"]');
 }

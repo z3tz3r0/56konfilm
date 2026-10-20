@@ -4,6 +4,7 @@ import { CtaGroup, HighlightedText, SectionShell } from '@shared/components';
 import { cn } from '@shared/utils/styling/tailwindUtils';
 import { MediaWithFallback } from '@shared/components';
 
+/** Render production copy and CTAs alongside a persistent image frame with localized feedback. */
 export default function Production({
   block,
   lang,

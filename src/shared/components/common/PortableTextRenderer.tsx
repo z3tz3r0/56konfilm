@@ -10,6 +10,7 @@ interface PortableTextRendererProps {
   className?: string;
 }
 
+/** Render nonempty Portable Text content with localized image fallbacks and prose styling. */
 export default function PortableTextRenderer({
   value,
   lang,

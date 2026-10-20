@@ -9,6 +9,7 @@ interface ProjectHeroProps {
   coverImage: Project['coverImage'];
 }
 
+/** Render the project cover as a priority image with localized fallback feedback in a stable frame. */
 export default function ProjectHero({
   lang,
   projectTitle,

@@ -231,6 +231,7 @@ beforeEach(async () => {
       await route.abort();
       return;
     }
+    /** Fulfill the intercepted request with a local media fixture or a simulated 404. */
     const respond = () =>
       url.pathname.includes('error')
         ? route.fulfill({ status: 404, body: 'Fixture asset unavailable' })
@@ -280,6 +281,7 @@ afterAll(async () => {
   await browser?.close();
 });
 
+/** Render the requested browser fixture and wait for its media frame or policy fallback. */
 async function show(options: FixtureOptions) {
   await page.evaluate((options) => window.showMediaFixture(options), options);
   if (
@@ -295,10 +297,12 @@ async function show(options: FixtureOptions) {
   ).toBeVisible();
 }
 
+/** Locate the first shared media frame in the current browser fixture. */
 function media() {
   return page.locator('[data-slot="media-with-fallback"]').first();
 }
 
+/** Read computed loading-surface animation and background values from the browser. */
 async function surface() {
   return page
     .locator('[data-slot="media-loading-surface"]')
@@ -313,6 +317,7 @@ async function surface() {
     });
 }
 
+/** Assert that the media frame retains its initial dimensions without horizontal page overflow. */
 async function assertGeometry(
   before: { width: number; height: number } | null
 ) {

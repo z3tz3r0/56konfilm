@@ -27,6 +27,7 @@ interface ProjectDetailLayoutProps extends BaseProps {
   children: ReactNode;
 }
 
+/** Render a validated project route with its localized hero, aside, and navigation. */
 export default async function ProjectDetailLayout({
   children,
   params,
