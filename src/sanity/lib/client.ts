@@ -12,16 +12,6 @@ export const client = createClient({
   useCdn: false, // Set to false if statically generating pages, using ISR or tag-based revalidation
 });
 
-// Write client for password updates (server-side only)
-// Uses SANITY_API_TOKEN from environment variables
-export const writeClient = createClient({
-  projectId,
-  dataset,
-  apiVersion,
-  useCdn: false,
-  token: env.SANITY_API_TOKEN,
-});
-
 // --- Sanity Fetch ---
 interface SanityFetchParams {
   query: string;

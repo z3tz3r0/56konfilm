@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ContentService } from '@services/contentService';
-import { client, writeClient } from '@/sanity/lib/client';
+import { client } from '@/sanity/lib/client';
 import { CACHE_TAGS } from '@shared/config/cacheTags';
 import { pageBySlugQuery } from '@/sanity/lib/queries';
 
@@ -58,16 +58,15 @@ describe('Public catalog reads through the existing content service', () => {
     }
   );
 
-  it('scopes published perspective to content fetches without changing exported credential clients', () => {
+  it('keeps the public content client unauthenticated and independent of credential clients', async () => {
     expect(client).toBe(mocks.readClient);
-    expect(writeClient).toBe(mocks.credentialClient);
-    expect(mocks.createClient.mock.calls).toHaveLength(2);
+    expect(mocks.createClient.mock.calls).toHaveLength(1);
     for (const [config] of mocks.createClient.mock.calls)
       expect(config).not.toHaveProperty('perspective');
-    expect(mocks.createClient.mock.calls[1][0]).toMatchObject({
-      token: 'fixture-only',
-      useCdn: false,
-    });
+    expect(mocks.createClient.mock.calls[0][0]).not.toHaveProperty('token');
+    expect(await import('@/sanity/lib/client')).not.toHaveProperty(
+      'writeClient'
+    );
     expect(mocks.credentialClient.fetch).not.toHaveBeenCalled();
   });
 });
