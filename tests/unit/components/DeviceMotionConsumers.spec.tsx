@@ -20,11 +20,15 @@ import CapabilitiesSection from '@features/capabilities-section/components/Capab
 import ProcessSection from '@features/process-section/components/ProcessSection';
 import TeamSection from '@features/team-section/TeamSection';
 import GalleryGrid from '@features/media-gallery-section/components/grid/Grid';
+import type { ImageSource } from '@shared/types/sanity';
 import { mockReducedMotion } from '../../support/fixtures/reduced-motion';
 
 // Avoid unrelated integrations in barrels, but use the real hook and Motion runtime.
 vi.mock('@shared/hooks', async () => import('@shared/hooks/useDeviceTier'));
-vi.mock('@shared/components', () => ({
+vi.mock('@shared/components', async () => ({
+  MediaWithFallback: (
+    await import('@shared/components/common/MediaWithFallback')
+  ).default,
   SectionShell: ({ children }: { children: ReactNode }) => (
     <section>{children}</section>
   ),
@@ -48,6 +52,10 @@ vi.mock('next/image', () => ({
   ),
 }));
 vi.mock('@/sanity/lib/image', () => ({
+  getImageSource: (source: ImageSource | null | undefined) => {
+    if (source) throw new Error('No CMS media in this fixture.');
+    return undefined;
+  },
   urlFor: () => {
     throw new Error('No CMS media in this fixture.');
   },
@@ -150,7 +158,7 @@ describe('real device-tier consumers during preference changes', () => {
   });
 
   it('observes the restored gallery video and pauses it after leaving the viewport', () => {
-    render(<VideoItem src='/fixture.mp4' />);
+    render(<VideoItem src='/fixture.mp4' lang='en' />);
     const first = screen.getByTestId('video-item');
     act(() => intersect(first, true));
     act(() => motion.set(true));
@@ -167,6 +175,66 @@ describe('real device-tier consumers during preference changes', () => {
     vi.mocked(HTMLMediaElement.prototype.pause).mockClear();
     act(() => intersect(restored, false));
     expect(restored.pause).toHaveBeenCalled();
+  });
+
+  it('releases the previous gallery observer and playback when its source changes', () => {
+    const { rerender } = render(
+      <VideoItem src='/first.mp4' lang='en' posterUrl='/poster.png' />
+    );
+    const first = screen.getByTestId<HTMLVideoElement>('video-item');
+    expect(first).toHaveAttribute('poster', '/poster.png');
+    expect(first).toHaveAttribute('preload', 'metadata');
+    act(() => intersect(first, true));
+    vi.mocked(first.pause).mockClear();
+    rerender(<VideoItem src='/second.mp4' lang='en' posterUrl='/poster.png' />);
+    const second = screen.getByTestId<HTMLVideoElement>('video-item');
+    expect(second).not.toBe(first);
+    expect(first.pause).toHaveBeenCalled();
+    expect(observers.some((observer) => observer.targets.has(first))).toBe(
+      false
+    );
+    expect(observers.some((observer) => observer.targets.has(second))).toBe(
+      true
+    );
+    act(() => intersect(second, true));
+    expect(second.play).toHaveBeenCalled();
+    fireEvent.canPlay(second);
+    fireEvent.waiting(second);
+    fireEvent.pause(second);
+    expect(second.closest('[data-slot="media-with-fallback"]')).toHaveAttribute(
+      'data-media-status',
+      'success'
+    );
+  });
+
+  it('does not turn an autoplay rejection into a media error', async () => {
+    vi.mocked(HTMLMediaElement.prototype.play).mockRejectedValue(
+      new DOMException('Blocked', 'NotAllowedError')
+    );
+    render(<VideoItem src='/fixture.mp4' lang='th' />);
+    const video = screen.getByTestId('video-item');
+    await act(async () => intersect(video, true));
+    expect(
+      video.closest('[data-slot="media-with-fallback"]')
+    ).not.toHaveAttribute('data-media-status', 'error');
+    expect(screen.queryByText('ไม่สามารถโหลดวิดีโอได้')).toBeNull();
+    fireEvent.canPlay(video);
+    expect(video.closest('[data-slot="media-with-fallback"]')).toHaveAttribute(
+      'data-media-status',
+      'success'
+    );
+  });
+
+  it('distinguishes a missing video from valid media intentionally disabled by policy', () => {
+    act(() => motion.set(true));
+    const { container, rerender } = render(<VideoItem src={null} lang='th' />);
+    expect(screen.getByRole('status')).toHaveTextContent('ไม่มีวิดีโอ');
+    expect(container.querySelector('video')).toBeNull();
+    rerender(<VideoItem src='/fixture.mp4' lang='th' />);
+    expect(screen.getByTestId('video-item-fallback')).toBeInTheDocument();
+    expect(screen.queryByRole('status')).toBeNull();
+    expect(container.querySelector('video')).toBeNull();
+    expect(container.querySelector('.motion-safe\\:animate-pulse')).toBeNull();
   });
 
   it.each(['portfolio', 'collage'] as const)(

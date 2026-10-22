@@ -42,7 +42,7 @@ function Fixture() {
         <VideoLoop url='data:video/mp4;base64,' />
       </div>
       <div className='video-frame'>
-        <VideoItem src='data:video/mp4;base64,' />
+        <VideoItem src='data:video/mp4;base64,' lang='en' />
       </div>
       <div style={{ height: 1400 }} />
       <StatsCounterSection

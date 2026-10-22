@@ -6,7 +6,7 @@ import {
 } from '@shared/components';
 import type { Locale } from '@shared/config';
 import type { MediaItem } from '@shared/types';
-import { urlFor } from '@/sanity/lib/image';
+import { getImageSource } from '@/sanity/lib/image';
 import { cn } from '@shared/utils/styling/tailwindUtils';
 import { getBGVariants } from '@shared/utils/styling/styleVariants';
 import AnimatedCollageImage from './AnimatedCollageImage';
@@ -58,14 +58,12 @@ function CollageImage({
   hasBody: boolean;
 }) {
   const slot = imageSlots[index];
-  const source = media?.image
-    ? urlFor(media.image)
-        .width(slot.width)
-        .height(slot.height)
-        .fit('crop')
-        .quality(85)
-        .url()
-    : undefined;
+  const source = getImageSource(media?.image, {
+    width: slot.width,
+    height: slot.height,
+    fit: 'crop',
+    quality: 85,
+  });
   return (
     <AnimatedCollageImage
       key={`${revealKey}:${index}`}
@@ -73,11 +71,11 @@ function CollageImage({
       className={cn(slot.className, index === 0 && hasBody && 'lg:row-span-4')}
     >
       <ImageWithFrame
+        lang={lang}
         src={source}
         alt={media?.alt ?? ''}
         imageAspectRatio={slot.aspectRatio}
         sizes={slot.sizes}
-        placeholder={lang === 'th' ? 'ไม่มีรูปภาพ' : 'No Image'}
         className='shadow-none'
       />
     </AnimatedCollageImage>

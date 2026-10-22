@@ -1,13 +1,14 @@
-import Image from 'next/image';
-import type { ReactNode } from 'react';
 import { cn } from '@shared/utils/styling/tailwindUtils';
+import { DEFAULT_LOCALE, type Locale } from '@shared/config';
+import MediaWithFallback from './MediaWithFallback';
+import type { MediaSource } from './MediaWithFallback/types';
 
 interface ImageWithFrameProps extends React.ComponentPropsWithoutRef<'section'> {
-  src?: string;
+  src?: MediaSource<string>;
+  lang?: Locale;
   alt: string;
   imageAspectRatio?: string;
   sizes?: string;
-  placeholder?: ReactNode;
 }
 
 /**
@@ -17,15 +18,16 @@ interface ImageWithFrameProps extends React.ComponentPropsWithoutRef<'section'> 
  */
 export default function ImageWithFrame({
   src,
+  lang = DEFAULT_LOCALE,
   alt,
   imageAspectRatio,
   sizes = '(min-width: 768px) 50vw, 100vw',
-  placeholder,
   className,
   ...props
 }: ImageWithFrameProps) {
   return (
     <section
+      lang={lang}
       className={cn(
         'bg-neutral relative shadow-md',
         imageAspectRatio
@@ -39,19 +41,15 @@ export default function ImageWithFrame({
         className={imageAspectRatio ? 'relative w-full' : 'absolute inset-4'}
         style={imageAspectRatio ? { aspectRatio: imageAspectRatio } : undefined}
       >
-        {src ? (
-          <Image
-            src={src}
-            alt={alt}
-            fill
-            className='object-cover'
-            sizes={sizes}
-          />
-        ) : (
-          <div className='bg-background-secondary text-text-secondary flex size-full items-center justify-center text-sm'>
-            {placeholder}
-          </div>
-        )}
+        <MediaWithFallback
+          mediaType='image'
+          source={src}
+          lang={lang}
+          alt={alt}
+          fill
+          className='object-cover'
+          sizes={sizes}
+        />
       </div>
     </section>
   );

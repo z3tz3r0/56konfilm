@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import { SectionShell, SectionHeader } from '@shared/components';
 import { AspectRatio } from '@shared/components/ui/aspect-ratio';
-import { urlFor } from '@/sanity/lib/image';
+import { getImageSource } from '@/sanity/lib/image';
+import type { Locale } from '@shared/config';
+import { MediaWithFallback } from '@shared/components';
 import { VideoShowreelSectionBlock } from '../types';
 
 function getEmbedUrl(url: string): string | null {
@@ -36,10 +37,13 @@ function getEmbedUrl(url: string): string | null {
 
 interface VideoShowreelSectionProps {
   block: VideoShowreelSectionBlock;
+  lang: Locale;
 }
 
+/** Show a thumbnail with localized fallback feedback until the viewer opens the video embed. */
 export default function VideoShowreelSection({
   block,
+  lang,
 }: VideoShowreelSectionProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const embedUrl = block.videoUrl ? getEmbedUrl(block.videoUrl) : null;
@@ -74,21 +78,24 @@ export default function VideoShowreelSection({
                 aria-label='Play video'
                 data-testid='showreel-play'
               >
-                {block.thumbnail && (
-                  <Image
-                    src={urlFor(block.thumbnail)
-                      .width(1280)
-                      .height(720)
-                      .fit('crop')
-                      .url()}
-                    alt={block.caption ?? 'Video thumbnail'}
-                    fill
-                    className='object-cover transition-transform duration-700 ease-out group-hover:scale-105'
-                    sizes='(min-width: 1024px) 1024px, 100vw'
-                  />
-                )}
+                <MediaWithFallback
+                  mediaType='image'
+                  source={getImageSource(block.thumbnail, {
+                    width: 1280,
+                    height: 720,
+                    fit: 'crop',
+                  })}
+                  lang={lang}
+                  alt={block.caption ?? 'Video thumbnail'}
+                  fill
+                  className='object-cover transition-transform duration-700 ease-out group-hover:scale-105'
+                  sizes='(min-width: 1024px) 1024px, 100vw'
+                />
                 {/* Play button overlay */}
-                <div className='absolute inset-0 flex items-center justify-center bg-black/30 transition-colors duration-300 group-hover:bg-black/20'>
+                <div
+                  data-slot='showreel-overlay'
+                  className='absolute inset-0 flex items-center justify-center bg-black/30 transition-colors duration-300 group-hover:bg-black/20 group-has-[[data-media-status=error]]:items-start group-has-[[data-media-status=error]]:justify-end group-has-[[data-media-status=error]]:p-2 group-has-[[data-media-status=source-missing]]:items-start group-has-[[data-media-status=source-missing]]:justify-end group-has-[[data-media-status=source-missing]]:p-2 group-has-[[data-media-status=error]]:[&>div]:size-12 group-has-[[data-media-status=source-missing]]:[&>div]:size-12'
+                >
                   <div className='flex size-16 items-center justify-center rounded-full border-2 border-white/80 bg-white/10 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110 md:size-20'>
                     <svg
                       viewBox='0 0 24 24'

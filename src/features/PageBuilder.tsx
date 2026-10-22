@@ -233,7 +233,7 @@ function renderBlock(
     case 'faqSection':
       return <FAQSection key={key} block={block} />;
     case 'videoShowreelSection':
-      return <VideoShowreelSection key={key} block={block} />;
+      return <VideoShowreelSection key={key} block={block} lang={lang} />;
     case 'featuredProjectsSection':
       return (
         <FeaturedProjectSection

@@ -1,8 +1,8 @@
-import { urlFor } from '@/sanity/lib/image';
+import { getImageSource } from '@/sanity/lib/image';
 import { Locale, SiteMode } from '@shared/config';
 import { Project } from '@shared/types';
-import Image from 'next/image';
 import Link from 'next/link';
+import MediaWithFallback from '../MediaWithFallback';
 
 interface ProjectCardProps {
   project: Project;
@@ -11,6 +11,7 @@ interface ProjectCardProps {
   portfolioSlug: string;
 }
 
+/** Link to a localized project detail page with its title, year, and cover-image fallback. */
 export default function ProjectCard({
   project,
   lang,
@@ -22,23 +23,25 @@ export default function ProjectCard({
   // ดึงเฉพาะปีมาแสดงผล
   const year = projectDate ? new Date(projectDate).getFullYear() : '';
   const projectUrl = `/${lang}/${mode}/${portfolioSlug}/${slug}`;
+  const imageSource = getImageSource(coverImage, {
+    width: 1280,
+    height: 720,
+    fit: 'crop',
+  });
+  /** Render the persistent cover frame and add a hover overlay when a URL is available. */
   const renderProjectImage = () => (
     <section className='relative aspect-367/224 w-full overflow-hidden'>
-      {coverImage ? (
-        <>
-          <Image
-            src={urlFor(coverImage).width(1280).height(720).fit('crop').url()}
-            alt={title}
-            fill
-            className='absolute object-cover transition-transform duration-700 ease-out group-hover:scale-105'
-            sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-          />
-          <div className='group-hover:bg-background/10 absolute inset-0 bg-transparent transition-colors duration-700 ease-out' />
-        </>
-      ) : (
-        <div className='bg-off-white text-text-tertiary flex h-full w-full items-center justify-center'>
-          {lang === 'en' ? 'No Image' : 'ไม่มีรูปภาพ'}
-        </div>
+      <MediaWithFallback
+        mediaType='image'
+        source={imageSource}
+        lang={lang}
+        alt={title}
+        fill
+        className='absolute object-cover transition-transform duration-700 ease-out group-hover:scale-105'
+        sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+      />
+      {typeof imageSource === 'string' && (
+        <div className='group-hover:bg-background/10 absolute inset-0 bg-transparent transition-colors duration-700 ease-out' />
       )}
     </section>
   );

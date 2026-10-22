@@ -27,7 +27,7 @@ export default function Wedding({ block }: CardCollectionSectionProps) {
                 <article
                   key={card._key ?? index}
                   className={cn(
-                    'grid grid-rows-subgrid gap-4 rounded-2xl border p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg',
+                    'border-text-tertiary bg-neutral grid grid-rows-subgrid gap-4 rounded-2xl border p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg',
                     hasIcon ? 'row-span-3' : 'row-span-2'
                   )}
                 >

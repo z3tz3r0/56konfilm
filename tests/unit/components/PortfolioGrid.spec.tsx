@@ -62,6 +62,8 @@ vi.mock('next/image', () => ({
   },
 }));
 vi.mock('@/sanity/lib/image', () => ({
+  getImageSource: (source: unknown) =>
+    source ? '/mock-project.jpg' : undefined,
   urlFor: () => {
     const builder = {
       width: () => builder,

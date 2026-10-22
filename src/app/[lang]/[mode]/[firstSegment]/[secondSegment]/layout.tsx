@@ -27,6 +27,7 @@ interface ProjectDetailLayoutProps extends BaseProps {
   children: ReactNode;
 }
 
+/** Render a validated project route with its localized hero, aside, and navigation. */
 export default async function ProjectDetailLayout({
   children,
   params,
@@ -55,6 +56,7 @@ export default async function ProjectDetailLayout({
     <SectionShell className='overflow-visible pt-[76px] pb-16'>
       <article className='min-h-screen space-y-8'>
         <ProjectHero
+          lang={lang}
           projectTitle={project.title}
           coverImage={project.coverImage}
         />

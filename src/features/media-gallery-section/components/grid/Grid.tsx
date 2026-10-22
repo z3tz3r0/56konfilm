@@ -1,9 +1,7 @@
 'use client';
 
 import { m } from 'motion/react';
-import Image from 'next/image';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 import { CtaGroup, SectionHeader, SectionShell } from '@shared/components';
 import { useDeviceTier } from '@shared/hooks';
 import {
@@ -12,7 +10,8 @@ import {
   instantReveal,
 } from '@shared/lib/motion';
 import { cn } from '@shared/utils/styling/tailwindUtils';
-import { urlFor } from '@/sanity/lib/image';
+import { getImageSource } from '@/sanity/lib/image';
+import MediaWithFallback from '@shared/components/common/MediaWithFallback';
 import GalleryCard from './GalleryCard';
 import VideoItem from './VideoItem';
 import type { MediaGalleryPresentationProps } from '../../types/presentation.types';
@@ -23,11 +22,9 @@ import type { MediaGalleryPresentationProps } from '../../types/presentation.typ
  */
 export default function Grid({
   block,
-  lang: propLang,
+  lang,
   mode,
 }: MediaGalleryPresentationProps) {
-  const params = useParams();
-  const lang = propLang || (params?.lang as string) || 'en';
   const isCentered = block.heading?.align === 'center';
   const { allowHeavyMotion, isInitialized } = useDeviceTier();
   const useLiteMotion = isInitialized && !allowHeavyMotion;
@@ -56,78 +53,84 @@ export default function Grid({
             animate={useLiteMotion ? instantReveal : undefined}
             transition={useLiteMotion ? { duration: 0.2 } : undefined}
           >
-            {block.items.filter(Boolean).map((item, index) => {
-              const key = item._key ?? index;
+            {block.items
+              .filter((item) => item !== null)
+              .map((item, index) => {
+                const key = item._key ?? index;
 
-              if (item.mediaType === 'video' && item.videoUrl) {
-                return (
+                if (item.mediaType === 'video') {
+                  return (
+                    <GalleryCard
+                      key={key}
+                      variants={variants}
+                      useLiteMotion={useLiteMotion}
+                      label={item.label}
+                      testId='gallery-item-video'
+                    >
+                      <VideoItem
+                        lang={lang}
+                        src={item.videoUrl}
+                        className={
+                          useLiteMotion
+                            ? 'transition-none'
+                            : 'transition-transform duration-700 ease-out group-hover:scale-105'
+                        }
+                      />
+                    </GalleryCard>
+                  );
+                }
+
+                const image = item.media?.image;
+
+                const card = (
                   <GalleryCard
-                    key={key}
                     variants={variants}
                     useLiteMotion={useLiteMotion}
                     label={item.label}
-                    testId='gallery-item-video'
+                    testId={
+                      item.projectSlug
+                        ? 'gallery-item-project'
+                        : 'gallery-item-image'
+                    }
+                    extra={
+                      item.projectOverview ? (
+                        <p className='text-muted-foreground/90 px-1 pb-1 text-sm'>
+                          {item.projectOverview}
+                        </p>
+                      ) : undefined
+                    }
                   >
-                    <VideoItem
-                      src={item.videoUrl}
-                      className={
-                        useLiteMotion
-                          ? 'transition-none'
-                          : 'transition-transform duration-700 ease-out group-hover:scale-105'
-                      }
+                    <MediaWithFallback
+                      mediaType='image'
+                      source={getImageSource(image, {
+                        width: 800,
+                        height: 600,
+                        quality: 90,
+                      })}
+                      lang={lang}
+                      alt={item.media?.alt ?? item.label ?? 'Gallery item'}
+                      fill
+                      className={mediaClassName}
+                      sizes='(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'
                     />
                   </GalleryCard>
                 );
-              }
 
-              const image = item.media?.image;
-              if (!image) {
-                return null;
-              }
+                if (item.projectSlug) {
+                  return (
+                    <Link
+                      key={key}
+                      href={`/${lang}/work/${item.projectSlug}`}
+                      className='block'
+                      aria-label={item.label ?? item.projectSlug}
+                    >
+                      {card}
+                    </Link>
+                  );
+                }
 
-              const card = (
-                <GalleryCard
-                  variants={variants}
-                  useLiteMotion={useLiteMotion}
-                  label={item.label}
-                  testId={
-                    item.projectSlug
-                      ? 'gallery-item-project'
-                      : 'gallery-item-image'
-                  }
-                  extra={
-                    item.projectOverview ? (
-                      <p className='text-muted-foreground/90 px-1 pb-1 text-sm'>
-                        {item.projectOverview}
-                      </p>
-                    ) : undefined
-                  }
-                >
-                  <Image
-                    src={urlFor(image).width(800).height(600).quality(90).url()}
-                    alt={item.media?.alt ?? item.label ?? 'Gallery item'}
-                    fill
-                    className={mediaClassName}
-                    sizes='(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'
-                  />
-                </GalleryCard>
-              );
-
-              if (item.projectSlug) {
-                return (
-                  <Link
-                    key={key}
-                    href={`/${lang}/work/${item.projectSlug}`}
-                    className='block'
-                    aria-label={item.label ?? item.projectSlug}
-                  >
-                    {card}
-                  </Link>
-                );
-              }
-
-              return <div key={key}>{card}</div>;
-            })}
+                return <div key={key}>{card}</div>;
+              })}
           </m.div>
         ) : null}
 

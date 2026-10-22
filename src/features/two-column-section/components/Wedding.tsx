@@ -2,8 +2,9 @@ import { CtaGroup, ImageWithFrame, SectionShell } from '@shared/components';
 import { TwoColumnByMode } from '../types';
 import { cn } from '@shared/utils/styling/tailwindUtils';
 import { getBGVariants } from '@shared/utils/styling/styleVariants';
-import { urlFor } from '@/sanity/lib/image';
+import { getImageSource } from '@/sanity/lib/image';
 
+/** Render wedding copy and CTAs beside a framed image with localized fallback feedback. */
 export default function Wedding({
   block,
   lang,
@@ -74,13 +75,15 @@ export default function Wedding({
           </section>
 
           {/* 🖼️ ฝั่งรูปภาพ */}
-          {block.media?.image && (
-            <ImageWithFrame
-              src={urlFor(block.media.image).quality(80).fit('clip').url()}
-              alt={block.media.alt ?? ''}
-              className='flex-1'
-            />
-          )}
+          <ImageWithFrame
+            lang={lang}
+            src={getImageSource(block.media?.image, {
+              quality: 80,
+              fit: 'clip',
+            })}
+            alt={block.media?.alt ?? ''}
+            className='flex-1'
+          />
         </div>
       </div>
     </SectionShell>

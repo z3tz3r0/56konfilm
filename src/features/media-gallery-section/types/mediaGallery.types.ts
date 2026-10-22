@@ -20,10 +20,10 @@ export interface MediaGallerySectionBlock extends BaseBlock {
     _key?: string;
     mediaType?: 'image' | 'video';
     media?: MediaItem;
-    videoUrl?: string;
+    videoUrl?: string | null;
     label?: string;
     projectSlug?: string;
     projectOverview?: string;
-  }>;
+  } | null>;
   cta?: ContentCta;
 }
