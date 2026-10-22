@@ -49,7 +49,11 @@ export default function TimelineCard({
         >
           {showIcon ? (
             <div aria-hidden='true' className='shrink-0'>
-              <AppIcon iconName={iconName} variant='plain' />
+              <AppIcon
+                iconName={iconName}
+                variant='plain'
+                className='group-hover:text-primary transition-colors duration-200'
+              />
             </div>
           ) : null}
 
