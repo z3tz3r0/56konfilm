@@ -63,7 +63,10 @@ function credential(document: Snapshot): CredentialDocument {
 }
 
 /** Validate every record before producing any mutation; never promote a draft. */
-export function planCredentialMigration(documents: Snapshot[]) {
+export function planCredentialMigration(documents: Snapshot[]): {
+  source: CredentialDocument | undefined;
+  target: CredentialDocument | undefined;
+} {
   if (
     documents.some(
       (document) =>

@@ -96,6 +96,31 @@ describe('Protected credential operator workflow', () => {
   });
 
   it.each(['--create', '--reset'] as const)(
+    'sanitizes shared password hashing failures without writes during %s',
+    async (mode) => {
+      const { run, prompts, sdk, commit } = fixture(
+        mode === '--reset' ? [record()] : []
+      );
+      if (mode === '--reset') prompts.question.mockResolvedValueOnce('y');
+      prompts.question.mockResolvedValue('editor');
+      prompts.hidden.mockResolvedValue('new-password');
+      hash.mockRejectedValue(
+        new Error(`bcrypt failure: ${nextHash}; new-password`)
+      );
+
+      await expect(run(mode)).rejects.toThrow(
+        'Credential operation failed. Check token permissions and concurrent changes, then retry.'
+      );
+      expect(hash).toHaveBeenCalledExactlyOnceWith('new-password', 12);
+      expect(sdk.create).not.toHaveBeenCalled();
+      expect(sdk.patch).not.toHaveBeenCalled();
+      expect(sdk.transaction).not.toHaveBeenCalled();
+      expect(commit).not.toHaveBeenCalled();
+      expect(prompts.log).not.toHaveBeenCalled();
+    }
+  );
+
+  it.each(['--create', '--reset'] as const)(
     'cancels %s without writes',
     async (mode) => {
       const { run, prompts, sdk, commit } = fixture([record()]);

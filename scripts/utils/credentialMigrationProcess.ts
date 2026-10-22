@@ -23,7 +23,7 @@ export function startCredentialMigrationProcess(
   options: CredentialMigrationOptions,
   spawnProcess: SpawnMigration = spawn,
   environment: NodeJS.ProcessEnv = process.env
-) {
+): ChildProcess {
   const require = createRequire(import.meta.url);
   const cli = resolve(
     dirname(require.resolve('sanity/package.json')),

@@ -1,9 +1,9 @@
 import 'server-only';
-import { createClient } from 'next-sanity';
+import { createClient, type SanityClient } from 'next-sanity';
 import { env } from '@shared/config/env';
 
 /** Never fall back to anonymous access when a server secret is missing. */
-export function getCredentialClient() {
+export function getCredentialClient(): SanityClient {
   if (!env.SANITY_API_TOKEN?.trim()) {
     throw new Error('CMS credential store is not configured.');
   }

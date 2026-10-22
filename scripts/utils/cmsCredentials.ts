@@ -7,6 +7,7 @@ import {
   hasCredentialValues,
   type CredentialDocument,
 } from '../../src/shared/lib/auth/credentialDocument';
+import { hashPassword } from '../../src/shared/lib/auth/password';
 
 export type CredentialSetupMode =
   | '--create'
@@ -37,7 +38,7 @@ async function newPassword(prompts: CredentialPrompts) {
   if (password !== confirmation) {
     throw new CredentialSetupError('Passwords do not match.');
   }
-  return bcrypt.hash(password, 12);
+  return hashPassword(password);
 }
 
 /** All four modes are testable without starting the CLI or loading .env.local. */
@@ -45,7 +46,7 @@ export async function runCredentialSetup(
   client: SanityClient,
   mode: CredentialSetupMode,
   prompts: CredentialPrompts
-) {
+): Promise<void> {
   try {
     const documents = await client.fetch<CredentialDocument[]>(
       '*[_type == $type || _id in $ids]',
