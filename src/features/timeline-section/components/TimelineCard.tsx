@@ -27,7 +27,7 @@ export default function TimelineCard({
     <Card
       data-testid='timeline-card'
       className={cn(
-        'group border-steel-gray bg-card hover:border-primary relative flex h-full flex-col overflow-hidden p-6 transition-colors duration-200 md:p-8',
+        'group border-text-tertiary bg-card hover:border-primary dark:border-steel-gray relative flex h-full flex-col overflow-hidden p-6 transition-colors duration-200 md:p-8',
         className
       )}
     >
@@ -35,7 +35,7 @@ export default function TimelineCard({
         {/* Big Faded Number (Background) */}
         <span
           aria-hidden='true'
-          className='text-charcoal-gray group-hover:text-primary/20 absolute right-[50%] bottom-[50%] translate-x-[50%] translate-y-[50%] text-[10rem] leading-none font-bold transition-colors duration-200 select-none lg:right-4 lg:translate-x-0'
+          className='text-text-tertiary group-hover:text-primary/30 dark:group-hover:text-primary/20 absolute right-[50%] bottom-[50%] translate-x-[50%] translate-y-[50%] text-[10rem] leading-none font-bold transition-colors duration-200 select-none lg:right-4 lg:translate-x-0'
         >
           {step.order ?? index + 1}
         </span>

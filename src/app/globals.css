@@ -23,6 +23,7 @@
   --color-brown: #5b4339;
   --color-light-brown: #796b62;
   --color-mocha-brown: #6d4e3c;
+  --color-warm-gray: #e2dcd8;
 }
 
 @theme inline {
@@ -86,7 +87,7 @@
   --background-secondary: var(--color-linen-beige);
   --text-primary: var(--color-brown);
   --text-secondary: var(--color-light-brown);
-  --text-tertiary: var(--color-light-brown);
+  --text-tertiary: var(--color-warm-gray);
   /********** ShadCN **********/
   --radius: 0.625rem;
   --background: var(--color-ivory-white);
