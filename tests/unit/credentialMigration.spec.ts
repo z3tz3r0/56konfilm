@@ -8,9 +8,13 @@ import {
   type MigrationContext,
   type Transaction,
 } from 'sanity/migrate';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import migration from '../../migrations/protect-cms-credentials';
 import { planCredentialMigration } from '../../migrations/protect-cms-credentials/credentialMigration';
+import {
+  CREDENTIAL_MIGRATION_ID,
+  CREDENTIAL_MIGRATION_RUNNER,
+} from '../../migrations/protect-cms-credentials/runnerGuard';
 import {
   CMS_CREDENTIALS_ID,
   LEGACY_CMS_CREDENTIALS_ID,
@@ -31,6 +35,11 @@ const source = (overrides: Record<string, unknown> = {}): SanityDocument => ({
 });
 const target = (overrides: Record<string, unknown> = {}) =>
   source({ _id: CMS_CREDENTIALS_ID, _rev: 'target-rev', ...overrides });
+
+beforeEach(() => {
+  vi.stubEnv(CREDENTIAL_MIGRATION_RUNNER, CREDENTIAL_MIGRATION_ID);
+});
+afterEach(() => vi.unstubAllEnvs());
 
 function fixture(documents: SanityDocument[], dryRun = true) {
   const fetch = vi
@@ -126,6 +135,43 @@ describe('Protected credential migration planning', () => {
 });
 
 describe('Protected credentials with the native mutation collector', () => {
+  it.each([undefined, '', 'another-runner'])(
+    'blocks direct native apply before reading snapshots or live data (marker=%s)',
+    async (marker) => {
+      vi.stubEnv(CREDENTIAL_MIGRATION_RUNNER, marker);
+      const read = vi.fn();
+      const fetch = vi.fn();
+      async function* documents() {
+        read();
+        yield source();
+      }
+      const context = {
+        dryRun: false,
+        client: { fetch },
+      } as unknown as MigrationContext;
+      const collect = async () => {
+        for await (const _mutation of collectMigrationMutations(
+          migration,
+          documents,
+          context
+        )) {
+          throw new Error('Direct apply must not yield mutations');
+        }
+      };
+      await expect(collect()).rejects.toThrow('Apply requires the safe runner');
+      expect(read).not.toHaveBeenCalled();
+      expect(fetch).not.toHaveBeenCalled();
+    }
+  );
+
+  it('allows a direct redacted native dry-run without the runner marker', async () => {
+    vi.stubEnv(CREDENTIAL_MIGRATION_RUNNER, undefined);
+    const changes = await fixture([source()]).generate();
+    expect(changes).toHaveLength(1);
+    expect(JSON.stringify(changes)).not.toContain(hash);
+    expect(JSON.stringify(changes)).not.toContain(username);
+  });
+
   it('retains the CAS and strict create/delete when encoded by the installed native runner', async () => {
     const requireFromSanity = createRequire(
       createRequire(import.meta.url).resolve('sanity')
